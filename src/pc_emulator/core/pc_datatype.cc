@@ -338,10 +338,10 @@ PCDataType::PCDataType(PCConfiguration* configuration,
         // already been registered
         PCDataType * DataType = LookupDataType(DataTypeName);
         assert (DataType != nullptr);
-        DataTypeCategory = DataType->__DataTypeCategory;
+        __DataTypeCategory = DataType->__DataTypeCategory;
         
-        if (DataTypeCategory == DataTypeCategories::DERIVED
-            || DataTypeCategory == DataTypeCategories::POU) {
+        if (__DataTypeCategory == DataTypeCategories::DERIVED
+            || __DataTypeCategory == DataTypeCategories::POU) {
                 if (!InitialValue.empty()) {
                     __configuration->PCLogger->RaiseException(
                             "Cannot specify initial values for complex "
@@ -354,7 +354,7 @@ PCDataType::PCDataType(PCConfiguration* configuration,
                     // This is like a Typedef of a derived data type/function block
                     // Copy all the fields of the derived data type/function block
                     for (auto& field: 
-                            DataType->FieldsByInterfaceType[IntfType]) {
+                            DataType->__FieldsByInterfaceType[IntfType]) {
                         PCDataType * FieldDataType = LookupDataType(
                                                         field.FieldTypeName);
                         if (!FieldDataType) {
@@ -384,9 +384,9 @@ PCDataType::PCDataType(PCConfiguration* configuration,
             SetElementaryDataTypeAttributes(InitialValue, RangeMin, RangeMax);
         }
     } else {
-        DataTypeCategory = Category;
-        if (DataTypeCategory != DataTypeCategories::DERIVED &&
-            DataTypeCategory != DataTypeCategories::POU) {
+        __DataTypeCategory = Category;
+        if (__DataTypeCategory != DataTypeCategories::DERIVED &&
+            __DataTypeCategory != DataTypeCategories::POU) {
                 SetElementaryDataTypeAttributes(InitialValue,
                         RangeMin, RangeMax);
         } else {
@@ -430,7 +430,7 @@ PCDataType::PCDataType(PCConfiguration* configuration,
     }
 
     PCDataType * DataType = LookupDataType(DataTypeName);
-    DataTypeCategory = DataTypeCategories::ARRAY;
+    __DataTypeCategory = DataTypeCategories::ARRAY;
     assert(DataType != nullptr);
     if ((DataType->__DataTypeCategory == DataTypeCategories::DERIVED ||
             DataType->__DataTypeCategory == DataTypeCategories::POU)
@@ -506,7 +506,7 @@ PCDataType::PCDataType(PCConfiguration* configuration,
                 " be specified for arrays of complex types!\n");
     }
 
-    DataTypeCategory = DataTypeCategories::ARRAY;
+    __DataTypeCategory = DataTypeCategories::ARRAY;
 
     __RangeMax = (DataType->RangeMax < RangeMax) ? DataType->RangeMax :
                                                         RangeMax;
@@ -565,7 +565,7 @@ void PCDataType::GetFieldAttributes(string NestedFieldName,
     for (auto& AccessedFieldName : NestedFields) {
         for (int IntfType = FIELD_INTERFACE_TYPES::VAR_INPUT; 
             IntfType != FIELD_INTERFACE_TYPES::NA; IntfType ++) {
-            for(auto& DefinedField: DataType->FieldsByInterfaceType[IntfType]) {
+            for(auto& DefinedField: DataType->__FieldsByInterfaceType[IntfType]) {
                 PCDataType * FieldDataType = DefinedField.__FieldTypePtr;
                 assert(FieldDataType != nullptr);
                 if(AccessedFieldName == DefinedField.__FieldName) {

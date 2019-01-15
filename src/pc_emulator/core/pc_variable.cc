@@ -39,6 +39,21 @@ void PCVariable::AllocateStorage() {
     }
 }
 
+void PCVariable::AllocateAndInitialize() {
+    this->AllocateStorage();
+    this->InitializeAllFields();
+}
+
+void PCVariable::OnExecutorStartup() {
+    for(auto& DefinedField: 
+        __VariableDataType->__FieldsByInterfaceType[
+            FIELD_INTERFACE_TYPES::VAR_TEMP]) {
+        
+        PCVariable FieldVariable 
+            = GetPCVariableToField(DefinedField.__FieldName);
+        InitializeVariable(&FieldVariable);
+    }
+}
 
 PCVariable PCVariable::GetPCVariableToField(string NestedFieldName) {
     DataTypeFieldAttributes Attributes;
@@ -67,6 +82,212 @@ PCVariable PCVariable::GetPCVariableToField(string NestedFieldName) {
                                 __ByteOffset + (Attributes.RelativeOffset / 8));
         memcpy(&VariablePtrToField, PtrToStorageLoc, sizeof(PCVariable *));
         return *VariablePtrToField;
+    }
+}
+
+void PCVariable::InitializeVariable(PCVariable * V) {
+
+    assert(V->__VariableDataType != nullptr);
+
+    switch(V->__VariableDataType->__DataTypeCategory) {
+        case DataTypeCategories::BOOL : 
+                        assert(V->__VariableDataType->__NFields == 0);
+                        bool resbool;
+                        assert(DataTypeUtils::ValueToBool(
+                            V->__VariableDataType->__InitialValue, resbool));
+                        V->SetPCVariableField("", &resbool, sizeof(resbool));
+                        return;
+
+        case DataTypeCategories::BYTE : 
+                        assert(V->__VariableDataType->__NFields == 0);
+                        int8_t resbyte;
+                        assert(DataTypeUtils::ValueToByte(
+                            V->__VariableDataType->__InitialValue, resbyte));
+                        V->SetPCVariableField("", &resbyte, sizeof(resbyte));
+                        return; 
+
+        case DataTypeCategories::WORD : 
+                assert(V->__VariableDataType->__NFields == 0);
+                int16_t resword;
+                assert(DataTypeUtils::ValueToWord(
+                    V->__VariableDataType->__InitialValue, resword));
+                V->SetPCVariableField("", &resword, sizeof(resword));
+                return;     
+
+        case DataTypeCategories::DWORD : 
+                assert(V->__VariableDataType->__NFields == 0);
+                int32_t resdword;
+                assert(DataTypeUtils::ValueToDWord(
+                    V->__VariableDataType->__InitialValue, resdword));
+                V->SetPCVariableField("", &resdword, sizeof(resdword));
+                return;     
+
+        case DataTypeCategories::LWORD : 
+                assert(V->__VariableDataType->__NFields == 0);
+                int64_t reslword;
+                assert(DataTypeUtils::ValueToLWord(
+                    V->__VariableDataType->__InitialValue, reslword));
+                V->SetPCVariableField("", &reslword, sizeof(reslword));
+                return;     
+
+        case DataTypeCategories::CHAR : 
+                assert(V->__VariableDataType->__NFields == 0);
+                char reschar;
+                assert(DataTypeUtils::ValueToChar(
+                    V->__VariableDataType->__InitialValue, reschar));
+                V->SetPCVariableField("", &reschar, sizeof(reschar));
+                return; 
+                
+        case DataTypeCategories::INT : 
+                assert(V->__VariableDataType->__NFields == 0);
+                int16_t resint;
+                assert(DataTypeUtils::ValueToInt(
+                    V->__VariableDataType->__InitialValue, resint));
+                V->SetPCVariableField("", &resint, sizeof(resint));
+                return;
+
+        case DataTypeCategories::SINT : 
+                assert(V->__VariableDataType->__NFields == 0);
+                int8_t ressint;
+                assert(DataTypeUtils::ValueToSint(
+                    V->__VariableDataType->__InitialValue, ressint));
+                V->SetPCVariableField("", &ressint, sizeof(ressint));
+                return;     
+
+        case DataTypeCategories::DINT : 
+                assert(V->__VariableDataType->__NFields == 0);
+                int32_t resdint;
+                assert(DataTypeUtils::ValueToDint(
+                    V->__VariableDataType->__InitialValue, resdint));
+                V->SetPCVariableField("", &resdint, sizeof(resdint));
+                return;     
+
+        case DataTypeCategories::LINT : 
+                assert(V->__VariableDataType->__NFields == 0);
+                int64_t reslint;
+                assert(DataTypeUtils::ValueToLint(
+                    V->__VariableDataType->__InitialValue, reslint));
+                V->SetPCVariableField("", &reslint, sizeof(reslint));
+                return;     
+
+        case DataTypeCategories::UINT : 
+                assert(V->__VariableDataType->__NFields == 0);
+                uint16_t resuint;
+                assert(DataTypeUtils::ValueToUint(
+                    V->__VariableDataType->__InitialValue, resuint));
+                V->SetPCVariableField("", &resuint, sizeof(resuint));
+                return;     
+
+        case DataTypeCategories::USINT : 
+                assert(V->__VariableDataType->__NFields == 0);
+                uint8_t resusint;
+                assert(DataTypeUtils::ValueToUsint(
+                    V->__VariableDataType->__InitialValue, resusint));
+                V->SetPCVariableField("", &resusint, sizeof(resusint));
+                return;     
+
+        case DataTypeCategories::UDINT : 
+                assert(V->__VariableDataType->__NFields == 0);
+                uint32_t resudint;
+                assert(DataTypeUtils::ValueToUdint(
+                    V->__VariableDataType->__InitialValue, resudint));
+                V->SetPCVariableField("", &resudint, sizeof(resudint));
+                return;
+
+        case DataTypeCategories::ULINT : 
+                assert(V->__VariableDataType->__NFields == 0);
+                uint64_t resulint;
+                assert(DataTypeUtils::ValueToUlint(
+                    V->__VariableDataType->__InitialValue, resulint));
+                V->SetPCVariableField("", &resulint, sizeof(resulint));
+                return; 
+
+        case DataTypeCategories::REAL : 
+                assert(V->__VariableDataType->__NFields == 0);
+                float resreal;
+                assert(DataTypeUtils::ValueToReal(
+                    V->__VariableDataType->__InitialValue, resreal));
+                V->SetPCVariableField("", &resreal, sizeof(resreal));
+                return;     
+
+        case DataTypeCategories::LREAL : 
+                assert(V->__VariableDataType->__NFields == 0);
+                double reslreal;
+                assert(DataTypeUtils::ValueToLReal(
+                    V->__VariableDataType->__InitialValue, reslreal));
+                V->SetPCVariableField("", &reslreal, sizeof(reslreal));
+                return;     
+
+        case DataTypeCategories::TIME : 
+                assert(V->__VariableDataType->__NFields == 0);
+                TimeType restime;
+                assert(DataTypeUtils::ValueToTime(
+                    V->__VariableDataType->__InitialValue, restime));
+                V->SetPCVariableField("", &restime, sizeof(restime));
+                return;     
+
+        case DataTypeCategories::DATE : 
+                assert(V->__VariableDataType->__NFields == 0);
+                DateType resdate;
+                assert(DataTypeUtils::ValueToDate(
+                    V->__VariableDataType->__InitialValue, resdate));
+                V->SetPCVariableField("", &resdate, sizeof(resdate));
+                return;     
+
+        case DataTypeCategories::DATE_AND_TIME : 
+                assert(V->__VariableDataType->__NFields == 0);
+                DateTODType resdt;
+                assert(DataTypeUtils::ValueToDT(
+                    V->__VariableDataType->__InitialValue, resdt));
+                V->SetPCVariableField("", &resdt, sizeof(resdt));
+                return;     
+
+        case DataTypeCategories::TIME_OF_DAY : 
+                assert(V->__VariableDataType->__NFields == 0);
+                TODType restod;
+                assert(DataTypeUtils::ValueToTOD(
+                    V->__VariableDataType->__InitialValue, restod));
+                V->SetPCVariableField("", &restod, sizeof(restod));
+                return;     
+
+        default :
+                for (int IntfType = FIELD_INTERFACE_TYPES::VAR_INPUT; 
+                    IntfType != FIELD_INTERFACE_TYPES::NA; IntfType ++) {
+                    
+                    if (IntfType != FIELD_INTERFACE_TYPES::VAR_IN_OUT &&
+                        IntfType != FIELD_INTERFACE_TYPES::VAR_EXTERNAL &&
+                        IntfType != FIELD_INTERFACE_TYPES::VAR_ACCESS) {
+                        for(auto& DefinedField: 
+                            V->__VariableDataType->__FieldsByInterfaceType[IntfType]) {
+                            
+                            PCVariable FieldVariable 
+                                = V->GetPCVariableToField(
+                                 DefinedField.__FieldName);
+                            InitializeVariable(&FieldVariable);
+                        }
+                    }
+                }
+                return; 
+    }
+
+    return;
+
+}
+void PCVariable::InitializeAllFields() {
+    for (int IntfType = FIELD_INTERFACE_TYPES::VAR_INPUT; 
+            IntfType != FIELD_INTERFACE_TYPES::NA; IntfType ++) {
+        
+        if (IntfType != FIELD_INTERFACE_TYPES::VAR_IN_OUT &&
+            IntfType != FIELD_INTERFACE_TYPES::VAR_EXTERNAL &&
+            IntfType != FIELD_INTERFACE_TYPES::VAR_ACCESS) {
+            for(auto& DefinedField: 
+                __VariableDataType->__FieldsByInterfaceType[IntfType]) {
+                
+                PCVariable FieldVariable 
+                    = GetPCVariableToField(DefinedField.__FieldName);
+                InitializeVariable(&FieldVariable);
+            }
+        }
     }
 }
 

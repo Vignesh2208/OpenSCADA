@@ -440,6 +440,8 @@ namespace pc_emulator {
             DataTypeCategories __DataTypeCategory;
             int __SizeInBits;
             int __NFields;
+            s64 __RangeMin, __RangeMax;
+            string __InitialValue;
             std::vector<int> __DimensionSizes;
 
         void GetFieldAttributes(string NestedFieldName, 
@@ -493,6 +495,8 @@ namespace pc_emulator {
 
     class DataTypeUtils {
         public:
+
+            
             static bool ValueToBool(string Value, bool& BoolValue);
             static bool ValueToByte(string Value, int8_t & ByteValue);
             static bool ValueToWord(string Value, int16_t & WordValue);

@@ -42,6 +42,8 @@ namespace pc_emulator {
                     string VariableName,
                     string VariableDataTypeName);
             void AllocateStorage();
+            void AllocateAndInitialize();
+            void OnExecutorStartup();
             PCVariable GetPCVariableToField(string NestedFieldName);
             void CopyPCVariableFieldFromPointer(string NestedFieldName,
                 PCVariable * From);
@@ -60,6 +62,9 @@ namespace pc_emulator {
                                         int DataTypeCategory, int VarOp);
 
             bool InitiateOperationOnVariables(PCVariable& V, int VarOp);
+
+            void InitializeVariable(PCVariable * V);
+            void InitializeAllFields(); 
 
             void operator=(const PCVariable& V);
 
