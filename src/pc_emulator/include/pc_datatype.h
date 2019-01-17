@@ -5,6 +5,7 @@
 #include <vector>
 #include <climits>
 #include <cstdlib>
+#include <assert>
 #include <unordered_map>
 
 using namespace std;
@@ -407,7 +408,14 @@ namespace pc_emulator {
         VAR_EXTERNAL,
         VAR_GLOBAL,
         VAR_ACCESS,
+        VAR_EXPLICIT_STORAGE,
         NA
+    };
+
+    enum MEM_TYPE {
+        INPUT_MEM,
+        OUTPUT_MEM,
+        RAM_MEM
     };
 
     class PCDataTypeField {
@@ -418,7 +426,10 @@ namespace pc_emulator {
             DataTypeCategories __FieldTypeCategory;
             s64 __RangeMin, __RangeMax;
             string __InitialValue; 
-            PCDataType * __FieldTypePtr;        
+            PCDataType * __FieldTypePtr;
+            int __StorageMemType;
+            int __StorageByteOffset;
+            int __StorageBitOffset;      
 
         PCDataTypeField(string FieldName, string FieldTypeName,
                         DataTypeCategories FieldTypeCategory,
@@ -428,7 +439,11 @@ namespace pc_emulator {
             __RangeMin(RangeMin), __RangeMax(RangeMax), 
             __InitialValue(InitialValue), __FieldTypeCategory(FieldTypeCategory),
             __FieldInterfaceType(FieldInterfaceType),
-            __FieldTypePtr(FieldTypePtr) {};
+            __FieldTypePtr(FieldTypePtr), __StorageMemType(-1), 
+            __StorageByteOffset(-1), __StorageBitOffset(-1) {};
+
+        void SetExplicitStorageConstraints(int MemType, int ByteOffset,
+                                            int BitOffset);
     };
 
     class PCDataType {
@@ -453,19 +468,41 @@ namespace pc_emulator {
         void RegisterDataType();
 
         void AddDataTypeField(string FieldName, string FieldTypeName,
-            string InitialValue, s64 RangeMin, s64 RangeMax);
+            string InitialValue, int FieldInterfaceType, 
+            s64 RangeMin, s64 RangeMax);
 
         void AddArrayDataTypeField(string FieldName, string FieldTypeName,
-            int DimensionSize, string InitialValue,
+            int DimensionSize, string InitialValue, int FieldInterfaceType,
             s64 RangeMin, s64 RangeMax);
         
         void AddArrayDataTypeField(string FieldName, string FieldTypeName,
             int DimensionSize1, int DimesionSize2, string InitialValue,
-            s64 RangeMin, s64 RangeMax);
+            int FieldInterfaceType, s64 RangeMin, s64 RangeMax);
 
         void AddDataTypeField(string FieldName, string FieldTypeName,
             DataTypeCategories FieldTypeCategory, string InitialValue,
-            s64 RangeMin, s64 RangeMax);
+            int FieldInterfaceType, s64 RangeMin, s64 RangeMax);
+
+
+        // For adding fields grounded at specified locations
+        void AddDataTypeFieldAT(string FieldName, string FieldTypeName,
+            string InitialValue, s64 RangeMin, s64 RangeMax,
+            int MemType, int ByteOffset, int BitOffset);
+
+        void AddDataTypeFieldAT(string FieldName, string FieldTypeName,
+            DataTypeCategories FieldTypeCategory, string InitialValue,
+            s64 RangeMin, s64 RangeMax, int MemType, int ByteOffset,
+            int BitOffset);
+
+        void AddArrayDataTypeFieldAT(string FieldName, string FieldTypeName,
+            int DimensionSize, string InitialValue, s64 RangeMin, s64 RangeMax,
+            int MemType, int ByteOffset, int BitOffset);
+        
+        void AddArrayDataTypeFieldAT(string FieldName, string FieldTypeName,
+            int DimensionSize1, int DimesionSize2, string InitialValue,
+            s64 RangeMin, s64 RangeMax, int MemType, int ByteOffset,
+            int BitOffset);
+
 
         void SetElementaryDataTypeAttributes(string InitialValue,
                                             s64 RangeMin, s64 RangeMax);

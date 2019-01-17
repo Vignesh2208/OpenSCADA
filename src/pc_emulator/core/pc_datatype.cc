@@ -11,6 +11,19 @@
 using namespace std;
 using namespace pc_emulator;
 
+void PCDataTypeField::SetExplicitStorageConstraints(int MemType,
+                            int ByteOffset, int BitOffset) {
+    assert(MemType == MEM_TYPE::INPUT_MEM ||
+            MemType == MEM_TYPE::OUTPUT_MEM ||
+            MemType == MEM_TYPE::RAM_MEM);
+    assert(ByteOffset > 0 && BitOffset >= 0 && BitOffset < 8);
+    __StorageMemType(MemType);
+    __StorageBitOffset(BitOffset);
+    __StorageByteOffset(ByteOffset);
+    __FieldTypeCategory(FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE);
+
+}
+
 void PCDataType::AddDataTypeField(string FieldName, string FieldTypeName,
             string InitialValue, int FieldInterfaceType, s64 RangeMin,
             s64 RangeMax) {
@@ -23,6 +36,24 @@ void PCDataType::AddDataTypeField(string FieldName, string FieldTypeName,
     AddDataTypeField(FieldName, FieldTypeName,
                     DataType->__DataTypeCategory, InitialValue,
                     FieldInterfaceType, RangeMin, RangeMax);
+}
+
+
+void PCDataType::AddDataTypeFieldAT(string FieldName, string FieldTypeName,
+            string InitialValue, s64 RangeMin,
+            s64 RangeMax, int MemType, int ByteOffset, int BitOffset) {
+    PCDataType * DataType = LookupDataType(FieldTypeName);
+    if (DataType == nullptr) {
+        __configuration->PCLogger->RaiseException(
+            "Field Type Name " + FieldTypeName + " is not found !");
+    }
+
+    // At fields can be added only to a PoU data type
+    assert(__DataTypeCategory == DataTypeCategories::PoU);
+
+    AddDataTypeFieldAT(FieldName, FieldTypeName,
+                    DataType->__DataTypeCategory, InitialValue,
+                    RangeMin, RangeMax ,MemType, ByteOffset, BitOffset);
 }
 
 void PCDataType:::AddDataTypeField(string FieldName, string FieldTypeName,
@@ -84,6 +115,67 @@ void PCDataType:::AddDataTypeField(string FieldName, string FieldTypeName,
     
 }
 
+void AddDataTypeFieldAT(string FieldName, string FieldTypeName,
+            DataTypeCategories FieldTypeCategory, string InitialValue,
+            s64 RangeMin, s64 RangeMax, int MemType, int ByteOffset,
+            int BitOffset) {
+
+    assert(__DataTypeCategory == DataTypeCategories::PoU);
+    PCDataType * DataType = LookupDataType(FieldTypeName);
+    if (DataType == nullptr) {
+        __configuration->PCLogger->RaiseException(
+            "Field Type Name " + FieldTypeName + " is not found !");
+    }
+    if (DataType->__DataTypeCategory == DataTypeCategories::POU 
+            || DataType->__DataTypeCategory == DataTypeCategories::DERIVED) {
+        if (!InitialValue.empty()) {
+            __configuration->PCLogger->RaiseException("Initial Values cannot "
+                "be specified for complex data types");
+        }
+    } 
+    
+    if(__DataTypeCategory == DataTypeCategories::ARRAY) {
+        __configuration->PCLogger->RaiseException("New fields cannot be "
+            "added to a data type of ARRAY category");
+    }
+
+    if (DataType->__DataTypeCategory == DataTypeCategories::ARRAY) {
+        switch(DataType->__DimensionSizes.length()) {
+            case 1 : AddArrayDataTypeFieldAT(FieldName, DataType->__DataTypeName,
+                        DataType->__DimensionSizes[0], InitialValue, RangeMin,
+                        RangeMax, MemType, ByteOffset, BitOffset);
+                    break;
+            case 2 : AddArrayDataTypeFieldAT(FieldName, DataType->__DataTypeName,
+                        DataType->__DimensionSizes[0], 
+                        DataType->__DimensionSizes[1], InitialValue, RangeMin,
+                        RangeMax, MemType, ByteOffset, BitOffset);
+                    break;
+            default:  __configuration->PCLogger->RaiseException(
+                        "Dimensions cannot exceed 2 "); 
+        }
+        return;
+    }
+
+    PCDataTypeField NewField(FieldName, FieldTypeName,
+                            FieldTypeCategory, RangeMin, RangeMax,
+                            InitialValue,
+                            FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE,
+                            DataType);
+
+    if (DataType->__DataTypeCategory == DataTypeCategories::BOOL)
+        NewField.SetExplicitStorageConstraints(MemType, ByteOffset, BitOffset);
+    else
+        NewField.SetExplicitStorageConstraints(MemType, ByteOffset, 0);
+
+    __FieldsByInterfaceType[FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE]
+            .push_back(NewField);    
+    
+    // this is a pointer
+    __SizeInBits += sizeof (PCDataType *);
+    __NFields ++;
+
+}
+
 void PCDataType:::AddArrayDataTypeField(string FieldName, string FieldTypeName,
             int DimensionSize, string InitialValue,
             int FieldInterfaceType, s64 RangeMin, s64 RangeMax) {
@@ -128,6 +220,71 @@ void PCDataType:::AddArrayDataTypeField(string FieldName, string FieldTypeName,
         } else {
             __SizeInBits += DataType->__SizeInBits;
         }
+        __NFields ++;
+    }
+
+    
+    
+    
+}
+
+
+void PCDataType:::AddArrayDataTypeFieldAT(string FieldName, string FieldTypeName,
+            int DimensionSize, string InitialValue, s64 RangeMin,
+            s64 RangeMax, int MemType, int ByteOffset, int BitOffset) {
+
+    PCDataType * DataType = LookupDataType(FieldTypeName);
+    if (DataType == nullptr) {
+        __configuration->PCLogger->RaiseException(
+            "Field Type Name " + FieldTypeName + " is not found !");
+    }
+
+    if (DataType->__DataTypeCategory == DataTypeCategories::POU 
+            || DataType->__DataTypeCategory == DataTypeCategories::DERIVED) {
+        if (!InitialValue.empty()) {
+            __configuration->PCLogger->RaiseException("Initial Values cannot "
+                "be specified for complex data types");
+        }
+    }
+
+    if(__DataTypeCategory == DataTypeCategories::ARRAY) {
+        __configuration->PCLogger->RaiseException("New fields cannot be "
+            "added to a data type of ARRAY category");
+    }
+
+    assert(__DataTypeCategory == DataTypeCategories::PoU);
+
+    std::vector<std::string> InitialValues;
+    boost::split(InitalValues, InitialValue,
+                boost::is_any_of(",{}"), boost::token_compress_on); 
+    if (!InitialValue.empty())
+        assert(InitialValues.length() == DimensionSize);
+    int CurrBitOffset = BitOffset;    
+
+    for(int i = 0; i < DimensionSize; i++) {
+        PCDataTypeField NewField(FieldName + "[" + std::to_string(i+1) + "]",
+                                FieldTypeName, DataType->__DataTypeCategory, 
+                                RangeMin, RangeMax, 
+                                (InitialValue.empty() ? "" : InitialValues[i]),
+                                FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE,
+                                DataType);
+
+        __FieldsByInterfaceType[FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE]
+                    .push_back(NewField);
+
+        
+        if (DataType->__DataTypeCategory == DataTypeCategories::BOOL) {
+            CurrBitOffset ++;
+            NewField.SetExplicitStorageConstraints(MemType,
+                    ByteOffset + CurrBitOffset / 8, CurrBitOffset % 8);
+        } else {
+            NewField.SetExplicitStorageConstraints(MemType,
+                    ByteOffset + i*(DataType->__SizeInBits / 8), 0);
+        }
+        
+    
+        // this is a pointer
+        __SizeInBits += sizeof (PCDataType *);
         __NFields ++;
     }
 
@@ -189,6 +346,69 @@ void PCDataType::AddArrayDataTypeField(string FieldName, string FieldTypeName,
     }
     
 }
+
+void PCDataType::AddArrayDataTypeFieldAT(string FieldName, string FieldTypeName,
+            int DimensionSize1, int DimesionSize2, string InitialValue,
+            s64 RangeMin, s64 RangeMax) {
+
+    PCDataType * DataType = LookupDataType(FieldTypeName);
+    if (DataType == nullptr) {
+        __configuration->PCLogger->RaiseException(
+            "Field Type Name " + FieldTypeName + " is not found !");
+    }
+
+    if (DataType->__DataTypeCategory == DataTypeCategories::POU 
+            || DataType->__DataTypeCategory == DataTypeCategories::DERIVED) {
+        if (!InitialValue.empty()) {
+            __configuration->PCLogger->RaiseException("Initial Values cannot "
+                "be specified for complex data types");
+        }
+    }
+
+    if(__DataTypeCategory == DataTypeCategories::ARRAY) {
+        __configuration->PCLogger->RaiseException("New fields cannot be "
+            "added to a data type of ARRAY category");
+    }
+
+    assert(__DataTypeCategory == DataTypeCategories::PoU);
+    std::vector<std::string> InitialValues;
+    boost::split(InitalValues, InitialValue,
+                boost::is_any_of(",{}"), boost::token_compress_on); 
+    if (!InitialValue.empty())
+        assert(InitialValues.length() == DimensionSize1*DimensionSize2);
+
+    int CurrBitOffset = BitOffset;
+    for(int i = 0; i < DimensionSize1; i++) {
+        for(int j = 0; j < DimensionSize2; j++) {
+            PCDataTypeField NewField(
+                                FieldName + "[" + std::to_string(i+1) + "]"
+                                + "[" + std::to_string(j+1) + "]",
+                                FieldTypeName, DataType->__DataTypeCategory, 
+                                RangeMin, RangeMax
+                                (InitialValue.empty() ? "" 
+                                    : InitialValues[i*DimensionSize2 + j]),
+                                FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE,
+                                DataType);
+            __FieldsByInterfaceType[FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE]
+                        .push_back(NewField);
+            
+            if (DataType->__DataTypeCategory == DataTypeCategories::BOOL) {
+                CurrBitOffset ++;
+                NewField.SetExplicitStorageConstraints(MemType,
+                        ByteOffset + CurrBitOffset / 8, CurrBitOffset % 8);
+            } else {
+                NewField.SetExplicitStorageConstraints(MemType,
+                        ByteOffset + (i*DimensionSize2 + j)*(
+                            DataType->__SizeInBits / 8), 0);
+            }
+            // this is a pointer
+            __SizeInBits += sizeof (PCDataType *);
+            __NFields ++;
+        }
+    }
+    
+}
+
 
 void PCDataType::SetElementaryDataTypeAttributes(string InitialValue,
                                                 s64 RangeMin, s64 RangeMax) {
