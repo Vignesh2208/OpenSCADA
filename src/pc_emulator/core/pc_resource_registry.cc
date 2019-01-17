@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "pc_emulator/include/pc_resource_registry.h"
 #include "pc_emulator/include/pc_logger.h"
 #include "pc_emulator/include/pc_configuration.h"
@@ -6,7 +7,7 @@
 using namespace pc_emulator;
 using namespace std;
 
-void ResourceRegistry::RegisterDataType(string ResourceName,
+void ResourceRegistry::RegisterResource(string ResourceName,
                                         PCResource* Resource) {
     assert (__configuration != nullptr);
     assert (__configuration->PCLogger != nullptr);

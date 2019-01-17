@@ -5,7 +5,7 @@
 #include <vector>
 #include <climits>
 #include <cstdlib>
-#include <assert>
+#include <assert.h>
 #include <unordered_map>
 
 using namespace std;
@@ -370,6 +370,7 @@ namespace pc_emulator {
         unsigned long SizeInBits;
         int FieldInterfaceType;
         PCDataType* FieldDataTypePtr;
+        string NestedFieldName;
     } DataTypeFieldAttributes;
 
     enum DataTypeCategories {
@@ -554,27 +555,6 @@ namespace pc_emulator {
             static bool ValueToTOD(string Value, TODType & TOD);
             static bool ValueToDT(string Value, DateTODDataType & Dt);
             static bool ValueToDate(string Value, DateType& Date);
-
-            static string BoolToValue(bool& BoolValue);
-            static string ByteToValue(int8_t& ByteValue);
-            static string WordToValue(int16_t& WordValue);
-            static string DWordToValue(int32_t& DWordValue);
-            static string LWordToValue(int64_t& LWordValue);
-            static string CharToValue(char& CharValue);
-            static string IntToValue(int16_t& IntValue);
-            static string SintToValue(int8_t& SintValue);
-            static string DintToValue(int32_t& DintValue);
-            static string LintToValue(int64_t& LintValue);
-            static string UintToValue(uint16_t& UintValue);
-            static string UsintToValue(uint8_t& UsintValue);
-            static string UdintToValue(uint32_t& UdintValue);
-            static string UlintToValue(uint64_t& UlintValue);
-            static string RealToValue(float& RealValue);
-            static string LRealToValue(double& LRealValue);
-            static string TimeToValue(TimeType& Time);
-            static string TODToValue(TODType& TOD);
-            static string DTToValue(DateTODDataType& Dt);
-            static string DateToValue(DateType& Date);
 
     };
 }

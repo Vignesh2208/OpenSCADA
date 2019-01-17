@@ -25,7 +25,7 @@ namespace pc_emulator {
             void CopyFromMemUnit(PCMemUnit * From, int FromStartOffset,
                                 int CopySizeBytes, int ToStartOffset);
 
-            void operator=(const PCMemUnit& MemUnit);
+            void operator=(PCMemUnit& MemUnit);
 
     };
 }

@@ -1,8 +1,9 @@
 
-#include <assert>
+#include <assert.h>
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/predicate.hpp>
+#include <boost/lexical_cast.hpp>
 #include <regex>
 
 #include "pc_emulator/include/pc_datatype.h"
@@ -17,10 +18,10 @@ void PCDataTypeField::SetExplicitStorageConstraints(int MemType,
             MemType == MEM_TYPE::OUTPUT_MEM ||
             MemType == MEM_TYPE::RAM_MEM);
     assert(ByteOffset > 0 && BitOffset >= 0 && BitOffset < 8);
-    __StorageMemType(MemType);
-    __StorageBitOffset(BitOffset);
-    __StorageByteOffset(ByteOffset);
-    __FieldTypeCategory(FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE);
+    __StorageMemType = MemType;
+    __StorageBitOffset = BitOffset;
+    __StorageByteOffset = ByteOffset;
+    __FieldInterfaceType = FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE;
 
 }
 
@@ -49,14 +50,14 @@ void PCDataType::AddDataTypeFieldAT(string FieldName, string FieldTypeName,
     }
 
     // At fields can be added only to a PoU data type
-    assert(__DataTypeCategory == DataTypeCategories::PoU);
+    assert(__DataTypeCategory == DataTypeCategories::POU);
 
     AddDataTypeFieldAT(FieldName, FieldTypeName,
                     DataType->__DataTypeCategory, InitialValue,
                     RangeMin, RangeMax ,MemType, ByteOffset, BitOffset);
 }
 
-void PCDataType:::AddDataTypeField(string FieldName, string FieldTypeName,
+void PCDataType::AddDataTypeField(string FieldName, string FieldTypeName,
             DataTypeCategories FieldTypeCategory, string InitialValue,
             int FieldInterfaceType, s64 RangeMin, s64 RangeMax) {
 
@@ -80,7 +81,7 @@ void PCDataType:::AddDataTypeField(string FieldName, string FieldTypeName,
     }
 
     if (DataType->__DataTypeCategory == DataTypeCategories::ARRAY) {
-        switch(DataType->__DimensionSizes.length()) {
+        switch(DataType->__DimensionSizes.size()) {
             case 1 : AddArrayDataTypeField(FieldName, DataType->__DataTypeName,
                         DataType->__DimensionSizes[0], InitialValue,
                         FieldInterfaceType, RangeMin, RangeMax);
@@ -115,12 +116,12 @@ void PCDataType:::AddDataTypeField(string FieldName, string FieldTypeName,
     
 }
 
-void AddDataTypeFieldAT(string FieldName, string FieldTypeName,
+void PCDataType::AddDataTypeFieldAT(string FieldName, string FieldTypeName,
             DataTypeCategories FieldTypeCategory, string InitialValue,
             s64 RangeMin, s64 RangeMax, int MemType, int ByteOffset,
             int BitOffset) {
 
-    assert(__DataTypeCategory == DataTypeCategories::PoU);
+    assert(__DataTypeCategory == DataTypeCategories::POU);
     PCDataType * DataType = LookupDataType(FieldTypeName);
     if (DataType == nullptr) {
         __configuration->PCLogger->RaiseException(
@@ -140,7 +141,7 @@ void AddDataTypeFieldAT(string FieldName, string FieldTypeName,
     }
 
     if (DataType->__DataTypeCategory == DataTypeCategories::ARRAY) {
-        switch(DataType->__DimensionSizes.length()) {
+        switch(DataType->__DimensionSizes.size()) {
             case 1 : AddArrayDataTypeFieldAT(FieldName, DataType->__DataTypeName,
                         DataType->__DimensionSizes[0], InitialValue, RangeMin,
                         RangeMax, MemType, ByteOffset, BitOffset);
@@ -176,7 +177,7 @@ void AddDataTypeFieldAT(string FieldName, string FieldTypeName,
 
 }
 
-void PCDataType:::AddArrayDataTypeField(string FieldName, string FieldTypeName,
+void PCDataType::AddArrayDataTypeField(string FieldName, string FieldTypeName,
             int DimensionSize, string InitialValue,
             int FieldInterfaceType, s64 RangeMin, s64 RangeMax) {
 
@@ -200,10 +201,10 @@ void PCDataType:::AddArrayDataTypeField(string FieldName, string FieldTypeName,
     }
 
     std::vector<std::string> InitialValues;
-    boost::split(InitalValues, InitialValue,
+    boost::split(InitialValues, InitialValue,
                 boost::is_any_of(",{}"), boost::token_compress_on); 
     if (!InitialValue.empty())
-        assert(InitialValues.length() == DimensionSize);
+        assert(InitialValues.size() == DimensionSize);
 
     for(int i = 0; i < DimensionSize; i++) {
         PCDataTypeField NewField(FieldName + "[" + std::to_string(i+1) + "]",
@@ -229,7 +230,7 @@ void PCDataType:::AddArrayDataTypeField(string FieldName, string FieldTypeName,
 }
 
 
-void PCDataType:::AddArrayDataTypeFieldAT(string FieldName, string FieldTypeName,
+void PCDataType::AddArrayDataTypeFieldAT(string FieldName, string FieldTypeName,
             int DimensionSize, string InitialValue, s64 RangeMin,
             s64 RangeMax, int MemType, int ByteOffset, int BitOffset) {
 
@@ -252,13 +253,13 @@ void PCDataType:::AddArrayDataTypeFieldAT(string FieldName, string FieldTypeName
             "added to a data type of ARRAY category");
     }
 
-    assert(__DataTypeCategory == DataTypeCategories::PoU);
+    assert(__DataTypeCategory == DataTypeCategories::POU);
 
     std::vector<std::string> InitialValues;
-    boost::split(InitalValues, InitialValue,
+    boost::split(InitialValues, InitialValue,
                 boost::is_any_of(",{}"), boost::token_compress_on); 
     if (!InitialValue.empty())
-        assert(InitialValues.length() == DimensionSize);
+        assert(InitialValues.size() == DimensionSize);
     int CurrBitOffset = BitOffset;    
 
     for(int i = 0; i < DimensionSize; i++) {
@@ -294,7 +295,7 @@ void PCDataType:::AddArrayDataTypeFieldAT(string FieldName, string FieldTypeName
 }
 
 void PCDataType::AddArrayDataTypeField(string FieldName, string FieldTypeName,
-            int DimensionSize1, int DimesionSize2, string InitialValue,
+            int DimensionSize1, int DimensionSize2, string InitialValue,
             int FieldInterfaceType, s64 RangeMin, s64 RangeMax) {
 
     PCDataType * DataType = LookupDataType(FieldTypeName);
@@ -317,10 +318,10 @@ void PCDataType::AddArrayDataTypeField(string FieldName, string FieldTypeName,
     }
 
     std::vector<std::string> InitialValues;
-    boost::split(InitalValues, InitialValue,
+    boost::split(InitialValues, InitialValue,
                 boost::is_any_of(",{}"), boost::token_compress_on); 
     if (!InitialValue.empty())
-        assert(InitialValues.length() == DimensionSize1*DimensionSize2);
+        assert(InitialValues.size() == DimensionSize1*DimensionSize2);
 
     for(int i = 0; i < DimensionSize1; i++) {
         for(int j = 0; j < DimensionSize2; j++) {
@@ -328,7 +329,7 @@ void PCDataType::AddArrayDataTypeField(string FieldName, string FieldTypeName,
                                 FieldName + "[" + std::to_string(i+1) + "]"
                                 + "[" + std::to_string(j+1) + "]",
                                 FieldTypeName, DataType->__DataTypeCategory, 
-                                RangeMin, RangeMax
+                                RangeMin, RangeMax,
                                 (InitialValue.empty() ? "" 
                                     : InitialValues[i*DimensionSize2 + j]),
                                 FieldInterfaceType, DataType);
@@ -348,8 +349,9 @@ void PCDataType::AddArrayDataTypeField(string FieldName, string FieldTypeName,
 }
 
 void PCDataType::AddArrayDataTypeFieldAT(string FieldName, string FieldTypeName,
-            int DimensionSize1, int DimesionSize2, string InitialValue,
-            s64 RangeMin, s64 RangeMax) {
+            int DimensionSize1, int DimensionSize2, string InitialValue,
+            s64 RangeMin, s64 RangeMax, int MemType, int ByteOffset,
+            int BitOffset) {
 
     PCDataType * DataType = LookupDataType(FieldTypeName);
     if (DataType == nullptr) {
@@ -370,12 +372,12 @@ void PCDataType::AddArrayDataTypeFieldAT(string FieldName, string FieldTypeName,
             "added to a data type of ARRAY category");
     }
 
-    assert(__DataTypeCategory == DataTypeCategories::PoU);
+    assert(__DataTypeCategory == DataTypeCategories::POU);
     std::vector<std::string> InitialValues;
-    boost::split(InitalValues, InitialValue,
+    boost::split(InitialValues, InitialValue,
                 boost::is_any_of(",{}"), boost::token_compress_on); 
     if (!InitialValue.empty())
-        assert(InitialValues.length() == DimensionSize1*DimensionSize2);
+        assert(InitialValues.size() == DimensionSize1*DimensionSize2);
 
     int CurrBitOffset = BitOffset;
     for(int i = 0; i < DimensionSize1; i++) {
@@ -384,7 +386,7 @@ void PCDataType::AddArrayDataTypeFieldAT(string FieldName, string FieldTypeName,
                                 FieldName + "[" + std::to_string(i+1) + "]"
                                 + "[" + std::to_string(j+1) + "]",
                                 FieldTypeName, DataType->__DataTypeCategory, 
-                                RangeMin, RangeMax
+                                RangeMin, RangeMax,
                                 (InitialValue.empty() ? "" 
                                     : InitialValues[i*DimensionSize2 + j]),
                                 FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE,
@@ -482,22 +484,22 @@ void PCDataType::SetElementaryDataTypeAttributes(string InitialValue,
                             break;
         case DataTypeCategories::TIME :     
                             __SizeInBits 
-                                = sizeof(pc_emulator::Time)*8, DataTypeName = "TIME";
+                                = sizeof(pc_emulator::TimeType)*8, DataTypeName = "TIME";
                             InitValue = is_empty ? "t#0s" : InitialValue;
                             break;
         case DataTypeCategories::DATE :     
                             __SizeInBits 
-                                = sizeof(pc_emulator::Date)*8, DataTypeName = "DATE";
+                                = sizeof(pc_emulator::DateType)*8, DataTypeName = "DATE";
                             InitValue = is_empty ? "d#0001-01-01" : InitialValue;
                             break;
         case DataTypeCategories::TIME_OF_DAY :     
                             __SizeInBits 
-                                = sizeof(pc_emulator::TOD)*8, DataTypeName = "TOD";
+                                = sizeof(pc_emulator::TODType)*8, DataTypeName = "TOD";
                             InitValue = is_empty ? "tod#00:00:00" : InitialValue;
                             break;
         case DataTypeCategories::DATE_AND_TIME :     
                             __SizeInBits 
-                                = sizeof(pc_emulator::DateTOD)*8, DataTypeName = "DT";
+                                = sizeof(pc_emulator::DateTODType)*8, DataTypeName = "DT";
                             InitValue = is_empty ? "dt#0001-01-01-00:00:00" 
                                             : InitialValue;
                             break;
@@ -507,7 +509,7 @@ void PCDataType::SetElementaryDataTypeAttributes(string InitialValue,
     __NFields = 0; // This will be 0 only for elementary data types
     //AddDataTypeField("@", DataTypeName, DataTypeCategory, InitValue, 
     //                RangeMin, RangeMax);
-    __RangeMax = RangeMax
+    __RangeMax = RangeMax;
     __RangeMin = RangeMin;
     __InitialValue = InitValue;
 
@@ -549,7 +551,7 @@ PCDataType::PCDataType(PCConfiguration* configuration,
 
     if (LookupDataType(AliasName) != nullptr) {
             __configuration->PCLogger->RaiseException("Alias Name " + AliasName
-                    " has already been used !");
+                    + " has already been used !");
     }        
     
 
@@ -576,21 +578,20 @@ PCDataType::PCDataType(PCConfiguration* configuration,
                     for (auto& field: 
                             DataType->__FieldsByInterfaceType[IntfType]) {
                         PCDataType * FieldDataType = LookupDataType(
-                                                        field.FieldTypeName);
+                                                        field.__FieldTypeName);
                         if (!FieldDataType) {
                             __configuration->PCLogger->RaiseException(
                                 "Field DataType Not found for " 
-                                + field.FieldTypeName);
+                                + field.__FieldTypeName);
                         }
-                        __FieldsByInterfaceType[FieldInterfaceType].push_back(
-                            field);
+                        __FieldsByInterfaceType[IntfType].push_back(field);
                         __NFields ++;
 
-                        if (FieldInterfaceType 
+                        if (IntfType 
                                 == FIELD_INTERFACE_TYPES::VAR_IN_OUT || 
-                            FieldInterfaceType 
+                            IntfType 
                                 == FIELD_INTERFACE_TYPES::VAR_EXTERNAL ||
-                            FieldInterfaceType 
+                            IntfType 
                                 == FIELD_INTERFACE_TYPES::VAR_ACCESS ) {
                             __SizeInBits += sizeof (PCDataType *);
                         } else {
@@ -614,7 +615,7 @@ PCDataType::PCDataType(PCConfiguration* configuration,
                 " be not assigned for complex data types!\n");
         }
     }
-    __DimensionSizes.append(1);
+    __DimensionSizes.push_back(1);
 }
 
 
@@ -626,16 +627,17 @@ PCDataType::PCDataType(PCConfiguration* configuration,
     InitialValue:  Initialvalue specified in string format: {val1, val2, ... valn}
 */
 PCDataType::PCDataType(PCConfiguration* configuration, 
-            string AliasName, string DataTypeName, int DimSize, 
-            string InitialValue="") {
+                    string AliasName, string DataTypeName, int DimSize, 
+                    DataTypeCategories Category,
+                    string InitialValue="", s64 RangeMin = LLONG_MIN,
+                    s64 RangeMax = LLONG_MAX) {
 
     __configuration = configuration;
     __DataTypeName = DataTypeName;
     __NFields = 0, __SizeInBits = 0;
     __AliasName = AliasName;
     __InitialValue = InitialValue;
-    __RangeMax = RangeMax;
-    __RangeMin = RangeMin;
+ 
 
     for (int IntfType = FIELD_INTERFACE_TYPES::VAR_INPUT; 
             IntfType != FIELD_INTERFACE_TYPES::NA; IntfType ++) {
@@ -646,7 +648,7 @@ PCDataType::PCDataType(PCConfiguration* configuration,
 
     if (LookupDataType(AliasName) != nullptr) {
             __configuration->PCLogger->RaiseException("Alias Name " + AliasName
-                    " has already been used !");
+                    + " has already been used !");
     }
 
     PCDataType * DataType = LookupDataType(DataTypeName);
@@ -659,22 +661,22 @@ PCDataType::PCDataType(PCConfiguration* configuration,
                 " be specified for arrays of complex types!\n");
     }
 
-    __RangeMax = (DataType->RangeMax < RangeMax) ? DataType->RangeMax :
+    __RangeMax = (DataType->__RangeMax < RangeMax) ? DataType->__RangeMax :
                                                         RangeMax;
 
-    __RangeMin = (DataType->RangeMin > RangeMin) ? DataType->RangeMin :
+    __RangeMin = (DataType->__RangeMin > RangeMin) ? DataType->__RangeMin :
                                                         RangeMin;
 
     
 
     std::vector<std::string> InitialValues;
-    boost::split(InitalValues, InitialValue,
+    boost::split(InitialValues, InitialValue,
                 boost::is_any_of(",{}"), boost::token_compress_on); 
     assert (InitialValues.empty() ||
-            InitialValues.length() == DimSize);                                       
+            InitialValues.size() == DimSize);                                       
 
     for(int i = 0; i < DimSize; i++) {
-        string Init = InitialValues.empty() ? DataType->InitialValue :
+        string Init = InitialValues.empty() ? DataType->__InitialValue :
                             InitialValues[i];
         PCDataTypeField NewField(
                             "[" + std::to_string(i+1) + "]", 
@@ -688,22 +690,23 @@ PCDataType::PCDataType(PCConfiguration* configuration,
         __SizeInBits += DataType->__SizeInBits;
         
     }
-    __DimensionSizes.append(DimSize);
+    __DimensionSizes.push_back(DimSize);
 }
 
 
 PCDataType::PCDataType(PCConfiguration* configuration, 
-            string AliasName, string DataTypeName, int Dim1Size, int Dim2Size, 
-            string InitialValue="", 
-            s64 RangeMin = LLONG_MIN, s64 RangeMax = LLONG_MAX) {
+                    string AliasName, string DataTypeName,
+                    int Dim1Size, int Dim2Size, 
+                    DataTypeCategories Category,
+                    string InitialValue="", 
+                    s64 RangeMin = LLONG_MIN, s64 RangeMax = LLONG_MAX) {
 
     __configuration = configuration;
     __DataTypeName = DataTypeName;
     __NFields = 0, __SizeInBits = 0;
     __AliasName = AliasName;
     __InitialValue = InitialValue;
-    __RangeMax = RangeMax;
-    __RangeMin = RangeMin;
+    
 
     for (int IntfType = FIELD_INTERFACE_TYPES::VAR_INPUT; 
             IntfType != FIELD_INTERFACE_TYPES::NA; IntfType ++) {
@@ -714,7 +717,7 @@ PCDataType::PCDataType(PCConfiguration* configuration,
 
     if (LookupDataType(AliasName) != nullptr) {
             __configuration->PCLogger->RaiseException("Alias Name " + AliasName
-                    " has already been used !");
+                    + " has already been used !");
     }
 
     PCDataType * DataType = LookupDataType(DataTypeName);
@@ -728,20 +731,20 @@ PCDataType::PCDataType(PCConfiguration* configuration,
 
     __DataTypeCategory = DataTypeCategories::ARRAY;
 
-    __RangeMax = (DataType->RangeMax < RangeMax) ? DataType->RangeMax :
+    __RangeMax = (DataType->__RangeMax < RangeMax) ? DataType->__RangeMax :
                                                         RangeMax;
-    __RangeMin = (DataType->RangeMin > RangeMin) ? DataType->RangeMin :
+    __RangeMin = (DataType->__RangeMin > RangeMin) ? DataType->__RangeMin :
                                                         RangeMin;
                                                         
     std::vector<std::string> InitialValues;
-    boost::split(InitalValues, InitialValue,
+    boost::split(InitialValues, InitialValue,
                 boost::is_any_of(",{}"), boost::token_compress_on); 
     assert (InitialValues.empty() ||
-            InitialValues.length() == Dim1Size*Dim2Size);                                       
+            InitialValues.size() == Dim1Size*Dim2Size);                                       
 
     for(int i = 0; i < Dim1Size; i++) {
         for(int j = 0; j < Dim2Size; j++) {
-            string Init = InitialValues.empty() ? DataType->InitialValue :
+            string Init = InitialValues.empty() ? DataType->__InitialValue :
                                 InitialValues[i*Dim2Size + j];
             PCDataTypeField NewField(
                     "[" + std::to_string(i+1) + "][" + std::to_string(j+1) + "]", 
@@ -755,8 +758,8 @@ PCDataType::PCDataType(PCConfiguration* configuration,
             __SizeInBits += DataType->__SizeInBits;
         }
     }
-    __DimensionSizes.append(Dim1Size);
-    __DimensionSizes.append(Dim2Size);
+    __DimensionSizes.push_back(Dim1Size);
+    __DimensionSizes.push_back(Dim2Size);
 }
 
 void PCDataType::RegisterDataType() {
@@ -776,10 +779,12 @@ void PCDataType::GetFieldAttributes(string NestedFieldName,
         FieldAttributes.FieldInterfaceType = FIELD_INTERFACE_TYPES::NA;
         FieldAttributes.SizeInBits = __SizeInBits;
         FieldAttributes.FieldDataTypePtr = this;
+        FieldAttributes.NestedFieldName = "";
         return;
             
     }
 
+    FieldAttributes.NestedFieldName = NestedFieldName;
     PCDataType * DataType = this;
     FieldAttributes.RelativeOffset = 0;
     for (auto& AccessedFieldName : NestedFields) {
@@ -889,7 +894,7 @@ bool DataTypeUtils::ValueToLWord(string Value, int64_t & LWordValue) {
 }
 bool DataTypeUtils::ValueToChar(string Value, char & CharValue){
     if(Value.length() == 0) {
-        CharValue = '';
+        CharValue = '\0';
         return true;
     }
 

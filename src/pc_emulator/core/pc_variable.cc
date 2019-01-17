@@ -29,8 +29,9 @@ PCVariable::PCVariable(PCConfiguration * configuration,
     __ByteOffset = 0;
     __BitOffset = 0;
     __VariableName = VariableName;
-    __MemoryLocation = PCMemUnit::PCMemUnit();
+    //__MemoryLocation = PCMemUnit();
     __MemAllocated = false;
+    __IsDirectlyRepresented = false;
 }
 
 PCVariable::~PCVariable() {
@@ -40,6 +41,11 @@ PCVariable::~PCVariable() {
             ++it )
             delete it->second;
     
+}
+
+void PCVariable::CheckValidity() {
+    if (!__IsDirectlyRepresented)
+        assert(__BitOffset == 0);
 }
 
 void PCVariable::AllocateStorage() {
@@ -61,6 +67,7 @@ void PCVariable::AllocateAndInitialize() {
         this->InitializeAllDirectlyRepresentedFields();
     }
     __MemAllocated = true;
+    CheckValidity();
 }
 
 void PCVariable::OnExecutorStartup() {
@@ -77,6 +84,8 @@ void PCVariable::OnExecutorStartup() {
 PCVariable* PCVariable::GetPCVariableToField(string NestedFieldName) {
     DataTypeFieldAttributes Attributes;
     
+    CheckValidity();
+
     if (NestedFieldName.empty())
         return this;
     __VariableDataType->GetFieldAttributes(NestedFieldName, Attributes);
@@ -94,6 +103,7 @@ PCVariable* PCVariable::GetPCVariableToField(string NestedFieldName) {
 
             PCVariable *VariablePtrToField
                                  = new PCVariable(__configuration,
+                                    __AssociatedResource,
                                     __VariableName + NestedFieldName,
                                     Attributes.FieldDataTypePtr->__DataTypeName);
             VariablePtrToField->__ByteOffset 
@@ -103,13 +113,14 @@ PCVariable* PCVariable::GetPCVariableToField(string NestedFieldName) {
             VariablePtrToField->__MemoryLocation.SetMemUnitLocation(
                                 (PCMemUnit *)&this->__MemoryLocation);
             __AccessedFields.insert(std::make_pair(NestedFieldName,
-                                                    VariableToPtrField));
+                                                    VariablePtrToField));
             return VariablePtrToField;
         }
         
     } else {
         PCVariable * VariablePtrToField;
-        char * PtrToStorageLoc = (char *) this->__MemoryLocation.GetPointerToMemory(
+        char * PtrToStorageLoc 
+            = (char *) this->__MemoryLocation.GetPointerToMemory(
                                 __ByteOffset + (Attributes.RelativeOffset / 8));
         memcpy(&VariablePtrToField, PtrToStorageLoc, sizeof(PCVariable *));
         return VariablePtrToField;
@@ -324,7 +335,7 @@ void PCVariable::InitializeAllNonPtrFields() {
 }
 
 void PCVariable::InitializeAllDirectlyRepresentedFields() {
-    if (__DataTypeCategory == DataTypeCategories::PoU) {
+    if (__VariableDataType->__DataTypeCategory == DataTypeCategories::POU) {
         for(auto& DefinedField: 
                 __VariableDataType->__FieldsByInterfaceType[
                     FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE]) {
@@ -356,8 +367,9 @@ void PCVariable::InitializeAllDirectlyRepresentedFields() {
 
 void PCVariable::SetVarExternalPtr(string FieldName, PCVariable * VarExtPtr) {
 
-    assert(__DataTypeCategory == DataTypeCategories::PoU);
+    assert(__VariableDataType->__DataTypeCategory == DataTypeCategories::POU);
     assert(!FieldName.empty());
+    CheckValidity();
     DataTypeFieldAttributes Attributes;
     __VariableDataType->GetFieldAttributes(FieldName, Attributes);
 
@@ -368,13 +380,14 @@ void PCVariable::SetVarExternalPtr(string FieldName, PCVariable * VarExtPtr) {
 
 }
 void PCVariable::SetVarAccessPtr(string FieldName, PCVariable * VarAccessPtr) {
-    assert(__DataTypeCategory == DataTypeCategories::PoU);
+    assert(__VariableDataType->__DataTypeCategory == DataTypeCategories::POU);
     assert(!FieldName.empty());
+    CheckValidity();
     DataTypeFieldAttributes Attributes;
     __VariableDataType->GetFieldAttributes(FieldName, Attributes);
 
     assert(Attributes.FieldDataTypePtr->__DataTypeName
-            == VarExtPtr->__VariableDataType->__DataTypeName);
+            == VarAccessPtr->__VariableDataType->__DataTypeName);
     assert(Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_ACCESS);
     CopyPCVariableFieldFromPointer(Attributes, VarAccessPtr);
 
@@ -383,13 +396,14 @@ void PCVariable::SetVarAccessPtr(string FieldName, PCVariable * VarAccessPtr) {
 void PCVariable::SetVarExplicitStoragePtr(string FieldName,
                 PCVariable * VarExplicitStoragePtr) {
 
-    assert(__DataTypeCategory == DataTypeCategories::PoU);
+    assert(__VariableDataType->__DataTypeCategory == DataTypeCategories::POU);
     assert(!FieldName.empty());
+    CheckValidity();
     DataTypeFieldAttributes Attributes;
     __VariableDataType->GetFieldAttributes(FieldName, Attributes);
 
     assert(Attributes.FieldDataTypePtr->__DataTypeName
-            == VarExtPtr->__VariableDataType->__DataTypeName);
+            == VarExplicitStoragePtr->__VariableDataType->__DataTypeName);
     assert(Attributes.FieldInterfaceType 
                     == FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE);
     CopyPCVariableFieldFromPointer(Attributes, VarExplicitStoragePtr);
@@ -397,13 +411,15 @@ void PCVariable::SetVarExplicitStoragePtr(string FieldName,
 }
 void PCVariable::SetVarInOutPtr(string FieldName, PCVariable * VarInOutPtr) {
 
-    assert(__DataTypeCategory == DataTypeCategories::PoU);
+    assert(__VariableDataType->__DataTypeCategory 
+                                            == DataTypeCategories::POU);
     assert(!FieldName.empty());
+    CheckValidity();
     DataTypeFieldAttributes Attributes;
     __VariableDataType->GetFieldAttributes(FieldName, Attributes);
 
     assert(Attributes.FieldDataTypePtr->__DataTypeName
-            == VarExtPtr->__VariableDataType->__DataTypeName);
+            == VarInOutPtr->__VariableDataType->__DataTypeName);
     assert(Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_IN_OUT);
     CopyPCVariableFieldFromPointer(Attributes, VarInOutPtr);
 
@@ -412,10 +428,29 @@ void PCVariable::SetVarInOutPtr(string FieldName, PCVariable * VarInOutPtr) {
 void PCVariable::CopyPCVariableFieldFromPointer(string NestedFieldName,
                 PCVariable * From) {
     
+    
     if (NestedFieldName.empty()) {
         //  Copy whole content of From except variable name.
         assert(this->__VariableDataType->__DataTypeName
             == From->__VariableDataType->__DataTypeName);
+
+
+        if (From->__VariableDataType->__DataTypeCategory 
+                                        == DataTypeCategories::BOOL) {
+
+            int8_t temp = From->__MemoryLocation.GetStorageLocation().get()
+                                                        [From->__ByteOffset];
+            if (temp & ((1UL) <<  From->__BitOffset)) {
+                this->__MemoryLocation.GetStorageLocation().get()[
+                    __ByteOffset] |= ((1UL) <<  __BitOffset);
+            }
+            else {
+                this->__MemoryLocation.GetStorageLocation().get()[
+                    __ByteOffset] &= ~((1UL) <<  __BitOffset);
+            }
+            return;
+        }
+
         this->__MemoryLocation.CopyFromMemUnit(&From->__MemoryLocation, 
                 From->__ByteOffset,
                 From->__MemoryLocation.GetMemUnitSize() - From->__ByteOffset,
@@ -436,6 +471,8 @@ void PCVariable::CopyPCVariableFieldFromPointer(
             == From->__VariableDataType->__DataTypeName);
     assert(this->__MemoryLocation.IsInitialized());
 
+    PCVariable * FieldVariable = 
+                    GetPCVariableToField(Attributes.NestedFieldName);
 
     if (Attributes.FieldInterfaceType != FIELD_INTERFACE_TYPES::VAR_IN_OUT
         && Attributes.FieldInterfaceType != FIELD_INTERFACE_TYPES::VAR_EXTERNAL
@@ -444,25 +481,46 @@ void PCVariable::CopyPCVariableFieldFromPointer(
             // The content pointed to by From is copied at the appropriate
             // offset
 
+            
+
+            if (From->__VariableDataType->__DataTypeCategory 
+                                            == DataTypeCategories::BOOL) {
+
+                int8_t temp = From->__MemoryLocation.GetStorageLocation()
+                                                    .get()[From->__ByteOffset];
+                if (temp & ((1UL) <<  From->__BitOffset)) {
+                    FieldVariable->__MemoryLocation.GetStorageLocation().get()[
+                        FieldVariable->__ByteOffset] 
+                                |= ((1UL) <<  FieldVariable->__BitOffset);
+                }
+                else {
+                    FieldVariable->__MemoryLocation.GetStorageLocation().get()[
+                        FieldVariable->__ByteOffset] 
+                                &= ~((1UL) <<  FieldVariable->__BitOffset);
+                }
+                return;
+            }
+        
+
             assert(__ByteOffset + (Attributes.RelativeOffset / 8) 
             + From->__MemoryLocation.GetMemUnitSize() - From->__ByteOffset
              <= this->__MemoryLocation.GetMemUnitSize());
             
-            this->__MemoryLocation.CopyFromMemUnit(&From->__MemoryLocation, 
+            FieldVariable->__MemoryLocation.CopyFromMemUnit(
+                &From->__MemoryLocation, 
                 From->__ByteOffset,
                 From->__MemoryLocation.GetMemUnitSize() - From->__ByteOffset,
-                __ByteOffset + (Attributes.RelativeOffset / 8));
+                FieldVariable->__ByteOffset);
 
 
     } else {
         // The pointer From is itself to be copied at the appropriate offset
 
-        assert(__ByteOffset + (Attributes.RelativeOffset / 8) 
-        + sizeof(PCVariable *) <= this->__MemoryLocation.GetMemUnitSize());
+        assert(FieldVariable->__ByteOffset  + sizeof(PCVariable *) 
+            <= FieldVariable->__MemoryLocation.GetMemUnitSize());
 
         std::memcpy(
-            &this->__MemoryLocation.GetStorageLocation().get()[
-                __ByteOffset + (Attributes.RelativeOffset / 8)],
+            FieldVariable->__MemoryLocation.GetPointerToMemory(FieldVariable->__ByteOffset),
             &From, sizeof(PCVariable *));
     }
 }
@@ -471,6 +529,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
 
     DataTypeFieldAttributes Attributes;
     __VariableDataType->GetFieldAttributes(NestedFieldName, Attributes);
+    CheckValidity();
 
     if (Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_IN_OUT
         || Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_EXTERNAL
@@ -485,16 +544,17 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
         auto PointedVariable  =  GetPCVariableToField(
                     NestedFieldName);
 
-        if (PointedVariable->__DataTypeCategory == DataTypeCategories::BOOL) {
+        if (PointedVariable->__VariableDataType->__DataTypeCategory 
+                                            == DataTypeCategories::BOOL) {
             bool boolValue;
-            int bit_off = PointedVariable.__BitOffset;
+            int bit_off = PointedVariable->__BitOffset;
             if (!DataTypeUtils::ValueToBool(Value, boolValue)){
                 __configuration->PCLogger->RaiseException(
                     "Bool conversion error !");
             }
             if (boolValue) // set bit at bit_offset
                 PointedVariable->__MemoryLocation.GetStorageLocation().get()[
-                    PointedVariable->__ByteOffset] |= (1UL) <<  bit_off;
+                    PointedVariable->__ByteOffset] |= ((1UL) <<  bit_off);
             else // clear bit at bit offset
                 PointedVariable->__MemoryLocation.GetStorageLocation().get()[
                     PointedVariable->__ByteOffset] &= ~((1UL) <<  bit_off);
@@ -505,233 +565,238 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
     }
 
     assert(this->__MemoryLocation.IsInitialized());
+    PCVariable *FieldVariable = 
+                GetPCVariableToField(NestedFieldName);
 
     switch(Attributes.FieldDataTypePtr->__DataTypeCategory) {
         case DataTypeCategories::BOOL :     
-                            bool BoolValue;
-                            int bit_off = __BitOffset;
-                            if (!DataTypeUtils::ValueToBool(Value, BoolValue)){
-                                __configuration->PCLogger->RaiseException(
-                                    "Bool conversion error !");
-                            }
-                            
-                            if (BoolValue) // set bit at bit_offset
-                                __MemoryLocation.GetStorageLocation().get()[
-                                    __ByteOffset + (Attributes.RelativeOffset / 8)] |= (1UL) <<  bit_off;
-                            else // clear bit at bit offset
-                                __MemoryLocation.GetStorageLocation().get()[
-                                    __ByteOffset + (Attributes.RelativeOffset / 8)] &= ~((1UL) <<  bit_off);
-                            break;
+            bool BoolValue;
+            
+            int bit_off = FieldVariable->__BitOffset;
+            if (!DataTypeUtils::ValueToBool(Value, BoolValue)){
+                __configuration->PCLogger->RaiseException(
+                    "Bool conversion error !");
+            }
+            
+            if (BoolValue) // set bit at bit_offset
+                FieldVariable->__MemoryLocation.GetStorageLocation().get()[
+                    FieldVariable->__ByteOffset] |= 
+                                ((1UL) <<  bit_off);
+            else // clear bit at bit offset
+                FieldVariable->__MemoryLocation.GetStorageLocation().get()[
+                    FieldVariable->__ByteOffset] &= 
+                                ~((1UL) <<  bit_off);
+            break;
 
         case DataTypeCategories::BYTE :     
-                            int8_t ByteValue;
-                            if (!DataTypeUtils::ValueToByte(Value, ByteValue)){
-                                __configuration->PCLogger->RaiseException(
-                                    "Byte conversion error !");
-                            }
-                            std::memcpy(
-                            &this->__MemoryLocation.GetStorageLocation().get()[
-                                __ByteOffset + (Attributes.RelativeOffset / 8)],
-                                &ByteValue, sizeof(int8_t));
-                            break;
+            int8_t ByteValue;
+            if (!DataTypeUtils::ValueToByte(Value, ByteValue)){
+                __configuration->PCLogger->RaiseException(
+                    "Byte conversion error !");
+            }
+            std::memcpy(
+                FieldVariable->__MemoryLocation
+                    .GetPointerToMemory(FieldVariable->__ByteOffset),
+                &ByteValue, sizeof(int8_t));
+            break;
         case DataTypeCategories::WORD :     
-                            int16_t WordValue;
-                            if (!DataTypeUtils::ValueToWord(Value, WordValue)){
-                                __configuration->PCLogger->RaiseException(
-                                    "Word conversion error !");
-                            }
-                            std::memcpy(
-                            &this->__MemoryLocation.GetStorageLocation().get()[
-                                __ByteOffset + (Attributes.RelativeOffset / 8)],
-                                &WordValue, sizeof(int16_t));
-                            break;
+            int16_t WordValue;
+            if (!DataTypeUtils::ValueToWord(Value, WordValue)){
+                __configuration->PCLogger->RaiseException(
+                    "Word conversion error !");
+            }
+            std::memcpy(
+                FieldVariable->__MemoryLocation
+                    .GetPointerToMemory(FieldVariable->__ByteOffset),
+                &WordValue, sizeof(int16_t));
+            break;
         case DataTypeCategories::DWORD :     
-                            int32_t DWordValue;
-                            if (!DataTypeUtils::ValueToDWord(Value, DWordValue)){
-                                __configuration->PCLogger->RaiseException(
-                                    "DWord conversion error !");
-                            }
-                            std::memcpy(
-                            &this->__MemoryLocation.GetStorageLocation().get()[
-                                __ByteOffset + (Attributes.RelativeOffset / 8)],
-                                &DWordValue, sizeof(int32_t));
-                            break;
+            int32_t DWordValue;
+            if (!DataTypeUtils::ValueToDWord(Value, DWordValue)){
+                __configuration->PCLogger->RaiseException(
+                    "DWord conversion error !");
+            }
+            std::memcpy(
+                FieldVariable->__MemoryLocation
+                    .GetPointerToMemory(FieldVariable->__ByteOffset),
+                &DWordValue, sizeof(int32_t));
+            break;
         case DataTypeCategories::LWORD :    
-                            int64_t LWordValue;
-                            if (!DataTypeUtils::ValueToLWord(Value, LWordValue)){
-                                __configuration->PCLogger->RaiseException(
-                                    "LWord conversion error !");
-                            }
-                            std::memcpy(
-                            &this->__MemoryLocation.GetStorageLocation().get()[
-                                __ByteOffset + (Attributes.RelativeOffset / 8)],
-                                &LWordValue, sizeof(int64_t));
-                            break;
+            int64_t LWordValue;
+            if (!DataTypeUtils::ValueToLWord(Value, LWordValue)){
+                __configuration->PCLogger->RaiseException(
+                    "LWord conversion error !");
+            }
+            std::memcpy(
+                FieldVariable->__MemoryLocation
+                    .GetPointerToMemory(FieldVariable->__ByteOffset),
+                &LWordValue, sizeof(int64_t));
+            break;
         case DataTypeCategories::CHAR :    
-                            char CharValue;
-                            if (!DataTypeUtils::ValueToChar(Value, CharValue)){
-                                __configuration->PCLogger->RaiseException(
-                                    "Char conversion error !");
-                            }
-                            std::memcpy(
-                            &this->__MemoryLocation.GetStorageLocation().get()[
-                                __ByteOffset + (Attributes.RelativeOffset / 8)],
-                                &CharValue, sizeof(char));
-                            break;
+            char CharValue;
+            if (!DataTypeUtils::ValueToChar(Value, CharValue)){
+                __configuration->PCLogger->RaiseException(
+                    "Char conversion error !");
+            }
+            std::memcpy(
+                FieldVariable->__MemoryLocation
+                    .GetPointerToMemory(FieldVariable->__ByteOffset),
+                &CharValue, sizeof(char));
+            break;
         case DataTypeCategories::INT :      
-                            int16_t IntValue;
-                            if (!DataTypeUtils::ValueToInt(Value, IntValue)){
-                                __configuration->PCLogger->RaiseException(
-                                    "Int conversion error !");
-                            }
-                            std::memcpy(
-                            &this->__MemoryLocation.GetStorageLocation().get()[
-                                __ByteOffset + (Attributes.RelativeOffset / 8)],
-                                &IntValue, sizeof(int16_t));
-                            break;
+            int16_t IntValue;
+            if (!DataTypeUtils::ValueToInt(Value, IntValue)){
+                __configuration->PCLogger->RaiseException(
+                    "Int conversion error !");
+            }
+            std::memcpy(
+                FieldVariable->__MemoryLocation
+                    .GetPointerToMemory(FieldVariable->__ByteOffset),
+                &IntValue, sizeof(int16_t));
+            break;
         case DataTypeCategories::SINT :     
-                            int8_t SIntValue;
-                            if (!DataTypeUtils::ValueToSint(Value, SIntValue)){
-                                __configuration->PCLogger->RaiseException(
-                                    "SInt conversion error !");
-                            }
-                            std::memcpy(
-                            &this->__MemoryLocation.GetStorageLocation().get()[
-                                __ByteOffset + (Attributes.RelativeOffset / 8)],
-                                &SIntValue, sizeof(int8_t));
-                            break;
+            int8_t SIntValue;
+            if (!DataTypeUtils::ValueToSint(Value, SIntValue)){
+                __configuration->PCLogger->RaiseException(
+                    "SInt conversion error !");
+            }
+            std::memcpy(
+                FieldVariable->__MemoryLocation
+                    .GetPointerToMemory(FieldVariable->__ByteOffset),
+                &SIntValue, sizeof(int8_t));
+            break;
         case DataTypeCategories::DINT :     
-                            int32_t DIntValue;
-                            if (!DataTypeUtils::ValueToDint(Value, DIntValue)){
-                                __configuration->PCLogger->RaiseException(
-                                    "DInt conversion error !");
-                            }
-                            std::memcpy(
-                            &this->__MemoryLocation.GetStorageLocation().get()[
-                                __ByteOffset + (Attributes.RelativeOffset / 8)],
-                                &DIntValue, sizeof(int32_t));
-                            break;
+            int32_t DIntValue;
+            if (!DataTypeUtils::ValueToDint(Value, DIntValue)){
+                __configuration->PCLogger->RaiseException(
+                    "DInt conversion error !");
+            }
+            std::memcpy(
+                FieldVariable->__MemoryLocation
+                    .GetPointerToMemory(FieldVariable->__ByteOffset),
+                &DIntValue, sizeof(int32_t));
+            break;
         case DataTypeCategories::LINT :     
-                            int64_t LIntValue;
-                            if (!DataTypeUtils::ValueToLint(Value, LIntValue)){
-                                __configuration->PCLogger->RaiseException(
-                                    "LInt conversion error !");
-                            }
-                            std::memcpy(
-                            &this->__MemoryLocation.GetStorageLocation().get()[
-                                __ByteOffset + (Attributes.RelativeOffset / 8)],
-                                &LIntValue, sizeof(int64_t));
-                            break;
+            int64_t LIntValue;
+            if (!DataTypeUtils::ValueToLint(Value, LIntValue)){
+                __configuration->PCLogger->RaiseException(
+                    "LInt conversion error !");
+            }
+            std::memcpy(
+                FieldVariable->__MemoryLocation
+                    .GetPointerToMemory(FieldVariable->__ByteOffset),
+                &LIntValue, sizeof(int64_t));
+            break;
         case DataTypeCategories::UINT :     
-                            uint16_t UIntValue;
-                            if (!DataTypeUtils::ValueToUint(Value, UIntValue)){
-                                __configuration->PCLogger->RaiseException(
-                                    "UInt conversion error !");
-                            }
-                            std::memcpy(
-                            &this->__MemoryLocation.GetStorageLocation().get()[
-                                __ByteOffset + (Attributes.RelativeOffset / 8)],
-                                &UIntValue, sizeof(uint16_t));
-                            break;
+            uint16_t UIntValue;
+            if (!DataTypeUtils::ValueToUint(Value, UIntValue)){
+                __configuration->PCLogger->RaiseException(
+                    "UInt conversion error !");
+            }
+            std::memcpy(
+                FieldVariable->__MemoryLocation
+                    .GetPointerToMemory(FieldVariable->__ByteOffset),
+                &UIntValue, sizeof(uint16_t));
+            break;
         case DataTypeCategories::USINT :     
-                            uint8_t USIntValue;
-                            if (!DataTypeUtils::ValueToUsint(Value, USIntValue)){
-                                __configuration->PCLogger->RaiseException(
-                                    "USInt conversion error !");
-                            }
-                            std::memcpy(
-                            &this->__MemoryLocation.GetStorageLocation().get()[
-                                __ByteOffset + (Attributes.RelativeOffset / 8)],
-                                &USIntValue, sizeof(uint8_t));
-                            break;
+            uint8_t USIntValue;
+            if (!DataTypeUtils::ValueToUsint(Value, USIntValue)){
+                __configuration->PCLogger->RaiseException(
+                    "USInt conversion error !");
+            }
+            std::memcpy(
+                FieldVariable->__MemoryLocation
+                    .GetPointerToMemory(FieldVariable->__ByteOffset),
+                &USIntValue, sizeof(uint8_t));
+            break;
         case DataTypeCategories::UDINT :     
-                            uint32_t UDIntValue;
-                            if (!DataTypeUtils::ValueToUdint(Value, UDIntValue)){
-                                __configuration->PCLogger->RaiseException(
-                                    "UDInt conversion error !");
-                            }
-                            std::memcpy(
-                            &this->__MemoryLocation.GetStorageLocation().get()[
-                                __ByteOffset + (Attributes.RelativeOffset / 8)],
-                                &UDIntValue, sizeof(uint32_t));
-                            break;
+            uint32_t UDIntValue;
+            if (!DataTypeUtils::ValueToUdint(Value, UDIntValue)){
+                __configuration->PCLogger->RaiseException(
+                    "UDInt conversion error !");
+            }
+            std::memcpy(
+                FieldVariable->__MemoryLocation
+                    .GetPointerToMemory(FieldVariable->__ByteOffset),
+                &UDIntValue, sizeof(uint32_t));
+            break;
         case DataTypeCategories::ULINT :     
-                            uint64_t ULIntValue;
-                            if (!DataTypeUtils::ValueToUlint(Value, ULIntValue)){
-                                __configuration->PCLogger->RaiseException(
-                                    "ULInt conversion error !");
-                            }
-                            std::memcpy(
-                            &this->__MemoryLocation.GetStorageLocation().get()[
-                                __ByteOffset + (Attributes.RelativeOffset / 8)],
-                                &ULIntValue, sizeof(uint64_t));
-                            break;
+            uint64_t ULIntValue;
+            if (!DataTypeUtils::ValueToUlint(Value, ULIntValue)){
+                __configuration->PCLogger->RaiseException(
+                    "ULInt conversion error !");
+            }
+            std::memcpy(
+                FieldVariable->__MemoryLocation
+                    .GetPointerToMemory(FieldVariable->__ByteOffset),
+                &ULIntValue, sizeof(uint64_t));
+            break;
         case DataTypeCategories::REAL :     
-                            float RealValue;
-                            if (!DataTypeUtils::ValueToReal(Value, RealValue)){
-                                __configuration->PCLogger->RaiseException(
-                                    "Real conversion error !");
-                            }
-                            std::memcpy(
-                            &this->__MemoryLocation.GetStorageLocation().get()[
-                                __ByteOffset + (Attributes.RelativeOffset / 8)],
-                                &RealValue, sizeof(float));
-                            break;
+            float RealValue;
+            if (!DataTypeUtils::ValueToReal(Value, RealValue)){
+                __configuration->PCLogger->RaiseException(
+                    "Real conversion error !");
+            }
+            std::memcpy(
+                FieldVariable->__MemoryLocation
+                    .GetPointerToMemory(FieldVariable->__ByteOffset),
+                &RealValue, sizeof(float));
+            break;
         case DataTypeCategories::LREAL :     
-                            double LRealValue;
-                            if (!DataTypeUtils::ValueToLReal(Value, LRealValue)){
-                                __configuration->PCLogger->RaiseException(
-                                    "LReal conversion error !");
-                            }
-                            std::memcpy(
-                            &this->__MemoryLocation.GetStorageLocation().get()[
-                                __ByteOffset + (Attributes.RelativeOffset / 8)],
-                                &LRealValue, sizeof(double));
-                            break;
+            double LRealValue;
+            if (!DataTypeUtils::ValueToLReal(Value, LRealValue)){
+                __configuration->PCLogger->RaiseException(
+                    "LReal conversion error !");
+            }
+            std::memcpy(
+                FieldVariable->__MemoryLocation
+                    .GetPointerToMemory(FieldVariable->__ByteOffset),
+                &LRealValue, sizeof(double));
+            break;
         case DataTypeCategories::TIME :     
-                            TimeType Time;
-                            if (!DataTypeUtils::ValueToTime(Value, Time)){
-                                __configuration->PCLogger->RaiseException(
-                                    "Time conversion error !");
-                            }
-                            std::memcpy(
-                            &this->__MemoryLocation.GetStorageLocation().get()[
-                                __ByteOffset + (Attributes.RelativeOffset / 8)],
-                                &Time, sizeof(TimeType));
-                            break;
+            TimeType Time;
+            if (!DataTypeUtils::ValueToTime(Value, Time)){
+                __configuration->PCLogger->RaiseException(
+                    "Time conversion error !");
+            }
+            std::memcpy(
+                FieldVariable->__MemoryLocation
+                    .GetPointerToMemory(FieldVariable->__ByteOffset),
+                &Time, sizeof(TimeType));
+            break;
         case DataTypeCategories::DATE :     
-                            DateType Date;
-                            if (!DataTypeUtils::ValueToDate(Value, Date)){
-                                __configuration->PCLogger->RaiseException(
-                                    "Date conversion error !");
-                            }
-                            std::memcpy(
-                            &this->__MemoryLocation.GetStorageLocation().get()[
-                                __ByteOffset + (Attributes.RelativeOffset / 8)],
-                                &Date, sizeof(DateType));
-                            break;
+            DateType Date;
+            if (!DataTypeUtils::ValueToDate(Value, Date)){
+                __configuration->PCLogger->RaiseException(
+                    "Date conversion error !");
+            }
+            std::memcpy(
+                FieldVariable->__MemoryLocation
+                    .GetPointerToMemory(FieldVariable->__ByteOffset),
+                &Date, sizeof(DateType));
+            break;
         case DataTypeCategories::TIME_OF_DAY :     
-                            TODType TOD;
-                            if (!DataTypeUtils::ValueToTOD(Value, TOD)){
-                                __configuration->PCLogger->RaiseException(
-                                    "TOD conversion error !");
-                            }
-                            std::memcpy(
-                            &this->__MemoryLocation.GetStorageLocation().get()[
-                                __ByteOffset + (Attributes.RelativeOffset / 8)],
-                                &TOD, sizeof(TOD));
-                            break;
+            TODType TOD;
+            if (!DataTypeUtils::ValueToTOD(Value, TOD)){
+                __configuration->PCLogger->RaiseException(
+                    "TOD conversion error !");
+            }
+            std::memcpy(
+                FieldVariable->__MemoryLocation
+                    .GetPointerToMemory(FieldVariable->__ByteOffset),
+                &TOD, sizeof(TOD));
+            break;
         case DataTypeCategories::DATE_AND_TIME :     
-                            DateTODDataType Dt;
-                            if (!DataTypeUtils::ValueToDT(Value, Dt)){
-                                __configuration->PCLogger->RaiseException(
-                                    "Dt conversion error !");
-                            }
-                            std::memcpy(
-                            &this->__MemoryLocation.GetStorageLocation().get()[
-                                __ByteOffset + (Attributes.RelativeOffset / 8)],
-                                &Dt, sizeof(DateTODDataType));
-                            break;
+            DateTODDataType Dt;
+            if (!DataTypeUtils::ValueToDT(Value, Dt)){
+                __configuration->PCLogger->RaiseException(
+                    "Dt conversion error !");
+            }
+            std::memcpy(
+                FieldVariable->__MemoryLocation
+                    .GetPointerToMemory(FieldVariable->__ByteOffset),
+                &Dt, sizeof(DateTODDataType));
+            break;
         default :           __configuration->PCLogger->RaiseException(
                                 "Only fields pointing to elementary data types"
                                 " can be set with passed string values !");
@@ -741,15 +806,18 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
 void PCVariable::SetPCVariableField(string NestedFieldName, void * Value,
                                     int CopySizeBytes) {
 
-    
+    CheckValidity();
     if (!NestedFieldName.empty()) {
         DataTypeFieldAttributes Attributes;
         __VariableDataType->GetFieldAttributes(NestedFieldName, Attributes);
 
         if (Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_IN_OUT
-            || Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_EXTERNAL
-            || Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_ACCESS
-            || Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE) {
+            || Attributes.FieldInterfaceType 
+                        == FIELD_INTERFACE_TYPES::VAR_EXTERNAL
+            || Attributes.FieldInterfaceType 
+                        == FIELD_INTERFACE_TYPES::VAR_ACCESS
+            || Attributes.FieldInterfaceType 
+                        == FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE) {
                 // it is a pointer, we must get the pointed variable and set it there
                 auto PointedVariable  =  GetPCVariableToField(
                         NestedFieldName);       
@@ -759,16 +827,32 @@ void PCVariable::SetPCVariableField(string NestedFieldName, void * Value,
         } 
 
         assert(this->__MemoryLocation.IsInitialized());
+        PCVariable *FieldVariable = 
+                GetPCVariableToField(NestedFieldName);
+
+        if (FieldVariable->__VariableDataType->__DataTypeCategory 
+                                            == DataTypeCategories::BOOL) {
+            bool BoolValue = *(bool *)Value;
+
+            if (BoolValue) // set bit at appropriate bit and byte offset
+                FieldVariable->__MemoryLocation.GetStorageLocation().get()[
+                    FieldVariable->__ByteOffset] 
+                        |= ((1UL) << FieldVariable->__BitOffset);
+            else
+                FieldVariable->__MemoryLocation.GetStorageLocation().get()[
+                    FieldVariable->__ByteOffset] 
+                        &= ~((1UL) << FieldVariable->__BitOffset);
+        }
 
         std::memcpy(
-            &this->__MemoryLocation.GetStorageLocation().get()[
-                __ByteOffset + (Attributes.RelativeOffset / 8)],
-                Value, CopySizeBytes);
+            this->__MemoryLocation
+                    .GetPointerToMemory(FieldVariable->__ByteOffset),
+            Value, CopySizeBytes);
         return;
 
     }
 
-    std::memcpy(&this->__MemoryLocation.GetStorageLocation().get()[__ByteOffset],
+    std::memcpy(this->__MemoryLocation.GetPointerToMemory(__ByteOffset),
                 Value, CopySizeBytes);
     return;
 }
@@ -776,32 +860,34 @@ void PCVariable::SetPCVariableField(string NestedFieldName, void * Value,
 void PCVariable::GetAndStoreValue(string NestedFieldName,
     void * Value, int CopySize, int DataTypeCategory) {
     assert (Value != nullptr);
-    if (!NestedFieldName.empty()) {
-        auto PointedVariable =  GetPCVariableToField(NestedFieldName);
-        assert(PointedVariable->__VariableDataType->__DataTypeCategory
-            == DataTypeCategory);
     
-        std::memcpy(&Value, 
-                    &PointedVariable->__MemoryLocation
-                        .GetStorageLocation()
-                        .get()[PointedVariable->__ByteOffset],                               
-                    CopySize);    
-    } else {
-        assert(this->__VariableDataType->__DataTypeCategory
-            == DataTypeCategory);
-    
-        std::memcpy(&Value, 
-                    &this->__MemoryLocation
-                        .GetStorageLocation()
-                        .get()[this->__ByteOffset],                               
-                    CopySize); 
+    auto PointedVariable =  GetPCVariableToField(NestedFieldName);
+    assert(PointedVariable->__VariableDataType->__DataTypeCategory
+        == DataTypeCategory);
+
+    if (DataTypeCategory == DataTypeCategories::BOOL) {
+        if (PointedVariable->__MemoryLocation.GetStorageLocation().get()[
+            PointedVariable->__ByteOffset] 
+            & ((1UL) << PointedVariable->__ByteOffset)) {
+            // bit pointed to by pointed variable is set
+            *(bool *) Value = true;
+        } else {
+            *(bool *) Value = false;
+        }
+        return;
     }
+    std::memcpy(&Value, 
+                &PointedVariable->__MemoryLocation
+                    .GetStorageLocation().get()[
+                        PointedVariable->__ByteOffset],                               
+                CopySize);    
 }
 
 template <typename T> T PCVariable::GetFieldValue(string NestedFieldName,
                                             int DataTypeCategory) {
     T Value;
     int CopySize = sizeof(T);
+    CheckValidity();
     GetAndStoreValue(NestedFieldName, &Value, CopySize, DataTypeCategory);
     return Value;
 }
@@ -926,13 +1012,16 @@ template <typename T> bool PCVariable::OperateOnVariables(T var1, T var2,
     return false;
 }
 
-void PCVariable::operator=(const PCVariable& V) {
+void PCVariable::operator=(PCVariable& V) {
     this->__ByteOffset = V.__ByteOffset;
     this->__BitOffset = V.__BitOffset;
     this->__VariableName = V.__VariableName;
     this->__VariableDataType = V.__VariableDataType;
     this->__MemoryLocation = V.__MemoryLocation;
     this->__configuration = V.__configuration;
+    this->__MemAllocated = V.__MemAllocated;
+    this->__IsDirectlyRepresented = V.__IsDirectlyRepresented;
+    this->__AssociatedResource = V.__AssociatedResource;
 }
 
 
@@ -942,7 +1031,7 @@ bool PCVariable::InitiateOperationOnVariables(PCVariable& V, int VarOp) {
     assert(this->__VariableDataType->__DataTypeCategory
         == V.__VariableDataType->__DataTypeCategory);
     int DataTypeCategory = V.__VariableDataType->__DataTypeCategory;
-
+    CheckValidity();
 
     switch(DataTypeCategory) {
         case DataTypeCategories::BOOL :

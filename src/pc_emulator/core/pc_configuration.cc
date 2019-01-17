@@ -11,22 +11,23 @@ using namespace std;
 using namespace pc_emulator;
 
 PCVariable * PCConfiguration::GetVariablePointerToMem(int MemType,
-                            int ByteOffset, string VariableDataTypeName) {
+                int ByteOffset, int BitOffset,string VariableDataTypeName) {
 
     assert(ByteOffset > 0 && BitOffset >= 0 && BitOffset < 8);
     assert(MemType == MEM_TYPE::RAM_MEM);
     string VariableName = __ConfigurationName + std::to_string(MemType)
                             + "." + std::to_string(ByteOffset)
-                            + "." _ std::to_string(BitOffset);
+                            + "." + std::to_string(BitOffset);
     // need to track and delete this variable later on
     PCVariable* V = new PCVariable(this, nullptr, VariableName,
                                 VariableDataTypeName);
     assert(V != nullptr);
 
     
-    V->__MemoryLocation.SetMemUnitLocation(__RAMMemory);
+    V->__MemoryLocation.SetMemUnitLocation(&__RAMMemory);
     V->__ByteOffset = ByteOffset;
     V->__BitOffset = BitOffset;
+    V->__IsDirectlyRepresented = true;
 
     return V;
 }

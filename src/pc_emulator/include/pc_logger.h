@@ -1,6 +1,7 @@
-#include <iostream>
+
 #ifndef __PC_EMULATOR_INCLUDE_PC_LOGGER_H__
 #define __PC_EMULATOR_INCLUDE_PC_LOGGER_H__
+#include <iostream>
 #include <fstream>
 #include <string>
 #include <assert.h>
@@ -24,7 +25,7 @@ namespace pc_emulator {
             std::ofstream __ofs;
 
         public:
-            Logger(PCConfiguration * configuration, std::string & LogFile,
+            Logger(PCConfiguration * configuration, std::string LogFile,
                     int LogLevel) : __configuration(configuration), 
                                     __LogFile(LogFile), __LogLevel(LogLevel) {
 

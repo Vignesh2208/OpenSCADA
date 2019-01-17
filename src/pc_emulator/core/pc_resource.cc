@@ -1,4 +1,4 @@
-#include <assert>
+#include <assert.h>
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/predicate.hpp>
@@ -19,7 +19,7 @@ PCVariable * PCResource::GetVariablePointerToMem(int MemType, int ByteOffset,
     assert(MemType == MEM_TYPE::INPUT_MEM || MemType == MEM_TYPE::OUTPUT_MEM);
     string VariableName = __ResourceName + std::to_string(MemType)
                             + "." + std::to_string(ByteOffset)
-                            + "." _ std::to_string(BitOffset);
+                            + "." + std::to_string(BitOffset);
 
     // need to track and delete this variable later on
     PCVariable* V = new PCVariable(__configuration, this, VariableName,
@@ -27,12 +27,13 @@ PCVariable * PCResource::GetVariablePointerToMem(int MemType, int ByteOffset,
     assert(V != nullptr);
 
     if(MemType == MEM_TYPE::INPUT_MEM)
-        V->__MemoryLocation.SetMemUnitLocation(__InputMemory);
+        V->__MemoryLocation.SetMemUnitLocation(&__InputMemory);
     else 
-        V->__MemoryLocation.SetMemUnitLocation(__OutputMemory);
+        V->__MemoryLocation.SetMemUnitLocation(&__OutputMemory);
 
     V->__ByteOffset = ByteOffset;
     V->__BitOffset = BitOffset;
+    V->__IsDirectlyRepresented = true;
 
     return V;     
 }

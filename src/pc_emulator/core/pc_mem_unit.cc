@@ -1,14 +1,13 @@
 
-#include <assert>
-
+#include <assert.h>
 #include "pc_emulator/include/pc_mem_unit.h"
 
 using namespace std;
 using namespace pc_emulator;
 
-PCMemUnit::AllocateStaticMemory(int MemSize) {
+void PCMemUnit::AllocateStaticMemory(int MemSize) {
 
-    if (!Initialized) {
+    if (!__Initialized) {
         __BaseStorageLocation = std::make_shared<char>(new char[MemSize], 
                     [](char *p) { delete[] p; });
         __MemUnitSizeBytes = MemSize;
@@ -58,7 +57,7 @@ void PCMemUnit::CopyFromMemUnit(PCMemUnit * From, int FromStartOffset,
 
 }
 
-void PCMemUnit::operator=(const PCMemUnit& MemUnit) {
+void PCMemUnit::operator=(PCMemUnit& MemUnit) {
     this->__Initialized = MemUnit.IsInitialized();
     this->__MemUnitSizeBytes = MemUnit.GetMemUnitSize();
     this->__BaseStorageLocation = MemUnit.GetStorageLocation();

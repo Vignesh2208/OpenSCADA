@@ -9,6 +9,8 @@
 using namespace std;
 
 namespace pc_emulator {
+    class PCVariable;
+    
     class PCConfiguration {
         public:
             Logger * PCLogger;
@@ -20,13 +22,15 @@ namespace pc_emulator {
             string __ConfigurationName;
 
             PCConfiguration(string ConfigurationName, string ConfigurationPath) :
-                __ConfigurationPath(ConfigurationPath) {
+                __ConfigurationPath(ConfigurationPath),
+                __ConfigurationName(ConfigurationName),
+                RegisteredDataTypes(this), RegisteredResources(this) {
                     PCLogger = new Logger(this, ExtractLogFile(),
                                         ExtractLogLevel());
                     __RAMmemSize = ExtractRAMSize();
                     assert(__RAMmemSize > 0);
                     __RAMMemory.AllocateStaticMemory(__RAMmemSize);
-                    __ConfigurationName(ConfigurationName);
+
             };
 
             string ExtractLogFile();

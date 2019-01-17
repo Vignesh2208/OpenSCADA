@@ -29,7 +29,7 @@ namespace pc_emulator {
                 __configuration(configuration), __ResourceName(ResourceName),
                 __InputMemSize(InputMemSize), __OutputMemSize(OutputMemSize) {
 
-                    assert(__InputMemSize > 0 && __OutputMemSize > 0)
+                    assert(__InputMemSize > 0 && __OutputMemSize > 0);
                     __InputMemory.AllocateStaticMemory(__InputMemSize);
                     __OutputMemory.AllocateStaticMemory(__OutputMemSize);
 
@@ -37,7 +37,7 @@ namespace pc_emulator {
 
             PCVariable * GetVariablePointerToMem(int MemType, int ByteOffset,
                                 int BitOffset, string VariableDataTypeName);
-    }
+    };
 
 }
 

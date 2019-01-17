@@ -51,6 +51,7 @@ namespace pc_emulator {
             void InitializeVariable(PCVariable * V);
             void InitializeAllNonPtrFields();
             void InitializeAllDirectlyRepresentedFields();
+            void CheckValidity();
 
         public:
             int __ByteOffset;
@@ -62,7 +63,7 @@ namespace pc_emulator {
             PCResource * __AssociatedResource; // if null, associated with all
                                                // resources or entire configuration
             std::unordered_map<std::string,  PCVariable*> __AccessedFields;
-            bool __MemAllocated;
+            bool __MemAllocated, __IsDirectlyRepresented;
 
 
             PCVariable(PCConfiguration * configuration,
@@ -94,7 +95,7 @@ namespace pc_emulator {
                                             int DataTypeCategory);
           
 
-            void operator=(const PCVariable& V);
+            void operator=(PCVariable& V);
             PCVariable& operator+(PCVariable& V );
             PCVariable& operator-(PCVariable& V );
             PCVariable& operator/(PCVariable& V );
