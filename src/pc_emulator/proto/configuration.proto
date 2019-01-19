@@ -1,0 +1,165 @@
+syntax = "proto2";
+
+package pc_specification;
+
+enum DataTypeCategory {
+    BOOL = 0;
+    BYTE = 1;
+    WORD = 2;
+    DWORD = 3;
+    LWORD = 4;
+    CHAR = 5;
+    INT = 6;
+    SINT = 7;
+    DINT = 8;
+    LINT = 9;
+    UINT = 10;
+    USINT = 11;
+    UDINT = 12;
+    ULINT = 13;
+    REAL = 14;
+    LREAL = 15;
+    TIME = 16;
+    DATE = 17;
+    TIME_OF_DAY = 18;
+    DATE_AND_TIME = 19;
+    ARRAY = 20;
+    DERIVED = 21;
+    POU = 22;
+    NOT_ASSIGNED = 23;
+}
+
+enum FieldInterfaceType {
+    VAR_INPUT = 0;
+    VAR_OUTPUT = 1;
+    VAR_IN_OUT = 2;
+    VAR = 3;
+    VAR_TEMP = 4;
+    VAR_EXTERNAL = 5;
+    VAR_GLOBAL = 6;
+    VAR_ACCESS = 7;
+    VAR_EXPLICIT_STORAGE = 8;
+    NA = 9;
+}
+
+enum MemType {
+    INPUT_MEM = 0;
+    OUTPUT_MEM = 1;
+    RAM_MEM = 2;
+}
+
+enum TaskType {
+    INTERVAL = 0;
+    INTERRUPT = 1;
+}
+
+enum LogLevels {
+    LOG_NONE = 0;
+    LOG_INFO = 1;
+    LOG_ERROR = 2;
+    LOG_VERBOSE = 3;
+};
+
+message FieldStorageSpec {
+    optional MemType mem_type = 1;
+    optional int64 byte_offset = 2;
+    optional int32 bit_offset = 3;
+    optional string full_storage_spec = 4;
+}
+
+message DataTypeField {
+    required string field_name = 1;
+    required string field_datatype_name = 2;
+    optional double range_min = 3;
+    optional double range_max = 4;
+    optional string initial_value = 5;
+    optional int32 dimension_1 = 6; // must only be specified if this field is an array
+    optional int32 dimension_2 = 7; // // must only be specified if this field is an 2d-array
+    optional FieldInterfaceType intf_type = 8 [default = NA];
+
+    //May only be specified if parent datatype is a POU category datatype
+    optional FieldStorageSpec field_storage_spec = 9; 
+}
+
+
+
+message DataType {
+    required string name = 1;
+    required DataTypeCategory datatype_category = 2 [default =NOT_ASSIGNED];
+    repeated DataTypeField datatype_field = 3;
+}
+
+message SFBSpecification {
+    required string sfb_name = 1;
+    required int64 exec_time_ns = 2;
+}
+
+message SFCSpecification {
+    required string sfc_name = 1;
+    required int64 exec_time_ns = 2;
+}
+
+message InstructionSpecification {
+    required string ins_name = 1;
+    required int64 exec_time_ns = 2;
+}
+
+message IntervalTaskParams {
+    required int64 interval_ms = 1;
+}
+
+message InterruptTaskParams {
+    required string trigger_variable_field = 1;
+}
+
+message TaskSpecification {
+    required string task_name = 1;
+    required int32 priority = 2;
+    required TaskType type = 3;
+    optional IntervalTaskParams interval_task_params = 4;
+    optional InterruptTaskParams interrupt_task_params = 5;
+}
+
+message ProgramVariableInitialization {
+    required string pou_variable_field_name = 1;
+    required string mapped_variable_field_name = 2; 
+}
+
+message ProgramSpecification {
+    required string program_name = 1;
+    required string pou_variable_type = 2;
+    required string task_name = 3;
+    repeated ProgramVariableInitialization initialization_maps = 4;
+}
+
+message ResourceSpecification {
+    required string resource_name = 1;
+    optional int64 input_mem_size_bytes = 2;
+    optional int64 output_mem_size_bytes = 3;
+    optional DataType resource_global_var = 4;
+    repeated DataType pou_var = 5;
+    repeated TaskSpecification tasks = 6;
+    repeated ProgramSpecification programs = 7;
+    
+}
+message MachineSpecification {
+    required int32 num_cpus = 1;
+    optional int64 ram_mem_size_bytes = 2;
+    repeated InstructionSpecification ins_spec = 3;
+    repeated SFCSpecification sfc_spec = 4;
+    repeated SFBSpecification sfb_spec = 5;
+    repeated ResourceSpecification resource_spec = 6;
+}
+
+
+
+message Specification {
+    optional string config_name = 1;
+    optional LogLevels log_level = 2;
+    optional string log_file_path = 3;
+    optional DataType config_global_pou_var = 4;
+    optional DataType config_access_pou_var = 5;
+    repeated DataType complex_datatypes = 6;
+    required MachineSpecification machine_spec = 7;
+
+}

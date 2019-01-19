@@ -610,10 +610,10 @@ PCDataType::PCDataType(PCConfiguration* configuration,
             __DataTypeCategory != DataTypeCategories::POU) {
                 SetElementaryDataTypeAttributes(InitialValue,
                         RangeMin, RangeMax);
-        } else {
+        } /*else {
             __configuration->PCLogger->RaiseException("Data type category must"
                 " be not assigned for complex data types!\n");
-        }
+        }*/
     }
     __DimensionSizes.push_back(1);
 }
