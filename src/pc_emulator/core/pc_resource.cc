@@ -61,7 +61,7 @@ PCVariable * PCResource::GetVariable(string NestedFieldName) {
                     "__RESOURCE_" + __ResourceName + " _GLOBAL__")->second;
             assert(global_var != nullptr);
             return global_var->GetPCVariableToField(NestedFieldName);
-            
+
         } else {
             PCVariable * Base = got->second;
             assert(Base != nullptr);
@@ -121,7 +121,7 @@ void PCResource::InitializeAllPoUVars() {
                 Utils::InitializeDataType(__configuration, new_var_type,
                                         pou_var);
 
-                if (pou_var.pou_type() == PoUType::PROGRAM) {
+                if (pou_var.pou_type() != PoUType::FC) {
                     PCVariable * new_pou_var = new PCVariable(
                         __configuration,
                         this, pou_var.name(), pou_var.name());

@@ -44,6 +44,9 @@ namespace pc_emulator {
             PCVariable * AccessVariable(string NestedFieldName);
             PCConfiguration(string ConfigurationPath);
             PCVariable * GetVariablePointerToMem(int MemType, int ByteOffset,
+                        int BitOffset, string VariableDataTypeName);
+            PCVariable * GetVariablePointerToResourceMem(string ResourceName,
+                        int MemType, int ByteOffset,
                         int BitOffset, string VariableDataTypeName); 
     };
 }

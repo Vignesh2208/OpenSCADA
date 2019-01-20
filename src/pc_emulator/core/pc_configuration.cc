@@ -252,6 +252,20 @@ PCVariable * PCConfiguration::GetVariablePointerToMem(int MemType,
     return V;
 }
 
+PCVariable * PCConfiguration::GetVariablePointerToResourceMem(
+                        string ResourceName,
+                        int MemType, int ByteOffset,
+                        int BitOffset, string VariableDataTypeName){
+    PCResource * desired_resource = RegisteredResources.GetResource(
+                                        ResourceName);
+    if (!desired_resource)
+        return nullptr;
+    
+    return desired_resource->GetVariablePointerToMem(MemType, ByteOffset,
+                                    BitOffset, VariableDataTypeName);
+
+}
+
 PCVariable * PCConfiguration::GetVariable(string NestedFieldName) {
     assert(!NestedFieldName.empty());
     std::vector<string> results;
