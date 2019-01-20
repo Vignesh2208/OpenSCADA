@@ -401,7 +401,7 @@ void InitDefaultsSpecification() {
 }
 
 ::google::protobuf::Metadata file_level_metadata[14];
-const ::google::protobuf::EnumDescriptor* file_level_enum_descriptors[5];
+const ::google::protobuf::EnumDescriptor* file_level_enum_descriptors[6];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pc_specification::FieldStorageSpec, _has_bits_),
@@ -448,9 +448,11 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pc_specification::DataType, name_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pc_specification::DataType, datatype_category_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pc_specification::DataType, datatype_field_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pc_specification::DataType, pou_type_),
   0,
-  1,
+  2,
   ~0u,
+  1,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pc_specification::SFBSpecification, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pc_specification::SFBSpecification, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -588,18 +590,18 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   { 0, 9, sizeof(::pc_specification::FieldStorageSpec)},
   { 13, 27, sizeof(::pc_specification::DataTypeField)},
-  { 36, 44, sizeof(::pc_specification::DataType)},
-  { 47, 54, sizeof(::pc_specification::SFBSpecification)},
-  { 56, 63, sizeof(::pc_specification::SFCSpecification)},
-  { 65, 72, sizeof(::pc_specification::InstructionSpecification)},
-  { 74, 80, sizeof(::pc_specification::IntervalTaskParams)},
-  { 81, 87, sizeof(::pc_specification::InterruptTaskParams)},
-  { 88, 98, sizeof(::pc_specification::TaskSpecification)},
-  { 103, 110, sizeof(::pc_specification::ProgramVariableInitialization)},
-  { 112, 121, sizeof(::pc_specification::ProgramSpecification)},
-  { 125, 137, sizeof(::pc_specification::ResourceSpecification)},
-  { 144, 155, sizeof(::pc_specification::MachineSpecification)},
-  { 161, 173, sizeof(::pc_specification::Specification)},
+  { 36, 45, sizeof(::pc_specification::DataType)},
+  { 49, 56, sizeof(::pc_specification::SFBSpecification)},
+  { 58, 65, sizeof(::pc_specification::SFCSpecification)},
+  { 67, 74, sizeof(::pc_specification::InstructionSpecification)},
+  { 76, 82, sizeof(::pc_specification::IntervalTaskParams)},
+  { 83, 89, sizeof(::pc_specification::InterruptTaskParams)},
+  { 90, 100, sizeof(::pc_specification::TaskSpecification)},
+  { 105, 112, sizeof(::pc_specification::ProgramVariableInitialization)},
+  { 114, 123, sizeof(::pc_specification::ProgramSpecification)},
+  { 127, 139, sizeof(::pc_specification::ResourceSpecification)},
+  { 146, 157, sizeof(::pc_specification::MachineSpecification)},
+  { 163, 175, sizeof(::pc_specification::Specification)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -652,74 +654,77 @@ void AddDescriptorsImpl() {
       "(\005\022\023\n\013dimension_2\030\007 \001(\005\022;\n\tintf_type\030\010 \001"
       "(\0162$.pc_specification.FieldInterfaceType"
       ":\002NA\022>\n\022field_storage_spec\030\t \001(\0132\".pc_sp"
-      "ecification.FieldStorageSpec\"\236\001\n\010DataTyp"
+      "ecification.FieldStorageSpec\"\313\001\n\010DataTyp"
       "e\022\014\n\004name\030\001 \002(\t\022K\n\021datatype_category\030\002 \002"
       "(\0162\".pc_specification.DataTypeCategory:\014"
       "NOT_ASSIGNED\0227\n\016datatype_field\030\003 \003(\0132\037.p"
-      "c_specification.DataTypeField\":\n\020SFBSpec"
-      "ification\022\020\n\010sfb_name\030\001 \002(\t\022\024\n\014exec_time"
-      "_ns\030\002 \002(\003\":\n\020SFCSpecification\022\020\n\010sfc_nam"
-      "e\030\001 \002(\t\022\024\n\014exec_time_ns\030\002 \002(\003\"B\n\030Instruc"
-      "tionSpecification\022\020\n\010ins_name\030\001 \002(\t\022\024\n\014e"
-      "xec_time_ns\030\002 \002(\003\")\n\022IntervalTaskParams\022"
-      "\023\n\013interval_ms\030\001 \002(\003\"5\n\023InterruptTaskPar"
-      "ams\022\036\n\026trigger_variable_field\030\001 \002(\t\"\354\001\n\021"
-      "TaskSpecification\022\021\n\ttask_name\030\001 \002(\t\022\020\n\010"
-      "priority\030\002 \002(\005\022(\n\004type\030\003 \002(\0162\032.pc_specif"
-      "ication.TaskType\022B\n\024interval_task_params"
-      "\030\004 \001(\0132$.pc_specification.IntervalTaskPa"
-      "rams\022D\n\025interrupt_task_params\030\005 \001(\0132%.pc"
-      "_specification.InterruptTaskParams\"d\n\035Pr"
-      "ogramVariableInitialization\022\037\n\027pou_varia"
-      "ble_field_name\030\001 \002(\t\022\"\n\032mapped_variable_"
-      "field_name\030\002 \002(\t\"\250\001\n\024ProgramSpecificatio"
-      "n\022\024\n\014program_name\030\001 \002(\t\022\031\n\021pou_variable_"
-      "type\030\002 \002(\t\022\021\n\ttask_name\030\003 \002(\t\022L\n\023initial"
-      "ization_maps\030\004 \003(\0132/.pc_specification.Pr"
-      "ogramVariableInitialization\"\277\002\n\025Resource"
-      "Specification\022\025\n\rresource_name\030\001 \002(\t\022\034\n\024"
-      "input_mem_size_bytes\030\002 \001(\003\022\035\n\025output_mem"
-      "_size_bytes\030\003 \001(\003\0227\n\023resource_global_var"
-      "\030\004 \001(\0132\032.pc_specification.DataType\022+\n\007po"
-      "u_var\030\005 \003(\0132\032.pc_specification.DataType\022"
-      "2\n\005tasks\030\006 \003(\0132#.pc_specification.TaskSp"
-      "ecification\0228\n\010programs\030\007 \003(\0132&.pc_speci"
-      "fication.ProgramSpecification\"\256\002\n\024Machin"
-      "eSpecification\022\020\n\010num_cpus\030\001 \002(\005\022\032\n\022ram_"
-      "mem_size_bytes\030\002 \001(\003\022<\n\010ins_spec\030\003 \003(\0132*"
-      ".pc_specification.InstructionSpecificati"
-      "on\0224\n\010sfc_spec\030\004 \003(\0132\".pc_specification."
-      "SFCSpecification\0224\n\010sfb_spec\030\005 \003(\0132\".pc_"
-      "specification.SFBSpecification\022>\n\rresour"
-      "ce_spec\030\006 \003(\0132\'.pc_specification.Resourc"
-      "eSpecification\"\326\002\n\rSpecification\022\023\n\013conf"
-      "ig_name\030\001 \001(\t\022.\n\tlog_level\030\002 \001(\0162\033.pc_sp"
-      "ecification.LogLevels\022\025\n\rlog_file_path\030\003"
-      " \001(\t\0229\n\025config_global_pou_var\030\004 \001(\0132\032.pc"
-      "_specification.DataType\0229\n\025config_access"
-      "_pou_var\030\005 \001(\0132\032.pc_specification.DataTy"
-      "pe\0225\n\021complex_datatypes\030\006 \003(\0132\032.pc_speci"
-      "fication.DataType\022<\n\014machine_spec\030\007 \002(\0132"
-      "&.pc_specification.MachineSpecification*"
-      "\242\002\n\020DataTypeCategory\022\010\n\004BOOL\020\000\022\010\n\004BYTE\020\001"
-      "\022\010\n\004WORD\020\002\022\t\n\005DWORD\020\003\022\t\n\005LWORD\020\004\022\010\n\004CHAR"
-      "\020\005\022\007\n\003INT\020\006\022\010\n\004SINT\020\007\022\010\n\004DINT\020\010\022\010\n\004LINT\020"
-      "\t\022\010\n\004UINT\020\n\022\t\n\005USINT\020\013\022\t\n\005UDINT\020\014\022\t\n\005ULI"
-      "NT\020\r\022\010\n\004REAL\020\016\022\t\n\005LREAL\020\017\022\010\n\004TIME\020\020\022\010\n\004D"
-      "ATE\020\021\022\017\n\013TIME_OF_DAY\020\022\022\021\n\rDATE_AND_TIME\020"
-      "\023\022\t\n\005ARRAY\020\024\022\013\n\007DERIVED\020\025\022\007\n\003POU\020\026\022\020\n\014NO"
-      "T_ASSIGNED\020\027*\256\001\n\022FieldInterfaceType\022\r\n\tV"
-      "AR_INPUT\020\000\022\016\n\nVAR_OUTPUT\020\001\022\016\n\nVAR_IN_OUT"
-      "\020\002\022\007\n\003VAR\020\003\022\014\n\010VAR_TEMP\020\004\022\020\n\014VAR_EXTERNA"
-      "L\020\005\022\016\n\nVAR_GLOBAL\020\006\022\016\n\nVAR_ACCESS\020\007\022\030\n\024V"
-      "AR_EXPLICIT_STORAGE\020\010\022\006\n\002NA\020\t*5\n\007MemType"
-      "\022\r\n\tINPUT_MEM\020\000\022\016\n\nOUTPUT_MEM\020\001\022\013\n\007RAM_M"
-      "EM\020\002*\'\n\010TaskType\022\014\n\010INTERVAL\020\000\022\r\n\tINTERR"
-      "UPT\020\001*G\n\tLogLevels\022\014\n\010LOG_NONE\020\000\022\014\n\010LOG_"
-      "INFO\020\001\022\r\n\tLOG_ERROR\020\002\022\017\n\013LOG_VERBOSE\020\003"
+      "c_specification.DataTypeField\022+\n\010pou_typ"
+      "e\030\004 \001(\0162\031.pc_specification.PoUType\":\n\020SF"
+      "BSpecification\022\020\n\010sfb_name\030\001 \002(\t\022\024\n\014exec"
+      "_time_ns\030\002 \002(\003\":\n\020SFCSpecification\022\020\n\010sf"
+      "c_name\030\001 \002(\t\022\024\n\014exec_time_ns\030\002 \002(\003\"B\n\030In"
+      "structionSpecification\022\020\n\010ins_name\030\001 \002(\t"
+      "\022\024\n\014exec_time_ns\030\002 \002(\003\")\n\022IntervalTaskPa"
+      "rams\022\023\n\013interval_ms\030\001 \002(\003\"5\n\023InterruptTa"
+      "skParams\022\036\n\026trigger_variable_field\030\001 \002(\t"
+      "\"\354\001\n\021TaskSpecification\022\021\n\ttask_name\030\001 \002("
+      "\t\022\020\n\010priority\030\002 \002(\005\022(\n\004type\030\003 \002(\0162\032.pc_s"
+      "pecification.TaskType\022B\n\024interval_task_p"
+      "arams\030\004 \001(\0132$.pc_specification.IntervalT"
+      "askParams\022D\n\025interrupt_task_params\030\005 \001(\013"
+      "2%.pc_specification.InterruptTaskParams\""
+      "d\n\035ProgramVariableInitialization\022\037\n\027pou_"
+      "variable_field_name\030\001 \002(\t\022\"\n\032mapped_vari"
+      "able_field_name\030\002 \002(\t\"\250\001\n\024ProgramSpecifi"
+      "cation\022\024\n\014program_name\030\001 \002(\t\022\031\n\021pou_vari"
+      "able_type\030\002 \002(\t\022\021\n\ttask_name\030\003 \002(\t\022L\n\023in"
+      "itialization_maps\030\004 \003(\0132/.pc_specificati"
+      "on.ProgramVariableInitialization\"\277\002\n\025Res"
+      "ourceSpecification\022\025\n\rresource_name\030\001 \002("
+      "\t\022\034\n\024input_mem_size_bytes\030\002 \001(\003\022\035\n\025outpu"
+      "t_mem_size_bytes\030\003 \001(\003\0227\n\023resource_globa"
+      "l_var\030\004 \001(\0132\032.pc_specification.DataType\022"
+      "+\n\007pou_var\030\005 \003(\0132\032.pc_specification.Data"
+      "Type\0222\n\005tasks\030\006 \003(\0132#.pc_specification.T"
+      "askSpecification\0228\n\010programs\030\007 \003(\0132&.pc_"
+      "specification.ProgramSpecification\"\256\002\n\024M"
+      "achineSpecification\022\020\n\010num_cpus\030\001 \002(\005\022\032\n"
+      "\022ram_mem_size_bytes\030\002 \001(\003\022<\n\010ins_spec\030\003 "
+      "\003(\0132*.pc_specification.InstructionSpecif"
+      "ication\0224\n\010sfc_spec\030\004 \003(\0132\".pc_specifica"
+      "tion.SFCSpecification\0224\n\010sfb_spec\030\005 \003(\0132"
+      "\".pc_specification.SFBSpecification\022>\n\rr"
+      "esource_spec\030\006 \003(\0132\'.pc_specification.Re"
+      "sourceSpecification\"\326\002\n\rSpecification\022\023\n"
+      "\013config_name\030\001 \001(\t\022.\n\tlog_level\030\002 \001(\0162\033."
+      "pc_specification.LogLevels\022\025\n\rlog_file_p"
+      "ath\030\003 \001(\t\0229\n\025config_global_pou_var\030\004 \001(\013"
+      "2\032.pc_specification.DataType\0229\n\025config_a"
+      "ccess_pou_var\030\005 \001(\0132\032.pc_specification.D"
+      "ataType\0225\n\021complex_datatypes\030\006 \003(\0132\032.pc_"
+      "specification.DataType\022<\n\014machine_spec\030\007"
+      " \002(\0132&.pc_specification.MachineSpecifica"
+      "tion*\242\002\n\020DataTypeCategory\022\010\n\004BOOL\020\000\022\010\n\004B"
+      "YTE\020\001\022\010\n\004WORD\020\002\022\t\n\005DWORD\020\003\022\t\n\005LWORD\020\004\022\010\n"
+      "\004CHAR\020\005\022\007\n\003INT\020\006\022\010\n\004SINT\020\007\022\010\n\004DINT\020\010\022\010\n\004"
+      "LINT\020\t\022\010\n\004UINT\020\n\022\t\n\005USINT\020\013\022\t\n\005UDINT\020\014\022\t"
+      "\n\005ULINT\020\r\022\010\n\004REAL\020\016\022\t\n\005LREAL\020\017\022\010\n\004TIME\020\020"
+      "\022\010\n\004DATE\020\021\022\017\n\013TIME_OF_DAY\020\022\022\021\n\rDATE_AND_"
+      "TIME\020\023\022\t\n\005ARRAY\020\024\022\013\n\007DERIVED\020\025\022\007\n\003POU\020\026\022"
+      "\020\n\014NOT_ASSIGNED\020\027*\256\001\n\022FieldInterfaceType"
+      "\022\r\n\tVAR_INPUT\020\000\022\016\n\nVAR_OUTPUT\020\001\022\016\n\nVAR_I"
+      "N_OUT\020\002\022\007\n\003VAR\020\003\022\014\n\010VAR_TEMP\020\004\022\020\n\014VAR_EX"
+      "TERNAL\020\005\022\016\n\nVAR_GLOBAL\020\006\022\016\n\nVAR_ACCESS\020\007"
+      "\022\030\n\024VAR_EXPLICIT_STORAGE\020\010\022\006\n\002NA\020\t*5\n\007Me"
+      "mType\022\r\n\tINPUT_MEM\020\000\022\016\n\nOUTPUT_MEM\020\001\022\013\n\007"
+      "RAM_MEM\020\002*\'\n\010TaskType\022\014\n\010INTERVAL\020\000\022\r\n\tI"
+      "NTERRUPT\020\001*&\n\007PoUType\022\006\n\002FC\020\000\022\006\n\002FB\020\001\022\013\n"
+      "\007PROGRAM\020\002*G\n\tLogLevels\022\014\n\010LOG_NONE\020\000\022\014\n"
+      "\010LOG_INFO\020\001\022\r\n\tLOG_ERROR\020\002\022\017\n\013LOG_VERBOS"
+      "E\020\003"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 3038);
+      descriptor, 3123);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "configuration.proto", &protobuf_RegisterTypes);
 }
@@ -823,9 +828,24 @@ bool TaskType_IsValid(int value) {
   }
 }
 
-const ::google::protobuf::EnumDescriptor* LogLevels_descriptor() {
+const ::google::protobuf::EnumDescriptor* PoUType_descriptor() {
   protobuf_configuration_2eproto::protobuf_AssignDescriptorsOnce();
   return protobuf_configuration_2eproto::file_level_enum_descriptors[4];
+}
+bool PoUType_IsValid(int value) {
+  switch (value) {
+    case 0:
+    case 1:
+    case 2:
+      return true;
+    default:
+      return false;
+  }
+}
+
+const ::google::protobuf::EnumDescriptor* LogLevels_descriptor() {
+  protobuf_configuration_2eproto::protobuf_AssignDescriptorsOnce();
+  return protobuf_configuration_2eproto::file_level_enum_descriptors[5];
 }
 bool LogLevels_IsValid(int value) {
   switch (value) {
@@ -1904,6 +1924,7 @@ void DataType::InitAsDefaultInstance() {
 const int DataType::kNameFieldNumber;
 const int DataType::kDatatypeCategoryFieldNumber;
 const int DataType::kDatatypeFieldFieldNumber;
+const int DataType::kPouTypeFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 DataType::DataType()
@@ -1925,13 +1946,16 @@ DataType::DataType(const DataType& from)
   if (from.has_name()) {
     name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
   }
-  datatype_category_ = from.datatype_category_;
+  ::memcpy(&pou_type_, &from.pou_type_,
+    static_cast<size_t>(reinterpret_cast<char*>(&datatype_category_) -
+    reinterpret_cast<char*>(&pou_type_)) + sizeof(datatype_category_));
   // @@protoc_insertion_point(copy_constructor:pc_specification.DataType)
 }
 
 void DataType::SharedCtor() {
   _cached_size_ = 0;
   name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  pou_type_ = 0;
   datatype_category_ = 23;
 }
 
@@ -1975,11 +1999,12 @@ void DataType::Clear() {
 
   datatype_field_.Clear();
   cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 3u) {
-    if (cached_has_bits & 0x00000001u) {
-      GOOGLE_DCHECK(!name_.IsDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited()));
-      (*name_.UnsafeRawStringPointer())->clear();
-    }
+  if (cached_has_bits & 0x00000001u) {
+    GOOGLE_DCHECK(!name_.IsDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited()));
+    (*name_.UnsafeRawStringPointer())->clear();
+  }
+  if (cached_has_bits & 6u) {
+    pou_type_ = 0;
     datatype_category_ = 23;
   }
   _has_bits_.Clear();
@@ -2043,6 +2068,26 @@ bool DataType::MergePartialFromCodedStream(
         break;
       }
 
+      // optional .pc_specification.PoUType pou_type = 4;
+      case 4: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(32u /* 32 & 0xFF */)) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::pc_specification::PoUType_IsValid(value)) {
+            set_pou_type(static_cast< ::pc_specification::PoUType >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(
+                4, static_cast< ::google::protobuf::uint64>(value));
+          }
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -2081,7 +2126,7 @@ void DataType::SerializeWithCachedSizes(
   }
 
   // required .pc_specification.DataTypeCategory datatype_category = 2 [default = NOT_ASSIGNED];
-  if (cached_has_bits & 0x00000002u) {
+  if (cached_has_bits & 0x00000004u) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
       2, this->datatype_category(), output);
   }
@@ -2091,6 +2136,12 @@ void DataType::SerializeWithCachedSizes(
       n = static_cast<unsigned int>(this->datatype_field_size()); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       3, this->datatype_field(static_cast<int>(i)), output);
+  }
+
+  // optional .pc_specification.PoUType pou_type = 4;
+  if (cached_has_bits & 0x00000002u) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      4, this->pou_type(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -2120,7 +2171,7 @@ void DataType::SerializeWithCachedSizes(
   }
 
   // required .pc_specification.DataTypeCategory datatype_category = 2 [default = NOT_ASSIGNED];
-  if (cached_has_bits & 0x00000002u) {
+  if (cached_has_bits & 0x00000004u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       2, this->datatype_category(), target);
   }
@@ -2131,6 +2182,12 @@ void DataType::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         3, this->datatype_field(static_cast<int>(i)), deterministic, target);
+  }
+
+  // optional .pc_specification.PoUType pou_type = 4;
+  if (cached_has_bits & 0x00000002u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      4, this->pou_type(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -2169,7 +2226,7 @@ size_t DataType::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
-  if (((_has_bits_[0] & 0x00000003) ^ 0x00000003) == 0) {  // All required fields are present.
+  if (((_has_bits_[0] & 0x00000005) ^ 0x00000005) == 0) {  // All required fields are present.
     // required string name = 1;
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::StringSize(
@@ -2191,6 +2248,12 @@ size_t DataType::ByteSizeLong() const {
         ::google::protobuf::internal::WireFormatLite::MessageSize(
           this->datatype_field(static_cast<int>(i)));
     }
+  }
+
+  // optional .pc_specification.PoUType pou_type = 4;
+  if (has_pou_type()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::EnumSize(this->pou_type());
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -2224,12 +2287,15 @@ void DataType::MergeFrom(const DataType& from) {
 
   datatype_field_.MergeFrom(from.datatype_field_);
   cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 3u) {
+  if (cached_has_bits & 7u) {
     if (cached_has_bits & 0x00000001u) {
       set_has_name();
       name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
     }
     if (cached_has_bits & 0x00000002u) {
+      pou_type_ = from.pou_type_;
+    }
+    if (cached_has_bits & 0x00000004u) {
       datatype_category_ = from.datatype_category_;
     }
     _has_bits_[0] |= cached_has_bits;
@@ -2251,7 +2317,7 @@ void DataType::CopyFrom(const DataType& from) {
 }
 
 bool DataType::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
+  if ((_has_bits_[0] & 0x00000005) != 0x00000005) return false;
   if (!::google::protobuf::internal::AllAreInitialized(this->datatype_field())) return false;
   return true;
 }
@@ -2264,6 +2330,7 @@ void DataType::InternalSwap(DataType* other) {
   using std::swap;
   datatype_field_.InternalSwap(&other->datatype_field_);
   name_.Swap(&other->name_);
+  swap(pou_type_, other->pou_type_);
   swap(datatype_category_, other->datatype_category_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);

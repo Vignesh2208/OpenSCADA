@@ -53,6 +53,12 @@ enum TaskType {
     INTERRUPT = 1;
 }
 
+enum PoUType {
+    FC = 0;
+    FB = 1;
+    PROGRAM = 2;
+}
+
 enum LogLevels {
     LOG_NONE = 0;
     LOG_INFO = 1;
@@ -87,6 +93,7 @@ message DataType {
     required string name = 1;
     required DataTypeCategory datatype_category = 2 [default =NOT_ASSIGNED];
     repeated DataTypeField datatype_field = 3;
+    optional PoUType pou_type = 4; // must be set if datatype category is POU
 }
 
 message SFBSpecification {

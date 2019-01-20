@@ -1,11 +1,15 @@
 #include <iostream>
 #include <cstdint>
 #include <cstring>
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/algorithm/string.hpp>
+#include <vector>
 
 #include "pc_emulator/include/pc_variable.h"
 #include "pc_emulator/include/pc_datatype.h"
 #include "pc_emulator/include/pc_configuration.h"
 #include "pc_emulator/include/pc_resource.h"
+#include "pc_emulator/include/utils.h"
 
 using namespace std;
 using namespace pc_emulator;
@@ -58,6 +62,8 @@ PCConfiguration::PCConfiguration(string ConfigurationPath):
         assert(__NumResources > 0);
 
 };
+
+
 
 void PCConfiguration::RegisterAllResources() {
     for (auto& resource_spec : __specification.machine_spec().resource_spec()) {
@@ -164,73 +170,8 @@ void PCConfiguration::RegisterAllComplexDataTypes() {
         RegisteredDataTypes.RegisterDataType("__CONFIG__GLOBAL__", 
                                         global_var_type);
 
-        for (auto& field : 
-                    __specification.config_global_pou_var().datatype_field()) {
-            if (field.intf_type() != FieldInterfaceType::VAR_EXPLICIT_STORAGE) {
-                if (field.has_dimension_1() && !field.has_dimension_2()) {
-                    global_var_type->AddArrayDataTypeField(field.field_name(),
-                            field.field_datatype_name(), field.dimension_1(),
-                            field.initial_value(),
-                            field.intf_type(), field.range_min(),
-                            field.range_max());
-                } else if (field.has_dimension_1() && field.has_dimension_2()) {
-
-                    global_var_type->AddArrayDataTypeField(field.field_name(),
-                            field.field_datatype_name(), field.dimension_1(),
-                            field.dimension_2(),
-                            field.initial_value(),
-                            field.intf_type(), field.range_min(),
-                            field.range_max());
-
-                } else {
-                    global_var_type->AddDataTypeField(field.field_name(),
-                            field.field_datatype_name(), field.initial_value(),
-                            field.intf_type(), field.range_min(),
-                            field.range_max());
-                }
-            }
-            else if (field.intf_type() 
-                        == FieldInterfaceType::VAR_EXPLICIT_STORAGE
-                    && field.has_field_storage_spec()) {
-
-                int mem_type = 0;
-                int ByteOffset = 0;
-                int BitOffset = 0;
-                if (field.field_storage_spec().has_full_storage_spec()) {
-                    //extract memtype, byte and bit offsets from string specification
-                } else {
-                    mem_type = (int)field.field_storage_spec().mem_type();
-                    ByteOffset = field.field_storage_spec().byte_offset();
-                    BitOffset = field.field_storage_spec().bit_offset();
-                }
-
-                if (field.has_dimension_1() && !field.has_dimension_2()) {
-                    global_var_type->AddArrayDataTypeFieldAT(field.field_name(),
-                            field.field_datatype_name(), field.dimension_1(),
-                            field.initial_value(),
-                            field.range_min(),
-                            field.range_max(),
-                            mem_type, ByteOffset, BitOffset);
-                } else if (field.has_dimension_1() && field.has_dimension_2()) {
-
-                    global_var_type->AddArrayDataTypeFieldAT(field.field_name(),
-                            field.field_datatype_name(), field.dimension_1(),
-                            field.dimension_2(),
-                            field.initial_value(),
-                            field.range_min(),
-                            field.range_max(),
-                            mem_type, ByteOffset, BitOffset);
-
-                } else {
-                    global_var_type->AddDataTypeFieldAT(field.field_name(),
-                            field.field_datatype_name(), field.initial_value(),
-                            field.range_min(),
-                            field.range_max(),
-                            mem_type, ByteOffset, BitOffset);
-                }
-
-            }
-        }
+        Utils::InitializeDataType(this, global_var_type,
+             __specification.config_global_pou_var());
 
         __global_pou_var = new PCVariable(this, nullptr,
                                 "__CONFIG_GLOBAL_VAR__", "__CONFIG_GLOBAL__");
@@ -240,6 +181,51 @@ void PCConfiguration::RegisterAllComplexDataTypes() {
     if (!__specification.has_config_access_pou_var())
         __access_pou_var = nullptr;
     else {
+        PCDataType * access_var_type = new PCDataType(this, 
+                    "__CONFIG_ACCESS__", "__CONFIG_ACCESS__",
+                    DataTypeCategories::POU);
+
+        RegisteredDataTypes.RegisterDataType("__CONFIG__ACCESS__", 
+                                        access_var_type);
+
+        Utils::InitializeAccessDataType(this, access_var_type,
+             __specification.config_access_pou_var());
+        __access_pou_var = new PCVariable(this, nullptr,
+                                "__CONFIG_ACCESS_VAR__", "__CONFIG_ACCESS__");
+
+        // now we need to set pointers to some fields of this variable
+
+        for (auto& field : 
+                    __specification.config_access_pou_var().datatype_field()) {
+            if (field.intf_type() == FieldInterfaceType::VAR_ACCESS 
+                    && field.has_field_storage_spec()) {
+
+            
+                if (field.field_storage_spec().has_full_storage_spec()) {
+                    //extract memtype, byte and bit offsets from string specification
+                    int mem_type, ByteOffset, BitOffset;
+                    if (!Utils::ExtractFromAccessStorageSpec(
+                            this,
+                            field.field_storage_spec().full_storage_spec(),
+                            &mem_type, &ByteOffset, &BitOffset)) {
+                        // these are the fields which are selected
+                        string StorageSpec 
+                            = field.field_storage_spec().full_storage_spec();
+
+                        PCVariable * desired_ptr = GetVariable(StorageSpec);
+                        if(!desired_ptr) {
+                            PCLogger->RaiseException("Error in storage spec"
+                                    " of access variable!");
+                        }
+
+                        //set this as a ptr to the field of acess variable
+                        __access_pou_var->SetVarAccessPtr(field.field_name(),
+                                        desired_ptr);
+
+                    }
+                }
+            }
+        }
 
     }
 }
@@ -264,4 +250,41 @@ PCVariable * PCConfiguration::GetVariablePointerToMem(int MemType,
     V->__IsDirectlyRepresented = true;
 
     return V;
+}
+
+PCVariable * PCConfiguration::GetVariable(string NestedFieldName) {
+    assert(!NestedFieldName.empty());
+    std::vector<string> results;
+    boost::split(results, NestedFieldName, [](char c){return c == '.';});
+
+    if  (results.size() == 1) {
+        //no . was found, try the global_variable
+        if (__global_pou_var)
+            return __global_pou_var->GetPCVariableToField(NestedFieldName);
+        return nullptr;
+    } else {
+        // dot was found;
+        PCResource * resource = RegisteredResources.GetResource(results[0]);
+        if (resource == nullptr) {
+            if(__global_pou_var)
+                return __global_pou_var->GetPCVariableToField(NestedFieldName);
+            else
+                return nullptr;
+            
+        } else {
+            
+            string ResourceVariableName = NestedFieldName.substr(
+                    NestedFieldName.find('.') + 1, string::npos);
+            return resource->GetVariable(ResourceVariableName);
+        }
+    } 
+}
+
+PCVariable * PCConfiguration::AccessVariable(string NestedFieldName) {
+
+    if (!__access_pou_var || NestedFieldName.empty())
+        return nullptr;
+    
+    return __access_pou_var->GetPCVariableToField(NestedFieldName);
+    
 }

@@ -36,8 +36,7 @@ PCResource * ResourceRegistry::GetResource(string ResourceName) {
     std::unordered_map<std::string, PCResource*>::const_iterator got = 
                         __Registry.find (ResourceName);
     if (got == __Registry.end()) {
-        LogMsg = "Resource " + ResourceName + " Not Found !";
-        PCLogger->RaiseException(LogMsg);
+        return nullptr;
     } else {
         return got->second;
     }

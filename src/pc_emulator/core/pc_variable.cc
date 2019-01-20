@@ -34,13 +34,15 @@ PCVariable::PCVariable(PCConfiguration * configuration,
     __IsDirectlyRepresented = false;
 }
 
-PCVariable::~PCVariable() {
+void PCVariable::Cleanup() {
 
     // delete all accessed fields
     for ( auto it = __AccessedFields.begin(); it != __AccessedFields.end(); 
-            ++it )
-            delete it->second;
-    
+            ++it ) {
+            PCVariable * __AccessedVariable = it->second;
+            __AccessedVariable->Cleanup();
+            delete __AccessedVariable;
+    }   
 }
 
 void PCVariable::CheckValidity() {

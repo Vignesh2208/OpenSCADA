@@ -23,6 +23,8 @@ namespace pc_emulator {
             void RegisterAllResources();
             void RegisterAllElementaryDataTypes();
             void RegisterAllComplexDataTypes();
+            PCVariable * GetVariable(string NestedFieldName);
+            
 
         public:
             Logger * PCLogger;
@@ -37,6 +39,9 @@ namespace pc_emulator {
             PCVariable * __access_pou_var;
             int __NumResources;
 
+            
+            
+            PCVariable * AccessVariable(string NestedFieldName);
             PCConfiguration(string ConfigurationPath);
             PCVariable * GetVariablePointerToMem(int MemType, int ByteOffset,
                         int BitOffset, string VariableDataTypeName); 

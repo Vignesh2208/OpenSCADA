@@ -241,6 +241,26 @@ inline bool TaskType_Parse(
   return ::google::protobuf::internal::ParseNamedEnum<TaskType>(
     TaskType_descriptor(), name, value);
 }
+enum PoUType {
+  FC = 0,
+  FB = 1,
+  PROGRAM = 2
+};
+bool PoUType_IsValid(int value);
+const PoUType PoUType_MIN = FC;
+const PoUType PoUType_MAX = PROGRAM;
+const int PoUType_ARRAYSIZE = PoUType_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* PoUType_descriptor();
+inline const ::std::string& PoUType_Name(PoUType value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    PoUType_descriptor(), value);
+}
+inline bool PoUType_Parse(
+    const ::std::string& name, PoUType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<PoUType>(
+    PoUType_descriptor(), name, value);
+}
 enum LogLevels {
   LOG_NONE = 0,
   LOG_INFO = 1,
@@ -747,6 +767,13 @@ class DataType : public ::google::protobuf::Message /* @@protoc_insertion_point(
   ::std::string* release_name();
   void set_allocated_name(::std::string* name);
 
+  // optional .pc_specification.PoUType pou_type = 4;
+  bool has_pou_type() const;
+  void clear_pou_type();
+  static const int kPouTypeFieldNumber = 4;
+  ::pc_specification::PoUType pou_type() const;
+  void set_pou_type(::pc_specification::PoUType value);
+
   // required .pc_specification.DataTypeCategory datatype_category = 2 [default = NOT_ASSIGNED];
   bool has_datatype_category() const;
   void clear_datatype_category();
@@ -760,6 +787,8 @@ class DataType : public ::google::protobuf::Message /* @@protoc_insertion_point(
   void clear_has_name();
   void set_has_datatype_category();
   void clear_has_datatype_category();
+  void set_has_pou_type();
+  void clear_has_pou_type();
 
   // helper for ByteSizeLong()
   size_t RequiredFieldsByteSizeFallback() const;
@@ -769,6 +798,7 @@ class DataType : public ::google::protobuf::Message /* @@protoc_insertion_point(
   mutable int _cached_size_;
   ::google::protobuf::RepeatedPtrField< ::pc_specification::DataTypeField > datatype_field_;
   ::google::protobuf::internal::ArenaStringPtr name_;
+  int pou_type_;
   int datatype_category_;
   friend struct ::protobuf_configuration_2eproto::TableStruct;
   friend void ::protobuf_configuration_2eproto::InitDefaultsDataTypeImpl();
@@ -3008,13 +3038,13 @@ inline void DataType::set_allocated_name(::std::string* name) {
 
 // required .pc_specification.DataTypeCategory datatype_category = 2 [default = NOT_ASSIGNED];
 inline bool DataType::has_datatype_category() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
 inline void DataType::set_has_datatype_category() {
-  _has_bits_[0] |= 0x00000002u;
+  _has_bits_[0] |= 0x00000004u;
 }
 inline void DataType::clear_has_datatype_category() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void DataType::clear_datatype_category() {
   datatype_category_ = 23;
@@ -3059,6 +3089,31 @@ inline const ::google::protobuf::RepeatedPtrField< ::pc_specification::DataTypeF
 DataType::datatype_field() const {
   // @@protoc_insertion_point(field_list:pc_specification.DataType.datatype_field)
   return datatype_field_;
+}
+
+// optional .pc_specification.PoUType pou_type = 4;
+inline bool DataType::has_pou_type() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void DataType::set_has_pou_type() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void DataType::clear_has_pou_type() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void DataType::clear_pou_type() {
+  pou_type_ = 0;
+  clear_has_pou_type();
+}
+inline ::pc_specification::PoUType DataType::pou_type() const {
+  // @@protoc_insertion_point(field_get:pc_specification.DataType.pou_type)
+  return static_cast< ::pc_specification::PoUType >(pou_type_);
+}
+inline void DataType::set_pou_type(::pc_specification::PoUType value) {
+  assert(::pc_specification::PoUType_IsValid(value));
+  set_has_pou_type();
+  pou_type_ = value;
+  // @@protoc_insertion_point(field_set:pc_specification.DataType.pou_type)
 }
 
 // -------------------------------------------------------------------
@@ -4840,6 +4895,11 @@ template <> struct is_proto_enum< ::pc_specification::TaskType> : ::google::prot
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::pc_specification::TaskType>() {
   return ::pc_specification::TaskType_descriptor();
+}
+template <> struct is_proto_enum< ::pc_specification::PoUType> : ::google::protobuf::internal::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::pc_specification::PoUType>() {
+  return ::pc_specification::PoUType_descriptor();
 }
 template <> struct is_proto_enum< ::pc_specification::LogLevels> : ::google::protobuf::internal::true_type {};
 template <>

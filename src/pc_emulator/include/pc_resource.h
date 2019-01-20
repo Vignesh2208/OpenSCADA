@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include "pc_variable.h"
 #include "pc_mem_unit.h"
+#include "pc_emulator/proto/configuration.pb.h"
 
 using namespace std;
 
@@ -22,6 +23,9 @@ namespace pc_emulator {
             int __OutputMemSize;
             PCMemUnit __InputMemory;
             PCMemUnit __OutputMemory;
+            std::unordered_map<std::string,  PCVariable*> __ResourcePoUVars;
+            
+            void InitializeAllPoUVars();
 
         public :
             PCResource(PCConfiguration * configuration, 
@@ -35,6 +39,8 @@ namespace pc_emulator {
 
             }
 
+            void RegisterPoUVariable(string VariableName, PCVariable * Var);
+            PCVariable * GetVariable(string NestedFieldName);
             PCVariable * GetVariablePointerToMem(int MemType, int ByteOffset,
                                 int BitOffset, string VariableDataTypeName);
     };

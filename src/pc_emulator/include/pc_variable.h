@@ -70,9 +70,8 @@ namespace pc_emulator {
                     PCResource * AssociatedResource,
                     string VariableName,
                     string VariableDataTypeName);
-            ~PCVariable();
-
-            
+                    
+            void Cleanup();    
             void AllocateAndInitialize();
             void OnExecutorStartup();
             PCVariable* GetPCVariableToField(string NestedFieldName);
