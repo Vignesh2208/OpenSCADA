@@ -414,7 +414,9 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                                  DefinedField.__FieldName);
                             InitializeVariable(FieldVariable);
                         }
-                    }
+                    } // no need to initialize explit storage type subfields here
+                      // because there would be none. The variable V or any of
+                      // its nested fields will not be explicit storage type
                 }
                 return; 
     }
@@ -435,6 +437,9 @@ void PCVariable::InitializeAllNonPtrFields() {
                 
                 PCVariable* FieldVariable 
                     = GetPCVariableToField(DefinedField.__FieldName);
+
+                // Note that no subfield of this can be of explicit storage type
+                // because this field is not explicit storage type.
                 InitializeVariable(FieldVariable);
             }
         } 
@@ -623,35 +628,24 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
     if (Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_IN_OUT
         || Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_EXTERNAL
         || Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_ACCESS) {
-            // it is a pointer, we must get the pointed variable and set it there
-            auto PointedVariable  =  GetPCVariableToField(
-                     NestedFieldName);       
-            PointedVariable->SetPCVariableField("", Value);
-            return;
-    } else if (Attributes.FieldInterfaceType 
-                == FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE) {
-        auto PointedVariable  =  GetPCVariableToField(
-                    NestedFieldName);
 
-        if (PointedVariable->__VariableDataType->__DataTypeCategory 
-                                            == DataTypeCategories::BOOL) {
-            bool boolValue;
-            int bit_off = PointedVariable->__BitOffset;
-            if (!DataTypeUtils::ValueToBool(Value, boolValue)){
-                __configuration->PCLogger->RaiseException(
-                    "Bool conversion error !");
-            }
-            if (boolValue) // set bit at bit_offset
-                PointedVariable->__MemoryLocation.GetStorageLocation().get()[
-                    PointedVariable->__ByteOffset] |= ((1UL) <<  bit_off);
-            else // clear bit at bit offset
-                PointedVariable->__MemoryLocation.GetStorageLocation().get()[
-                    PointedVariable->__ByteOffset] &= ~((1UL) <<  bit_off);
-            return;
-        } else {
-            PointedVariable->SetPCVariableField("", Value);
-        }
+       return; // a string value cannot be set at a field location which is a pointer, use SetPtr instead
     }
+
+    if (Attributes.FieldInterfaceType 
+                == FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE) {
+        auto FieldLocationPtr = GetPCVariableToField(NestedFieldName);
+        // now we must get the pointer value at this field location
+
+        PCVariable * ActualPointerVariable;
+        std::memcpy(&ActualPointerVariable,
+                FieldLocationPtr->__MemoryLocation
+                    .GetPointerToMemory(FieldLocationPtr->__ByteOffset),
+                sizeof(PCVariable *));
+        return ActualPointerVariable->SetPCVariableField("", Value);
+
+    } // this case needs to be handled separately, we must get value of pointer at
+      // field location
 
     assert(this->__MemoryLocation.IsInitialized());
     PCVariable *FieldVariable = 
@@ -911,8 +905,8 @@ void PCVariable::SetPCVariableField(string NestedFieldName, void * Value,
                 // it is a pointer, we must get the pointed variable and set it there
                 auto PointedVariable  =  GetPCVariableToField(
                         NestedFieldName);       
-                PointedVariable->SetPCVariableField("", Value,
-                                sizeof(PCVariable *));
+                PointedVariable->SetPCVariableField("", &Value,
+                                sizeof(PCVariable *)); // Value is set at appropriate offset, not *Value.
                 return;
         } 
 
@@ -951,6 +945,28 @@ void PCVariable::GetAndStoreValue(string NestedFieldName,
     void * Value, int CopySize, int DataTypeCategory) {
     assert (Value != nullptr);
 
+    DataTypeFieldAttributes Attributes;
+    assert(__VariableDataType->IsFieldPresent(NestedFieldName) == true);
+    GetFieldAttributes(NestedFieldName, Attributes);
+
+
+    if (Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_IN_OUT
+        || Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_EXTERNAL
+        || Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_ACCESS
+        || Attributes.FieldInterfaceType 
+                == FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE) {
+        auto FieldLocationPtr = GetPCVariableToField(NestedFieldName);
+        // now we must get the pointer value at this field location
+
+        PCVariable * ActualPointerVariable;
+        std::memcpy(&ActualPointerVariable,
+                FieldLocationPtr->__MemoryLocation
+                    .GetPointerToMemory(FieldLocationPtr->__ByteOffset),
+                sizeof(PCVariable *));
+        return ActualPointerVariable->GetAndStoreValue("", Value, CopySize,
+                                                        DataTypeCategory);
+
+    } 
     
     auto PointedVariable =  GetPCVariableToField(NestedFieldName);
     assert(PointedVariable->__VariableDataType->__DataTypeCategory
@@ -967,7 +983,7 @@ void PCVariable::GetAndStoreValue(string NestedFieldName,
         }
         return;
     }
-    std::memcpy(&Value, 
+    std::memcpy(Value, 
                 &PointedVariable->__MemoryLocation
                     .GetStorageLocation().get()[
                         PointedVariable->__ByteOffset],                               
