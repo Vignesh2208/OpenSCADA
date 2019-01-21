@@ -523,6 +523,28 @@ void PCVariable::SetPtr(string NestedFieldName, PCVariable * ptr) {
     CopyPCVariableFieldFromPointer(Attributes, ptr);
 }
 
+PCVariable * PCVariable::GetPtrStoredAtField(string NestedFieldName) {
+    DataTypeFieldAttributes Attributes;
+    GetFieldAttributes(NestedFieldName, Attributes);
+
+    if(Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_IN_OUT ||
+        Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE ||
+        Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_ACCESS ||
+        Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_EXTERNAL) {
+        PCVariable *StoredPointer;
+        auto FieldVariable = GetPCVariableToField(NestedFieldName);
+        std::memcpy(&StoredPointer, 
+            FieldVariable->__MemoryLocation.GetPointerToMemory(FieldVariable->__ByteOffset),
+            sizeof(PCVariable *));
+        return StoredPointer;
+    }
+
+    return nullptr; // this field location does not store a pointer
+
+    
+
+}
+
 void PCVariable::CopyPCVariableFieldFromPointer(
         DataTypeFieldAttributes& Attributes, PCVariable * From) {
     assert(Attributes.FieldDataTypePtr->__DataTypeName
@@ -967,7 +989,7 @@ void PCVariable::GetAndStoreValue(string NestedFieldName,
                                                         DataTypeCategory);
 
     } 
-    
+
     auto PointedVariable =  GetPCVariableToField(NestedFieldName);
     assert(PointedVariable->__VariableDataType->__DataTypeCategory
         == DataTypeCategory);

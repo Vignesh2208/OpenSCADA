@@ -92,6 +92,8 @@ namespace pc_emulator {
 
             void SetPtr(string NestedFieldName, PCVariable * ptr);
 
+            PCVariable * GetPtrStoredAtField(string NestedFieldName);
+
             
             void SetPCVariableField(string NestedFieldName, string value);
 
