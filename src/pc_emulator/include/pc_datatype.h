@@ -16,6 +16,7 @@ namespace pc_emulator {
     class PCConfiguration;
     class PCDataType;
 
+
     struct DateDataType {
         int Year;
         int Month;
@@ -365,13 +366,7 @@ namespace pc_emulator {
 
     typedef struct TIMEDataType TimeType;
 
-    typedef struct DataTypeFieldAttributesStruct {
-        unsigned long RelativeOffset;
-        unsigned long SizeInBits;
-        int FieldInterfaceType;
-        PCDataType* FieldDataTypePtr;
-        string NestedFieldName;
-    } DataTypeFieldAttributes;
+    
 
     enum DataTypeCategories {
         BOOL,
@@ -448,6 +443,12 @@ namespace pc_emulator {
     };
 
     class PCDataType {
+        private:
+            bool CheckRemFields(std::vector<string>& NestedFields, int StartPos,
+                            PCDataType * Current);
+            void SetElementaryDataTypeAttributes(string InitialValue,
+                                            s64 RangeMin, s64 RangeMax);
+        
         public:
             string __AliasName;
             string __DataTypeName;
@@ -460,8 +461,8 @@ namespace pc_emulator {
             string __InitialValue;
             std::vector<int> __DimensionSizes;
 
-        void GetFieldAttributes(string NestedFieldName, 
-                            DataTypeFieldAttributes& FieldAttributes);
+        bool IsFieldPresent(string NestedFieldName);
+        bool IsNestedFieldOfType(string NestedFieldName, int IntfTypeToCheck);
 
         PCDataType* LookupDataType(string DataTypeName);
 
@@ -505,8 +506,6 @@ namespace pc_emulator {
             int BitOffset);
 
 
-        void SetElementaryDataTypeAttributes(string InitialValue,
-                                            s64 RangeMin, s64 RangeMax);
         
         // Non-Array
         PCDataType(PCConfiguration* configuration, 
@@ -528,6 +527,7 @@ namespace pc_emulator {
                     DataTypeCategories Category,
                     string InitialValue="", 
                     s64 RangeMin = LLONG_MIN, s64 RangeMax = LLONG_MAX);
+        void Cleanup();
     };
 
 

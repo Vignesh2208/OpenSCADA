@@ -1,4 +1,5 @@
 #include "pc_emulator/include/pc_logger.h"
+#include "pc_emulator/include/pc_configuration.h"
 
 using namespace std;
 using namespace pc_emulator;
@@ -32,5 +33,7 @@ void Logger::RaiseException(std::string Message) {
 }
 
 void Logger::ShutDown() {
-
+    LogMessage(LOG_LEVELS::LOG_INFO, "Shutting Down ....");
+    __configuration->Cleanup();
+    exit(0);
 }

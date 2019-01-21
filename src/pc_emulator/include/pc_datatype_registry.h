@@ -20,6 +20,8 @@ namespace pc_emulator {
                     __configuration(configuration) {};
             void RegisterDataType(string DataTypeName, PCDataType* DataType);
             PCDataType * GetDataType(string DataTypeName);
+
+            void Cleanup();
     };
 }
 

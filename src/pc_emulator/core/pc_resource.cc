@@ -37,39 +37,64 @@ PCVariable * PCResource::GetVariable(string NestedFieldName) {
 
     if  (results.size() == 1) {
         //not . was found
-
-        std::unordered_map<std::string, PCVariable*>::const_iterator got = 
-                        __ResourcePoUVars.find(NestedFieldName);
-        if (got == __ResourcePoUVars.end()) {
-            
-            // this may belong to global variable
+        // this may belong to global variable
             PCVariable * global_var = __ResourcePoUVars.find(
-                    "__RESOURCE_" + __ResourceName + " _GLOBAL__")->second;
+                    "__RESOURCE_" + __ResourceName + "_GLOBAL__")->second;
             assert(global_var != nullptr);
-            return global_var->GetPCVariableToField(NestedFieldName);
-        } else {
-            return got->second;
-        }
+            if (global_var->__VariableDataType->IsFieldPresent(NestedFieldName))
+                return global_var->GetPCVariableToField(NestedFieldName);
+            else
+                return nullptr;
     } else {
-        // dot was found;
+        // dot was found; could be of the form resource_pou_var.field_name
         std::unordered_map<std::string, PCVariable*>::const_iterator got = 
                         __ResourcePoUVars.find(results[0]);
         if (got == __ResourcePoUVars.end()) {
             
             // this may belong to global variable
             PCVariable * global_var = __ResourcePoUVars.find(
-                    "__RESOURCE_" + __ResourceName + " _GLOBAL__")->second;
+                    "__RESOURCE_" + __ResourceName + "_GLOBAL__")->second;
             assert(global_var != nullptr);
-            return global_var->GetPCVariableToField(NestedFieldName);
+            if (global_var->__VariableDataType->IsFieldPresent(NestedFieldName))
+                return global_var->GetPCVariableToField(NestedFieldName);
+            else
+                return nullptr;
 
         } else {
             PCVariable * Base = got->second;
             assert(Base != nullptr);
             string Field = NestedFieldName.substr(
                     NestedFieldName.find('.') + 1, string::npos);
-            return Base->GetPCVariableToField(Field);
+            if (Base->__VariableDataType->IsFieldPresent(Field))
+                return Base->GetPCVariableToField(Field);
+            else
+                return nullptr;
         }
     } 
+}
+
+PCVariable * PCResource::GetGlobalVariable(string NestedFieldName) {
+    assert(!NestedFieldName.empty());
+    std::vector<string> results;
+    boost::split(results, NestedFieldName, [](char c){return c == '.';});
+
+    for (auto it = __ResourcePoUVars.begin(); 
+                    it != __ResourcePoUVars.end(); it ++) {
+        PCVariable * var = it->second;
+        if (var->__VariableDataType->IsFieldPresent(NestedFieldName)) {
+            DataTypeFieldAttributes FieldAttributes;
+            var->GetFieldAttributes(NestedFieldName, 
+                                    FieldAttributes);
+            if (FieldAttributes.FieldInterfaceType 
+                == FIELD_INTERFACE_TYPES::VAR_GLOBAL
+                || FieldAttributes.FieldInterfaceType 
+                == FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE) {
+                return var->GetPCVariableToField(NestedFieldName);
+            }
+        }
+    }
+
+    return nullptr;
 }
 
 void PCResource::InitializeAllPoUVars() {
@@ -81,22 +106,22 @@ void PCResource::InitializeAllPoUVars() {
             if (resource_spec.has_resource_global_var()) {
                 PCDataType * global_var_type = new PCDataType(
                     __configuration, 
-                    "__RESOURCE_" + __ResourceName + " _GLOBAL__",
-                    "__RESOURCE_" + __ResourceName + " _GLOBAL__",
+                    "__RESOURCE_" + __ResourceName + "_GLOBAL__",
+                    "__RESOURCE_" + __ResourceName + "_GLOBAL__",
                     DataTypeCategories::POU);
 
                 __configuration->RegisteredDataTypes.RegisterDataType(
-                "__RESOURCE_" + __ResourceName + " _GLOBAL__", global_var_type);
+                "__RESOURCE_" + __ResourceName + "_GLOBAL__", global_var_type);
 
                 Utils::InitializeDataType(__configuration, global_var_type,
                         resource_spec.resource_global_var());
                 
                 PCVariable * __global_pou_var = new PCVariable(__configuration,
-                        this, "__RESOURCE_" + __ResourceName + " _GLOBAL_VAR__",
-                        "__RESOURCE_" + __ResourceName + " _GLOBAL__");
+                        this, "__RESOURCE_" + __ResourceName + "_GLOBAL_VAR__",
+                        "__RESOURCE_" + __ResourceName + "_GLOBAL__");
 
                 RegisterPoUVariable(
-                    "__RESOURCE_" + __ResourceName + " _GLOBAL_VAR__",
+                    "__RESOURCE_" + __ResourceName + "_GLOBAL_VAR__",
                     __global_pou_var);
 
             }
@@ -125,9 +150,22 @@ void PCResource::InitializeAllPoUVars() {
                     PCVariable * new_pou_var = new PCVariable(
                         __configuration,
                         this, pou_var.name(), pou_var.name());
+                    
 
                     RegisterPoUVariable(pou_var.name(), new_pou_var);
                 }
+            }
+
+            for(auto it = __ResourcePoUVars.begin();
+                    it != __ResourcePoUVars.end(); it ++) {
+                PCVariable * pou_var = it->second;
+                pou_var->AllocateAndInitialize();
+            }
+
+            for(auto it = __ResourcePoUVars.begin();
+                    it != __ResourcePoUVars.end(); it ++) {
+                PCVariable * pou_var = it->second;
+                pou_var->ResolveAllExternalFields();
             }
 
             break;
@@ -146,18 +184,42 @@ PCVariable * PCResource::GetVariablePointerToMem(int MemType, int ByteOffset,
                             + "." + std::to_string(BitOffset);
 
     // need to track and delete this variable later on
-    PCVariable* V = new PCVariable(__configuration, this, VariableName,
-                                VariableDataTypeName);
-    assert(V != nullptr);
+    auto got = __AccessedFields.find(VariableName);
 
-    if(MemType == MEM_TYPE::INPUT_MEM)
-        V->__MemoryLocation.SetMemUnitLocation(&__InputMemory);
-    else 
-        V->__MemoryLocation.SetMemUnitLocation(&__OutputMemory);
+    if(got == __AccessedFields.end()) {
+        PCVariable* V = new PCVariable(__configuration, this, VariableName,
+                                    VariableDataTypeName);
+        assert(V != nullptr);
 
-    V->__ByteOffset = ByteOffset;
-    V->__BitOffset = BitOffset;
-    V->__IsDirectlyRepresented = true;
+        if(MemType == MEM_TYPE::INPUT_MEM)
+            V->__MemoryLocation.SetMemUnitLocation(&__InputMemory);
+        else 
+            V->__MemoryLocation.SetMemUnitLocation(&__OutputMemory);
 
-    return V;     
+        V->__ByteOffset = ByteOffset;
+        V->__BitOffset = BitOffset;
+        V->__IsDirectlyRepresented = true;
+        V->__MemAllocated = true;
+        V->AllocateAndInitialize();
+        __AccessedFields.insert(std::make_pair(VariableName, V));
+    } else {
+        return got->second;
+    }
+   
+}
+
+void PCResource::Cleanup() {
+    for ( auto it = __AccessedFields.begin(); it != __AccessedFields.end(); 
+            ++it ) {
+            PCVariable * __AccessedVariable = it->second;
+            __AccessedVariable->Cleanup();
+            delete __AccessedVariable;
+    }
+
+    for ( auto it = __ResourcePoUVars.begin(); it != __ResourcePoUVars.end(); 
+            ++it ) {
+            PCVariable * __AccessedVariable = it->second;
+            __AccessedVariable->Cleanup();
+            delete __AccessedVariable;
+    }
 }

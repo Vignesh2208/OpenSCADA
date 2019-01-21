@@ -41,3 +41,12 @@ PCResource * ResourceRegistry::GetResource(string ResourceName) {
         return got->second;
     }
 }
+
+void ResourceRegistry::Cleanup() {
+    for ( auto it = __Registry.begin(); it != __Registry.end(); 
+            ++it ) {
+            PCResource * __AccessedResource = it->second;
+            __AccessedResource->Cleanup();
+            delete __AccessedResource;
+    }
+}

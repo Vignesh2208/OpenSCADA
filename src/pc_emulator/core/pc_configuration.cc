@@ -61,6 +61,10 @@ PCConfiguration::PCConfiguration(string ConfigurationPath):
         __NumResources = __specification.machine_spec().num_cpus();
         assert(__NumResources > 0);
 
+        
+        RegisterAllElementaryDataTypes();
+        RegisterAllComplexDataTypes();
+        RegisterAllResources();
 };
 
 
@@ -73,6 +77,8 @@ void PCConfiguration::RegisterAllResources() {
                                         resource_spec.output_mem_size_bytes());
         RegisteredResources.RegisterResource(
                         resource_spec.resource_name(), new_resource);
+
+        new_resource->InitializeAllPoUVars();
     }
 }
 
@@ -175,6 +181,7 @@ void PCConfiguration::RegisterAllComplexDataTypes() {
 
         __global_pou_var = new PCVariable(this, nullptr,
                                 "__CONFIG_GLOBAL_VAR__", "__CONFIG_GLOBAL__");
+        __global_pou_var->AllocateAndInitialize();
         
     }
     
@@ -192,6 +199,7 @@ void PCConfiguration::RegisterAllComplexDataTypes() {
              __specification.config_access_pou_var());
         __access_pou_var = new PCVariable(this, nullptr,
                                 "__CONFIG_ACCESS_VAR__", "__CONFIG_ACCESS__");
+        __access_pou_var->AllocateAndInitialize();
 
         // now we need to set pointers to some fields of this variable
 
@@ -219,7 +227,7 @@ void PCConfiguration::RegisterAllComplexDataTypes() {
                         }
 
                         //set this as a ptr to the field of acess variable
-                        __access_pou_var->SetVarAccessPtr(field.field_name(),
+                        __access_pou_var->SetPtr(field.field_name(),
                                         desired_ptr);
 
                     }
@@ -239,17 +247,25 @@ PCVariable * PCConfiguration::GetVariablePointerToMem(int MemType,
                             + "." + std::to_string(ByteOffset)
                             + "." + std::to_string(BitOffset);
     // need to track and delete this variable later on
-    PCVariable* V = new PCVariable(this, nullptr, VariableName,
-                                VariableDataTypeName);
-    assert(V != nullptr);
+    auto got = __AccessedFields.find(VariableName);
+    if(got == __AccessedFields.end()) {
+        PCVariable* V = new PCVariable(this, nullptr, VariableName,
+                                    VariableDataTypeName);
+        assert(V != nullptr);
 
-    
-    V->__MemoryLocation.SetMemUnitLocation(&__RAMMemory);
-    V->__ByteOffset = ByteOffset;
-    V->__BitOffset = BitOffset;
-    V->__IsDirectlyRepresented = true;
+        
+        V->__MemoryLocation.SetMemUnitLocation(&__RAMMemory);
+        V->__ByteOffset = ByteOffset;
+        V->__BitOffset = BitOffset;
+        V->__IsDirectlyRepresented = true;
+        V->__MemAllocated = true;
+        V->AllocateAndInitialize();
+        __AccessedFields.insert(std::make_pair(VariableName, V));
 
-    return V;
+        return V;
+    } else {
+        return got->second;
+    }
 }
 
 PCVariable * PCConfiguration::GetVariablePointerToResourceMem(
@@ -272,15 +288,19 @@ PCVariable * PCConfiguration::GetVariable(string NestedFieldName) {
     boost::split(results, NestedFieldName, [](char c){return c == '.';});
 
     if  (results.size() == 1) {
-        //no . was found, try the global_variable
-        if (__global_pou_var)
+        //no dot was found, try the global_variable
+        if (__global_pou_var 
+            && __global_pou_var->__VariableDataType->IsFieldPresent(
+                                                    NestedFieldName))
             return __global_pou_var->GetPCVariableToField(NestedFieldName);
         return nullptr;
     } else {
-        // dot was found;
+        // dot was found; could be of the form resource.field_name
         PCResource * resource = RegisteredResources.GetResource(results[0]);
         if (resource == nullptr) {
-            if(__global_pou_var)
+            if (__global_pou_var 
+            && __global_pou_var->__VariableDataType->IsFieldPresent(
+                                                    NestedFieldName))
                 return __global_pou_var->GetPCVariableToField(NestedFieldName);
             else
                 return nullptr;
@@ -294,11 +314,36 @@ PCVariable * PCConfiguration::GetVariable(string NestedFieldName) {
     } 
 }
 
-PCVariable * PCConfiguration::AccessVariable(string NestedFieldName) {
+PCVariable * PCConfiguration::GetAccessVariable(string NestedFieldName) {
 
     if (!__access_pou_var || NestedFieldName.empty())
         return nullptr;
     
-    return __access_pou_var->GetPCVariableToField(NestedFieldName);
+    if (__access_pou_var->__VariableDataType->IsFieldPresent(NestedFieldName))
+        return __access_pou_var->GetPCVariableToField(NestedFieldName);
+    else
+        return nullptr;
     
+}
+
+void PCConfiguration::Cleanup() {
+    for ( auto it = __AccessedFields.begin(); it != __AccessedFields.end(); 
+            ++it ) {
+            PCVariable * __AccessedVariable = it->second;
+            __AccessedVariable->Cleanup();
+            delete __AccessedVariable;
+    }
+
+    if (__global_pou_var) {
+        __global_pou_var->Cleanup();
+        delete __global_pou_var;
+    }
+
+    if (__access_pou_var) {
+        __access_pou_var->Cleanup();
+        delete __access_pou_var;
+    }
+
+    RegisteredResources.Cleanup();
+    RegisteredDataTypes.Cleanup();
 }

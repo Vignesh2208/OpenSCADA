@@ -41,3 +41,12 @@ PCDataType * DataTypeRegistry::GetDataType(string DataTypeName) {
         return got->second;
     }
 }
+
+void DataTypeRegistry::Cleanup() {
+    for ( auto it = __Registry.begin(); it != __Registry.end(); 
+            ++it ) {
+            PCDataType * __AccessedDataType = it->second;
+            __AccessedDataType->Cleanup();
+            delete __AccessedDataType;
+    }
+}

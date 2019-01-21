@@ -24,8 +24,9 @@ namespace pc_emulator {
             PCMemUnit __InputMemory;
             PCMemUnit __OutputMemory;
             std::unordered_map<std::string,  PCVariable*> __ResourcePoUVars;
+            std::unordered_map<std::string, PCVariable*> __AccessedFields;
             
-            void InitializeAllPoUVars();
+            
 
         public :
             PCResource(PCConfiguration * configuration, 
@@ -39,10 +40,13 @@ namespace pc_emulator {
 
             }
 
+            void InitializeAllPoUVars();
             void RegisterPoUVariable(string VariableName, PCVariable * Var);
             PCVariable * GetVariable(string NestedFieldName);
+            PCVariable * GetGlobalVariable(string NestedFieldName);
             PCVariable * GetVariablePointerToMem(int MemType, int ByteOffset,
                                 int BitOffset, string VariableDataTypeName);
+            void Cleanup();
     };
 
 }

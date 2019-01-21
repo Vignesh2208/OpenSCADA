@@ -20,6 +20,8 @@ namespace pc_emulator {
                     __configuration(configuration) {};
             void RegisterResource(string ResourceName, PCResource* Resource);
             PCResource * GetResource(string ResourceName);
+
+            void Cleanup();
     };
 }
 

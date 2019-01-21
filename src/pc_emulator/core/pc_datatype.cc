@@ -5,12 +5,15 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/lexical_cast.hpp>
 #include <regex>
+#include <vector>
 
 #include "pc_emulator/include/pc_datatype.h"
 #include "pc_emulator/include/pc_configuration.h"
 
 using namespace std;
 using namespace pc_emulator;
+
+
 
 void PCDataTypeField::SetExplicitStorageConstraints(int MemType,
                             int ByteOffset, int BitOffset) {
@@ -23,6 +26,10 @@ void PCDataTypeField::SetExplicitStorageConstraints(int MemType,
     __StorageByteOffset = ByteOffset;
     __FieldInterfaceType = FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE;
 
+}
+
+void PCDataType::Cleanup() {
+    
 }
 
 void PCDataType::AddDataTypeField(string FieldName, string FieldTypeName,
@@ -767,70 +774,44 @@ void PCDataType::RegisterDataType() {
             this);
 }
 
+bool PCDataType::CheckRemFields(std::vector<string>& NestedFields, int StartPos,
+                            PCDataType * Current) {
+    if (StartPos >= NestedFields.size())
+        return true;
 
-void PCDataType::GetFieldAttributes(string NestedFieldName,
-                                    DataTypeFieldAttributes& FieldAttributes) {
-    std::vector<std::string> NestedFields;
-    boost::split(NestedFields, NestedFieldName,
-                boost::is_any_of("."), boost::token_compress_on);
-    if (NestedFields.empty()) {
-        
-        FieldAttributes.RelativeOffset = 0;
-        FieldAttributes.FieldInterfaceType = FIELD_INTERFACE_TYPES::NA;
-        FieldAttributes.SizeInBits = __SizeInBits;
-        FieldAttributes.FieldDataTypePtr = this;
-        FieldAttributes.NestedFieldName = "";
-        return;
-            
-    }
-
-    FieldAttributes.NestedFieldName = NestedFieldName;
-    PCDataType * DataType = this;
-    FieldAttributes.RelativeOffset = 0;
-    for (auto& AccessedFieldName : NestedFields) {
+    for (int i = StartPos ; i < NestedFields.size(); i++) {
+        string AccessedFieldName = NestedFields[i];
         for (int IntfType = FIELD_INTERFACE_TYPES::VAR_INPUT; 
-            IntfType != FIELD_INTERFACE_TYPES::NA; IntfType ++) {
-            for(auto& DefinedField: DataType->__FieldsByInterfaceType[IntfType]) {
+            IntfType != FIELD_INTERFACE_TYPES::NA + 1; IntfType ++) {
+            for(auto& DefinedField: Current->__FieldsByInterfaceType[IntfType]) {
                 PCDataType * FieldDataType = DefinedField.__FieldTypePtr;
                 assert(FieldDataType != nullptr);
                 if(AccessedFieldName == DefinedField.__FieldName) {
-                    DataType = FieldDataType;
-
-                    if (DefinedField.__FieldInterfaceType 
-                            == FIELD_INTERFACE_TYPES::VAR_IN_OUT || 
-                        DefinedField.__FieldInterfaceType 
-                            == FIELD_INTERFACE_TYPES::VAR_EXTERNAL ||
-                        DefinedField.__FieldInterfaceType 
-                            == FIELD_INTERFACE_TYPES::VAR_ACCESS ) {
-                        FieldAttributes.SizeInBits = sizeof (PCDataType *);
-                    } else {
-                        FieldAttributes.SizeInBits = DataType->__SizeInBits;
-                    }
-                    FieldAttributes.FieldInterfaceType 
-                            = DefinedField.__FieldInterfaceType;
-                    FieldAttributes.FieldDataTypePtr = DataType;
-                    return;
-                } else {
-                    if (DefinedField.__FieldInterfaceType 
-                            == FIELD_INTERFACE_TYPES::VAR_IN_OUT || 
-                        DefinedField.__FieldInterfaceType 
-                            == FIELD_INTERFACE_TYPES::VAR_EXTERNAL ||
-                        DefinedField.__FieldInterfaceType 
-                            == FIELD_INTERFACE_TYPES::VAR_ACCESS ) {
-                        // this is a pointer
-                        FieldAttributes.RelativeOffset += sizeof (PCDataType *);
-                    } else {
-                        FieldAttributes.RelativeOffset 
-                                += FieldDataType->__SizeInBits;
-                    }
+                    return CheckRemFields(NestedFields, i+1, FieldDataType);
                 }
             }
         }
     }
-    
-    __configuration->PCLogger->RaiseException("Accessed field not found!");
+    return false;
 }
 
+
+bool PCDataType::IsFieldPresent(string NestedFieldName) {
+    std::vector<std::string> NestedFields;
+    boost::split(NestedFields, NestedFieldName,
+                boost::is_any_of("."), boost::token_compress_on);
+    if (NestedFields.empty()) {
+        return true;           
+    }
+    
+    return CheckRemFields(NestedFields, 0, this);
+
+}
+
+bool PCDataType::IsNestedFieldOfType(string NestedFieldName,
+                                    int IntfTypeToCheck) {
+
+}
 
 bool DataTypeUtils::ValueToBool(string Value, bool& BoolValue) {
     if(boost::iequals(Value, "True") 

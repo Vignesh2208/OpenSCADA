@@ -24,10 +24,15 @@ namespace pc_emulator {
                 __configuration(configuration), __ResourceName(ResourceName),
                 __ExecPoUVariable(nullptr), __Initialized(false) {};
 
-            void SetExecPoUVariable(PCVariable* ExecPoUVariable);
+            void SetExecPoUVariable(PCVariable* ExecPoUVariable) {
+                __ExecPoUVariable = ExecPoUVariable;
+                __Initialized = true;
+            };
+
+
             
             
-    }
+    };
 }
 
 #endif

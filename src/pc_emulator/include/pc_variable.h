@@ -12,6 +12,7 @@ namespace pc_emulator {
 
     class PCConfiguration;
     class PCResource;
+    class PCVariable;
 
     enum VariableOps {
         ADD,
@@ -31,12 +32,19 @@ namespace pc_emulator {
         LE
     };  
 
+    typedef struct DataTypeFieldAttributesStruct {
+        unsigned long RelativeOffset;
+        unsigned long SizeInBits;
+        int FieldInterfaceType;
+        PCDataType* FieldDataTypePtr;
+        PCVariable* HoldVariablePtr;
+        string NestedFieldName;
+    } DataTypeFieldAttributes;
+
     class PCVariable {
 
         private:
             void AllocateStorage();
-            void CopyPCVariableFieldFromPointer(string NestedFieldName,
-                                                PCVariable * From);
 
             void CopyPCVariableFieldFromPointer(DataTypeFieldAttributes&
                                                 Attributes, PCVariable * From);
@@ -51,7 +59,11 @@ namespace pc_emulator {
             void InitializeVariable(PCVariable * V);
             void InitializeAllNonPtrFields();
             void InitializeAllDirectlyRepresentedFields();
+            
             void CheckValidity();
+            void ParseRemFieldAttributes(std::vector<string>& Fields,
+                        int StartPos, DataTypeFieldAttributes& FieldAttributes,
+                        PCVariable * HolderVariable);
 
         public:
             int __ByteOffset;
@@ -70,17 +82,15 @@ namespace pc_emulator {
                     PCResource * AssociatedResource,
                     string VariableName,
                     string VariableDataTypeName);
-                    
+
             void Cleanup();    
             void AllocateAndInitialize();
+            void ResolveAllExternalFields();
             void OnExecutorStartup();
             PCVariable* GetPCVariableToField(string NestedFieldName);
 
-            void SetVarExternalPtr(string FieldName, PCVariable * VarExtPtr);
-            void SetVarAccessPtr(string FieldName, PCVariable * VarAccessPtr);
-            void SetVarExplicitStoragePtr(string FieldName,
-                            PCVariable * VarExplicitStoragePtr);
-            void SetVarInOutPtr(string FieldName, PCVariable * VarInOutPtr);
+
+            void SetPtr(string NestedFieldName, PCVariable * ptr);
 
             
             void SetPCVariableField(string NestedFieldName, string value);
@@ -88,10 +98,17 @@ namespace pc_emulator {
             void SetPCVariableField(string NestedFieldName, void * value,
                                     int CopySizeBytes);
 
+            void CopyPCVariableFieldFromPointer(string NestedFieldName,
+                                                PCVariable * From);
+
+
             
 
             template <typename T> T GetFieldValue(string NestedFieldName,
                                             int DataTypeCategory);
+
+            void GetFieldAttributes(string NestedFieldName, 
+                            DataTypeFieldAttributes& FieldAttributes);
           
 
             void operator=(PCVariable& V);

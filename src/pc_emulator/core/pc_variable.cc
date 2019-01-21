@@ -1,6 +1,9 @@
 #include <iostream>
 #include <cstdint>
 #include <cstring>
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 
 #include "pc_emulator/include/pc_variable.h"
 #include "pc_emulator/include/pc_datatype.h"
@@ -83,14 +86,109 @@ void PCVariable::OnExecutorStartup() {
     }
 }
 
+void PCVariable::ParseRemFieldAttributes(std::vector<string>& NestedFields,
+                        int StartPos, DataTypeFieldAttributes& FieldAttributes,
+                        PCVariable * HolderVariable) {
+    
+    if (StartPos == NestedFields.size())
+        return;
+
+    PCDataType * DataType = HolderVariable->__VariableDataType;
+    FieldAttributes.FieldDataTypePtr = HolderVariable->__VariableDataType;
+    FieldAttributes.HoldVariablePtr = HolderVariable;
+    FieldAttributes.SizeInBits = HolderVariable->__VariableDataType->__SizeInBits;
+
+    
+
+    for (int i = StartPos; i < NestedFields.size(); i++) {
+        string AccessedFieldName = NestedFields[i];
+        for (int IntfType = FIELD_INTERFACE_TYPES::VAR_INPUT; 
+            IntfType != FIELD_INTERFACE_TYPES::NA + 1; IntfType ++) {
+            for(auto& DefinedField: DataType->__FieldsByInterfaceType[IntfType]) {
+                PCDataType * FieldDataType = DefinedField.__FieldTypePtr;
+                assert(FieldDataType != nullptr);
+                if(AccessedFieldName == DefinedField.__FieldName) {
+                    DataType = FieldDataType;
+                    FieldAttributes.FieldInterfaceType = IntfType;
+                    FieldAttributes.FieldDataTypePtr = DataType;
+
+                    if (i == NestedFields.size() - 1)
+                        return; // note theat the relative offset is already set
+
+                    if (IntfType == FIELD_INTERFACE_TYPES::VAR_IN_OUT || 
+                        IntfType == FIELD_INTERFACE_TYPES::VAR_EXTERNAL ||
+                        IntfType == FIELD_INTERFACE_TYPES::VAR_ACCESS ) {
+                        PCVariable * nxtHolderVariable;
+                                              
+                        std::memcpy(&nxtHolderVariable,
+                            HolderVariable->__MemoryLocation.GetPointerToMemory(
+                            FieldAttributes.RelativeOffset),
+                            sizeof(PCVariable *));
+                        FieldAttributes.HoldVariablePtr = nxtHolderVariable;
+                        FieldAttributes.RelativeOffset = 0; // Relative Offset reset                        
+                        ParseRemFieldAttributes(NestedFields, i+1,
+                                    FieldAttributes, nxtHolderVariable);
+                        return;
+                    } 
+                    ParseRemFieldAttributes(NestedFields, i+1,
+                                    FieldAttributes, HolderVariable);
+                    return;
+                } else {
+                    if (IntfType == FIELD_INTERFACE_TYPES::VAR_IN_OUT || 
+                        IntfType == FIELD_INTERFACE_TYPES::VAR_EXTERNAL ||
+                        IntfType == FIELD_INTERFACE_TYPES::VAR_ACCESS ) {
+                        // this is a pointer
+                        FieldAttributes.RelativeOffset += sizeof (PCDataType *);
+                    } else {
+                        FieldAttributes.RelativeOffset 
+                                += FieldDataType->__SizeInBits;
+                    }
+                }
+            }
+        }
+
+    }
+
+    __configuration->PCLogger->RaiseException("Nested Field not found !");
+
+}
+
+void PCVariable::GetFieldAttributes(string NestedFieldName,
+                                    DataTypeFieldAttributes& FieldAttributes) {
+    std::vector<std::string> NestedFields;
+    boost::split(NestedFields, NestedFieldName,
+                boost::is_any_of("."), boost::token_compress_on);
+    if (NestedFields.empty()) {
+        
+        FieldAttributes.RelativeOffset = 0;
+        FieldAttributes.FieldInterfaceType = FIELD_INTERFACE_TYPES::NA;
+        FieldAttributes.SizeInBits = this->__VariableDataType->__SizeInBits;
+        FieldAttributes.FieldDataTypePtr = this->__VariableDataType;
+        FieldAttributes.NestedFieldName = "";
+        FieldAttributes.HoldVariablePtr = this;
+        return;
+            
+    }
+    FieldAttributes.FieldDataTypePtr = this->__VariableDataType;
+    FieldAttributes.HoldVariablePtr = this;
+    FieldAttributes.FieldInterfaceType = FIELD_INTERFACE_TYPES::NA;
+    FieldAttributes.NestedFieldName = NestedFieldName;
+    FieldAttributes.RelativeOffset = 0;
+    FieldAttributes.SizeInBits = this->__VariableDataType->__SizeInBits;
+    ParseRemFieldAttributes(NestedFields, 0, FieldAttributes, this);
+}
+
 PCVariable* PCVariable::GetPCVariableToField(string NestedFieldName) {
     DataTypeFieldAttributes Attributes;
     
     CheckValidity();
+    assert(__VariableDataType->IsFieldPresent(NestedFieldName) == true);
 
     if (NestedFieldName.empty())
         return this;
-    __VariableDataType->GetFieldAttributes(NestedFieldName, Attributes);
+    GetFieldAttributes(NestedFieldName, Attributes);
+
+    PCVariable * HolderVariable = Attributes.HoldVariablePtr;
 
     if (Attributes.FieldInterfaceType != FIELD_INTERFACE_TYPES::VAR_IN_OUT
         && Attributes.FieldInterfaceType != FIELD_INTERFACE_TYPES::VAR_EXTERNAL
@@ -100,30 +198,35 @@ PCVariable* PCVariable::GetPCVariableToField(string NestedFieldName) {
         std::unordered_map<std::string, PCVariable*>::const_iterator got = 
                         __AccessedFields.find (NestedFieldName);
         if (got != __AccessedFields.end()) {
-            return got->second;
-        } else {
-
-            PCVariable *VariablePtrToField
-                                 = new PCVariable(__configuration,
-                                    __AssociatedResource,
-                                    __VariableName + NestedFieldName,
-                                    Attributes.FieldDataTypePtr->__DataTypeName);
-            VariablePtrToField->__ByteOffset 
-                            = __ByteOffset + Attributes.RelativeOffset / 8;
-            VariablePtrToField->__BitOffset 
-                            = __BitOffset + Attributes.RelativeOffset % 8;
-            VariablePtrToField->__MemoryLocation.SetMemUnitLocation(
-                                (PCMemUnit *)&this->__MemoryLocation);
-            __AccessedFields.insert(std::make_pair(NestedFieldName,
-                                                    VariablePtrToField));
-            return VariablePtrToField;
+            got->second->Cleanup();
+            delete got->second;
         }
+
+        PCVariable *VariablePtrToField
+                                = new PCVariable(__configuration,
+                                __AssociatedResource,
+                                __VariableName + NestedFieldName,
+                                Attributes.FieldDataTypePtr->__DataTypeName);
+        VariablePtrToField->__ByteOffset 
+                        = HolderVariable->__ByteOffset 
+                        + Attributes.RelativeOffset / 8;
+        VariablePtrToField->__BitOffset 
+                        = HolderVariable->__BitOffset 
+                        + (Attributes.RelativeOffset % 8);
+        VariablePtrToField->__MemoryLocation.SetMemUnitLocation(
+                            (PCMemUnit *)&HolderVariable->__MemoryLocation);
+        VariablePtrToField->__MemAllocated = true;
+        __AccessedFields.insert(
+                        std::make_pair(NestedFieldName, VariablePtrToField));
+        return VariablePtrToField;
+        
         
     } else {
         PCVariable * VariablePtrToField;
         char * PtrToStorageLoc 
-            = (char *) this->__MemoryLocation.GetPointerToMemory(
-                                __ByteOffset + (Attributes.RelativeOffset / 8));
+            = (char *) HolderVariable->__MemoryLocation.GetPointerToMemory(
+                                HolderVariable->__ByteOffset 
+                                + (Attributes.RelativeOffset / 8));
         memcpy(&VariablePtrToField, PtrToStorageLoc, sizeof(PCVariable *));
         return VariablePtrToField;
     }
@@ -296,11 +399,13 @@ void PCVariable::InitializeVariable(PCVariable * V) {
 
         default :
                 for (int IntfType = FIELD_INTERFACE_TYPES::VAR_INPUT; 
-                    IntfType != FIELD_INTERFACE_TYPES::NA; IntfType ++) {
+                    IntfType != FIELD_INTERFACE_TYPES::NA + 1; IntfType ++) {
                     
                     if (IntfType != FIELD_INTERFACE_TYPES::VAR_IN_OUT &&
                         IntfType != FIELD_INTERFACE_TYPES::VAR_EXTERNAL &&
-                        IntfType != FIELD_INTERFACE_TYPES::VAR_ACCESS) {
+                        IntfType != FIELD_INTERFACE_TYPES::VAR_ACCESS &&
+                        IntfType != FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE) {
+                        // all non ptr fields
                         for(auto& DefinedField: 
                             V->__VariableDataType->__FieldsByInterfaceType[IntfType]) {
                             
@@ -360,71 +465,109 @@ void PCVariable::InitializeAllDirectlyRepresentedFields() {
                             DefinedField.__FieldTypeName);
                 }
 
-                InitializeVariable(FieldVariable);
-                SetVarExplicitStoragePtr(DefinedField.__FieldName,
-                                    FieldVariable);
+                //InitializeVariable(FieldVariable);
+                SetPtr(DefinedField.__FieldName, FieldVariable);
         }
     }
 }
 
-void PCVariable::SetVarExternalPtr(string FieldName, PCVariable * VarExtPtr) {
+void PCVariable::ResolveAllExternalFields() {
+    if (__VariableDataType->__DataTypeCategory == DataTypeCategories::POU) {
+        for(auto& DefinedField: 
+                __VariableDataType->__FieldsByInterfaceType[
+                    FIELD_INTERFACE_TYPES::VAR_EXTERNAL]) {
+                
+                PCVariable* FieldVariable;  
+                          
+                FieldVariable 
+                    = __configuration->GetVariable(DefinedField.__FieldName);
+                if (FieldVariable == nullptr 
+                    && __AssociatedResource != nullptr) {
+                    FieldVariable = __AssociatedResource->GetGlobalVariable(
+                                        DefinedField.__FieldName);
 
-    assert(__VariableDataType->__DataTypeCategory == DataTypeCategories::POU);
-    assert(!FieldName.empty());
-    CheckValidity();
-    DataTypeFieldAttributes Attributes;
-    __VariableDataType->GetFieldAttributes(FieldName, Attributes);
-
-    assert(Attributes.FieldDataTypePtr->__DataTypeName
-            == VarExtPtr->__VariableDataType->__DataTypeName);
-    assert(Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_EXTERNAL);
-    CopyPCVariableFieldFromPointer(Attributes, VarExtPtr);
-
+                    if (FieldVariable == nullptr) {
+                        __configuration->PCLogger->RaiseException(
+                                "Cannot resolve an external field: "
+                                + DefinedField.__FieldName);
+                    }
+                }
+                
+                SetPtr(DefinedField.__FieldName, FieldVariable);
+        }
+    }
 }
-void PCVariable::SetVarAccessPtr(string FieldName, PCVariable * VarAccessPtr) {
-    assert(__VariableDataType->__DataTypeCategory == DataTypeCategories::POU);
-    assert(!FieldName.empty());
-    CheckValidity();
-    DataTypeFieldAttributes Attributes;
-    __VariableDataType->GetFieldAttributes(FieldName, Attributes);
 
-    assert(Attributes.FieldDataTypePtr->__DataTypeName
-            == VarAccessPtr->__VariableDataType->__DataTypeName);
-    assert(Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_ACCESS);
-    CopyPCVariableFieldFromPointer(Attributes, VarAccessPtr);
 
-}
-
-void PCVariable::SetVarExplicitStoragePtr(string FieldName,
-                PCVariable * VarExplicitStoragePtr) {
-
-    assert(__VariableDataType->__DataTypeCategory == DataTypeCategories::POU);
-    assert(!FieldName.empty());
-    CheckValidity();
-    DataTypeFieldAttributes Attributes;
-    __VariableDataType->GetFieldAttributes(FieldName, Attributes);
-
-    assert(Attributes.FieldDataTypePtr->__DataTypeName
-            == VarExplicitStoragePtr->__VariableDataType->__DataTypeName);
-    assert(Attributes.FieldInterfaceType 
-                    == FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE);
-    CopyPCVariableFieldFromPointer(Attributes, VarExplicitStoragePtr);
-
-}
-void PCVariable::SetVarInOutPtr(string FieldName, PCVariable * VarInOutPtr) {
-
+void PCVariable::SetPtr(string NestedFieldName, PCVariable * ptr) {
     assert(__VariableDataType->__DataTypeCategory 
-                                            == DataTypeCategories::POU);
-    assert(!FieldName.empty());
+                            == DataTypeCategories::POU);
+    assert(!NestedFieldName.empty() && ptr != nullptr);
+    assert(__VariableDataType->IsFieldPresent(NestedFieldName) == true);
     CheckValidity();
+    
     DataTypeFieldAttributes Attributes;
-    __VariableDataType->GetFieldAttributes(FieldName, Attributes);
+    GetFieldAttributes(NestedFieldName, Attributes);
 
     assert(Attributes.FieldDataTypePtr->__DataTypeName
-            == VarInOutPtr->__VariableDataType->__DataTypeName);
-    assert(Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_IN_OUT);
-    CopyPCVariableFieldFromPointer(Attributes, VarInOutPtr);
+            == ptr->__VariableDataType->__DataTypeName);
+    assert(Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_IN_OUT ||
+        Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE ||
+        Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_ACCESS ||
+        Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_EXTERNAL);
+    CopyPCVariableFieldFromPointer(Attributes, ptr);
+}
 
+void PCVariable::CopyPCVariableFieldFromPointer(
+        DataTypeFieldAttributes& Attributes, PCVariable * From) {
+    assert(Attributes.FieldDataTypePtr->__DataTypeName
+            == From->__VariableDataType->__DataTypeName);
+
+    PCVariable * FieldVariable = 
+                    GetPCVariableToField(Attributes.NestedFieldName);
+
+    if (Attributes.FieldInterfaceType != FIELD_INTERFACE_TYPES::VAR_IN_OUT
+        && Attributes.FieldInterfaceType != FIELD_INTERFACE_TYPES::VAR_EXTERNAL
+        && Attributes.FieldInterfaceType != FIELD_INTERFACE_TYPES::VAR_ACCESS
+        && Attributes.FieldInterfaceType != FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE) {
+            // The content pointed to by From is copied at the appropriate
+            // offset
+            if (From->__VariableDataType->__DataTypeCategory 
+                                            == DataTypeCategories::BOOL) {
+
+                int8_t temp = From->__MemoryLocation.GetStorageLocation()
+                                                    .get()[From->__ByteOffset];
+                if (temp & ((1UL) <<  From->__BitOffset)) {
+                    FieldVariable->__MemoryLocation.GetStorageLocation().get()[
+                        FieldVariable->__ByteOffset] 
+                                |= ((1UL) <<  FieldVariable->__BitOffset);
+                }
+                else {
+                    FieldVariable->__MemoryLocation.GetStorageLocation().get()[
+                        FieldVariable->__ByteOffset] 
+                                &= ~((1UL) <<  FieldVariable->__BitOffset);
+                }
+                return;
+            }
+        
+
+            
+            FieldVariable->__MemoryLocation.CopyFromMemUnit(
+                &From->__MemoryLocation, 
+                From->__ByteOffset,
+                From->__MemoryLocation.GetMemUnitSize() - From->__ByteOffset,
+                FieldVariable->__ByteOffset);
+
+
+    } else {
+        // The pointer From is itself to be copied at the appropriate offset
+        assert(FieldVariable->__ByteOffset  + sizeof(PCVariable *) 
+            <= FieldVariable->__MemoryLocation.GetMemUnitSize());
+
+        std::memcpy(
+            FieldVariable->__MemoryLocation.GetPointerToMemory(FieldVariable->__ByteOffset),
+            &From, sizeof(PCVariable *));
+    }
 }
 
 void PCVariable::CopyPCVariableFieldFromPointer(string NestedFieldName,
@@ -462,76 +605,20 @@ void PCVariable::CopyPCVariableFieldFromPointer(string NestedFieldName,
     }
 
     DataTypeFieldAttributes Attributes;
-    __VariableDataType->GetFieldAttributes(NestedFieldName, Attributes);
+    GetFieldAttributes(NestedFieldName, Attributes);
 
     CopyPCVariableFieldFromPointer(Attributes, From);
 }
 
-void PCVariable::CopyPCVariableFieldFromPointer(
-        DataTypeFieldAttributes& Attributes, PCVariable * From) {
-    assert(Attributes.FieldDataTypePtr->__DataTypeName
-            == From->__VariableDataType->__DataTypeName);
-    assert(this->__MemoryLocation.IsInitialized());
 
-    PCVariable * FieldVariable = 
-                    GetPCVariableToField(Attributes.NestedFieldName);
-
-    if (Attributes.FieldInterfaceType != FIELD_INTERFACE_TYPES::VAR_IN_OUT
-        && Attributes.FieldInterfaceType != FIELD_INTERFACE_TYPES::VAR_EXTERNAL
-        && Attributes.FieldInterfaceType != FIELD_INTERFACE_TYPES::VAR_ACCESS
-        && Attributes.FieldInterfaceType != FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE) {
-            // The content pointed to by From is copied at the appropriate
-            // offset
-
-            
-
-            if (From->__VariableDataType->__DataTypeCategory 
-                                            == DataTypeCategories::BOOL) {
-
-                int8_t temp = From->__MemoryLocation.GetStorageLocation()
-                                                    .get()[From->__ByteOffset];
-                if (temp & ((1UL) <<  From->__BitOffset)) {
-                    FieldVariable->__MemoryLocation.GetStorageLocation().get()[
-                        FieldVariable->__ByteOffset] 
-                                |= ((1UL) <<  FieldVariable->__BitOffset);
-                }
-                else {
-                    FieldVariable->__MemoryLocation.GetStorageLocation().get()[
-                        FieldVariable->__ByteOffset] 
-                                &= ~((1UL) <<  FieldVariable->__BitOffset);
-                }
-                return;
-            }
-        
-
-            assert(__ByteOffset + (Attributes.RelativeOffset / 8) 
-            + From->__MemoryLocation.GetMemUnitSize() - From->__ByteOffset
-             <= this->__MemoryLocation.GetMemUnitSize());
-            
-            FieldVariable->__MemoryLocation.CopyFromMemUnit(
-                &From->__MemoryLocation, 
-                From->__ByteOffset,
-                From->__MemoryLocation.GetMemUnitSize() - From->__ByteOffset,
-                FieldVariable->__ByteOffset);
-
-
-    } else {
-        // The pointer From is itself to be copied at the appropriate offset
-
-        assert(FieldVariable->__ByteOffset  + sizeof(PCVariable *) 
-            <= FieldVariable->__MemoryLocation.GetMemUnitSize());
-
-        std::memcpy(
-            FieldVariable->__MemoryLocation.GetPointerToMemory(FieldVariable->__ByteOffset),
-            &From, sizeof(PCVariable *));
-    }
-}
 
 void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
 
     DataTypeFieldAttributes Attributes;
-    __VariableDataType->GetFieldAttributes(NestedFieldName, Attributes);
+    assert(__VariableDataType->IsFieldPresent(NestedFieldName) == true);
+    GetFieldAttributes(NestedFieldName, Attributes);
     CheckValidity();
+
 
     if (Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_IN_OUT
         || Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_EXTERNAL
@@ -809,9 +896,10 @@ void PCVariable::SetPCVariableField(string NestedFieldName, void * Value,
                                     int CopySizeBytes) {
 
     CheckValidity();
+    assert(__VariableDataType->IsFieldPresent(NestedFieldName) == true);
     if (!NestedFieldName.empty()) {
         DataTypeFieldAttributes Attributes;
-        __VariableDataType->GetFieldAttributes(NestedFieldName, Attributes);
+        GetFieldAttributes(NestedFieldName, Attributes);
 
         if (Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_IN_OUT
             || Attributes.FieldInterfaceType 
@@ -862,6 +950,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, void * Value,
 void PCVariable::GetAndStoreValue(string NestedFieldName,
     void * Value, int CopySize, int DataTypeCategory) {
     assert (Value != nullptr);
+
     
     auto PointedVariable =  GetPCVariableToField(NestedFieldName);
     assert(PointedVariable->__VariableDataType->__DataTypeCategory

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fcntl.h>
 #include <fstream>
+#include <unordered_map>
 #include <google/protobuf/text_format.h>
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 
@@ -23,7 +24,7 @@ namespace pc_emulator {
             void RegisterAllResources();
             void RegisterAllElementaryDataTypes();
             void RegisterAllComplexDataTypes();
-            PCVariable * GetVariable(string NestedFieldName);
+            
             
 
         public:
@@ -38,16 +39,18 @@ namespace pc_emulator {
             PCVariable * __global_pou_var;
             PCVariable * __access_pou_var;
             int __NumResources;
-
             
+            std::unordered_map<string, PCVariable *> __AccessedFields;
             
-            PCVariable * AccessVariable(string NestedFieldName);
+            PCVariable * GetVariable(string NestedFieldName);
+            PCVariable * GetAccessVariable(string NestedFieldName);
             PCConfiguration(string ConfigurationPath);
             PCVariable * GetVariablePointerToMem(int MemType, int ByteOffset,
                         int BitOffset, string VariableDataTypeName);
             PCVariable * GetVariablePointerToResourceMem(string ResourceName,
                         int MemType, int ByteOffset,
                         int BitOffset, string VariableDataTypeName); 
+            void Cleanup();
     };
 }
 
