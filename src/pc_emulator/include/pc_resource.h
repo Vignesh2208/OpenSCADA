@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include "pc_variable.h"
 #include "pc_mem_unit.h"
+#include "pc_pou_code_container.h"
 #include "pc_emulator/proto/configuration.pb.h"
 
 using namespace std;
@@ -17,7 +18,7 @@ namespace pc_emulator {
 
     class PCResource {
         private:
-            PCConfiguration * __configuration;
+            
             string __ResourceName;
             int __InputMemSize;
             int __OutputMemSize;
@@ -25,10 +26,11 @@ namespace pc_emulator {
             PCMemUnit __OutputMemory;
             std::unordered_map<std::string,  PCVariable*> __ResourcePoUVars;
             std::unordered_map<std::string, PCVariable*> __AccessedFields;
-            
+            std::unordered_map<std::string, PoUCodeContainer*> __CodeContainers;
             
 
         public :
+            PCConfiguration * __configuration;
             PCResource(PCConfiguration * configuration, 
                 string ResourceName, int InputMemSize, int OutputMemSize):
                 __configuration(configuration), __ResourceName(ResourceName),
@@ -43,9 +45,13 @@ namespace pc_emulator {
             void InitializeAllPoUVars();
             void RegisterPoUVariable(string VariableName, PCVariable * Var);
             PCVariable * GetVariable(string NestedFieldName);
+            PCVariable * GetPoUVariable(string PoUName);
             PCVariable * GetGlobalVariable(string NestedFieldName);
             PCVariable * GetVariablePointerToMem(int MemType, int ByteOffset,
                                 int BitOffset, string VariableDataTypeName);
+            
+            PoUCodeContainer * CreateNewCodeContainer(string PoUDataTypeName);
+            PoUCodeContainer * GetCodeContainer(string PoUDataTypeName);
             void Cleanup();
     };
 

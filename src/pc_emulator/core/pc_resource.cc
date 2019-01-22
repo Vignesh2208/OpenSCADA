@@ -6,6 +6,7 @@
 #include <regex>
 #include <vector>
 
+#include "pc_emulator/include/pc_pou_code_container.h"
 #include "pc_emulator/include/pc_datatype.h"
 #include "pc_emulator/include/pc_variable.h"
 #include "pc_emulator/include/pc_resource.h"
@@ -71,6 +72,14 @@ PCVariable * PCResource::GetVariable(string NestedFieldName) {
                 return nullptr;
         }
     } 
+}
+
+PCVariable * PCResource::GetPoUVariable(string PoUName) {
+    auto got =  __ResourcePoUVars.find(PoUName);
+    if (got == __ResourcePoUVars.end()) {
+        return nullptr;
+    }
+    return got->second;
 }
 
 PCVariable * PCResource::GetGlobalVariable(string NestedFieldName) {
@@ -222,4 +231,33 @@ void PCResource::Cleanup() {
             __AccessedVariable->Cleanup();
             delete __AccessedVariable;
     }
+}
+
+PoUCodeContainer * PCResource::CreateNewCodeContainer(string PoUDataTypeName) {
+    PCDataType * PoUDataType 
+        = __configuration->RegisteredDataTypes.GetDataType(PoUDataTypeName);
+    if (!PoUDataType)
+        return nullptr;
+    
+    if (__CodeContainers.find(PoUDataTypeName) != __CodeContainers.end()) {
+        __configuration->PCLogger->RaiseException("Cannot define two code "
+                                        "bodies for same POU");
+    }
+    PoUCodeContainer * new_container = new PoUCodeContainer(__configuration,
+                                                this);
+    new_container->SetPoUDataType(PoUDataType);
+
+    __CodeContainers.insert(std::make_pair(PoUDataTypeName, new_container));
+
+    return new_container;
+
+    
+}
+PoUCodeContainer * PCResource::GetCodeContainer(string PoUDataTypeName) {
+
+    auto got = __CodeContainers.find(PoUDataTypeName);
+    if (got == __CodeContainers.end())
+        return nullptr;
+    
+    return got->second;
 }

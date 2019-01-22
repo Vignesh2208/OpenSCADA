@@ -9,27 +9,37 @@ using namespace std;
 #include <cstdlib>
 #include <unordered_map>
 #include "pc_variable.h"
+#include "pc_pou_code_container.h"
 
 namespace pc_emulator {
     class PCConfiguration;
+    class PCResource;
 
     class Executor {
         public :
             PCConfiguration * __configuration;
             PCVariable * __ExecPoUVariable;
-            string __ResourceName;
+            PCResource* __AssociatedResource;
+            PoUCodeContainer * __CodeContainer;
             bool __Initialized;
 
-            Executor(PCConfiguration* configuration, string ResourceName):
-                __configuration(configuration), __ResourceName(ResourceName),
-                __ExecPoUVariable(nullptr), __Initialized(false) {};
+            Executor(PCConfiguration* configuration,
+                                PCResource * AssociatedResource):
+                __configuration(configuration), 
+                __AssociatedResource(AssociatedResource),
+                __ExecPoUVariable(nullptr),
+                __CodeContainer(nullptr), __Initialized(false) {};
 
-            void SetExecPoUVariable(PCVariable* ExecPoUVariable) {
-                __ExecPoUVariable = ExecPoUVariable;
-                __Initialized = true;
-            };
+            void SetExecPoUVariable(PCVariable* ExecPoUVariable);
+            void Run();
 
-
+            // returns idx of next instruction to execute;
+            int RunInsn(InsnContainer& insn_container);
+            bool CheckActiveInterrupts();
+            void ServeActiveInterrupts();
+            void SaveCPURegisters();
+            void RestoreCPURegisters();
+            void ResetCPURegisters();
             
             
     };

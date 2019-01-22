@@ -592,8 +592,8 @@ void PCVariable::CopyPCVariableFieldFromPointer(
             <= FieldVariable->__MemoryLocation.GetMemUnitSize());
 
         std::memcpy(
-            FieldVariable->__MemoryLocation.GetPointerToMemory(FieldVariable->__ByteOffset),
-            &From, sizeof(PCVariable *));
+            FieldVariable->__MemoryLocation.GetPointerToMemory(
+                FieldVariable->__ByteOffset), &From, sizeof(PCVariable *));
     }
 }
 
@@ -966,26 +966,12 @@ void PCVariable::SetPCVariableField(string NestedFieldName, void * Value,
 void PCVariable::GetAndStoreValue(string NestedFieldName,
     void * Value, int CopySize, int DataTypeCategory) {
     assert (Value != nullptr);
-
-    DataTypeFieldAttributes Attributes;
     assert(__VariableDataType->IsFieldPresent(NestedFieldName) == true);
-    GetFieldAttributes(NestedFieldName, Attributes);
-
-
-    if (Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_IN_OUT
-        || Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_EXTERNAL
-        || Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_ACCESS
-        || Attributes.FieldInterfaceType 
-                == FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE) {
-        auto FieldLocationPtr = GetPCVariableToField(NestedFieldName);
-        // now we must get the pointer value at this field location
-
-        PCVariable * ActualPointerVariable;
-        std::memcpy(&ActualPointerVariable,
-                FieldLocationPtr->__MemoryLocation
-                    .GetPointerToMemory(FieldLocationPtr->__ByteOffset),
-                sizeof(PCVariable *));
-        return ActualPointerVariable->GetAndStoreValue("", Value, CopySize,
+    
+    PCVariable* PointerAtFieldLocation = GetPtrStoredAtField(NestedFieldName);
+    if (PointerAtFieldLocation != nullptr) {
+        
+        return PointerAtFieldLocation->GetAndStoreValue("", Value, CopySize,
                                                         DataTypeCategory);
 
     } 
@@ -1006,10 +992,8 @@ void PCVariable::GetAndStoreValue(string NestedFieldName,
         return;
     }
     std::memcpy(Value, 
-                &PointedVariable->__MemoryLocation
-                    .GetStorageLocation().get()[
-                        PointedVariable->__ByteOffset],                               
-                CopySize);    
+        PointedVariable->__MemoryLocation.GetPointerToMemory(
+            PointedVariable->__ByteOffset),  CopySize);    
 }
 
 template <typename T> T PCVariable::GetFieldValue(string NestedFieldName,
