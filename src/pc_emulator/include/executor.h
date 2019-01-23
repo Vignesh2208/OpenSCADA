@@ -14,6 +14,7 @@ using namespace std;
 namespace pc_emulator {
     class PCConfiguration;
     class PCResource;
+    class Task;
 
     class Executor {
         public :
@@ -22,12 +23,15 @@ namespace pc_emulator {
             PCResource* __AssociatedResource;
             PoUCodeContainer * __CodeContainer;
             bool __Initialized;
+            Task* __AssociatedTask;
 
             Executor(PCConfiguration* configuration,
-                                PCResource * AssociatedResource):
+                    PCResource * AssociatedResource,
+                    Task * AssociatedTask):
                 __configuration(configuration), 
                 __AssociatedResource(AssociatedResource),
                 __ExecPoUVariable(nullptr),
+                __AssociatedTask(AssociatedTask),
                 __CodeContainer(nullptr), __Initialized(false) {};
 
             void SetExecPoUVariable(PCVariable* ExecPoUVariable);
@@ -35,8 +39,6 @@ namespace pc_emulator {
 
             // returns idx of next instruction to execute;
             int RunInsn(InsnContainer& insn_container);
-            bool CheckActiveInterrupts();
-            void ServeActiveInterrupts();
             void SaveCPURegisters();
             void RestoreCPURegisters();
             void ResetCPURegisters();

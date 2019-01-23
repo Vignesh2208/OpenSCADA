@@ -35,12 +35,14 @@ namespace pc_emulator {
             PCVariable * __ExecPoUVariable;
             Executor * __AssociatedExecutor;
             std::vector<ProgramVariableInitialization> __initialization_map;
+            Task * __AssociatedTask;
 
             ProgramContainer(PCResource * AssociatedResource, 
-                const ProgramSpecification& program_spec);
+                const ProgramSpecification& program_spec, Task * AssociatedTask);
 
             void Cleanup();
     };
+
 
     class Task {
         public :
@@ -51,8 +53,11 @@ namespace pc_emulator {
             PCConfiguration * __configuration;
             PCResource * __AssociatedResource;
             string __trigger_variable_name;
-            float __nxt_schedule_time_us;
+            bool __trigger_variable_previous_value;
+            bool __IsReady;
+            double __nxt_schedule_time_ms;
             std::vector<ProgramContainer*> __AssociatedPrograms;
+            
 
             Task(PCConfiguration * configuration,
                 PCResource * AssociatedResource,
@@ -67,18 +72,20 @@ namespace pc_emulator {
                     assert(type == TaskType::INTERVAL);
                     __interval_ms 
                             = task_spec.interval_task_params().interval_ms();
+                    __IsReady = true;
                 } else if (task_spec.has_interrupt_task_params()) {
                     assert(type == TaskType::INTERRUPT);
                     __trigger_variable_name 
                         = task_spec.interrupt_task_params()
                                     .trigger_variable_field();
+                    __IsReady = false;
                 }
 
-                __nxt_schedule_time_us = 0;
+                __nxt_schedule_time_ms = 0.0;
             };
 
-            void SetNextScheduleTime(float nxt_schedule_time_us) {
-                __nxt_schedule_time_us = nxt_schedule_time_us;
+            void SetNextScheduleTime(double nxt_schedule_time_ms) {
+                __nxt_schedule_time_ms = nxt_schedule_time_ms;
             };
 
             void AddProgramToTask(const ProgramSpecification& program_spec);
@@ -86,6 +93,8 @@ namespace pc_emulator {
             void Execute();
 
             void Cleanup();
+
+            
 
     };
 }

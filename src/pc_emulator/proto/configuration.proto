@@ -164,9 +164,9 @@ message Specification {
     optional string config_name = 1;
     optional LogLevels log_level = 2;
     optional string log_file_path = 3;
-    optional DataType config_global_pou_var = 4;
-    optional DataType config_access_pou_var = 5;
-    repeated DataType complex_datatypes = 6;
-    required MachineSpecification machine_spec = 7;
-
+    optional bool enable_kronos = 4;
+    optional DataType config_global_pou_var = 5;
+    optional DataType config_access_pou_var = 6;
+    repeated DataType complex_datatypes = 7;
+    required MachineSpecification machine_spec = 8;
 }

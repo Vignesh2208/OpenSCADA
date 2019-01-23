@@ -10,9 +10,11 @@
 #include "pc_emulator/include/pc_configuration.h"
 #include "pc_emulator/include/pc_resource.h"
 #include "pc_emulator/include/utils.h"
+#include "pc_emulator/include/task.h"
 
 using namespace std;
 using namespace pc_emulator;
+using namespace pc_specification;
 
 PCConfiguration::PCConfiguration(string ConfigurationPath):
     __ConfigurationPath(ConfigurationPath),

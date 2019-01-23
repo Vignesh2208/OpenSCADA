@@ -575,6 +575,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pc_specification::Specification, config_name_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pc_specification::Specification, log_level_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pc_specification::Specification, log_file_path_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pc_specification::Specification, enable_kronos_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pc_specification::Specification, config_global_pou_var_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pc_specification::Specification, config_access_pou_var_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pc_specification::Specification, complex_datatypes_),
@@ -582,6 +583,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   0,
   5,
   1,
+  6,
   2,
   3,
   ~0u,
@@ -601,7 +603,7 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROT
   { 114, 123, sizeof(::pc_specification::ProgramSpecification)},
   { 127, 139, sizeof(::pc_specification::ResourceSpecification)},
   { 146, 157, sizeof(::pc_specification::MachineSpecification)},
-  { 163, 175, sizeof(::pc_specification::Specification)},
+  { 163, 176, sizeof(::pc_specification::Specification)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -695,36 +697,36 @@ void AddDescriptorsImpl() {
       "tion.SFCSpecification\0224\n\010sfb_spec\030\005 \003(\0132"
       "\".pc_specification.SFBSpecification\022>\n\rr"
       "esource_spec\030\006 \003(\0132\'.pc_specification.Re"
-      "sourceSpecification\"\326\002\n\rSpecification\022\023\n"
+      "sourceSpecification\"\355\002\n\rSpecification\022\023\n"
       "\013config_name\030\001 \001(\t\022.\n\tlog_level\030\002 \001(\0162\033."
       "pc_specification.LogLevels\022\025\n\rlog_file_p"
-      "ath\030\003 \001(\t\0229\n\025config_global_pou_var\030\004 \001(\013"
-      "2\032.pc_specification.DataType\0229\n\025config_a"
-      "ccess_pou_var\030\005 \001(\0132\032.pc_specification.D"
-      "ataType\0225\n\021complex_datatypes\030\006 \003(\0132\032.pc_"
-      "specification.DataType\022<\n\014machine_spec\030\007"
-      " \002(\0132&.pc_specification.MachineSpecifica"
-      "tion*\242\002\n\020DataTypeCategory\022\010\n\004BOOL\020\000\022\010\n\004B"
-      "YTE\020\001\022\010\n\004WORD\020\002\022\t\n\005DWORD\020\003\022\t\n\005LWORD\020\004\022\010\n"
-      "\004CHAR\020\005\022\007\n\003INT\020\006\022\010\n\004SINT\020\007\022\010\n\004DINT\020\010\022\010\n\004"
-      "LINT\020\t\022\010\n\004UINT\020\n\022\t\n\005USINT\020\013\022\t\n\005UDINT\020\014\022\t"
-      "\n\005ULINT\020\r\022\010\n\004REAL\020\016\022\t\n\005LREAL\020\017\022\010\n\004TIME\020\020"
-      "\022\010\n\004DATE\020\021\022\017\n\013TIME_OF_DAY\020\022\022\021\n\rDATE_AND_"
-      "TIME\020\023\022\t\n\005ARRAY\020\024\022\013\n\007DERIVED\020\025\022\007\n\003POU\020\026\022"
-      "\020\n\014NOT_ASSIGNED\020\027*\256\001\n\022FieldInterfaceType"
-      "\022\r\n\tVAR_INPUT\020\000\022\016\n\nVAR_OUTPUT\020\001\022\016\n\nVAR_I"
-      "N_OUT\020\002\022\007\n\003VAR\020\003\022\014\n\010VAR_TEMP\020\004\022\020\n\014VAR_EX"
-      "TERNAL\020\005\022\016\n\nVAR_GLOBAL\020\006\022\016\n\nVAR_ACCESS\020\007"
-      "\022\030\n\024VAR_EXPLICIT_STORAGE\020\010\022\006\n\002NA\020\t*5\n\007Me"
-      "mType\022\r\n\tINPUT_MEM\020\000\022\016\n\nOUTPUT_MEM\020\001\022\013\n\007"
-      "RAM_MEM\020\002*\'\n\010TaskType\022\014\n\010INTERVAL\020\000\022\r\n\tI"
-      "NTERRUPT\020\001*&\n\007PoUType\022\006\n\002FC\020\000\022\006\n\002FB\020\001\022\013\n"
-      "\007PROGRAM\020\002*G\n\tLogLevels\022\014\n\010LOG_NONE\020\000\022\014\n"
-      "\010LOG_INFO\020\001\022\r\n\tLOG_ERROR\020\002\022\017\n\013LOG_VERBOS"
-      "E\020\003"
+      "ath\030\003 \001(\t\022\025\n\renable_kronos\030\004 \001(\010\0229\n\025conf"
+      "ig_global_pou_var\030\005 \001(\0132\032.pc_specificati"
+      "on.DataType\0229\n\025config_access_pou_var\030\006 \001"
+      "(\0132\032.pc_specification.DataType\0225\n\021comple"
+      "x_datatypes\030\007 \003(\0132\032.pc_specification.Dat"
+      "aType\022<\n\014machine_spec\030\010 \002(\0132&.pc_specifi"
+      "cation.MachineSpecification*\242\002\n\020DataType"
+      "Category\022\010\n\004BOOL\020\000\022\010\n\004BYTE\020\001\022\010\n\004WORD\020\002\022\t"
+      "\n\005DWORD\020\003\022\t\n\005LWORD\020\004\022\010\n\004CHAR\020\005\022\007\n\003INT\020\006\022"
+      "\010\n\004SINT\020\007\022\010\n\004DINT\020\010\022\010\n\004LINT\020\t\022\010\n\004UINT\020\n\022"
+      "\t\n\005USINT\020\013\022\t\n\005UDINT\020\014\022\t\n\005ULINT\020\r\022\010\n\004REAL"
+      "\020\016\022\t\n\005LREAL\020\017\022\010\n\004TIME\020\020\022\010\n\004DATE\020\021\022\017\n\013TIM"
+      "E_OF_DAY\020\022\022\021\n\rDATE_AND_TIME\020\023\022\t\n\005ARRAY\020\024"
+      "\022\013\n\007DERIVED\020\025\022\007\n\003POU\020\026\022\020\n\014NOT_ASSIGNED\020\027"
+      "*\256\001\n\022FieldInterfaceType\022\r\n\tVAR_INPUT\020\000\022\016"
+      "\n\nVAR_OUTPUT\020\001\022\016\n\nVAR_IN_OUT\020\002\022\007\n\003VAR\020\003\022"
+      "\014\n\010VAR_TEMP\020\004\022\020\n\014VAR_EXTERNAL\020\005\022\016\n\nVAR_G"
+      "LOBAL\020\006\022\016\n\nVAR_ACCESS\020\007\022\030\n\024VAR_EXPLICIT_"
+      "STORAGE\020\010\022\006\n\002NA\020\t*5\n\007MemType\022\r\n\tINPUT_ME"
+      "M\020\000\022\016\n\nOUTPUT_MEM\020\001\022\013\n\007RAM_MEM\020\002*\'\n\010Task"
+      "Type\022\014\n\010INTERVAL\020\000\022\r\n\tINTERRUPT\020\001*&\n\007PoU"
+      "Type\022\006\n\002FC\020\000\022\006\n\002FB\020\001\022\013\n\007PROGRAM\020\002*G\n\tLog"
+      "Levels\022\014\n\010LOG_NONE\020\000\022\014\n\010LOG_INFO\020\001\022\r\n\tLO"
+      "G_ERROR\020\002\022\017\n\013LOG_VERBOSE\020\003"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 3123);
+      descriptor, 3146);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "configuration.proto", &protobuf_RegisterTypes);
 }
@@ -6155,6 +6157,7 @@ void Specification::InitAsDefaultInstance() {
 const int Specification::kConfigNameFieldNumber;
 const int Specification::kLogLevelFieldNumber;
 const int Specification::kLogFilePathFieldNumber;
+const int Specification::kEnableKronosFieldNumber;
 const int Specification::kConfigGlobalPouVarFieldNumber;
 const int Specification::kConfigAccessPouVarFieldNumber;
 const int Specification::kComplexDatatypesFieldNumber;
@@ -6199,7 +6202,9 @@ Specification::Specification(const Specification& from)
   } else {
     machine_spec_ = NULL;
   }
-  log_level_ = from.log_level_;
+  ::memcpy(&log_level_, &from.log_level_,
+    static_cast<size_t>(reinterpret_cast<char*>(&enable_kronos_) -
+    reinterpret_cast<char*>(&log_level_)) + sizeof(enable_kronos_));
   // @@protoc_insertion_point(copy_constructor:pc_specification.Specification)
 }
 
@@ -6208,8 +6213,8 @@ void Specification::SharedCtor() {
   config_name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   log_file_path_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&config_global_pou_var_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&log_level_) -
-      reinterpret_cast<char*>(&config_global_pou_var_)) + sizeof(log_level_));
+      reinterpret_cast<char*>(&enable_kronos_) -
+      reinterpret_cast<char*>(&config_global_pou_var_)) + sizeof(enable_kronos_));
 }
 
 Specification::~Specification() {
@@ -6278,7 +6283,11 @@ void Specification::Clear() {
       machine_spec_->Clear();
     }
   }
-  log_level_ = 0;
+  if (cached_has_bits & 96u) {
+    ::memset(&log_level_, 0, static_cast<size_t>(
+        reinterpret_cast<char*>(&enable_kronos_) -
+        reinterpret_cast<char*>(&log_level_)) + sizeof(enable_kronos_));
+  }
   _has_bits_.Clear();
   _internal_metadata_.Clear();
 }
@@ -6345,10 +6354,24 @@ bool Specification::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .pc_specification.DataType config_global_pou_var = 4;
+      // optional bool enable_kronos = 4;
       case 4: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(34u /* 34 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(32u /* 32 & 0xFF */)) {
+          set_has_enable_kronos();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &enable_kronos_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional .pc_specification.DataType config_global_pou_var = 5;
+      case 5: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(42u /* 42 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
                input, mutable_config_global_pou_var()));
         } else {
@@ -6357,10 +6380,10 @@ bool Specification::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .pc_specification.DataType config_access_pou_var = 5;
-      case 5: {
+      // optional .pc_specification.DataType config_access_pou_var = 6;
+      case 6: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(42u /* 42 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(50u /* 50 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
                input, mutable_config_access_pou_var()));
         } else {
@@ -6369,10 +6392,10 @@ bool Specification::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .pc_specification.DataType complex_datatypes = 6;
-      case 6: {
+      // repeated .pc_specification.DataType complex_datatypes = 7;
+      case 7: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(50u /* 50 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(58u /* 58 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(input, add_complex_datatypes()));
         } else {
           goto handle_unusual;
@@ -6380,10 +6403,10 @@ bool Specification::MergePartialFromCodedStream(
         break;
       }
 
-      // required .pc_specification.MachineSpecification machine_spec = 7;
-      case 7: {
+      // required .pc_specification.MachineSpecification machine_spec = 8;
+      case 8: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(58u /* 58 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(66u /* 66 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
                input, mutable_machine_spec()));
         } else {
@@ -6445,29 +6468,34 @@ void Specification::SerializeWithCachedSizes(
       3, this->log_file_path(), output);
   }
 
-  // optional .pc_specification.DataType config_global_pou_var = 4;
+  // optional bool enable_kronos = 4;
+  if (cached_has_bits & 0x00000040u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(4, this->enable_kronos(), output);
+  }
+
+  // optional .pc_specification.DataType config_global_pou_var = 5;
   if (cached_has_bits & 0x00000004u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      4, *this->config_global_pou_var_, output);
+      5, *this->config_global_pou_var_, output);
   }
 
-  // optional .pc_specification.DataType config_access_pou_var = 5;
+  // optional .pc_specification.DataType config_access_pou_var = 6;
   if (cached_has_bits & 0x00000008u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      5, *this->config_access_pou_var_, output);
+      6, *this->config_access_pou_var_, output);
   }
 
-  // repeated .pc_specification.DataType complex_datatypes = 6;
+  // repeated .pc_specification.DataType complex_datatypes = 7;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->complex_datatypes_size()); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      6, this->complex_datatypes(static_cast<int>(i)), output);
+      7, this->complex_datatypes(static_cast<int>(i)), output);
   }
 
-  // required .pc_specification.MachineSpecification machine_spec = 7;
+  // required .pc_specification.MachineSpecification machine_spec = 8;
   if (cached_has_bits & 0x00000010u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      7, *this->machine_spec_, output);
+      8, *this->machine_spec_, output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -6513,33 +6541,38 @@ void Specification::SerializeWithCachedSizes(
         3, this->log_file_path(), target);
   }
 
-  // optional .pc_specification.DataType config_global_pou_var = 4;
+  // optional bool enable_kronos = 4;
+  if (cached_has_bits & 0x00000040u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(4, this->enable_kronos(), target);
+  }
+
+  // optional .pc_specification.DataType config_global_pou_var = 5;
   if (cached_has_bits & 0x00000004u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        4, *this->config_global_pou_var_, deterministic, target);
+        5, *this->config_global_pou_var_, deterministic, target);
   }
 
-  // optional .pc_specification.DataType config_access_pou_var = 5;
+  // optional .pc_specification.DataType config_access_pou_var = 6;
   if (cached_has_bits & 0x00000008u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        5, *this->config_access_pou_var_, deterministic, target);
+        6, *this->config_access_pou_var_, deterministic, target);
   }
 
-  // repeated .pc_specification.DataType complex_datatypes = 6;
+  // repeated .pc_specification.DataType complex_datatypes = 7;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->complex_datatypes_size()); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        6, this->complex_datatypes(static_cast<int>(i)), deterministic, target);
+        7, this->complex_datatypes(static_cast<int>(i)), deterministic, target);
   }
 
-  // required .pc_specification.MachineSpecification machine_spec = 7;
+  // required .pc_specification.MachineSpecification machine_spec = 8;
   if (cached_has_bits & 0x00000010u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        7, *this->machine_spec_, deterministic, target);
+        8, *this->machine_spec_, deterministic, target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -6559,13 +6592,13 @@ size_t Specification::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
-  // required .pc_specification.MachineSpecification machine_spec = 7;
+  // required .pc_specification.MachineSpecification machine_spec = 8;
   if (has_machine_spec()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSize(
         *this->machine_spec_);
   }
-  // repeated .pc_specification.DataType complex_datatypes = 6;
+  // repeated .pc_specification.DataType complex_datatypes = 7;
   {
     unsigned int count = static_cast<unsigned int>(this->complex_datatypes_size());
     total_size += 1UL * count;
@@ -6591,14 +6624,14 @@ size_t Specification::ByteSizeLong() const {
           this->log_file_path());
     }
 
-    // optional .pc_specification.DataType config_global_pou_var = 4;
+    // optional .pc_specification.DataType config_global_pou_var = 5;
     if (has_config_global_pou_var()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
           *this->config_global_pou_var_);
     }
 
-    // optional .pc_specification.DataType config_access_pou_var = 5;
+    // optional .pc_specification.DataType config_access_pou_var = 6;
     if (has_config_access_pou_var()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
@@ -6606,12 +6639,19 @@ size_t Specification::ByteSizeLong() const {
     }
 
   }
-  // optional .pc_specification.LogLevels log_level = 2;
-  if (has_log_level()) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::EnumSize(this->log_level());
-  }
+  if (_has_bits_[0 / 32] & 96u) {
+    // optional .pc_specification.LogLevels log_level = 2;
+    if (has_log_level()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->log_level());
+    }
 
+    // optional bool enable_kronos = 4;
+    if (has_enable_kronos()) {
+      total_size += 1 + 1;
+    }
+
+  }
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = cached_size;
@@ -6643,7 +6683,7 @@ void Specification::MergeFrom(const Specification& from) {
 
   complex_datatypes_.MergeFrom(from.complex_datatypes_);
   cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 63u) {
+  if (cached_has_bits & 127u) {
     if (cached_has_bits & 0x00000001u) {
       set_has_config_name();
       config_name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.config_name_);
@@ -6663,6 +6703,9 @@ void Specification::MergeFrom(const Specification& from) {
     }
     if (cached_has_bits & 0x00000020u) {
       log_level_ = from.log_level_;
+    }
+    if (cached_has_bits & 0x00000040u) {
+      enable_kronos_ = from.enable_kronos_;
     }
     _has_bits_[0] |= cached_has_bits;
   }
@@ -6710,6 +6753,7 @@ void Specification::InternalSwap(Specification* other) {
   swap(config_access_pou_var_, other->config_access_pou_var_);
   swap(machine_spec_, other->machine_spec_);
   swap(log_level_, other->log_level_);
+  swap(enable_kronos_, other->enable_kronos_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   swap(_cached_size_, other->_cached_size_);

@@ -2350,10 +2350,10 @@ class Specification : public ::google::protobuf::Message /* @@protoc_insertion_p
 
   // accessors -------------------------------------------------------
 
-  // repeated .pc_specification.DataType complex_datatypes = 6;
+  // repeated .pc_specification.DataType complex_datatypes = 7;
   int complex_datatypes_size() const;
   void clear_complex_datatypes();
-  static const int kComplexDatatypesFieldNumber = 6;
+  static const int kComplexDatatypesFieldNumber = 7;
   const ::pc_specification::DataType& complex_datatypes(int index) const;
   ::pc_specification::DataType* mutable_complex_datatypes(int index);
   ::pc_specification::DataType* add_complex_datatypes();
@@ -2392,28 +2392,28 @@ class Specification : public ::google::protobuf::Message /* @@protoc_insertion_p
   ::std::string* release_log_file_path();
   void set_allocated_log_file_path(::std::string* log_file_path);
 
-  // optional .pc_specification.DataType config_global_pou_var = 4;
+  // optional .pc_specification.DataType config_global_pou_var = 5;
   bool has_config_global_pou_var() const;
   void clear_config_global_pou_var();
-  static const int kConfigGlobalPouVarFieldNumber = 4;
+  static const int kConfigGlobalPouVarFieldNumber = 5;
   const ::pc_specification::DataType& config_global_pou_var() const;
   ::pc_specification::DataType* release_config_global_pou_var();
   ::pc_specification::DataType* mutable_config_global_pou_var();
   void set_allocated_config_global_pou_var(::pc_specification::DataType* config_global_pou_var);
 
-  // optional .pc_specification.DataType config_access_pou_var = 5;
+  // optional .pc_specification.DataType config_access_pou_var = 6;
   bool has_config_access_pou_var() const;
   void clear_config_access_pou_var();
-  static const int kConfigAccessPouVarFieldNumber = 5;
+  static const int kConfigAccessPouVarFieldNumber = 6;
   const ::pc_specification::DataType& config_access_pou_var() const;
   ::pc_specification::DataType* release_config_access_pou_var();
   ::pc_specification::DataType* mutable_config_access_pou_var();
   void set_allocated_config_access_pou_var(::pc_specification::DataType* config_access_pou_var);
 
-  // required .pc_specification.MachineSpecification machine_spec = 7;
+  // required .pc_specification.MachineSpecification machine_spec = 8;
   bool has_machine_spec() const;
   void clear_machine_spec();
-  static const int kMachineSpecFieldNumber = 7;
+  static const int kMachineSpecFieldNumber = 8;
   const ::pc_specification::MachineSpecification& machine_spec() const;
   ::pc_specification::MachineSpecification* release_machine_spec();
   ::pc_specification::MachineSpecification* mutable_machine_spec();
@@ -2426,6 +2426,13 @@ class Specification : public ::google::protobuf::Message /* @@protoc_insertion_p
   ::pc_specification::LogLevels log_level() const;
   void set_log_level(::pc_specification::LogLevels value);
 
+  // optional bool enable_kronos = 4;
+  bool has_enable_kronos() const;
+  void clear_enable_kronos();
+  static const int kEnableKronosFieldNumber = 4;
+  bool enable_kronos() const;
+  void set_enable_kronos(bool value);
+
   // @@protoc_insertion_point(class_scope:pc_specification.Specification)
  private:
   void set_has_config_name();
@@ -2434,6 +2441,8 @@ class Specification : public ::google::protobuf::Message /* @@protoc_insertion_p
   void clear_has_log_level();
   void set_has_log_file_path();
   void clear_has_log_file_path();
+  void set_has_enable_kronos();
+  void clear_has_enable_kronos();
   void set_has_config_global_pou_var();
   void clear_has_config_global_pou_var();
   void set_has_config_access_pou_var();
@@ -2451,6 +2460,7 @@ class Specification : public ::google::protobuf::Message /* @@protoc_insertion_p
   ::pc_specification::DataType* config_access_pou_var_;
   ::pc_specification::MachineSpecification* machine_spec_;
   int log_level_;
+  bool enable_kronos_;
   friend struct ::protobuf_configuration_2eproto::TableStruct;
   friend void ::protobuf_configuration_2eproto::InitDefaultsSpecificationImpl();
 };
@@ -4647,7 +4657,31 @@ inline void Specification::set_allocated_log_file_path(::std::string* log_file_p
   // @@protoc_insertion_point(field_set_allocated:pc_specification.Specification.log_file_path)
 }
 
-// optional .pc_specification.DataType config_global_pou_var = 4;
+// optional bool enable_kronos = 4;
+inline bool Specification::has_enable_kronos() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void Specification::set_has_enable_kronos() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void Specification::clear_has_enable_kronos() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void Specification::clear_enable_kronos() {
+  enable_kronos_ = false;
+  clear_has_enable_kronos();
+}
+inline bool Specification::enable_kronos() const {
+  // @@protoc_insertion_point(field_get:pc_specification.Specification.enable_kronos)
+  return enable_kronos_;
+}
+inline void Specification::set_enable_kronos(bool value) {
+  set_has_enable_kronos();
+  enable_kronos_ = value;
+  // @@protoc_insertion_point(field_set:pc_specification.Specification.enable_kronos)
+}
+
+// optional .pc_specification.DataType config_global_pou_var = 5;
 inline bool Specification::has_config_global_pou_var() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -4701,7 +4735,7 @@ inline void Specification::set_allocated_config_global_pou_var(::pc_specificatio
   // @@protoc_insertion_point(field_set_allocated:pc_specification.Specification.config_global_pou_var)
 }
 
-// optional .pc_specification.DataType config_access_pou_var = 5;
+// optional .pc_specification.DataType config_access_pou_var = 6;
 inline bool Specification::has_config_access_pou_var() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
@@ -4755,7 +4789,7 @@ inline void Specification::set_allocated_config_access_pou_var(::pc_specificatio
   // @@protoc_insertion_point(field_set_allocated:pc_specification.Specification.config_access_pou_var)
 }
 
-// repeated .pc_specification.DataType complex_datatypes = 6;
+// repeated .pc_specification.DataType complex_datatypes = 7;
 inline int Specification::complex_datatypes_size() const {
   return complex_datatypes_.size();
 }
@@ -4785,7 +4819,7 @@ Specification::complex_datatypes() const {
   return complex_datatypes_;
 }
 
-// required .pc_specification.MachineSpecification machine_spec = 7;
+// required .pc_specification.MachineSpecification machine_spec = 8;
 inline bool Specification::has_machine_spec() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }

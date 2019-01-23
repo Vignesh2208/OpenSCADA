@@ -23,6 +23,7 @@ namespace pc_emulator {
     class Utils {
 
         public:
+
         static void InitializeDataType(PCConfiguration * __configuration,
                                 PCDataType * __new_data_type,
                                 const pc_specification::DataType& DataTypeSpec);
@@ -38,6 +39,7 @@ namespace pc_emulator {
             PCConfiguration * __configuration, string StorageSpec, 
                                             int * MemType, int * ByteOffset,
                                             int * BitOffset);
+
     };
 }   
 

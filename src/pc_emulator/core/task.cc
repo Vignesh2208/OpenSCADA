@@ -18,7 +18,7 @@ using namespace pc_emulator;
 using namespace pc_specification;
 
 ProgramContainer::ProgramContainer(PCResource * AssociatedResource,
-    const ProgramSpecification& program_spec) {
+    const ProgramSpecification& program_spec, Task * AssociatedTask) {
     __ProgramName = program_spec.program_name();
     __AssociatedResource = AssociatedResource;
     assert(__AssociatedResource != nullptr);
@@ -28,9 +28,9 @@ ProgramContainer::ProgramContainer(PCResource * AssociatedResource,
     for (auto initialization_map : program_spec.initialization_maps()) {
         __initialization_map.push_back(initialization_map);
     }
-
+    __AssociatedTask = __AssociatedTask;
     __AssociatedExecutor = new Executor(__AssociatedResource->__configuration,
-                                        __AssociatedResource); 
+                                        __AssociatedResource, AssociatedTask); 
 
     __AssociatedExecutor->SetExecPoUVariable(__ExecPoUVariable);   
 }
@@ -41,7 +41,7 @@ void ProgramContainer::Cleanup() {
 
 void Task::AddProgramToTask(const ProgramSpecification& program_spec) {
     ProgramContainer * ProgContainer 
-            = new ProgramContainer(__AssociatedResource, program_spec);
+            = new ProgramContainer(__AssociatedResource, program_spec, this);
     
     __AssociatedPrograms.push_back(ProgContainer);
 }
@@ -143,6 +143,9 @@ void Task::Execute() {
         }
 
     }
+
+    if (type == TaskType::INTERRUPT)
+        __IsReady = false;
 }
 
 void Task::Cleanup() {
@@ -152,3 +155,5 @@ void Task::Cleanup() {
     }
     __AssociatedPrograms.clear();
 }
+
+

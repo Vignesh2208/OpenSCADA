@@ -51,6 +51,7 @@ namespace pc_emulator {
                         int MemType, int ByteOffset,
                         int BitOffset, string VariableDataTypeName); 
             void Cleanup();
+
     };
 }
 

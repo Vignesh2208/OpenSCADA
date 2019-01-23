@@ -5,6 +5,7 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <regex>
 #include <vector>
+#include <queue>
 
 #include "pc_emulator/include/pc_pou_code_container.h"
 #include "pc_emulator/include/pc_datatype.h"
@@ -12,6 +13,7 @@
 #include "pc_emulator/include/pc_resource.h"
 #include "pc_emulator/include/pc_configuration.h"
 #include "pc_emulator/include/utils.h"
+#include "pc_emulator/include/task.h"
 
 using namespace std;
 using namespace pc_emulator;
@@ -260,4 +262,195 @@ PoUCodeContainer * PCResource::GetCodeContainer(string PoUDataTypeName) {
         return nullptr;
     
     return got->second;
+}
+
+
+void PCResource::AddTask(Task * Tsk) {
+
+    if (Tsk && __Tasks.find(Tsk->__TaskName) == __Tasks.end()) {
+        __Tasks.insert(std::make_pair(Tsk->__TaskName, Tsk));
+        return;
+    }
+
+    __configuration->PCLogger->RaiseException("Couldn't add tsk to resource !");
+}
+
+Task * PCResource::GetTask(string TaskName) {
+    auto got = __Tasks.find(TaskName);
+    if (got != __Tasks.end())
+        return got->second;
+    return nullptr;
+}
+
+void PCResource::QueueTask (Task * Tsk) {
+
+    if (Tsk == nullptr)
+        __configuration->PCLogger->RaiseException("Cannot queue null task!");
+
+    auto got = __IntervalTasksByPriority.find(Tsk->__priority);
+    if (got == __IntervalTasksByPriority.end() 
+                    && Tsk->type == TaskType::INTERVAL) {
+        
+        CompactTaskDescription tskDescription(Tsk->__TaskName,
+                                            Tsk->__nxt_schedule_time_ms);
+        __IntervalTasksByPriority.insert(std::make_pair(Tsk->__priority,
+                    priority_queue<CompactTaskDescription>()));
+        __IntervalTasksByPriority.find(Tsk->__priority)->second.push(
+                            tskDescription);
+    } else if (Tsk->type == TaskType::INTERVAL) {
+        CompactTaskDescription tskDescription(Tsk->__TaskName,
+                                            Tsk->__nxt_schedule_time_ms);
+        got->second.push(tskDescription);
+    } else {
+        auto got = __InterruptTasks.find(Tsk->__trigger_variable_name);
+        if (got == __InterruptTasks.end()) {
+            
+            __InterruptTasks.insert(std::make_pair(Tsk->__trigger_variable_name,
+                                    vector<Task*>()));
+            __InterruptTasks.find(
+                    Tsk->__trigger_variable_name)->second.push_back(Tsk);
+        } else {
+            got->second.push_back(Tsk);
+        }
+    }
+}
+
+Task * PCResource::GetInterruptTaskToExecute() {
+    Task * EligibleTask = nullptr;
+    int highest_priority = 10000;
+
+    for (auto it = __InterruptTasks.begin(); it != __InterruptTasks.end(); it++) {
+        PCVariable * trigger;
+        trigger = __configuration->GetVariable(it->first);
+        if(!trigger) {
+            trigger = GetGlobalVariable(it->first);
+            if(!trigger)
+                __configuration->PCLogger->RaiseException("Invalid trigger: "
+                        + it->first);
+
+        }
+        assert(trigger->__VariableDataType->__DataTypeCategory 
+                    == DataTypeCategories::BOOL); //trigger must be a boolean
+        auto curr_value = trigger->GetFieldValue<bool>("",
+                                        DataTypeCategories::BOOL);
+        
+        
+        for (int itt = 0; itt < it->second.size(); itt++) {
+            auto prev_value = it->second[itt]->__trigger_variable_previous_value;
+            if (prev_value == false && curr_value == true) {
+                if (it->second[itt]->__priority < highest_priority) {
+                    highest_priority = it->second[itt]->__priority;
+                    EligibleTask = it->second[itt];
+                }
+
+                it->second[itt]->__IsReady = true;
+                it->second[itt]->__trigger_variable_previous_value = true;
+            } else if (it->second[itt]->__IsReady == true) {
+                if (it->second[itt]->__priority < highest_priority) {
+                    highest_priority = it->second[itt]->__priority;
+                    EligibleTask = it->second[itt];
+                }
+            }
+        }
+    }
+
+    if (EligibleTask != nullptr)
+        return EligibleTask;
+    return nullptr;
+}
+
+Task * PCResource::GetIntervalTaskToExecuteAt(double schedule_time) {
+
+    
+
+    // Else we need to get highest priority expired interval task
+    
+    Task * EligibleTask = nullptr;
+    int highest_priority = 10000;
+
+    for(auto it = __IntervalTasksByPriority.begin(); 
+            it != __IntervalTasksByPriority.end(); it++ ) {
+        
+        auto compact_tsk_description = it->second.top();
+
+        if (it->first < highest_priority 
+            && compact_tsk_description.__nxt_schedule_time_ms <= schedule_time) {
+            highest_priority = it->first;
+            EligibleTask = GetTask(compact_tsk_description.__TaskName);
+        }
+    }
+
+    if (EligibleTask != nullptr) {
+        __IntervalTasksByPriority.find(highest_priority)->second.pop();
+        return EligibleTask;
+    }
+
+    return nullptr;
+
+}
+
+void PCResource::InitializeAllTasks() {
+    for (auto resource_spec : 
+           __configuration->__specification.machine_spec().resource_spec()) {
+        if(__ResourceName == resource_spec.resource_name()) {
+            for (auto task_spec : resource_spec.tasks()) {
+                    Task * new_task = new Task(__configuration, this, task_spec);
+
+                    if (new_task->type == TaskType::INTERVAL) {
+                        new_task->SetNextScheduleTime(clock->GetCurrentTime()
+                            + (float)new_task->__interval_ms);
+                    }
+
+                    AddTask(new_task);
+                    QueueTask(new_task);
+            }   
+
+            for (auto program_spec : resource_spec.programs()) {
+                Task * associated_task 
+                            = GetTask(program_spec.task_name());
+                if (associated_task != nullptr) {
+                    associated_task->AddProgramToTask(program_spec);
+                    
+                }
+                
+            }
+            break;
+        }
+    }
+}
+
+ void PCResource::InitializeClock() {
+     if (__configuration->__specification.has_enable_kronos() && 
+            __configuration->__specification.enable_kronos())
+        clock = new Clock(true, this);
+    else {
+        clock = new Clock(false, this);
+    }
+
+}
+
+void PCResource::OnStartup() {
+    InitializeClock();
+    InitializeAllTasks();
+}
+
+
+bool CompactTaskDescription::operator==(const CompactTaskDescription& a) {
+    return a.__nxt_schedule_time_ms == __nxt_schedule_time_ms;
+}
+
+bool CompactTaskDescription::operator>(const CompactTaskDescription& a) {
+    return a.__nxt_schedule_time_ms > __nxt_schedule_time_ms;
+}
+
+bool CompactTaskDescription::operator<(const CompactTaskDescription& a) {
+    return a.__nxt_schedule_time_ms < __nxt_schedule_time_ms;
+}
+
+bool CompactTaskDescription::operator<=(const CompactTaskDescription& a) {
+    return a.__nxt_schedule_time_ms <= __nxt_schedule_time_ms;
+}
+
+bool CompactTaskDescription::operator>=(const CompactTaskDescription& a) {
+    return a.__nxt_schedule_time_ms >= __nxt_schedule_time_ms;
 }

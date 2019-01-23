@@ -32,8 +32,8 @@ void Logger::RaiseException(std::string Message) {
     this->ShutDown();
 }
 
+// this will kill one of the resource threads
 void Logger::ShutDown() {
-    LogMessage(LOG_LEVELS::LOG_INFO, "Shutting Down ....");
-    __configuration->Cleanup();
+    LogMessage(LOG_LEVELS::LOG_INFO, "Shutting Down Resource Thread ....");
     exit(0);
 }
