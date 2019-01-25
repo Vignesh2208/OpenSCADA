@@ -13,6 +13,12 @@
 using namespace std;
 using namespace pc_specification;
 
+#define US_IN_MS 1000
+#define US_IN_SEC 1000000
+#define NS_IN_US 1000
+#define NS_IN_MS 1000000
+#define NS_IN_SEC 1000000000
+#define MS_IN_SEC 1000
 
 namespace pc_emulator {
 

@@ -38,7 +38,7 @@ namespace pc_emulator {
     class PCResource {
         private:
             
-            string __ResourceName;
+            
             int __InputMemSize;
             int __OutputMemSize;
             PCMemUnit __InputMemory;
@@ -54,6 +54,7 @@ namespace pc_emulator {
             
 
         public :
+            string __ResourceName;
             PCConfiguration * __configuration;
             Clock *clock;
             PCResource(PCConfiguration * configuration, 
