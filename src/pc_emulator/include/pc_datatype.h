@@ -8,7 +8,11 @@
 #include <assert.h>
 #include <unordered_map>
 
+
+#include "pc_emulator/proto/configuration.pb.h"
+
 using namespace std;
+using namespace pc_specification;
 
 typedef long long int s64;
 
@@ -366,60 +370,12 @@ namespace pc_emulator {
 
     typedef struct TIMEDataType TimeType;
 
-    
-
-    enum DataTypeCategories {
-        BOOL,
-        BYTE,
-        WORD,
-        DWORD,
-        LWORD,
-        CHAR,
-        INT,
-        SINT,
-        DINT,
-        LINT,
-        UINT,
-        USINT,
-        UDINT,
-        ULINT,
-        REAL,
-        LREAL,
-        TIME,
-        DATE,
-        TIME_OF_DAY,
-        DATE_AND_TIME,
-        ARRAY,
-        DERIVED,
-        POU,
-        NOT_ASSIGNED
-    };
-
-    enum FIELD_INTERFACE_TYPES {
-        VAR_INPUT,
-        VAR_OUTPUT,
-        VAR_IN_OUT,
-        VAR,
-        VAR_TEMP,
-        VAR_EXTERNAL,
-        VAR_GLOBAL,
-        VAR_ACCESS,
-        VAR_EXPLICIT_STORAGE,
-        NA
-    };
-
-    enum MEM_TYPE {
-        INPUT_MEM,
-        OUTPUT_MEM,
-        RAM_MEM
-    };
-
     class PCDataTypeField {
         public:
             string __FieldName;
             string __FieldTypeName;
             int __FieldInterfaceType;
-            DataTypeCategories __FieldTypeCategory;
+            DataTypeCategory __FieldTypeCategory;
             s64 __RangeMin, __RangeMax;
             string __InitialValue; 
             PCDataType * __FieldTypePtr;
@@ -428,7 +384,7 @@ namespace pc_emulator {
             int __StorageBitOffset;      
 
         PCDataTypeField(string FieldName, string FieldTypeName,
-                        DataTypeCategories FieldTypeCategory,
+                        DataTypeCategory FieldTypeCategory,
                         s64 RangeMin, s64 RangeMax, string InitialValue,
                         int FieldInterfaceType, PCDataType * FieldTypePtr)
             : __FieldName(FieldName), __FieldTypeName(FieldTypeName), 
@@ -454,7 +410,7 @@ namespace pc_emulator {
             string __DataTypeName;
             PCConfiguration * __configuration;
             unordered_map<int, std::vector<PCDataTypeField>> __FieldsByInterfaceType;
-            DataTypeCategories __DataTypeCategory;
+            DataTypeCategory __DataTypeCategory;
             int __SizeInBits;
             int __NFields;
             s64 __RangeMin, __RangeMax;
@@ -482,7 +438,7 @@ namespace pc_emulator {
             int FieldInterfaceType, s64 RangeMin, s64 RangeMax);
 
         void AddDataTypeField(string FieldName, string FieldTypeName,
-            DataTypeCategories FieldTypeCategory, string InitialValue,
+            DataTypeCategory FieldTypeCategory, string InitialValue,
             int FieldInterfaceType, s64 RangeMin, s64 RangeMax);
 
 
@@ -492,7 +448,7 @@ namespace pc_emulator {
             int MemType, int ByteOffset, int BitOffset);
 
         void AddDataTypeFieldAT(string FieldName, string FieldTypeName,
-            DataTypeCategories FieldTypeCategory, string InitialValue,
+            DataTypeCategory FieldTypeCategory, string InitialValue,
             s64 RangeMin, s64 RangeMax, int MemType, int ByteOffset,
             int BitOffset);
 
@@ -510,21 +466,21 @@ namespace pc_emulator {
         // Non-Array
         PCDataType(PCConfiguration* configuration, 
                     string AliasName, string DataTypeName,
-                    DataTypeCategories Category = DataTypeCategories::NOT_ASSIGNED,
+                    DataTypeCategory Category = DataTypeCategory::NOT_ASSIGNED,
                     string InitialValue="", s64 RangeMin = LLONG_MIN,
                     s64 RangeMax = LLONG_MAX);
 
         // 1-D Array
         PCDataType(PCConfiguration* configuration, 
                     string AliasName, string DataTypeName, int DimSize, 
-                    DataTypeCategories Category,
+                    DataTypeCategory Category,
                     string InitialValue="", s64 RangeMin = LLONG_MIN,
                     s64 RangeMax = LLONG_MAX);
         // 2-D Array
         PCDataType(PCConfiguration* configuration, 
                     string AliasName, string DataTypeName,
                     int Dim1Size, int Dim2Size, 
-                    DataTypeCategories Category,
+                    DataTypeCategory Category,
                     string InitialValue="", 
                     s64 RangeMin = LLONG_MIN, s64 RangeMax = LLONG_MAX);
         void Cleanup();

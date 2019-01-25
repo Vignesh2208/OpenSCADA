@@ -38,7 +38,7 @@ void ResourceManager::ExecuteResource() {
                 __AssociatedResource->clock->SleepFor(US_IN_MS);
             } else {
                 __AssociatedResource->__configuration->PCLogger->LogMessage(
-                LOG_LEVELS::LOG_INFO,
+                LogLevels::LOG_INFO,
                 std::to_string(curr_time) +
                 " >> Resource: " 
                 + __AssociatedResource->__ResourceName +  " Executing Task: "
@@ -47,7 +47,7 @@ void ResourceManager::ExecuteResource() {
             }
         } else {
             __AssociatedResource->__configuration->PCLogger->LogMessage(
-                LOG_LEVELS::LOG_INFO,
+                LogLevels::LOG_INFO,
                 std::to_string(curr_time) +
                 " >> Resource: " 
                 + __AssociatedResource->__ResourceName +  " Executing Task: "

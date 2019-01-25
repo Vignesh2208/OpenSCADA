@@ -49,10 +49,10 @@ namespace pc_emulator {
             void CopyPCVariableFieldFromPointer(DataTypeFieldAttributes&
                                                 Attributes, PCVariable * From);
             void GetAndStoreValue(string NestedFieldName, void * Value,
-                                int CopySize, int DataTypeCategory);
+                                int CopySize, int CategoryOfDataType);
 
             template <typename T> bool OperateOnVariables(T var1, T var2,
-                                        int DataTypeCategory, int VarOp);
+                                        int CategoryOfDataType, int VarOp);
 
             bool InitiateOperationOnVariables(PCVariable& V, int VarOp);
 
@@ -107,7 +107,7 @@ namespace pc_emulator {
             
 
             template <typename T> T GetFieldValue(string NestedFieldName,
-                                            int DataTypeCategory);
+                                            int CategoryOfDataType);
 
             void GetFieldAttributes(string NestedFieldName, 
                             DataTypeFieldAttributes& FieldAttributes);

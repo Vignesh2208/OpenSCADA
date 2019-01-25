@@ -6,16 +6,13 @@
 #include <string>
 #include <assert.h>
 
+#include "pc_emulator/proto/configuration.pb.h"
+
 using namespace std;
+using namespace pc_specification;
 
 namespace pc_emulator {
     class PCConfiguration;
-    enum LOG_LEVELS {
-        LOG_NONE,
-        LOG_INFO,
-        LOG_ERROR,
-        LOG_VERBOSE
-    };
 
     class Logger {
         private:
@@ -33,10 +30,10 @@ namespace pc_emulator {
                             __ofs.open(LogFile, std::ofstream::out 
                                             | std::ofstream::app );
 
-                        assert (LogLevel == LOG_LEVELS::LOG_NONE
-                                || LogLevel == LOG_LEVELS::LOG_ERROR
-                                || LogLevel == LOG_LEVELS::LOG_INFO 
-                                || LogLevel == LOG_LEVELS::LOG_VERBOSE);
+                        assert (LogLevel == LogLevels::LOG_NONE
+                                || LogLevel == LogLevels::LOG_ERROR
+                                || LogLevel == LogLevels::LOG_INFO 
+                                || LogLevel == LogLevels::LOG_VERBOSE);
                     };
             void LogMessage(int LogLevel, std::string Message);
             void RaiseException(std::string ErrorMessage);

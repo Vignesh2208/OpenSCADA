@@ -60,7 +60,7 @@ void Task::Execute() {
             
             
             if (Attributes.FieldInterfaceType 
-                        == FIELD_INTERFACE_TYPES::VAR_INPUT) {
+                        == FieldInterfaceType::VAR_INPUT) {
 
                 // Copy to mapped input variables
                 PCVariable * mappedVariable 
@@ -82,11 +82,11 @@ void Task::Execute() {
                 output_vars.push_back(0);
                 
             } else if (Attributes.FieldInterfaceType 
-                        == FIELD_INTERFACE_TYPES::VAR_OUTPUT) {
+                        == FieldInterfaceType::VAR_OUTPUT) {
                 output_vars.push_back(1);
 
             } else if (Attributes.FieldInterfaceType 
-                        == FIELD_INTERFACE_TYPES::VAR_IN_OUT) {
+                        == FieldInterfaceType::VAR_IN_OUT) {
 
                 // Set pointers to some inout variables
                 PCVariable * mappedVariable 

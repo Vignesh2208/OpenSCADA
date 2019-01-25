@@ -78,7 +78,7 @@ void PCVariable::AllocateAndInitialize() {
 void PCVariable::OnExecutorStartup() {
     for(auto& DefinedField: 
         __VariableDataType->__FieldsByInterfaceType[
-            FIELD_INTERFACE_TYPES::VAR_TEMP]) {
+            FieldInterfaceType::VAR_TEMP]) {
         
         PCVariable* FieldVariable 
             = GetPCVariableToField(DefinedField.__FieldName);
@@ -102,8 +102,8 @@ void PCVariable::ParseRemFieldAttributes(std::vector<string>& NestedFields,
 
     for (int i = StartPos; i < NestedFields.size(); i++) {
         string AccessedFieldName = NestedFields[i];
-        for (int IntfType = FIELD_INTERFACE_TYPES::VAR_INPUT; 
-            IntfType != FIELD_INTERFACE_TYPES::NA + 1; IntfType ++) {
+        for (int IntfType = FieldInterfaceType::VAR_INPUT; 
+            IntfType != FieldInterfaceType::NA + 1; IntfType ++) {
             for(auto& DefinedField: DataType->__FieldsByInterfaceType[IntfType]) {
                 PCDataType * FieldDataType = DefinedField.__FieldTypePtr;
                 assert(FieldDataType != nullptr);
@@ -115,9 +115,9 @@ void PCVariable::ParseRemFieldAttributes(std::vector<string>& NestedFields,
                     if (i == NestedFields.size() - 1)
                         return; // note theat the relative offset is already set
 
-                    if (IntfType == FIELD_INTERFACE_TYPES::VAR_IN_OUT || 
-                        IntfType == FIELD_INTERFACE_TYPES::VAR_EXTERNAL ||
-                        IntfType == FIELD_INTERFACE_TYPES::VAR_ACCESS ) {
+                    if (IntfType == FieldInterfaceType::VAR_IN_OUT || 
+                        IntfType == FieldInterfaceType::VAR_EXTERNAL ||
+                        IntfType == FieldInterfaceType::VAR_ACCESS ) {
                         PCVariable * nxtHolderVariable;
                                               
                         std::memcpy(&nxtHolderVariable,
@@ -134,9 +134,9 @@ void PCVariable::ParseRemFieldAttributes(std::vector<string>& NestedFields,
                                     FieldAttributes, HolderVariable);
                     return;
                 } else {
-                    if (IntfType == FIELD_INTERFACE_TYPES::VAR_IN_OUT || 
-                        IntfType == FIELD_INTERFACE_TYPES::VAR_EXTERNAL ||
-                        IntfType == FIELD_INTERFACE_TYPES::VAR_ACCESS ) {
+                    if (IntfType == FieldInterfaceType::VAR_IN_OUT || 
+                        IntfType == FieldInterfaceType::VAR_EXTERNAL ||
+                        IntfType == FieldInterfaceType::VAR_ACCESS ) {
                         // this is a pointer
                         FieldAttributes.RelativeOffset += sizeof (PCDataType *);
                     } else {
@@ -161,7 +161,7 @@ void PCVariable::GetFieldAttributes(string NestedFieldName,
     if (NestedFields.empty()) {
         
         FieldAttributes.RelativeOffset = 0;
-        FieldAttributes.FieldInterfaceType = FIELD_INTERFACE_TYPES::NA;
+        FieldAttributes.FieldInterfaceType = FieldInterfaceType::NA;
         FieldAttributes.SizeInBits = this->__VariableDataType->__SizeInBits;
         FieldAttributes.FieldDataTypePtr = this->__VariableDataType;
         FieldAttributes.NestedFieldName = "";
@@ -171,7 +171,7 @@ void PCVariable::GetFieldAttributes(string NestedFieldName,
     }
     FieldAttributes.FieldDataTypePtr = this->__VariableDataType;
     FieldAttributes.HoldVariablePtr = this;
-    FieldAttributes.FieldInterfaceType = FIELD_INTERFACE_TYPES::NA;
+    FieldAttributes.FieldInterfaceType = FieldInterfaceType::NA;
     FieldAttributes.NestedFieldName = NestedFieldName;
     FieldAttributes.RelativeOffset = 0;
     FieldAttributes.SizeInBits = this->__VariableDataType->__SizeInBits;
@@ -190,10 +190,10 @@ PCVariable* PCVariable::GetPCVariableToField(string NestedFieldName) {
 
     PCVariable * HolderVariable = Attributes.HoldVariablePtr;
 
-    if (Attributes.FieldInterfaceType != FIELD_INTERFACE_TYPES::VAR_IN_OUT
-        && Attributes.FieldInterfaceType != FIELD_INTERFACE_TYPES::VAR_EXTERNAL
-        && Attributes.FieldInterfaceType != FIELD_INTERFACE_TYPES::VAR_ACCESS
-        && Attributes.FieldInterfaceType != FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE) {
+    if (Attributes.FieldInterfaceType != FieldInterfaceType::VAR_IN_OUT
+        && Attributes.FieldInterfaceType != FieldInterfaceType::VAR_EXTERNAL
+        && Attributes.FieldInterfaceType != FieldInterfaceType::VAR_ACCESS
+        && Attributes.FieldInterfaceType != FieldInterfaceType::VAR_EXPLICIT_STORAGE) {
 
         std::unordered_map<std::string, PCVariable*>::const_iterator got = 
                         __AccessedFields.find (NestedFieldName);
@@ -237,7 +237,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
     assert(V->__VariableDataType != nullptr);
 
     switch(V->__VariableDataType->__DataTypeCategory) {
-        case DataTypeCategories::BOOL : 
+        case DataTypeCategory::BOOL : 
                         assert(V->__VariableDataType->__NFields == 0);
                         bool resbool;
                         assert(DataTypeUtils::ValueToBool(
@@ -245,7 +245,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                         V->SetPCVariableField("", &resbool, sizeof(resbool));
                         return;
 
-        case DataTypeCategories::BYTE : 
+        case DataTypeCategory::BYTE : 
                         assert(V->__VariableDataType->__NFields == 0);
                         int8_t resbyte;
                         assert(DataTypeUtils::ValueToByte(
@@ -253,7 +253,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                         V->SetPCVariableField("", &resbyte, sizeof(resbyte));
                         return; 
 
-        case DataTypeCategories::WORD : 
+        case DataTypeCategory::WORD : 
                 assert(V->__VariableDataType->__NFields == 0);
                 int16_t resword;
                 assert(DataTypeUtils::ValueToWord(
@@ -261,7 +261,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 V->SetPCVariableField("", &resword, sizeof(resword));
                 return;     
 
-        case DataTypeCategories::DWORD : 
+        case DataTypeCategory::DWORD : 
                 assert(V->__VariableDataType->__NFields == 0);
                 int32_t resdword;
                 assert(DataTypeUtils::ValueToDWord(
@@ -269,7 +269,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 V->SetPCVariableField("", &resdword, sizeof(resdword));
                 return;     
 
-        case DataTypeCategories::LWORD : 
+        case DataTypeCategory::LWORD : 
                 assert(V->__VariableDataType->__NFields == 0);
                 int64_t reslword;
                 assert(DataTypeUtils::ValueToLWord(
@@ -277,7 +277,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 V->SetPCVariableField("", &reslword, sizeof(reslword));
                 return;     
 
-        case DataTypeCategories::CHAR : 
+        case DataTypeCategory::CHAR : 
                 assert(V->__VariableDataType->__NFields == 0);
                 char reschar;
                 assert(DataTypeUtils::ValueToChar(
@@ -285,7 +285,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 V->SetPCVariableField("", &reschar, sizeof(reschar));
                 return; 
                 
-        case DataTypeCategories::INT : 
+        case DataTypeCategory::INT : 
                 assert(V->__VariableDataType->__NFields == 0);
                 int16_t resint;
                 assert(DataTypeUtils::ValueToInt(
@@ -293,7 +293,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 V->SetPCVariableField("", &resint, sizeof(resint));
                 return;
 
-        case DataTypeCategories::SINT : 
+        case DataTypeCategory::SINT : 
                 assert(V->__VariableDataType->__NFields == 0);
                 int8_t ressint;
                 assert(DataTypeUtils::ValueToSint(
@@ -301,7 +301,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 V->SetPCVariableField("", &ressint, sizeof(ressint));
                 return;     
 
-        case DataTypeCategories::DINT : 
+        case DataTypeCategory::DINT : 
                 assert(V->__VariableDataType->__NFields == 0);
                 int32_t resdint;
                 assert(DataTypeUtils::ValueToDint(
@@ -309,7 +309,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 V->SetPCVariableField("", &resdint, sizeof(resdint));
                 return;     
 
-        case DataTypeCategories::LINT : 
+        case DataTypeCategory::LINT : 
                 assert(V->__VariableDataType->__NFields == 0);
                 int64_t reslint;
                 assert(DataTypeUtils::ValueToLint(
@@ -317,7 +317,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 V->SetPCVariableField("", &reslint, sizeof(reslint));
                 return;     
 
-        case DataTypeCategories::UINT : 
+        case DataTypeCategory::UINT : 
                 assert(V->__VariableDataType->__NFields == 0);
                 uint16_t resuint;
                 assert(DataTypeUtils::ValueToUint(
@@ -325,7 +325,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 V->SetPCVariableField("", &resuint, sizeof(resuint));
                 return;     
 
-        case DataTypeCategories::USINT : 
+        case DataTypeCategory::USINT : 
                 assert(V->__VariableDataType->__NFields == 0);
                 uint8_t resusint;
                 assert(DataTypeUtils::ValueToUsint(
@@ -333,7 +333,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 V->SetPCVariableField("", &resusint, sizeof(resusint));
                 return;     
 
-        case DataTypeCategories::UDINT : 
+        case DataTypeCategory::UDINT : 
                 assert(V->__VariableDataType->__NFields == 0);
                 uint32_t resudint;
                 assert(DataTypeUtils::ValueToUdint(
@@ -341,7 +341,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 V->SetPCVariableField("", &resudint, sizeof(resudint));
                 return;
 
-        case DataTypeCategories::ULINT : 
+        case DataTypeCategory::ULINT : 
                 assert(V->__VariableDataType->__NFields == 0);
                 uint64_t resulint;
                 assert(DataTypeUtils::ValueToUlint(
@@ -349,7 +349,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 V->SetPCVariableField("", &resulint, sizeof(resulint));
                 return; 
 
-        case DataTypeCategories::REAL : 
+        case DataTypeCategory::REAL : 
                 assert(V->__VariableDataType->__NFields == 0);
                 float resreal;
                 assert(DataTypeUtils::ValueToReal(
@@ -357,7 +357,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 V->SetPCVariableField("", &resreal, sizeof(resreal));
                 return;     
 
-        case DataTypeCategories::LREAL : 
+        case DataTypeCategory::LREAL : 
                 assert(V->__VariableDataType->__NFields == 0);
                 double reslreal;
                 assert(DataTypeUtils::ValueToLReal(
@@ -365,7 +365,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 V->SetPCVariableField("", &reslreal, sizeof(reslreal));
                 return;     
 
-        case DataTypeCategories::TIME : 
+        case DataTypeCategory::TIME : 
                 assert(V->__VariableDataType->__NFields == 0);
                 TimeType restime;
                 assert(DataTypeUtils::ValueToTime(
@@ -373,7 +373,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 V->SetPCVariableField("", &restime, sizeof(restime));
                 return;     
 
-        case DataTypeCategories::DATE : 
+        case DataTypeCategory::DATE : 
                 assert(V->__VariableDataType->__NFields == 0);
                 DateType resdate;
                 assert(DataTypeUtils::ValueToDate(
@@ -381,7 +381,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 V->SetPCVariableField("", &resdate, sizeof(resdate));
                 return;     
 
-        case DataTypeCategories::DATE_AND_TIME : 
+        case DataTypeCategory::DATE_AND_TIME : 
                 assert(V->__VariableDataType->__NFields == 0);
                 DateTODType resdt;
                 assert(DataTypeUtils::ValueToDT(
@@ -389,7 +389,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 V->SetPCVariableField("", &resdt, sizeof(resdt));
                 return;     
 
-        case DataTypeCategories::TIME_OF_DAY : 
+        case DataTypeCategory::TIME_OF_DAY : 
                 assert(V->__VariableDataType->__NFields == 0);
                 TODType restod;
                 assert(DataTypeUtils::ValueToTOD(
@@ -398,13 +398,13 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 return;     
 
         default :
-                for (int IntfType = FIELD_INTERFACE_TYPES::VAR_INPUT; 
-                    IntfType != FIELD_INTERFACE_TYPES::NA + 1; IntfType ++) {
+                for (int IntfType = FieldInterfaceType::VAR_INPUT; 
+                    IntfType != FieldInterfaceType::NA + 1; IntfType ++) {
                     
-                    if (IntfType != FIELD_INTERFACE_TYPES::VAR_IN_OUT &&
-                        IntfType != FIELD_INTERFACE_TYPES::VAR_EXTERNAL &&
-                        IntfType != FIELD_INTERFACE_TYPES::VAR_ACCESS &&
-                        IntfType != FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE) {
+                    if (IntfType != FieldInterfaceType::VAR_IN_OUT &&
+                        IntfType != FieldInterfaceType::VAR_EXTERNAL &&
+                        IntfType != FieldInterfaceType::VAR_ACCESS &&
+                        IntfType != FieldInterfaceType::VAR_EXPLICIT_STORAGE) {
                         // all non ptr fields
                         for(auto& DefinedField: 
                             V->__VariableDataType->__FieldsByInterfaceType[IntfType]) {
@@ -425,13 +425,13 @@ void PCVariable::InitializeVariable(PCVariable * V) {
 
 }
 void PCVariable::InitializeAllNonPtrFields() {
-    for (int IntfType = FIELD_INTERFACE_TYPES::VAR_INPUT; 
-            IntfType != FIELD_INTERFACE_TYPES::NA; IntfType ++) {
+    for (int IntfType = FieldInterfaceType::VAR_INPUT; 
+            IntfType != FieldInterfaceType::NA; IntfType ++) {
         
-        if (IntfType != FIELD_INTERFACE_TYPES::VAR_IN_OUT &&
-            IntfType != FIELD_INTERFACE_TYPES::VAR_EXTERNAL &&
-            IntfType != FIELD_INTERFACE_TYPES::VAR_ACCESS &&
-            IntfType != FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE) {
+        if (IntfType != FieldInterfaceType::VAR_IN_OUT &&
+            IntfType != FieldInterfaceType::VAR_EXTERNAL &&
+            IntfType != FieldInterfaceType::VAR_ACCESS &&
+            IntfType != FieldInterfaceType::VAR_EXPLICIT_STORAGE) {
             for(auto& DefinedField: 
                 __VariableDataType->__FieldsByInterfaceType[IntfType]) {
                 
@@ -447,13 +447,13 @@ void PCVariable::InitializeAllNonPtrFields() {
 }
 
 void PCVariable::InitializeAllDirectlyRepresentedFields() {
-    if (__VariableDataType->__DataTypeCategory == DataTypeCategories::POU) {
+    if (__VariableDataType->__DataTypeCategory == DataTypeCategory::POU) {
         for(auto& DefinedField: 
                 __VariableDataType->__FieldsByInterfaceType[
-                    FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE]) {
+                    FieldInterfaceType::VAR_EXPLICIT_STORAGE]) {
                 
                 PCVariable* FieldVariable;  
-                if (DefinedField.__StorageMemType == MEM_TYPE::RAM_MEM)          
+                if (DefinedField.__StorageMemType == MemType::RAM_MEM)          
                     FieldVariable 
                         = __configuration->GetVariablePointerToMem(
                             DefinedField.__StorageMemType,
@@ -477,10 +477,10 @@ void PCVariable::InitializeAllDirectlyRepresentedFields() {
 }
 
 void PCVariable::ResolveAllExternalFields() {
-    if (__VariableDataType->__DataTypeCategory == DataTypeCategories::POU) {
+    if (__VariableDataType->__DataTypeCategory == DataTypeCategory::POU) {
         for(auto& DefinedField: 
                 __VariableDataType->__FieldsByInterfaceType[
-                    FIELD_INTERFACE_TYPES::VAR_EXTERNAL]) {
+                    FieldInterfaceType::VAR_EXTERNAL]) {
                 
                 PCVariable* FieldVariable;  
                           
@@ -506,7 +506,7 @@ void PCVariable::ResolveAllExternalFields() {
 
 void PCVariable::SetPtr(string NestedFieldName, PCVariable * ptr) {
     assert(__VariableDataType->__DataTypeCategory 
-                            == DataTypeCategories::POU);
+                            == DataTypeCategory::POU);
     assert(!NestedFieldName.empty() && ptr != nullptr);
     assert(__VariableDataType->IsFieldPresent(NestedFieldName) == true);
     CheckValidity();
@@ -516,10 +516,10 @@ void PCVariable::SetPtr(string NestedFieldName, PCVariable * ptr) {
 
     assert(Attributes.FieldDataTypePtr->__DataTypeName
             == ptr->__VariableDataType->__DataTypeName);
-    assert(Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_IN_OUT ||
-        Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE ||
-        Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_ACCESS ||
-        Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_EXTERNAL);
+    assert(Attributes.FieldInterfaceType == FieldInterfaceType::VAR_IN_OUT ||
+        Attributes.FieldInterfaceType == FieldInterfaceType::VAR_EXPLICIT_STORAGE ||
+        Attributes.FieldInterfaceType == FieldInterfaceType::VAR_ACCESS ||
+        Attributes.FieldInterfaceType == FieldInterfaceType::VAR_EXTERNAL);
     CopyPCVariableFieldFromPointer(Attributes, ptr);
 }
 
@@ -527,10 +527,10 @@ PCVariable * PCVariable::GetPtrStoredAtField(string NestedFieldName) {
     DataTypeFieldAttributes Attributes;
     GetFieldAttributes(NestedFieldName, Attributes);
 
-    if(Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_IN_OUT ||
-        Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE ||
-        Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_ACCESS ||
-        Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_EXTERNAL) {
+    if(Attributes.FieldInterfaceType == FieldInterfaceType::VAR_IN_OUT ||
+        Attributes.FieldInterfaceType == FieldInterfaceType::VAR_EXPLICIT_STORAGE ||
+        Attributes.FieldInterfaceType == FieldInterfaceType::VAR_ACCESS ||
+        Attributes.FieldInterfaceType == FieldInterfaceType::VAR_EXTERNAL) {
         PCVariable *StoredPointer;
         auto FieldVariable = GetPCVariableToField(NestedFieldName);
         std::memcpy(&StoredPointer, 
@@ -553,14 +553,14 @@ void PCVariable::CopyPCVariableFieldFromPointer(
     PCVariable * FieldVariable = 
                     GetPCVariableToField(Attributes.NestedFieldName);
 
-    if (Attributes.FieldInterfaceType != FIELD_INTERFACE_TYPES::VAR_IN_OUT
-        && Attributes.FieldInterfaceType != FIELD_INTERFACE_TYPES::VAR_EXTERNAL
-        && Attributes.FieldInterfaceType != FIELD_INTERFACE_TYPES::VAR_ACCESS
-        && Attributes.FieldInterfaceType != FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE) {
+    if (Attributes.FieldInterfaceType != FieldInterfaceType::VAR_IN_OUT
+        && Attributes.FieldInterfaceType != FieldInterfaceType::VAR_EXTERNAL
+        && Attributes.FieldInterfaceType != FieldInterfaceType::VAR_ACCESS
+        && Attributes.FieldInterfaceType != FieldInterfaceType::VAR_EXPLICIT_STORAGE) {
             // The content pointed to by From is copied at the appropriate
             // offset
             if (From->__VariableDataType->__DataTypeCategory 
-                                            == DataTypeCategories::BOOL) {
+                                            == DataTypeCategory::BOOL) {
 
                 int8_t temp = From->__MemoryLocation.GetStorageLocation()
                                                     .get()[From->__ByteOffset];
@@ -608,7 +608,7 @@ void PCVariable::CopyPCVariableFieldFromPointer(string NestedFieldName,
 
 
         if (From->__VariableDataType->__DataTypeCategory 
-                                        == DataTypeCategories::BOOL) {
+                                        == DataTypeCategory::BOOL) {
 
             int8_t temp = From->__MemoryLocation.GetStorageLocation().get()
                                                         [From->__ByteOffset];
@@ -647,15 +647,15 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
     CheckValidity();
 
 
-    if (Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_IN_OUT
-        || Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_EXTERNAL
-        || Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_ACCESS) {
+    if (Attributes.FieldInterfaceType == FieldInterfaceType::VAR_IN_OUT
+        || Attributes.FieldInterfaceType == FieldInterfaceType::VAR_EXTERNAL
+        || Attributes.FieldInterfaceType == FieldInterfaceType::VAR_ACCESS) {
 
        return; // a string value cannot be set at a field location which is a pointer, use SetPtr instead
     }
 
     if (Attributes.FieldInterfaceType 
-                == FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE) {
+                == FieldInterfaceType::VAR_EXPLICIT_STORAGE) {
         auto FieldLocationPtr = GetPCVariableToField(NestedFieldName);
         // now we must get the pointer value at this field location
 
@@ -674,7 +674,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
                 GetPCVariableToField(NestedFieldName);
 
     switch(Attributes.FieldDataTypePtr->__DataTypeCategory) {
-        case DataTypeCategories::BOOL :     
+        case DataTypeCategory::BOOL :     
             bool BoolValue;
             
             int bit_off = FieldVariable->__BitOffset;
@@ -693,7 +693,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
                                 ~((1UL) <<  bit_off);
             break;
 
-        case DataTypeCategories::BYTE :     
+        case DataTypeCategory::BYTE :     
             int8_t ByteValue;
             if (!DataTypeUtils::ValueToByte(Value, ByteValue)){
                 __configuration->PCLogger->RaiseException(
@@ -704,7 +704,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
                     .GetPointerToMemory(FieldVariable->__ByteOffset),
                 &ByteValue, sizeof(int8_t));
             break;
-        case DataTypeCategories::WORD :     
+        case DataTypeCategory::WORD :     
             int16_t WordValue;
             if (!DataTypeUtils::ValueToWord(Value, WordValue)){
                 __configuration->PCLogger->RaiseException(
@@ -715,7 +715,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
                     .GetPointerToMemory(FieldVariable->__ByteOffset),
                 &WordValue, sizeof(int16_t));
             break;
-        case DataTypeCategories::DWORD :     
+        case DataTypeCategory::DWORD :     
             int32_t DWordValue;
             if (!DataTypeUtils::ValueToDWord(Value, DWordValue)){
                 __configuration->PCLogger->RaiseException(
@@ -726,7 +726,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
                     .GetPointerToMemory(FieldVariable->__ByteOffset),
                 &DWordValue, sizeof(int32_t));
             break;
-        case DataTypeCategories::LWORD :    
+        case DataTypeCategory::LWORD :    
             int64_t LWordValue;
             if (!DataTypeUtils::ValueToLWord(Value, LWordValue)){
                 __configuration->PCLogger->RaiseException(
@@ -737,7 +737,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
                     .GetPointerToMemory(FieldVariable->__ByteOffset),
                 &LWordValue, sizeof(int64_t));
             break;
-        case DataTypeCategories::CHAR :    
+        case DataTypeCategory::CHAR :    
             char CharValue;
             if (!DataTypeUtils::ValueToChar(Value, CharValue)){
                 __configuration->PCLogger->RaiseException(
@@ -748,7 +748,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
                     .GetPointerToMemory(FieldVariable->__ByteOffset),
                 &CharValue, sizeof(char));
             break;
-        case DataTypeCategories::INT :      
+        case DataTypeCategory::INT :      
             int16_t IntValue;
             if (!DataTypeUtils::ValueToInt(Value, IntValue)){
                 __configuration->PCLogger->RaiseException(
@@ -759,7 +759,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
                     .GetPointerToMemory(FieldVariable->__ByteOffset),
                 &IntValue, sizeof(int16_t));
             break;
-        case DataTypeCategories::SINT :     
+        case DataTypeCategory::SINT :     
             int8_t SIntValue;
             if (!DataTypeUtils::ValueToSint(Value, SIntValue)){
                 __configuration->PCLogger->RaiseException(
@@ -770,7 +770,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
                     .GetPointerToMemory(FieldVariable->__ByteOffset),
                 &SIntValue, sizeof(int8_t));
             break;
-        case DataTypeCategories::DINT :     
+        case DataTypeCategory::DINT :     
             int32_t DIntValue;
             if (!DataTypeUtils::ValueToDint(Value, DIntValue)){
                 __configuration->PCLogger->RaiseException(
@@ -781,7 +781,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
                     .GetPointerToMemory(FieldVariable->__ByteOffset),
                 &DIntValue, sizeof(int32_t));
             break;
-        case DataTypeCategories::LINT :     
+        case DataTypeCategory::LINT :     
             int64_t LIntValue;
             if (!DataTypeUtils::ValueToLint(Value, LIntValue)){
                 __configuration->PCLogger->RaiseException(
@@ -792,7 +792,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
                     .GetPointerToMemory(FieldVariable->__ByteOffset),
                 &LIntValue, sizeof(int64_t));
             break;
-        case DataTypeCategories::UINT :     
+        case DataTypeCategory::UINT :     
             uint16_t UIntValue;
             if (!DataTypeUtils::ValueToUint(Value, UIntValue)){
                 __configuration->PCLogger->RaiseException(
@@ -803,7 +803,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
                     .GetPointerToMemory(FieldVariable->__ByteOffset),
                 &UIntValue, sizeof(uint16_t));
             break;
-        case DataTypeCategories::USINT :     
+        case DataTypeCategory::USINT :     
             uint8_t USIntValue;
             if (!DataTypeUtils::ValueToUsint(Value, USIntValue)){
                 __configuration->PCLogger->RaiseException(
@@ -814,7 +814,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
                     .GetPointerToMemory(FieldVariable->__ByteOffset),
                 &USIntValue, sizeof(uint8_t));
             break;
-        case DataTypeCategories::UDINT :     
+        case DataTypeCategory::UDINT :     
             uint32_t UDIntValue;
             if (!DataTypeUtils::ValueToUdint(Value, UDIntValue)){
                 __configuration->PCLogger->RaiseException(
@@ -825,7 +825,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
                     .GetPointerToMemory(FieldVariable->__ByteOffset),
                 &UDIntValue, sizeof(uint32_t));
             break;
-        case DataTypeCategories::ULINT :     
+        case DataTypeCategory::ULINT :     
             uint64_t ULIntValue;
             if (!DataTypeUtils::ValueToUlint(Value, ULIntValue)){
                 __configuration->PCLogger->RaiseException(
@@ -836,7 +836,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
                     .GetPointerToMemory(FieldVariable->__ByteOffset),
                 &ULIntValue, sizeof(uint64_t));
             break;
-        case DataTypeCategories::REAL :     
+        case DataTypeCategory::REAL :     
             float RealValue;
             if (!DataTypeUtils::ValueToReal(Value, RealValue)){
                 __configuration->PCLogger->RaiseException(
@@ -847,7 +847,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
                     .GetPointerToMemory(FieldVariable->__ByteOffset),
                 &RealValue, sizeof(float));
             break;
-        case DataTypeCategories::LREAL :     
+        case DataTypeCategory::LREAL :     
             double LRealValue;
             if (!DataTypeUtils::ValueToLReal(Value, LRealValue)){
                 __configuration->PCLogger->RaiseException(
@@ -858,7 +858,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
                     .GetPointerToMemory(FieldVariable->__ByteOffset),
                 &LRealValue, sizeof(double));
             break;
-        case DataTypeCategories::TIME :     
+        case DataTypeCategory::TIME :     
             TimeType Time;
             if (!DataTypeUtils::ValueToTime(Value, Time)){
                 __configuration->PCLogger->RaiseException(
@@ -869,7 +869,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
                     .GetPointerToMemory(FieldVariable->__ByteOffset),
                 &Time, sizeof(TimeType));
             break;
-        case DataTypeCategories::DATE :     
+        case DataTypeCategory::DATE :     
             DateType Date;
             if (!DataTypeUtils::ValueToDate(Value, Date)){
                 __configuration->PCLogger->RaiseException(
@@ -880,7 +880,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
                     .GetPointerToMemory(FieldVariable->__ByteOffset),
                 &Date, sizeof(DateType));
             break;
-        case DataTypeCategories::TIME_OF_DAY :     
+        case DataTypeCategory::TIME_OF_DAY :     
             TODType TOD;
             if (!DataTypeUtils::ValueToTOD(Value, TOD)){
                 __configuration->PCLogger->RaiseException(
@@ -891,7 +891,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
                     .GetPointerToMemory(FieldVariable->__ByteOffset),
                 &TOD, sizeof(TOD));
             break;
-        case DataTypeCategories::DATE_AND_TIME :     
+        case DataTypeCategory::DATE_AND_TIME :     
             DateTODDataType Dt;
             if (!DataTypeUtils::ValueToDT(Value, Dt)){
                 __configuration->PCLogger->RaiseException(
@@ -917,13 +917,13 @@ void PCVariable::SetPCVariableField(string NestedFieldName, void * Value,
         DataTypeFieldAttributes Attributes;
         GetFieldAttributes(NestedFieldName, Attributes);
 
-        if (Attributes.FieldInterfaceType == FIELD_INTERFACE_TYPES::VAR_IN_OUT
+        if (Attributes.FieldInterfaceType == FieldInterfaceType::VAR_IN_OUT
             || Attributes.FieldInterfaceType 
-                        == FIELD_INTERFACE_TYPES::VAR_EXTERNAL
+                        == FieldInterfaceType::VAR_EXTERNAL
             || Attributes.FieldInterfaceType 
-                        == FIELD_INTERFACE_TYPES::VAR_ACCESS
+                        == FieldInterfaceType::VAR_ACCESS
             || Attributes.FieldInterfaceType 
-                        == FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE) {
+                        == FieldInterfaceType::VAR_EXPLICIT_STORAGE) {
                 // it is a pointer, we must get the pointed variable and set it there
                 auto PointedVariable  =  GetPCVariableToField(
                         NestedFieldName);       
@@ -937,7 +937,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, void * Value,
                 GetPCVariableToField(NestedFieldName);
 
         if (FieldVariable->__VariableDataType->__DataTypeCategory 
-                                            == DataTypeCategories::BOOL) {
+                                            == DataTypeCategory::BOOL) {
             bool BoolValue = *(bool *)Value;
 
             if (BoolValue) // set bit at appropriate bit and byte offset
@@ -964,7 +964,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, void * Value,
 }
 
 void PCVariable::GetAndStoreValue(string NestedFieldName,
-    void * Value, int CopySize, int DataTypeCategory) {
+    void * Value, int CopySize, int CategoryOfDataType) {
     assert (Value != nullptr);
     assert(__VariableDataType->IsFieldPresent(NestedFieldName) == true);
     
@@ -972,15 +972,15 @@ void PCVariable::GetAndStoreValue(string NestedFieldName,
     if (PointerAtFieldLocation != nullptr) {
         
         return PointerAtFieldLocation->GetAndStoreValue("", Value, CopySize,
-                                                        DataTypeCategory);
+                                                        CategoryOfDataType);
 
     } 
 
     auto PointedVariable =  GetPCVariableToField(NestedFieldName);
     assert(PointedVariable->__VariableDataType->__DataTypeCategory
-        == DataTypeCategory);
+        == CategoryOfDataType);
 
-    if (DataTypeCategory == DataTypeCategories::BOOL) {
+    if (CategoryOfDataType == DataTypeCategory::BOOL) {
         if (PointedVariable->__MemoryLocation.GetStorageLocation().get()[
             PointedVariable->__ByteOffset] 
             & ((1UL) << PointedVariable->__ByteOffset)) {
@@ -997,35 +997,35 @@ void PCVariable::GetAndStoreValue(string NestedFieldName,
 }
 
 template <typename T> T PCVariable::GetFieldValue(string NestedFieldName,
-                                            int DataTypeCategory) {
+                                            int CategoryOfDataType) {
     T Value;
     int CopySize = sizeof(T);
     CheckValidity();
-    GetAndStoreValue(NestedFieldName, &Value, CopySize, DataTypeCategory);
+    GetAndStoreValue(NestedFieldName, &Value, CopySize, CategoryOfDataType);
     return Value;
 }
 
 
 template <typename T> bool PCVariable::OperateOnVariables(T var1, T var2,
-                                        int DataTypeCategory, int VarOp) {
+                                        int CategoryOfDataType, int VarOp) {
 
-    if (DataTypeCategory == DataTypeCategories::NOT_ASSIGNED ||
-        DataTypeCategory == DataTypeCategories::DERIVED ||
-        DataTypeCategory == DataTypeCategories::POU ||
-        DataTypeCategory == DataTypeCategories::ARRAY)
+    if (CategoryOfDataType == DataTypeCategory::NOT_ASSIGNED ||
+        CategoryOfDataType == DataTypeCategory::DERIVED ||
+        CategoryOfDataType == DataTypeCategory::POU ||
+        CategoryOfDataType == DataTypeCategory::ARRAY)
             __configuration->PCLogger->RaiseException("Cannot perform operation"
                                     "on complex data type variables")
     switch(VarOp) {
         case VariableOps::ADD :     
-            if (DataTypeCategory == DataTypeCategories::DATE ||
-                DataTypeCategory == DataTypeCategories::DATE_AND_TIME)
+            if (CategoryOfDataType == DataTypeCategory::DATE ||
+                CategoryOfDataType == DataTypeCategory::DATE_AND_TIME)
                 __configuration->PCLogger->RaiseException(
                     "Cannot perform + operation on date and date_time vars")
             break;
         
         case VariableOps::SUB :     
-            if (DataTypeCategory == DataTypeCategories::DATE ||
-                DataTypeCategory == DataTypeCategories::DATE_AND_TIME)
+            if (CategoryOfDataType == DataTypeCategory::DATE ||
+                CategoryOfDataType == DataTypeCategory::DATE_AND_TIME)
                 __configuration->PCLogger->RaiseException(
                     "Cannot perform - operation on date and date_time vars")
             break;
@@ -1039,10 +1039,10 @@ template <typename T> bool PCVariable::OperateOnVariables(T var1, T var2,
         case VariableOps::LS  :
         case VariableOps::RS  : 
 
-            if (DataTypeCategory == DataTypeCategories::DATE ||
-                DataTypeCategory == DataTypeCategories::DATE_AND_TIME ||
-                DataTypeCategory == DataTypeCategories::TIME_OF_DAY ||
-                DataTypeCategory == DataTypeCategories::TIME)
+            if (CategoryOfDataType == DataTypeCategory::DATE ||
+                CategoryOfDataType == DataTypeCategory::DATE_AND_TIME ||
+                CategoryOfDataType == DataTypeCategory::TIME_OF_DAY ||
+                CategoryOfDataType == DataTypeCategory::TIME)
                 __configuration->PCLogger->RaiseException(
                     "Cannot perform any of *,/,%%,&,|,^,<<,>> operation on "
                     "date, date_time, tod and time vars")
@@ -1143,114 +1143,114 @@ bool PCVariable::InitiateOperationOnVariables(PCVariable& V, int VarOp) {
 
     assert(this->__VariableDataType->__DataTypeCategory
         == V.__VariableDataType->__DataTypeCategory);
-    int DataTypeCategory = V.__VariableDataType->__DataTypeCategory;
+    int CategoryOfDataType = V.__VariableDataType->__DataTypeCategory;
     CheckValidity();
 
-    switch(DataTypeCategory) {
-        case DataTypeCategories::BOOL :
+    switch(CategoryOfDataType) {
+        case DataTypeCategory::BOOL :
             return OperateOnVariables<bool>(
-                    this->GetFieldValue<bool>("", DataTypeCategory),
-                    V.GetFieldValue<bool>("", DataTypeCategory),
-                    DataTypeCategory, VarOp);
+                    this->GetFieldValue<bool>("", CategoryOfDataType),
+                    V.GetFieldValue<bool>("", CategoryOfDataType),
+                    CategoryOfDataType, VarOp);
 
-        case DataTypeCategories::BYTE :
-        case DataTypeCategories::SINT :     
+        case DataTypeCategory::BYTE :
+        case DataTypeCategory::SINT :     
             return OperateOnVariables<int8_t>(
-                    this->GetFieldValue<int8_t>("", DataTypeCategory),
-                    V.GetFieldValue<int8_t>("", DataTypeCategory),
-                    DataTypeCategory, VarOp);
+                    this->GetFieldValue<int8_t>("", CategoryOfDataType),
+                    V.GetFieldValue<int8_t>("", CategoryOfDataType),
+                    CategoryOfDataType, VarOp);
         
-        case DataTypeCategories::WORD :   
-        case DataTypeCategories::INT :     
+        case DataTypeCategory::WORD :   
+        case DataTypeCategory::INT :     
             return OperateOnVariables<int16_t>(
-                    this->GetFieldValue<int16_t>("", DataTypeCategory),
-                    V.GetFieldValue<int16_t>("", DataTypeCategory),
-                    DataTypeCategory, VarOp);
+                    this->GetFieldValue<int16_t>("", CategoryOfDataType),
+                    V.GetFieldValue<int16_t>("", CategoryOfDataType),
+                    CategoryOfDataType, VarOp);
 
-        case DataTypeCategories::DWORD :   
-        case DataTypeCategories::DINT :     
+        case DataTypeCategory::DWORD :   
+        case DataTypeCategory::DINT :     
             return OperateOnVariables<int32_t>(
-                    this->GetFieldValue<int32_t>("", DataTypeCategory),
-                    V.GetFieldValue<int32_t>("", DataTypeCategory),
-                    DataTypeCategory, VarOp);
+                    this->GetFieldValue<int32_t>("", CategoryOfDataType),
+                    V.GetFieldValue<int32_t>("", CategoryOfDataType),
+                    CategoryOfDataType, VarOp);
 
-        case DataTypeCategories::LWORD :   
-        case DataTypeCategories::LINT :     
+        case DataTypeCategory::LWORD :   
+        case DataTypeCategory::LINT :     
             return OperateOnVariables<int64_t>(
-                    this->GetFieldValue<int64_t>("", DataTypeCategory),
-                    V.GetFieldValue<int64_t>("", DataTypeCategory),
-                    DataTypeCategory, VarOp);
+                    this->GetFieldValue<int64_t>("", CategoryOfDataType),
+                    V.GetFieldValue<int64_t>("", CategoryOfDataType),
+                    CategoryOfDataType, VarOp);
 
           
-        case DataTypeCategories::USINT :     
+        case DataTypeCategory::USINT :     
             return OperateOnVariables<uint8_t>(
-                    this->GetFieldValue<uint8_t>("", DataTypeCategory),
-                    V.GetFieldValue<uint8_t>("", DataTypeCategory),
-                    DataTypeCategory, VarOp);
+                    this->GetFieldValue<uint8_t>("", CategoryOfDataType),
+                    V.GetFieldValue<uint8_t>("", CategoryOfDataType),
+                    CategoryOfDataType, VarOp);
 
-        case DataTypeCategories::UINT :     
+        case DataTypeCategory::UINT :     
             return OperateOnVariables<uint16_t>(
-                    this->GetFieldValue<uint16_t>("", DataTypeCategory),
-                    V.GetFieldValue<uint16_t>("", DataTypeCategory),
-                    DataTypeCategory, VarOp);
+                    this->GetFieldValue<uint16_t>("", CategoryOfDataType),
+                    V.GetFieldValue<uint16_t>("", CategoryOfDataType),
+                    CategoryOfDataType, VarOp);
         
-        case DataTypeCategories::UDINT :     
+        case DataTypeCategory::UDINT :     
             return OperateOnVariables<uint32_t>(
-                    this->GetFieldValue<uint32_t>("", DataTypeCategory),
-                    V.GetFieldValue<uint32_t>("", DataTypeCategory),
-                    DataTypeCategory, VarOp);
+                    this->GetFieldValue<uint32_t>("", CategoryOfDataType),
+                    V.GetFieldValue<uint32_t>("", CategoryOfDataType),
+                    CategoryOfDataType, VarOp);
         
-        case DataTypeCategories::ULINT :     
+        case DataTypeCategory::ULINT :     
             return OperateOnVariables<uint64_t>(
-                    this->GetFieldValue<uint64_t>("", DataTypeCategory),
-                    V.GetFieldValue<uint64_t>("", DataTypeCategory),
-                    DataTypeCategory, VarOp);
+                    this->GetFieldValue<uint64_t>("", CategoryOfDataType),
+                    V.GetFieldValue<uint64_t>("", CategoryOfDataType),
+                    CategoryOfDataType, VarOp);
 
-        case DataTypeCategories::CHAR :     
+        case DataTypeCategory::CHAR :     
             return OperateOnVariables<char>(
-                    this->GetFieldValue<char>("", DataTypeCategory),
-                    V.GetFieldValue<char>("", DataTypeCategory),
-                    DataTypeCategory, VarOp);
+                    this->GetFieldValue<char>("", CategoryOfDataType),
+                    V.GetFieldValue<char>("", CategoryOfDataType),
+                    CategoryOfDataType, VarOp);
 
-        case DataTypeCategories::REAL :     
+        case DataTypeCategory::REAL :     
             return OperateOnVariables<float>(
-                    this->GetFieldValue<float>("", DataTypeCategory),
-                    V.GetFieldValue<float>("", DataTypeCategory),
-                    DataTypeCategory, VarOp);
+                    this->GetFieldValue<float>("", CategoryOfDataType),
+                    V.GetFieldValue<float>("", CategoryOfDataType),
+                    CategoryOfDataType, VarOp);
 
-        case DataTypeCategories::LREAL :     
+        case DataTypeCategory::LREAL :     
             return OperateOnVariables<double>(
-                    this->GetFieldValue<double>("", DataTypeCategory),
-                    V.GetFieldValue<double>("", DataTypeCategory),
-                    DataTypeCategory, VarOp);
+                    this->GetFieldValue<double>("", CategoryOfDataType),
+                    V.GetFieldValue<double>("", CategoryOfDataType),
+                    CategoryOfDataType, VarOp);
         
-        case DataTypeCategories::TIME :     
+        case DataTypeCategory::TIME :     
             return OperateOnVariables<TimeType>(
-                    this->GetFieldValue<TimeType>("", DataTypeCategory),
-                    V.GetFieldValue<TimeType>("", DataTypeCategory),
-                    DataTypeCategory, VarOp);
+                    this->GetFieldValue<TimeType>("", CategoryOfDataType),
+                    V.GetFieldValue<TimeType>("", CategoryOfDataType),
+                    CategoryOfDataType, VarOp);
         
-        case DataTypeCategories::TIME_OF_DAY: 
+        case DataTypeCategory::TIME_OF_DAY: 
             return OperateOnVariables<TODDataType>(
-                    this->GetFieldValue<TODDataType>("", DataTypeCategory),
-                    V.GetFieldValue<TODDataType>("", DataTypeCategory),
-                    DataTypeCategory, VarOp);
+                    this->GetFieldValue<TODDataType>("", CategoryOfDataType),
+                    V.GetFieldValue<TODDataType>("", CategoryOfDataType),
+                    CategoryOfDataType, VarOp);
         
-        case DataTypeCategories::DATE: 
+        case DataTypeCategory::DATE: 
             return OperateOnVariables<DateType>(
-                    this->GetFieldValue<DateType>("", DataTypeCategory),
-                    V.GetFieldValue<DateType>("", DataTypeCategory),
-                    DataTypeCategory, VarOp);
+                    this->GetFieldValue<DateType>("", CategoryOfDataType),
+                    V.GetFieldValue<DateType>("", CategoryOfDataType),
+                    CategoryOfDataType, VarOp);
 
-        case DataTypeCategories::DATE_AND_TIME: 
+        case DataTypeCategory::DATE_AND_TIME: 
             return OperateOnVariables<DateTODType>(
-                    this->GetFieldValue<DateTODType>("", DataTypeCategory),
-                    V.GetFieldValue<DateTODType>("", DataTypeCategory),
-                    DataTypeCategory, VarOp);
+                    this->GetFieldValue<DateTODType>("", CategoryOfDataType),
+                    V.GetFieldValue<DateTODType>("", CategoryOfDataType),
+                    CategoryOfDataType, VarOp);
 
         default :   __configuration->PCLogger->RaiseException(" Operation "
                         " is not supported for variables of DataType "
-                        + std::to_string(DataTypeCategory));
+                        + std::to_string(CategoryOfDataType));
         
     }
 }

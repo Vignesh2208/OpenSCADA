@@ -23,7 +23,7 @@ void ResourceRegistry::RegisterResource(string ResourceName,
         __Registry.insert(std::make_pair(ResourceName,
                                         Resource));
         LogMsg =  "Registered New Resource: " + ResourceName;
-        PCLogger->LogMessage(LOG_LEVELS::LOG_INFO, LogMsg);
+        PCLogger->LogMessage(LogLevels::LOG_INFO, LogMsg);
     }
 }
 

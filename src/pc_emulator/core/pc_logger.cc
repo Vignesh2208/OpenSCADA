@@ -3,14 +3,15 @@
 
 using namespace std;
 using namespace pc_emulator;
+using namespace pc_specification;
 
 void Logger::LogMessage(int LogLevel, std::string Message) {
     string Qualifier;
     
-    if (LogLevel != LOG_LEVELS::LOG_NONE && LogLevel <= __LogLevel) {
-        if (LogLevel == LOG_LEVELS::LOG_INFO) {
+    if (LogLevel != LogLevels::LOG_NONE && LogLevel <= __LogLevel) {
+        if (LogLevel == LogLevels::LOG_INFO) {
             Qualifier = "INFO";
-        } else if (LogLevel == LOG_LEVELS::LOG_ERROR) {
+        } else if (LogLevel == LogLevels::LOG_ERROR) {
             Qualifier = "ERROR";
         } else {
             Qualifier = "VERBOSE";
@@ -34,6 +35,6 @@ void Logger::RaiseException(std::string Message) {
 
 // this will kill one of the resource threads
 void Logger::ShutDown() {
-    LogMessage(LOG_LEVELS::LOG_INFO, "Shutting Down Resource Thread ....");
+    LogMessage(LogLevels::LOG_INFO, "Shutting Down Resource Thread ....");
     exit(0);
 }

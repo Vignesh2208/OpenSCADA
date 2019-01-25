@@ -27,7 +27,7 @@ void PCResource::RegisterPoUVariable(string VariableName, PCVariable * Var) {
     } else {
         __ResourcePoUVars.insert(std::make_pair(VariableName, Var));
        
-        __configuration->PCLogger->LogMessage(LOG_LEVELS::LOG_INFO,
+        __configuration->PCLogger->LogMessage(LogLevels::LOG_INFO,
                                         "Registered new resource pou variable!");
     }
 
@@ -97,9 +97,9 @@ PCVariable * PCResource::GetGlobalVariable(string NestedFieldName) {
             var->GetFieldAttributes(NestedFieldName, 
                                     FieldAttributes);
             if (FieldAttributes.FieldInterfaceType 
-                == FIELD_INTERFACE_TYPES::VAR_GLOBAL
+                == FieldInterfaceType::VAR_GLOBAL
                 || FieldAttributes.FieldInterfaceType 
-                == FIELD_INTERFACE_TYPES::VAR_EXPLICIT_STORAGE) {
+                == FieldInterfaceType::VAR_EXPLICIT_STORAGE) {
                 return var->GetPCVariableToField(NestedFieldName);
             }
         }
@@ -119,7 +119,7 @@ void PCResource::InitializeAllPoUVars() {
                     __configuration, 
                     "__RESOURCE_" + __ResourceName + "_GLOBAL__",
                     "__RESOURCE_" + __ResourceName + "_GLOBAL__",
-                    DataTypeCategories::POU);
+                    DataTypeCategory::POU);
 
                 __configuration->RegisteredDataTypes.RegisterDataType(
                 "__RESOURCE_" + __ResourceName + "_GLOBAL__", global_var_type);
@@ -149,7 +149,7 @@ void PCResource::InitializeAllPoUVars() {
                     __configuration, 
                     pou_var.name(),
                     pou_var.name(),
-                    DataTypeCategories::POU);
+                    DataTypeCategory::POU);
 
                 __configuration->RegisteredDataTypes.RegisterDataType(
                                             pou_var.name(), new_var_type);
@@ -185,12 +185,12 @@ void PCResource::InitializeAllPoUVars() {
 
 }
 
-PCVariable * PCResource::GetVariablePointerToMem(int MemType, int ByteOffset,
+PCVariable * PCResource::GetVariablePointerToMem(int memType, int ByteOffset,
                         int BitOffset, string VariableDataTypeName) {
 
     assert(ByteOffset > 0 && BitOffset >= 0 && BitOffset < 8);
-    assert(MemType == MEM_TYPE::INPUT_MEM || MemType == MEM_TYPE::OUTPUT_MEM);
-    string VariableName = __ResourceName + std::to_string(MemType)
+    assert(memType == MemType::INPUT_MEM || memType == MemType::OUTPUT_MEM);
+    string VariableName = __ResourceName + std::to_string(memType)
                             + "." + std::to_string(ByteOffset)
                             + "." + std::to_string(BitOffset);
 
@@ -202,7 +202,7 @@ PCVariable * PCResource::GetVariablePointerToMem(int MemType, int ByteOffset,
                                     VariableDataTypeName);
         assert(V != nullptr);
 
-        if(MemType == MEM_TYPE::INPUT_MEM)
+        if(memType == MemType::INPUT_MEM)
             V->__MemoryLocation.SetMemUnitLocation(&__InputMemory);
         else 
             V->__MemoryLocation.SetMemUnitLocation(&__OutputMemory);
@@ -330,9 +330,9 @@ Task * PCResource::GetInterruptTaskToExecute() {
 
         }
         assert(trigger->__VariableDataType->__DataTypeCategory 
-                    == DataTypeCategories::BOOL); //trigger must be a boolean
+                    == DataTypeCategory::BOOL); //trigger must be a boolean
         auto curr_value = trigger->GetFieldValue<bool>("",
-                                        DataTypeCategories::BOOL);
+                                        DataTypeCategory::BOOL);
         
         
         for (int itt = 0; itt < it->second.size(); itt++) {
