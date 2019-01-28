@@ -5,9 +5,9 @@
 #include <boost/algorithm/string.hpp>
 #include <vector>
 
-#include "pc_emulator/include/pc_configuration.h"
-#include "pc_emulator/include/pc_resource.h"
-#include "pc_emulator/include/pc_pou_code_container.h"
+#include "src/pc_emulator/include/pc_configuration.h"
+#include "src/pc_emulator/include/pc_resource.h"
+#include "src/pc_emulator/include/pc_pou_code_container.h"
 
 using namespace std;
 using namespace pc_emulator;

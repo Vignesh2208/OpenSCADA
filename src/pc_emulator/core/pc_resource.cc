@@ -7,16 +7,21 @@
 #include <vector>
 #include <queue>
 
-#include "pc_emulator/include/pc_pou_code_container.h"
-#include "pc_emulator/include/pc_datatype.h"
-#include "pc_emulator/include/pc_variable.h"
-#include "pc_emulator/include/pc_resource.h"
-#include "pc_emulator/include/pc_configuration.h"
-#include "pc_emulator/include/utils.h"
-#include "pc_emulator/include/task.h"
+#include "src/pc_emulator/include/pc_pou_code_container.h"
+#include "src/pc_emulator/include/pc_datatype.h"
+#include "src/pc_emulator/include/pc_variable.h"
+#include "src/pc_emulator/include/pc_resource.h"
+#include "src/pc_emulator/include/pc_configuration.h"
+#include "src/pc_emulator/include/utils.h"
+#include "src/pc_emulator/include/task.h"
 
 using namespace std;
 using namespace pc_emulator;
+using namespace pc_specification;
+using MemType  = pc_specification::MemType;
+using DataTypeCategory = pc_specification::DataTypeCategory;
+using FieldIntfType = pc_specification::FieldInterfaceType;
+
 
 void PCResource::RegisterPoUVariable(string VariableName, PCVariable * Var) {
     std::unordered_map<std::string, PCVariable*>::const_iterator got = 
@@ -97,9 +102,9 @@ PCVariable * PCResource::GetGlobalVariable(string NestedFieldName) {
             var->GetFieldAttributes(NestedFieldName, 
                                     FieldAttributes);
             if (FieldAttributes.FieldInterfaceType 
-                == FieldInterfaceType::VAR_GLOBAL
+                == FieldIntfType::VAR_GLOBAL
                 || FieldAttributes.FieldInterfaceType 
-                == FieldInterfaceType::VAR_EXPLICIT_STORAGE) {
+                == FieldIntfType::VAR_EXPLICIT_STORAGE) {
                 return var->GetPCVariableToField(NestedFieldName);
             }
         }
@@ -113,7 +118,7 @@ void PCResource::InitializeAllPoUVars() {
     
     for (auto & resource_spec : 
             __configuration->__specification.machine_spec().resource_spec()) {
-        if (resource_spec.resource_name == __ResourceName) {
+        if (resource_spec.resource_name() == __ResourceName) {
             if (resource_spec.has_resource_global_var()) {
                 PCDataType * global_var_type = new PCDataType(
                     __configuration, 
@@ -213,6 +218,7 @@ PCVariable * PCResource::GetVariablePointerToMem(int memType, int ByteOffset,
         V->__MemAllocated = true;
         V->AllocateAndInitialize();
         __AccessedFields.insert(std::make_pair(VariableName, V));
+        return V;
     } else {
         return got->second;
     }
@@ -435,22 +441,22 @@ void PCResource::OnStartup() {
 }
 
 
-bool CompactTaskDescription::operator==(const CompactTaskDescription& a) {
-    return a.__nxt_schedule_time_ms == __nxt_schedule_time_ms;
+bool operator==(const CompactTaskDescription& b, const CompactTaskDescription& a) {
+    return b.__nxt_schedule_time_ms == a.__nxt_schedule_time_ms;
 }
 
-bool CompactTaskDescription::operator>(const CompactTaskDescription& a) {
-    return a.__nxt_schedule_time_ms > __nxt_schedule_time_ms;
+bool operator>(const CompactTaskDescription& b,const CompactTaskDescription& a) {
+    return b.__nxt_schedule_time_ms > a.__nxt_schedule_time_ms;
 }
 
-bool CompactTaskDescription::operator<(const CompactTaskDescription& a) {
-    return a.__nxt_schedule_time_ms < __nxt_schedule_time_ms;
+bool operator<(const CompactTaskDescription& b, const CompactTaskDescription& a) {
+    return b.__nxt_schedule_time_ms < a.__nxt_schedule_time_ms;
 }
 
-bool CompactTaskDescription::operator<=(const CompactTaskDescription& a) {
-    return a.__nxt_schedule_time_ms <= __nxt_schedule_time_ms;
+bool operator<=(const CompactTaskDescription& b, const CompactTaskDescription& a) {
+    return b.__nxt_schedule_time_ms <= a.__nxt_schedule_time_ms;
 }
 
-bool CompactTaskDescription::operator>=(const CompactTaskDescription& a) {
-    return a.__nxt_schedule_time_ms >= __nxt_schedule_time_ms;
+bool operator>=(const CompactTaskDescription& b, const CompactTaskDescription& a) {
+    return b.__nxt_schedule_time_ms >= a.__nxt_schedule_time_ms;
 }

@@ -8,7 +8,8 @@
 #include <cstdlib>
 #include <assert.h>
 #include <unordered_map>
-#include "pc_emulator/proto/configuration.pb.h"
+#include "src/pc_emulator/proto/configuration.pb.h"
+
 
 using namespace std;
 using namespace pc_specification;
@@ -25,6 +26,8 @@ namespace pc_emulator {
     class PCDataType;
     class PCVariable;
     class PCConfiguration;
+    enum VarOpType;
+    enum VariableOps;
 
     class Utils {
 
@@ -40,6 +43,8 @@ namespace pc_emulator {
         static bool ExtractFromStorageSpec(string StorageSpec, 
                                             int * MemType, int * ByteOffset,
                                             int * BitOffset);
+
+        static VarOpType GetVarOpType(int varop);
 
         static bool ExtractFromAccessStorageSpec(
             PCConfiguration * __configuration, string StorageSpec, 

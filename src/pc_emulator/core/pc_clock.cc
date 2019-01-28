@@ -8,12 +8,13 @@
 #include <chrono>
 #include <thread>
 
-#include "pc_emulator/include/pc_clock.h"
-#include "pc_emulator/include/pc_resource.h"
+#include "src/pc_emulator/include/pc_clock.h"
+#include "src/pc_emulator/include/pc_resource.h"
 
 using namespace std;
 using namespace std::chrono;
 using namespace pc_emulator;
+
 
 
 Clock::Clock(bool is_virtual, PCResource * AssociatedResource) 

@@ -5,11 +5,14 @@
 #include <fstream>
 #include <string>
 #include <assert.h>
-
-#include "pc_emulator/proto/configuration.pb.h"
-
+#include "src/pc_emulator/proto/configuration.pb.h"
 using namespace std;
 using namespace pc_specification;
+
+using MemType  = pc_specification::MemType;
+using DataTypeCategory = pc_specification::DataTypeCategory;
+using FieldInterfaceType = pc_specification::FieldInterfaceType;
+
 
 namespace pc_emulator {
     class PCConfiguration;

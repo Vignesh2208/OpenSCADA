@@ -1,14 +1,16 @@
 
 #include <assert.h>
-#include "pc_emulator/include/pc_mem_unit.h"
+#include "src/pc_emulator/include/pc_mem_unit.h"
 
 using namespace std;
 using namespace pc_emulator;
 
+
+
 void PCMemUnit::AllocateStaticMemory(int MemSize) {
 
     if (!__Initialized) {
-        __BaseStorageLocation = std::make_shared<char>(new char[MemSize], 
+        __BaseStorageLocation = std::shared_ptr<char>(new char[MemSize], 
                     [](char *p) { delete[] p; });
         __MemUnitSizeBytes = MemSize;
     }

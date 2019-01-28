@@ -11,7 +11,7 @@
 #include "pc_mem_unit.h"
 #include "pc_datatype_registry.h"
 #include "pc_resource_registry.h"
-#include "pc_emulator/proto/configuration.pb.h"
+#include "src/pc_emulator/proto/configuration.pb.h"
 
 using namespace std;
 using namespace pc_specification;

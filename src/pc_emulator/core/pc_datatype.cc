@@ -7,23 +7,27 @@
 #include <regex>
 #include <vector>
 
-#include "pc_emulator/include/pc_datatype.h"
-#include "pc_emulator/include/pc_configuration.h"
-#include "pc_emulator/proto/configuration.pb.h"
+#include "src/pc_emulator/include/pc_datatype.h"
+#include "src/pc_emulator/include/pc_configuration.h"
+#include "src/pc_emulator/proto/configuration.pb.h"
 
 using namespace std;
 using namespace pc_emulator;
 using namespace pc_specification;
 
 
+using MemType  = pc_specification::MemType;
+using DataTypeCategory = pc_specification::DataTypeCategory;
+using FieldInterfaceType = pc_specification::FieldInterfaceType;
 
-void PCDataTypeField::SetExplicitStorageConstraints(int MemType,
+
+void PCDataTypeField::SetExplicitStorageConstraints(int memType,
                             int ByteOffset, int BitOffset) {
-    assert(MemType == MemType::INPUT_MEM ||
-            MemType == MemType::OUTPUT_MEM ||
-            MemType == MemType::RAM_MEM);
+    assert(memType == MemType::INPUT_MEM ||
+            memType == MemType::OUTPUT_MEM ||
+            memType == MemType::RAM_MEM);
     assert(ByteOffset > 0 && BitOffset >= 0 && BitOffset < 8);
-    __StorageMemType = MemType;
+    __StorageMemType = memType;
     __StorageBitOffset = BitOffset;
     __StorageByteOffset = ByteOffset;
     __FieldInterfaceType = FieldInterfaceType::VAR_EXPLICIT_STORAGE;
@@ -35,7 +39,7 @@ void PCDataType::Cleanup() {
 }
 
 void PCDataType::AddDataTypeField(string FieldName, string FieldTypeName,
-            string InitialValue, int FieldInterfaceType, s64 RangeMin,
+            string InitialValue, int FieldIntfType, s64 RangeMin,
             s64 RangeMax) {
     PCDataType * DataType = LookupDataType(FieldTypeName);
     if (DataType == nullptr) {
@@ -45,7 +49,7 @@ void PCDataType::AddDataTypeField(string FieldName, string FieldTypeName,
 
     AddDataTypeField(FieldName, FieldTypeName,
                     DataType->__DataTypeCategory, InitialValue,
-                    FieldInterfaceType, RangeMin, RangeMax);
+                    FieldIntfType, RangeMin, RangeMax);
 }
 
 
@@ -68,7 +72,7 @@ void PCDataType::AddDataTypeFieldAT(string FieldName, string FieldTypeName,
 
 void PCDataType::AddDataTypeField(string FieldName, string FieldTypeName,
             DataTypeCategory FieldTypeCategory, string InitialValue,
-            int FieldInterfaceType, s64 RangeMin, s64 RangeMax) {
+            int FieldIntfType, s64 RangeMin, s64 RangeMax) {
 
 
     PCDataType * DataType = LookupDataType(FieldTypeName);
@@ -93,12 +97,12 @@ void PCDataType::AddDataTypeField(string FieldName, string FieldTypeName,
         switch(DataType->__DimensionSizes.size()) {
             case 1 : AddArrayDataTypeField(FieldName, DataType->__DataTypeName,
                         DataType->__DimensionSizes[0], InitialValue,
-                        FieldInterfaceType, RangeMin, RangeMax);
+                        FieldIntfType, RangeMin, RangeMax);
                     break;
             case 2 : AddArrayDataTypeField(FieldName, DataType->__DataTypeName,
                         DataType->__DimensionSizes[0], 
                         DataType->__DimensionSizes[1], InitialValue,
-                        FieldInterfaceType, RangeMin, RangeMax);
+                        FieldIntfType, RangeMin, RangeMax);
                     break;
             default:  __configuration->PCLogger->RaiseException(
                         "Dimensions cannot exceed 2 "); 
@@ -108,12 +112,12 @@ void PCDataType::AddDataTypeField(string FieldName, string FieldTypeName,
 
     PCDataTypeField NewField(FieldName, FieldTypeName,
                             FieldTypeCategory, RangeMin, RangeMax,
-                            InitialValue, FieldInterfaceType, DataType);
+                            InitialValue, FieldIntfType, DataType);
 
-    __FieldsByInterfaceType[FieldInterfaceType].push_back(NewField);    
-    if (FieldInterfaceType == FieldInterfaceType::VAR_IN_OUT ||
-        FieldInterfaceType == FieldInterfaceType::VAR_EXTERNAL ||
-        FieldInterfaceType == FieldInterfaceType::VAR_ACCESS ) {
+    __FieldsByInterfaceType[FieldIntfType].push_back(NewField);    
+    if (FieldIntfType == FieldInterfaceType::VAR_IN_OUT ||
+        FieldIntfType == FieldInterfaceType::VAR_EXTERNAL ||
+        FieldIntfType == FieldInterfaceType::VAR_ACCESS ) {
         // this is a pointer
         __SizeInBits += sizeof (PCDataType *);
     } else {
@@ -188,7 +192,7 @@ void PCDataType::AddDataTypeFieldAT(string FieldName, string FieldTypeName,
 
 void PCDataType::AddArrayDataTypeField(string FieldName, string FieldTypeName,
             int DimensionSize, string InitialValue,
-            int FieldInterfaceType, s64 RangeMin, s64 RangeMax) {
+            int FieldIntfType, s64 RangeMin, s64 RangeMax) {
 
     PCDataType * DataType = LookupDataType(FieldTypeName);
     if (DataType == nullptr) {
@@ -220,11 +224,11 @@ void PCDataType::AddArrayDataTypeField(string FieldName, string FieldTypeName,
                                 FieldTypeName, DataType->__DataTypeCategory, 
                                 RangeMin, RangeMax, 
                                 (InitialValue.empty() ? "" : InitialValues[i]),
-                                FieldInterfaceType, DataType);
-        __FieldsByInterfaceType[FieldInterfaceType].push_back(NewField);
-        if (FieldInterfaceType == FieldInterfaceType::VAR_IN_OUT ||
-            FieldInterfaceType == FieldInterfaceType::VAR_EXTERNAL ||
-            FieldInterfaceType == FieldInterfaceType::VAR_ACCESS ) {
+                                FieldIntfType, DataType);
+        __FieldsByInterfaceType[FieldIntfType].push_back(NewField);
+        if (FieldIntfType == FieldInterfaceType::VAR_IN_OUT ||
+            FieldIntfType == FieldInterfaceType::VAR_EXTERNAL ||
+            FieldIntfType == FieldInterfaceType::VAR_ACCESS ) {
             // this is a pointer
             __SizeInBits += sizeof (PCDataType *);
         } else {
@@ -305,7 +309,7 @@ void PCDataType::AddArrayDataTypeFieldAT(string FieldName, string FieldTypeName,
 
 void PCDataType::AddArrayDataTypeField(string FieldName, string FieldTypeName,
             int DimensionSize1, int DimensionSize2, string InitialValue,
-            int FieldInterfaceType, s64 RangeMin, s64 RangeMax) {
+            int FieldIntfType, s64 RangeMin, s64 RangeMax) {
 
     PCDataType * DataType = LookupDataType(FieldTypeName);
     if (DataType == nullptr) {
@@ -341,11 +345,11 @@ void PCDataType::AddArrayDataTypeField(string FieldName, string FieldTypeName,
                                 RangeMin, RangeMax,
                                 (InitialValue.empty() ? "" 
                                     : InitialValues[i*DimensionSize2 + j]),
-                                FieldInterfaceType, DataType);
-            __FieldsByInterfaceType[FieldInterfaceType].push_back(NewField);
-            if (FieldInterfaceType == FieldInterfaceType::VAR_IN_OUT ||
-                FieldInterfaceType == FieldInterfaceType::VAR_EXTERNAL ||
-                FieldInterfaceType == FieldInterfaceType::VAR_ACCESS ) {
+                                FieldIntfType, DataType);
+            __FieldsByInterfaceType[FieldIntfType].push_back(NewField);
+            if (FieldIntfType == FieldInterfaceType::VAR_IN_OUT ||
+                FieldIntfType == FieldInterfaceType::VAR_EXTERNAL ||
+                FieldIntfType == FieldInterfaceType::VAR_ACCESS ) {
                 // this is a pointer
                 __SizeInBits += sizeof (PCDataType *);
             } else {

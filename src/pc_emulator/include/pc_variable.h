@@ -32,6 +32,12 @@ namespace pc_emulator {
         LE
     };  
 
+    enum VarOpType {
+        RELATIONAL,
+        ARITHMETIC,
+        BITWISE
+    };
+
     typedef struct DataTypeFieldAttributesStruct {
         unsigned long RelativeOffset;
         unsigned long SizeInBits;
@@ -50,11 +56,18 @@ namespace pc_emulator {
                                                 Attributes, PCVariable * From);
             void GetAndStoreValue(string NestedFieldName, void * Value,
                                 int CopySize, int CategoryOfDataType);
+            void CheckOperationValidity(int CategoryOfDataType, int VarOp);
 
-            template <typename T> bool OperateOnVariables(T var1, T var2,
+            template <typename T> bool ArithmeticOpOnVariables(T var1, T var2,
+                                        int CategoryOfDataType, int VarOp);
+            template <typename T> bool RelationalOpOnVariables(T var1, T var2,
+                                        int CategoryOfDataType, int VarOp);
+            template <typename T> bool BitwiseOpOnVariables(T var1, T var2,
+                                        int CategoryOfDataType, int VarOp);
+            template <typename T> bool AllOpsOnVariables(T var1, T var2,
                                         int CategoryOfDataType, int VarOp);
 
-            bool InitiateOperationOnVariables(PCVariable& V, int VarOp);
+            
 
             void InitializeVariable(PCVariable * V);
             void InitializeAllNonPtrFields();
@@ -111,7 +124,7 @@ namespace pc_emulator {
 
             void GetFieldAttributes(string NestedFieldName, 
                             DataTypeFieldAttributes& FieldAttributes);
-          
+            bool InitiateOperationOnVariables(PCVariable& V, int VarOp);
 
             void operator=(PCVariable& V);
             PCVariable& operator+(PCVariable& V );
@@ -125,13 +138,15 @@ namespace pc_emulator {
             PCVariable& operator<<(PCVariable& V );
             PCVariable& operator>>(PCVariable& V );
 
-            bool operator == (PCVariable& V );
-            bool operator > (PCVariable& V );
-            bool operator < (PCVariable& V );
-            bool operator <= (PCVariable& V );
-            bool operator >= (PCVariable& V );
+            
 
     };
+
+    bool operator == (PCVariable& V1, PCVariable& V2);
+    bool operator > (PCVariable& V1, PCVariable& V2);
+    bool operator < (PCVariable& V1, PCVariable& V2);
+    bool operator <= (PCVariable& V1, PCVariable& V2);
+    bool operator >= (PCVariable& V1, PCVariable& V2);
 }
 
 #endif

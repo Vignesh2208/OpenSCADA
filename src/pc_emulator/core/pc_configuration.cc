@@ -5,16 +5,21 @@
 #include <boost/algorithm/string.hpp>
 #include <vector>
 
-#include "pc_emulator/include/pc_variable.h"
-#include "pc_emulator/include/pc_datatype.h"
-#include "pc_emulator/include/pc_configuration.h"
-#include "pc_emulator/include/pc_resource.h"
-#include "pc_emulator/include/utils.h"
-#include "pc_emulator/include/task.h"
+#include "src/pc_emulator/include/pc_variable.h"
+#include "src/pc_emulator/include/pc_datatype.h"
+#include "src/pc_emulator/include/pc_configuration.h"
+#include "src/pc_emulator/include/pc_resource.h"
+#include "src/pc_emulator/include/utils.h"
+#include "src/pc_emulator/include/task.h"
 
 using namespace std;
 using namespace pc_emulator;
 using namespace pc_specification;
+
+using MemType  = pc_specification::MemType;
+using DataTypeCategory = pc_specification::DataTypeCategory;
+using FieldIntfType = pc_specification::FieldInterfaceType;
+
 
 PCConfiguration::PCConfiguration(string ConfigurationPath):
     __ConfigurationPath(ConfigurationPath),
@@ -44,7 +49,7 @@ PCConfiguration::PCConfiguration(string ConfigurationPath):
 
         
         __ConfigurationName = "Default_Configuration";
-        int logLevel = LOG_LEVELS::LOG_INFO;
+        int logLevel = LogLevels::LOG_INFO;
         string logFilePath = "";
         if (__specification.has_config_name())
             __ConfigurationName = __specification.config_name();
@@ -52,7 +57,7 @@ PCConfiguration::PCConfiguration(string ConfigurationPath):
         
         if (__specification.has_log_level())
             logLevel = __specification.log_level();
-        
+
         if (__specification.has_log_file_path())
             logFilePath = __specification.log_file_path();
 
@@ -85,70 +90,70 @@ void PCConfiguration::RegisterAllResources() {
 }
 
 void PCConfiguration::RegisterAllElementaryDataTypes () {
-    for (int Category = DataTypeCategories::BOOL ; 
-                Category != DataTypeCategories::ARRAY; Category++) {
+    for (int Category = DataTypeCategory::BOOL ; 
+                Category != DataTypeCategory::ARRAY; Category++) {
 
         PCDataType * newDataType;
         string DataTypeName, InitValue;
         switch(Category) {
-            case DataTypeCategories::BOOL :   
+            case DataTypeCategory::BOOL :   
                             DataTypeName = "BOOL", InitValue = "0";
                             break;
-            case DataTypeCategories::BYTE :     
+            case DataTypeCategory::BYTE :     
                                 DataTypeName = "BYTE", InitValue = "16#0";
                                 break;
-            case DataTypeCategories::WORD :     
+            case DataTypeCategory::WORD :     
                                 DataTypeName = "WORD", InitValue = "16#0";
                                 break;
-            case DataTypeCategories::DWORD :     
+            case DataTypeCategory::DWORD :     
                                 DataTypeName = "DWORD", InitValue = "16#0";
                                 break;
-            case DataTypeCategories::LWORD :    
+            case DataTypeCategory::LWORD :    
                                 DataTypeName = "LWORD", InitValue = "16#0";
                                 break;
-            case DataTypeCategories::CHAR :    
+            case DataTypeCategory::CHAR :    
                                 DataTypeName = "CHAR", InitValue  = "";
                                 break;
-            case DataTypeCategories::INT :      
+            case DataTypeCategory::INT :      
                                 DataTypeName = "INT", InitValue = "0";
                                 break;
-            case DataTypeCategories::SINT :     
+            case DataTypeCategory::SINT :     
                                 DataTypeName = "SINT", InitValue = "0";
                                 break;
-            case DataTypeCategories::DINT :     
+            case DataTypeCategory::DINT :     
                                 DataTypeName = "DINT", InitValue = "0";
                                 break;
-            case DataTypeCategories::LINT :     
+            case DataTypeCategory::LINT :     
                                 DataTypeName = "LINT", InitValue = "0";
                                 break;
-            case DataTypeCategories::UINT :     
+            case DataTypeCategory::UINT :     
                                 DataTypeName = "UINT", InitValue = "0";
                                 break;
-            case DataTypeCategories::USINT :     
+            case DataTypeCategory::USINT :     
                                 DataTypeName = "USINT", InitValue = "0";
                                 break;
-            case DataTypeCategories::UDINT :     
+            case DataTypeCategory::UDINT :     
                                 DataTypeName = "UDINT", InitValue = "0";
                                 break;
-            case DataTypeCategories::ULINT :     
+            case DataTypeCategory::ULINT :     
                                 DataTypeName = "ULINT", InitValue = "0";
                                 break;
-            case DataTypeCategories::REAL :     
+            case DataTypeCategory::REAL :     
                                 DataTypeName = "UREAL", InitValue = "0.0";
                                 break;
-            case DataTypeCategories::LREAL :     
+            case DataTypeCategory::LREAL :     
                                 DataTypeName = "LREAL", InitValue = "0.0";
                                 break;
-            case DataTypeCategories::TIME :     
+            case DataTypeCategory::TIME :     
                                 DataTypeName = "TIME", InitValue = "t#0s";
                                 break;
-            case DataTypeCategories::DATE :     
+            case DataTypeCategory::DATE :     
                                 DataTypeName = "DATE", InitValue = "d#0001-01-01";
                                 break;
-            case DataTypeCategories::TIME_OF_DAY :     
+            case DataTypeCategory::TIME_OF_DAY :     
                                 DataTypeName = "TOD", InitValue = "tod#00:00:00";
                                 break;
-            case DataTypeCategories::DATE_AND_TIME :     
+            case DataTypeCategory::DATE_AND_TIME :     
                                 DataTypeName = "DT";
                                 InitValue = "dt#0001-01-01-00:00:00";
                                 break;
@@ -156,13 +161,13 @@ void PCConfiguration::RegisterAllElementaryDataTypes () {
         }
 
         newDataType = new PCDataType(this, DataTypeName, DataTypeName,
-                                    (DataTypeCategories)Category, InitValue);   
+                                    (DataTypeCategory)Category, InitValue);   
         RegisteredDataTypes.RegisterDataType(DataTypeName, newDataType);   
     }
 
     // note that max string length is 1000 chars
     PCDataType * stringDataType = new PCDataType(this, "STRING", "CHAR",
-                                1000, DataTypeCategories::ARRAY);
+                                1000, DataTypeCategory::ARRAY);
     RegisteredDataTypes.RegisterDataType("STRING", stringDataType);
 }
 
@@ -173,7 +178,7 @@ void PCConfiguration::RegisterAllComplexDataTypes() {
 
         PCDataType * global_var_type = new PCDataType(this, 
                     "__CONFIG_GLOBAL__", "__CONFIG_GLOBAL__",
-                    DataTypeCategories::POU);
+                    DataTypeCategory::POU);
 
         RegisteredDataTypes.RegisterDataType("__CONFIG__GLOBAL__", 
                                         global_var_type);
@@ -192,7 +197,7 @@ void PCConfiguration::RegisterAllComplexDataTypes() {
     else {
         PCDataType * access_var_type = new PCDataType(this, 
                     "__CONFIG_ACCESS__", "__CONFIG_ACCESS__",
-                    DataTypeCategories::POU);
+                    DataTypeCategory::POU);
 
         RegisteredDataTypes.RegisterDataType("__CONFIG__ACCESS__", 
                                         access_var_type);
@@ -207,7 +212,7 @@ void PCConfiguration::RegisterAllComplexDataTypes() {
 
         for (auto& field : 
                     __specification.config_access_pou_var().datatype_field()) {
-            if (field.intf_type() == FieldInterfaceType::VAR_ACCESS 
+            if (field.intf_type() == FieldIntfType::VAR_ACCESS 
                     && field.has_field_storage_spec()) {
 
             
@@ -240,12 +245,12 @@ void PCConfiguration::RegisterAllComplexDataTypes() {
     }
 }
 
-PCVariable * PCConfiguration::GetVariablePointerToMem(int MemType,
+PCVariable * PCConfiguration::GetVariablePointerToMem(int memType,
                 int ByteOffset, int BitOffset,string VariableDataTypeName) {
 
     assert(ByteOffset > 0 && BitOffset >= 0 && BitOffset < 8);
-    assert(MemType == MEM_TYPE::RAM_MEM);
-    string VariableName = __ConfigurationName + std::to_string(MemType)
+    assert(memType == MemType::RAM_MEM);
+    string VariableName = __ConfigurationName + std::to_string(memType)
                             + "." + std::to_string(ByteOffset)
                             + "." + std::to_string(BitOffset);
     // need to track and delete this variable later on

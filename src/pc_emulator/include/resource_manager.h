@@ -4,9 +4,9 @@
 using namespace std;
 
 #include <thread>
-#include "pc_emulator/include/pc_datatype.h"
-#include "pc_emulator/include/pc_variable.h"
-#include "pc_emulator/include/pc_resource.h"
+#include "pc_datatype.h"
+#include "pc_variable.h"
+#include "pc_resource.h"
 
 namespace pc_emulator {
     class ResourceManager {

@@ -1,11 +1,18 @@
 #include <assert.h>
-#include "pc_emulator/include/pc_resource_registry.h"
-#include "pc_emulator/include/pc_logger.h"
-#include "pc_emulator/include/pc_configuration.h"
-#include "pc_emulator/include/pc_resource.h"
+#include "src/pc_emulator/include/pc_resource_registry.h"
+#include "src/pc_emulator/include/pc_logger.h"
+#include "src/pc_emulator/include/pc_configuration.h"
+#include "src/pc_emulator/include/pc_resource.h"
 
 using namespace pc_emulator;
 using namespace std;
+using namespace pc_specification;
+
+using MemType  = pc_specification::MemType;
+using DataTypeCategory = pc_specification::DataTypeCategory;
+using FieldIntfType = pc_specification::FieldInterfaceType;
+using LogLevels = pc_specification::LogLevels;
+
 
 void ResourceRegistry::RegisterResource(string ResourceName,
                                         PCResource* Resource) {

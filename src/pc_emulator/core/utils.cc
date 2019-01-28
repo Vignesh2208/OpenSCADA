@@ -6,28 +6,52 @@
 #include <boost/algorithm/string/split.hpp>
 #include <vector>
 
-#include "pc_emulator/include/pc_variable.h"
-#include "pc_emulator/include/pc_datatype.h"
-#include "pc_emulator/include/pc_configuration.h"
-#include "pc_emulator/include/pc_resource.h"
-#include "pc_emulator/include/utils.h"
-
+#include "src/pc_emulator/include/pc_variable.h"
+#include "src/pc_emulator/include/pc_datatype.h"
+#include "src/pc_emulator/include/pc_configuration.h"
+#include "src/pc_emulator/include/pc_resource.h"
+#include "src/pc_emulator/include/utils.h"
+#include "src/pc_emulator/proto/configuration.pb.h"
 
 using namespace std;
 using namespace pc_emulator;
+using namespace pc_specification;
+
+using MemType  = pc_specification::MemType;
+using DataTypeCategory = pc_specification::DataTypeCategory;
+using FieldIntfType = pc_specification::FieldInterfaceType;
+
+
+VarOpType Utils::GetVarOpType(int varop) {
+    switch(varop) {
+        case VariableOps::ADD:
+        case VariableOps::SUB:
+        case VariableOps::MUL:
+        case VariableOps::DIV:
+        case VariableOps::MOD:    return VarOpType::ARITHMETIC;
+
+        case VariableOps::AND:
+        case VariableOps::OR:
+        case VariableOps::XOR:
+        case VariableOps::LS:
+        case VariableOps::RS:     return VarOpType::BITWISE;
+
+        default :   return VarOpType::RELATIONAL;
+    }
+}
 
 bool Utils::ExtractFromStorageSpec(string StorageSpec, 
-                        int * MemType, int * ByteOffset, int * BitOffset) {
+                        int * memType, int * ByteOffset, int * BitOffset) {
     if (!boost::starts_with(StorageSpec, "%%") || StorageSpec.length() < 4)
         return false;
 
-    assert(MemType != nullptr && ByteOffset != nullptr && BitOffset != nullptr);
+    assert(memType != nullptr && ByteOffset != nullptr && BitOffset != nullptr);
     if (StorageSpec[1] == 'M') 
-        *MemType = (int)MemType::RAM_MEM;
+        *memType = (int)MemType::RAM_MEM;
     else if (StorageSpec[1] == 'I') 
-        *MemType = (int)MemType::INPUT_MEM;
+        *memType = (int)MemType::INPUT_MEM;
     else if (StorageSpec[1] == 'Q') 
-        *MemType = (int)MemType::OUTPUT_MEM;
+        *memType = (int)MemType::OUTPUT_MEM;
     else
         return false;
 
@@ -45,16 +69,16 @@ bool Utils::ExtractFromStorageSpec(string StorageSpec,
 
 
 bool Utils::ExtractFromAccessStorageSpec(PCConfiguration * __configuration,
-                        string StorageSpec,  int * MemType, int * ByteOffset,
+                        string StorageSpec,  int * memType, int * ByteOffset,
                         int * BitOffset) {
     if (StorageSpec.length() < 4)
         return false;
 
-    assert(MemType != nullptr && ByteOffset != nullptr && BitOffset != nullptr);
+    assert(memType != nullptr && ByteOffset != nullptr && BitOffset != nullptr);
 
     if (boost::starts_with(StorageSpec,"%%")) {
         assert(StorageSpec[1] == 'M');
-        *MemType = (int)MemType::RAM_MEM;
+        *memType = (int)MemType::RAM_MEM;
         if (StorageSpec[2] == 'W') {
             *ByteOffset = std::stoi(StorageSpec.substr(3,  string::npos));
             *BitOffset = 0;
@@ -82,7 +106,7 @@ bool Utils::ExtractFromAccessStorageSpec(PCConfiguration * __configuration,
             else {
                 string RemStorageSpec = StorageSpec.substr(
                     StorageSpec.find('.') + 1, string::npos);
-                if (!Utils::ExtractFromStorageSpec(RemStorageSpec, MemType,
+                if (!Utils::ExtractFromStorageSpec(RemStorageSpec, memType,
                             ByteOffset, BitOffset))
                     return false; // this must be a nested field of some resource variable
                 else
@@ -98,7 +122,7 @@ void Utils::InitializeDataType(PCConfiguration * __configuration,
                             PCDataType * __new_data_type,
                             const pc_specification::DataType& DataTypeSpec) {
     for (auto& field : DataTypeSpec.datatype_field()) {
-        if (field.intf_type() != FieldInterfaceType::VAR_EXPLICIT_STORAGE) {
+        if (field.intf_type() != FieldIntfType::VAR_EXPLICIT_STORAGE) {
             if (field.has_dimension_1() && !field.has_dimension_2()) {
                 __new_data_type->AddArrayDataTypeField(field.field_name(),
                         field.field_datatype_name(), field.dimension_1(),
@@ -122,7 +146,7 @@ void Utils::InitializeDataType(PCConfiguration * __configuration,
             }
         }
         else if (field.intf_type() 
-                    == FieldInterfaceType::VAR_EXPLICIT_STORAGE
+                    == FieldIntfType::VAR_EXPLICIT_STORAGE
                 && field.has_field_storage_spec()) {
 
             int mem_type = 0;
@@ -177,7 +201,7 @@ void Utils::InitializeAccessDataType(PCConfiguration * __configuration,
                                 const pc_specification::DataType& DataTypeSpec) {
 
     for (auto& field : DataTypeSpec.datatype_field()) {
-        if (field.intf_type() == FieldInterfaceType::VAR_ACCESS 
+        if (field.intf_type() == FieldIntfType::VAR_ACCESS 
                 && field.has_field_storage_spec()) {
 
             int mem_type = 0;

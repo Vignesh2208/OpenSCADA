@@ -11,9 +11,13 @@
 #include "pc_mem_unit.h"
 #include "pc_pou_code_container.h"
 #include "pc_clock.h"
-#include "pc_emulator/proto/configuration.pb.h"
+#include "src/pc_emulator/proto/configuration.pb.h"
 
 using namespace std;
+using namespace pc_specification;
+using MemType  = pc_specification::MemType;
+using DataTypeCategory = pc_specification::DataTypeCategory;
+using FieldInterfaceType = pc_specification::FieldInterfaceType;
 
 namespace pc_emulator {
     class PCConfiguration;
@@ -28,12 +32,13 @@ namespace pc_emulator {
                 : __TaskName(TaskName), 
                 __nxt_schedule_time_ms(nx_schedule_time_ms) {};
 
-            bool operator==(const CompactTaskDescription& a);
-            bool operator>(const CompactTaskDescription& a);
-            bool operator<(const CompactTaskDescription& a);
-            bool operator<=(const CompactTaskDescription& a);
-            bool operator>=(const CompactTaskDescription& a);
     };
+
+    bool operator==(const CompactTaskDescription& a, const CompactTaskDescription& b);
+    bool operator>(const CompactTaskDescription& a, const CompactTaskDescription& b);
+    bool operator<(const CompactTaskDescription& a, const CompactTaskDescription& b);
+    bool operator<=(const CompactTaskDescription& a, const CompactTaskDescription& b);
+    bool operator>=(const CompactTaskDescription& a, const CompactTaskDescription& b);
 
     class PCResource {
         private:

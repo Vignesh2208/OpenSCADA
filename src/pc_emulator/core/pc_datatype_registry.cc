@@ -1,10 +1,17 @@
-#include "pc_emulator/include/pc_datatype_registry.h"
-#include "pc_emulator/include/pc_logger.h"
-#include "pc_emulator/include/pc_configuration.h"
-#include "pc_emulator/include/pc_datatype.h"
+#include "src/pc_emulator/include/pc_datatype_registry.h"
+#include "src/pc_emulator/include/pc_logger.h"
+#include "src/pc_emulator/include/pc_configuration.h"
+#include "src/pc_emulator/include/pc_datatype.h"
 
 using namespace pc_emulator;
 using namespace std;
+using namespace pc_specification;
+
+using MemType  = pc_specification::MemType;
+using DataTypeCategory = pc_specification::DataTypeCategory;
+using FieldInterfaceType = pc_specification::FieldInterfaceType;
+using LogLevels = pc_specification::LogLevels;
+
 
 void DataTypeRegistry::RegisterDataType(string DataTypeName,
                                         PCDataType* DataType) {
@@ -22,7 +29,7 @@ void DataTypeRegistry::RegisterDataType(string DataTypeName,
         __Registry.insert(std::make_pair(DataTypeName,
                                         DataType));
         LogMsg =  "Registered New Data Type: " + DataTypeName;
-        PCLogger->LogMessage(LOG_LEVELS::LOG_INFO, LogMsg);
+        PCLogger->LogMessage(LogLevels::LOG_INFO, LogMsg);
     }
 }
 

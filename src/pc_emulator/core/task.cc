@@ -5,17 +5,22 @@
 #include <boost/algorithm/string.hpp>
 #include <vector>
 
-#include "pc_emulator/include/pc_datatype.h"
-#include "pc_emulator/include/pc_variable.h"
-#include "pc_emulator/include/pc_configuration.h"
-#include "pc_emulator/include/pc_resource.h"
-#include "pc_emulator/include/executor.h"
-#include "pc_emulator/include/task.h"
+#include "src/pc_emulator/include/pc_datatype.h"
+#include "src/pc_emulator/include/pc_variable.h"
+#include "src/pc_emulator/include/pc_configuration.h"
+#include "src/pc_emulator/include/pc_resource.h"
+#include "src/pc_emulator/include/executor.h"
+#include "src/pc_emulator/include/task.h"
 
 
 using namespace std;
 using namespace pc_emulator;
 using namespace pc_specification;
+
+using MemType  = pc_specification::MemType;
+using DataTypeCategory = pc_specification::DataTypeCategory;
+using FieldIntfType = pc_specification::FieldInterfaceType;
+
 
 ProgramContainer::ProgramContainer(PCResource * AssociatedResource,
     const ProgramSpecification& program_spec, Task * AssociatedTask) {
@@ -60,7 +65,7 @@ void Task::Execute() {
             
             
             if (Attributes.FieldInterfaceType 
-                        == FieldInterfaceType::VAR_INPUT) {
+                        == FieldIntfType::VAR_INPUT) {
 
                 // Copy to mapped input variables
                 PCVariable * mappedVariable 
@@ -82,11 +87,11 @@ void Task::Execute() {
                 output_vars.push_back(0);
                 
             } else if (Attributes.FieldInterfaceType 
-                        == FieldInterfaceType::VAR_OUTPUT) {
+                        == FieldIntfType::VAR_OUTPUT) {
                 output_vars.push_back(1);
 
             } else if (Attributes.FieldInterfaceType 
-                        == FieldInterfaceType::VAR_IN_OUT) {
+                        == FieldIntfType::VAR_IN_OUT) {
 
                 // Set pointers to some inout variables
                 PCVariable * mappedVariable 

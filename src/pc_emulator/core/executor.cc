@@ -5,16 +5,20 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string.hpp>
 #include <vector>
-
-#include "pc_emulator/include/pc_configuration.h"
-#include "pc_emulator/include/pc_resource.h"
-#include "pc_emulator/include/executor.h"
-#include "pc_emulator/include/task.h"
-#include "pc_emulator/include/utils.h"
-
+#include "src/pc_emulator/include/pc_configuration.h"
+#include "src/pc_emulator/include/pc_resource.h"
+#include "src/pc_emulator/include/executor.h"
+#include "src/pc_emulator/include/task.h"
+#include "src/pc_emulator/include/utils.h"
 
 using namespace std;
 using namespace pc_emulator;
+using namespace pc_specification;
+
+using MemType  = pc_specification::MemType;
+using DataTypeCategory = pc_specification::DataTypeCategory;
+using FieldInterfaceType = pc_specification::FieldInterfaceType;
+
 
 void Executor::SetExecPoUVariable(PCVariable* ExecPoUVariable) {
     __ExecPoUVariable = ExecPoUVariable;

@@ -5,17 +5,22 @@
 #include <boost/algorithm/string.hpp>
 #include <vector>
 
-#include "pc_emulator/include/pc_configuration.h"
-#include "pc_emulator/include/pc_resource.h"
-#include "pc_emulator/include/executor.h"
-#include "pc_emulator/include/task.h"
-#include "pc_emulator/include/utils.h"
-#include "pc_emulator/include/pc_clock.h"
-#include "pc_emulator/include/resource_manager.h"
+#include "src/pc_emulator/include/pc_configuration.h"
+#include "src/pc_emulator/include/pc_resource.h"
+#include "src/pc_emulator/include/executor.h"
+#include "src/pc_emulator/include/task.h"
+#include "src/pc_emulator/include/utils.h"
+#include "src/pc_emulator/include/pc_clock.h"
+#include "src/pc_emulator/include/resource_manager.h"
 
 using namespace std;
 using namespace pc_emulator;
 using namespace pc_specification;
+
+using MemType  = pc_specification::MemType;
+using DataTypeCategory = pc_specification::DataTypeCategory;
+using FieldIntfType = pc_specification::FieldInterfaceType;
+
 
 // Resource Must have been startup before this call
 void ResourceManager::ExecuteResource() {

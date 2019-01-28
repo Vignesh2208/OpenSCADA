@@ -1,9 +1,15 @@
-#include "pc_emulator/include/pc_logger.h"
-#include "pc_emulator/include/pc_configuration.h"
+#include "src/pc_emulator/include/pc_logger.h"
+#include "src/pc_emulator/include/pc_configuration.h"
 
 using namespace std;
 using namespace pc_emulator;
 using namespace pc_specification;
+
+using MemType  = pc_specification::MemType;
+using DataTypeCategory = pc_specification::DataTypeCategory;
+using FieldIntfType = pc_specification::FieldInterfaceType;
+using LogLevels = pc_specification::LogLevels;
+
 
 void Logger::LogMessage(int LogLevel, std::string Message) {
     string Qualifier;
