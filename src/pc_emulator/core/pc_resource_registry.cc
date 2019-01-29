@@ -37,7 +37,6 @@ void ResourceRegistry::RegisterResource(string ResourceName,
 PCResource * ResourceRegistry::GetResource(string ResourceName) {
     assert (__configuration != nullptr);
     assert (__configuration->PCLogger != nullptr);
-    Logger * PCLogger = __configuration->PCLogger;
     std::string LogMsg;
 
     std::unordered_map<std::string, PCResource*>::const_iterator got = 

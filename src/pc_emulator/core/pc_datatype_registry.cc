@@ -47,6 +47,7 @@ PCDataType * DataTypeRegistry::GetDataType(string DataTypeName) {
     } else {
         return got->second;
     }
+    return nullptr;
 }
 
 void DataTypeRegistry::Cleanup() {

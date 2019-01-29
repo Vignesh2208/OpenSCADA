@@ -52,6 +52,6 @@ cc_library(
     deps = ["@boost//:boost",
             ":pc_configuration_cc_proto"],
     
-    copts = ["-fpermissive -fno-implicit-templates -Wreorder"],
+    copts = ["-fpermissive -fno-implicit-templates -Wno-reorder"],
     visibility = ["//visibility:public"],
 )

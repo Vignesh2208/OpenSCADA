@@ -41,7 +41,6 @@ void Executor::Run() {
     assert(__Initialized);
 
     __ExecPoUVariable->OnExecutorStartup();
-    auto nInsns = __CodeContainer->GetTotalNumberInsns();
     int idx = 0;
 
     while (true) {

@@ -17,7 +17,7 @@ PoUCodeContainer& PoUCodeContainer::AddInstruction(string InsnString) {
     boost::split(results, InsnString, [](char c){return c == ' ';});
     string InsnLabel;
     string InsnName;
-    int StartIdx = 1;
+    size_t StartIdx = 1;
 
     if (results.size() < 2) {
         __configuration->PCLogger->RaiseException("Incorrectly formatted "

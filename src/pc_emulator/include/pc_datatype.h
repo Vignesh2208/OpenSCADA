@@ -74,7 +74,6 @@ namespace pc_emulator {
             std::vector<int> __DimensionSizes;
 
         bool IsFieldPresent(string NestedFieldName);
-        bool IsNestedFieldOfType(string NestedFieldName, int IntfTypeToCheck);
 
         PCDataType* LookupDataType(string DataTypeName);
 

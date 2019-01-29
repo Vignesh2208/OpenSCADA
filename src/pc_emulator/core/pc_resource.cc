@@ -341,7 +341,7 @@ Task * PCResource::GetInterruptTaskToExecute() {
                                         DataTypeCategory::BOOL);
         
         
-        for (int itt = 0; itt < it->second.size(); itt++) {
+        for (int itt = 0; itt < (int)it->second.size(); itt++) {
             auto prev_value = it->second[itt]->__trigger_variable_previous_value;
             if (prev_value == false && curr_value == true) {
                 if (it->second[itt]->__priority < highest_priority) {

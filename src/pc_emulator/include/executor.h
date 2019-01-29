@@ -28,11 +28,12 @@ namespace pc_emulator {
             Executor(PCConfiguration* configuration,
                     PCResource * AssociatedResource,
                     Task * AssociatedTask):
-                __configuration(configuration), 
+                __configuration(configuration),
+                __ExecPoUVariable(nullptr), 
                 __AssociatedResource(AssociatedResource),
-                __ExecPoUVariable(nullptr),
-                __AssociatedTask(AssociatedTask),
-                __CodeContainer(nullptr), __Initialized(false) {};
+                __CodeContainer(nullptr),
+                __Initialized(false),
+                __AssociatedTask(AssociatedTask) {};
 
             void SetExecPoUVariable(PCVariable* ExecPoUVariable);
             void Run();

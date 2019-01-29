@@ -54,7 +54,7 @@ void Task::AddProgramToTask(const ProgramSpecification& program_spec) {
 void Task::Execute() {
 
     std::vector<int> output_vars;
-    for (int i = 0; i < __AssociatedPrograms.size(); i++) {
+    for (int i = 0; i < (int)__AssociatedPrograms.size(); i++) {
         ProgramContainer * container = __AssociatedPrograms[i];
         output_vars.clear();
         for (auto map : container->__initialization_map) {
@@ -121,7 +121,7 @@ void Task::Execute() {
 
         //Gather output from some output variables and set it to mapped ones
         assert (output_vars.size() == container->__initialization_map.size());
-        for (int i = 0; i < container->__initialization_map.size(); i++) {
+        for (int i = 0; i < (int)container->__initialization_map.size(); i++) {
 
             if (output_vars[i] == 1) {
                 auto map = container->__initialization_map[i];
@@ -154,7 +154,7 @@ void Task::Execute() {
 }
 
 void Task::Cleanup() {
-    for (int i = 0; i <  __AssociatedPrograms.size(); i++) {
+    for (int i = 0; i <  (int)__AssociatedPrograms.size(); i++) {
             __AssociatedPrograms[i]->Cleanup();
             delete __AssociatedPrograms[i];
     }

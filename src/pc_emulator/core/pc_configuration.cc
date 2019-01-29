@@ -25,7 +25,7 @@ PCConfiguration::PCConfiguration(string ConfigurationPath):
     __ConfigurationPath(ConfigurationPath),
     RegisteredDataTypes(this), RegisteredResources(this) {
 
-        bool retValue = false;
+
         int fileDescriptor = open(ConfigurationPath.c_str(),
                                 O_RDONLY);
 

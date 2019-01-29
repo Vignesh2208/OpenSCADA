@@ -217,7 +217,7 @@ void PCDataType::AddArrayDataTypeField(string FieldName, string FieldTypeName,
     boost::split(InitialValues, InitialValue,
                 boost::is_any_of(",{}"), boost::token_compress_on); 
     if (!InitialValue.empty())
-        assert(InitialValues.size() == DimensionSize);
+        assert((int)InitialValues.size() == DimensionSize);
 
     for(int i = 0; i < DimensionSize; i++) {
         PCDataTypeField NewField(FieldName + "[" + std::to_string(i+1) + "]",
@@ -272,7 +272,7 @@ void PCDataType::AddArrayDataTypeFieldAT(string FieldName, string FieldTypeName,
     boost::split(InitialValues, InitialValue,
                 boost::is_any_of(",{}"), boost::token_compress_on); 
     if (!InitialValue.empty())
-        assert(InitialValues.size() == DimensionSize);
+        assert((int)InitialValues.size() == DimensionSize);
     int CurrBitOffset = BitOffset;    
 
     for(int i = 0; i < DimensionSize; i++) {
@@ -334,7 +334,7 @@ void PCDataType::AddArrayDataTypeField(string FieldName, string FieldTypeName,
     boost::split(InitialValues, InitialValue,
                 boost::is_any_of(",{}"), boost::token_compress_on); 
     if (!InitialValue.empty())
-        assert(InitialValues.size() == DimensionSize1*DimensionSize2);
+        assert((int)InitialValues.size() == DimensionSize1*DimensionSize2);
 
     for(int i = 0; i < DimensionSize1; i++) {
         for(int j = 0; j < DimensionSize2; j++) {
@@ -390,7 +390,7 @@ void PCDataType::AddArrayDataTypeFieldAT(string FieldName, string FieldTypeName,
     boost::split(InitialValues, InitialValue,
                 boost::is_any_of(",{}"), boost::token_compress_on); 
     if (!InitialValue.empty())
-        assert(InitialValues.size() == DimensionSize1*DimensionSize2);
+        assert((int)InitialValues.size() == DimensionSize1*DimensionSize2);
 
     int CurrBitOffset = BitOffset;
     for(int i = 0; i < DimensionSize1; i++) {
@@ -537,9 +537,9 @@ PCDataType * PCDataType::LookupDataType(string DataTypeName) {
 
 PCDataType::PCDataType(PCConfiguration* configuration, 
                     string AliasName, string DataTypeName,
-                    DataTypeCategory Category = DataTypeCategory::NOT_ASSIGNED,
-                    string InitialValue="", s64 RangeMin = LLONG_MIN,
-                    s64 RangeMax = LLONG_MAX) {
+                    DataTypeCategory Category,
+                    string InitialValue, s64 RangeMin,
+                    s64 RangeMax) {
 
     
     __configuration = __configuration;
@@ -642,8 +642,8 @@ PCDataType::PCDataType(PCConfiguration* configuration,
 PCDataType::PCDataType(PCConfiguration* configuration, 
                     string AliasName, string DataTypeName, int DimSize, 
                     DataTypeCategory Category,
-                    string InitialValue="", s64 RangeMin = LLONG_MIN,
-                    s64 RangeMax = LLONG_MAX) {
+                    string InitialValue, s64 RangeMin,
+                    s64 RangeMax) {
 
     __configuration = configuration;
     __DataTypeName = DataTypeName;
@@ -686,7 +686,7 @@ PCDataType::PCDataType(PCConfiguration* configuration,
     boost::split(InitialValues, InitialValue,
                 boost::is_any_of(",{}"), boost::token_compress_on); 
     assert (InitialValues.empty() ||
-            InitialValues.size() == DimSize);                                       
+            (int)InitialValues.size() == DimSize);                                       
 
     for(int i = 0; i < DimSize; i++) {
         string Init = InitialValues.empty() ? DataType->__InitialValue :
@@ -711,8 +711,8 @@ PCDataType::PCDataType(PCConfiguration* configuration,
                     string AliasName, string DataTypeName,
                     int Dim1Size, int Dim2Size, 
                     DataTypeCategory Category,
-                    string InitialValue="", 
-                    s64 RangeMin = LLONG_MIN, s64 RangeMax = LLONG_MAX) {
+                    string InitialValue, 
+                    s64 RangeMin, s64 RangeMax) {
 
     __configuration = configuration;
     __DataTypeName = DataTypeName;
@@ -753,7 +753,7 @@ PCDataType::PCDataType(PCConfiguration* configuration,
     boost::split(InitialValues, InitialValue,
                 boost::is_any_of(",{}"), boost::token_compress_on); 
     assert (InitialValues.empty() ||
-            InitialValues.size() == Dim1Size*Dim2Size);                                       
+            (int)InitialValues.size() == Dim1Size*Dim2Size);                                       
 
     for(int i = 0; i < Dim1Size; i++) {
         for(int j = 0; j < Dim2Size; j++) {
@@ -782,10 +782,10 @@ void PCDataType::RegisterDataType() {
 
 bool PCDataType::CheckRemFields(std::vector<string>& NestedFields, int StartPos,
                             PCDataType * Current) {
-    if (StartPos >= NestedFields.size())
+    if (StartPos >= (int)NestedFields.size())
         return true;
 
-    for (int i = StartPos ; i < NestedFields.size(); i++) {
+    for (int i = StartPos ; i < (int)NestedFields.size(); i++) {
         string AccessedFieldName = NestedFields[i];
         for (int IntfType = FieldInterfaceType::VAR_INPUT; 
             IntfType != FieldInterfaceType::NA + 1; IntfType ++) {
@@ -814,10 +814,6 @@ bool PCDataType::IsFieldPresent(string NestedFieldName) {
 
 }
 
-bool PCDataType::IsNestedFieldOfType(string NestedFieldName,
-                                    int IntfTypeToCheck) {
-
-}
 
 bool DataTypeUtils::ValueToBool(string Value, bool& BoolValue) {
     if(boost::iequals(Value, "True") 
