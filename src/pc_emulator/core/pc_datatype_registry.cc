@@ -37,13 +37,13 @@ PCDataType * DataTypeRegistry::GetDataType(string DataTypeName) {
     assert (__configuration != nullptr);
     assert (__configuration->PCLogger != nullptr);
     Logger * PCLogger = __configuration->PCLogger;
-    std::string LogMsg;
+    //std::string LogMsg;
 
     std::unordered_map<std::string, PCDataType*>::const_iterator got = 
                         __Registry.find (DataTypeName);
     if (got == __Registry.end()) {
-        LogMsg = "Data Type " + DataTypeName + " Not Found !";
-        PCLogger->RaiseException(LogMsg);
+        //LogMsg = "Data Type " + DataTypeName + " Not Found !";
+        //PCLogger->RaiseException(LogMsg);
     } else {
         return got->second;
     }

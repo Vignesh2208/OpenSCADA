@@ -1,6 +1,5 @@
 config_name: "DataType_Test_Configuration"
 log_level: LOG_INFO
-log_file_path: "/tmp/log.txt"
 enable_kronos: false
 run_time_secs: 1
 datatype_declaration {
@@ -16,7 +15,7 @@ datatype_declaration {
     name: "INT_1DARR_TYPE_DEF"
     datatype_category: INT
     datatype_spec {
-        initial_value: "-1"
+        initial_value: "{-1,0,1,2,3,4,5,6,7,8}"
         range_min: -10
         range_max: 10
         dimension_1:  10
@@ -26,11 +25,11 @@ datatype_declaration {
     name: "INT_2DARR_TYPE_DEF"
     datatype_category: INT
     datatype_spec {
-        initial_value: "-1"
+        initial_value: "{{0,1},{2,3}}"
         range_min: -10
         range_max: 10
-        dimension_1:  10
-        dimension_2: 10
+        dimension_1:  2
+        dimension_2: 2
     }   
 }
 datatype_declaration {

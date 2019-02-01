@@ -12,7 +12,7 @@ using LogLevels = pc_specification::LogLevels;
 
 
 void Logger::LogMessage(int LogLevel, std::string Message) {
-    string Qualifier;
+    string Qualifier = "";
     
     if (LogLevel != LogLevels::LOG_NONE && LogLevel <= __LogLevel) {
         if (LogLevel == LogLevels::LOG_INFO) {
@@ -22,12 +22,15 @@ void Logger::LogMessage(int LogLevel, std::string Message) {
         } else {
             Qualifier = "VERBOSE";
         }
+
         if (!__LogFile.empty()){
             __ofs << Qualifier << " >> " << Message << std::endl;
         } else {
-            std::cout << Qualifier << " >> " << Message << std::endl;
+            
         }
     }
+
+    std::cout << Qualifier << " >> " << Message << std::endl;
 }
 
 void Logger::RaiseException(std::string Message) {

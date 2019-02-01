@@ -37,7 +37,15 @@ namespace pc_emulator {
             PCDataType * __FieldTypePtr;
             int __StorageMemType;
             int __StorageByteOffset;
-            int __StorageBitOffset;      
+            int __StorageBitOffset;
+
+        PCDataTypeField() : __FieldName(""), __FieldTypeName(""),
+                        __RangeMin(0), __RangeMax(0),
+                        __InitialValue(""), 
+                        __FieldTypeCategory(static_cast<DataTypeCategory>(0)),
+                        __FieldInterfaceType(-1),
+                        __FieldTypePtr(nullptr), __StorageMemType(-1), 
+                        __StorageByteOffset(-1), __StorageBitOffset(-1) {};      
 
         PCDataTypeField(string FieldName, string FieldTypeName,
                         DataTypeCategory FieldTypeCategory,
@@ -58,6 +66,8 @@ namespace pc_emulator {
         private:
             bool CheckRemFields(std::vector<string>& NestedFields, int StartPos,
                             PCDataType * Current);
+            bool CheckRemFields(std::vector<string>& NestedFields, int StartPos,
+                            PCDataType * Current, PCDataTypeField& Result);
             void SetElementaryDataTypeAttributes(string InitialValue,
                                             s64 RangeMin, s64 RangeMax);
         
@@ -138,6 +148,9 @@ namespace pc_emulator {
                     DataTypeCategory Category,
                     string InitialValue="", 
                     s64 RangeMin = LLONG_MIN, s64 RangeMax = LLONG_MAX);
+
+        bool GetPCDataTypeField(string NestedFieldName,
+                                    PCDataTypeField& Result);
         void Cleanup();
     };
 

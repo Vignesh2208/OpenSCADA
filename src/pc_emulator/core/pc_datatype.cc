@@ -3,6 +3,7 @@
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/predicate.hpp>
+#include <boost/algorithm/string/trim.hpp>
 #include <boost/lexical_cast.hpp>
 #include <regex>
 #include <vector>
@@ -526,6 +527,10 @@ void PCDataType::SetElementaryDataTypeAttributes(string InitialValue,
     __RangeMin = RangeMin;
     __InitialValue = InitValue;
 
+    if (LookupDataType(DataTypeName) == nullptr)
+    __configuration->PCLogger->LogMessage(LogLevels::LOG_INFO,
+            "Registered Elementary DataType: " + DataTypeName);
+
 }
 
 PCDataType * PCDataType::LookupDataType(string DataTypeName) {
@@ -542,7 +547,7 @@ PCDataType::PCDataType(PCConfiguration* configuration,
                     s64 RangeMax) {
 
     
-    __configuration = __configuration;
+    __configuration = configuration;
     __DataTypeName = DataTypeName;
     __NFields = 0, __SizeInBits = 0;
     __AliasName = AliasName;
@@ -558,6 +563,7 @@ PCDataType::PCDataType(PCConfiguration* configuration,
     }
     
 
+    
     // Since size of dimensions is not specified, it cannot be an array or
     // string
     assert (Category != DataTypeCategory::ARRAY);
@@ -615,12 +621,20 @@ PCDataType::PCDataType(PCConfiguration* configuration,
                 }           
 
         } else {
+            /*
+            __configuration->PCLogger->LogMessage(LogLevels::LOG_INFO,
+            "Registering as an elementary datatype because category of lookup datatype was not complex!");
             SetElementaryDataTypeAttributes(InitialValue, RangeMin, RangeMax);
+            */
+           __configuration->PCLogger->RaiseException("This should never happen!\n");
         }
     } else {
         __DataTypeCategory = Category;
         if (__DataTypeCategory != DataTypeCategory::DERIVED &&
             __DataTypeCategory != DataTypeCategory::POU) {
+
+            __configuration->PCLogger->LogMessage(LogLevels::LOG_INFO,
+                "Registering as an elementary datatype because category of datatype was not complex!");
                 SetElementaryDataTypeAttributes(InitialValue,
                         RangeMin, RangeMax);
         } /*else {
@@ -649,7 +663,7 @@ PCDataType::PCDataType(PCConfiguration* configuration,
     __DataTypeName = DataTypeName;
     __NFields = 0, __SizeInBits = 0;
     __AliasName = AliasName;
-    __InitialValue = InitialValue;
+    __InitialValue = "";
  
 
     for (int IntfType = FieldInterfaceType::VAR_INPUT; 
@@ -683,13 +697,15 @@ PCDataType::PCDataType(PCConfiguration* configuration,
     
 
     std::vector<std::string> InitialValues;
+    boost::trim_if(InitialValue, boost::is_any_of("\t ,{}"));
     boost::split(InitialValues, InitialValue,
                 boost::is_any_of(",{}"), boost::token_compress_on); 
-    assert (InitialValues.empty() ||
+    
+    assert (InitialValue == "" ||
             (int)InitialValues.size() == DimSize);                                       
 
     for(int i = 0; i < DimSize; i++) {
-        string Init = InitialValues.empty() ? DataType->__InitialValue :
+        string Init = (InitialValue == "") ? DataType->__InitialValue :
                             InitialValues[i];
         PCDataTypeField NewField(
                             "[" + std::to_string(i+1) + "]", 
@@ -718,7 +734,7 @@ PCDataType::PCDataType(PCConfiguration* configuration,
     __DataTypeName = DataTypeName;
     __NFields = 0, __SizeInBits = 0;
     __AliasName = AliasName;
-    __InitialValue = InitialValue;
+    __InitialValue = "";
     
 
     for (int IntfType = FieldInterfaceType::VAR_INPUT; 
@@ -750,14 +766,15 @@ PCDataType::PCDataType(PCConfiguration* configuration,
                                                         RangeMin;
                                                         
     std::vector<std::string> InitialValues;
+    boost::trim_if(InitialValue, boost::is_any_of("\t ,{}"));
     boost::split(InitialValues, InitialValue,
                 boost::is_any_of(",{}"), boost::token_compress_on); 
-    assert (InitialValues.empty() ||
+    assert (InitialValue == "" ||
             (int)InitialValues.size() == Dim1Size*Dim2Size);                                       
 
     for(int i = 0; i < Dim1Size; i++) {
         for(int j = 0; j < Dim2Size; j++) {
-            string Init = InitialValues.empty() ? DataType->__InitialValue :
+            string Init = (InitialValue == "") ? DataType->__InitialValue :
                                 InitialValues[i*Dim2Size + j];
             PCDataTypeField NewField(
                     "[" + std::to_string(i+1) + "][" + std::to_string(j+1) + "]", 
@@ -814,6 +831,40 @@ bool PCDataType::IsFieldPresent(string NestedFieldName) {
 
 }
 
+bool PCDataType::CheckRemFields(std::vector<string>& NestedFields, int StartPos,
+                PCDataType * Current, PCDataTypeField& Result) {
+    if (StartPos >= (int)NestedFields.size())
+        return true;
+
+    for (int i = StartPos ; i < (int)NestedFields.size(); i++) {
+        string AccessedFieldName = NestedFields[i];
+        for (int IntfType = FieldInterfaceType::VAR_INPUT; 
+            IntfType != FieldInterfaceType::NA + 1; IntfType ++) {
+            for(auto& DefinedField: Current->__FieldsByInterfaceType[IntfType]) {
+                PCDataType * FieldDataType = DefinedField.__FieldTypePtr;
+                assert(FieldDataType != nullptr);
+                if(AccessedFieldName == DefinedField.__FieldName) {
+                    Result = DefinedField;
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+bool PCDataType::GetPCDataTypeField(string NestedFieldName,
+                PCDataTypeField& Result) {
+
+    std::vector<std::string> NestedFields;
+    boost::split(NestedFields, NestedFieldName,
+                boost::is_any_of("."), boost::token_compress_on);
+    if (NestedFields.empty()) {
+        return true;           
+    }
+    
+    return CheckRemFields(NestedFields, 0, this, Result);
+}
 
 bool DataTypeUtils::ValueToBool(string Value, bool& BoolValue) {
     if(boost::iequals(Value, "True") 

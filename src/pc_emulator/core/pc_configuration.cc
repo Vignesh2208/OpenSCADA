@@ -73,12 +73,12 @@ PCConfiguration::PCConfiguration(string ConfigurationPath):
         __NumResources = __specification.machine_spec().num_cpus();
         assert(__NumResources > 0);
 
-        
+        std::cout << "Read Configuration !" << std::endl;
         RegisterAllElementaryDataTypes();
         RegisterAllComplexDataTypes();
         RegisterAllResources();
-};
 
+};
 
 
 void PCConfiguration::RegisterAllResources() {
@@ -100,6 +100,9 @@ void PCConfiguration::RegisterAllElementaryDataTypes () {
 
         PCDataType * newDataType;
         string DataTypeName, InitValue;
+
+        PCLogger->LogMessage(LogLevels::LOG_INFO, "Next Elementary Category "
+            + std::to_string(Category));
         switch(Category) {
             case DataTypeCategory::BOOL :   
                             DataTypeName = "BOOL", InitValue = "0";
@@ -162,18 +165,29 @@ void PCConfiguration::RegisterAllElementaryDataTypes () {
                                 DataTypeName = "DT";
                                 InitValue = "dt#0001-01-01-00:00:00";
                                 break;
+            default:            DataTypeName = "NA";
+                                break;
      
         }
 
-        newDataType = new PCDataType(this, DataTypeName, DataTypeName,
-                                    (DataTypeCategory)Category, InitValue);   
-        RegisteredDataTypes.RegisterDataType(DataTypeName, newDataType);   
+        if(DataTypeName != "NA") {
+            PCLogger->LogMessage(LogLevels::LOG_INFO, 
+                    "Registering Elementary DataType: " + DataTypeName);
+            newDataType = new PCDataType(this, DataTypeName, DataTypeName,
+                                        static_cast<DataTypeCategory>(Category),
+                                        InitValue);   
+            RegisteredDataTypes.RegisterDataType(DataTypeName, newDataType);  
+        } 
     }
 
+    PCLogger->LogMessage(LogLevels::LOG_INFO, "Registering STRING DataType");
     // note that max string length is 1000 chars
     PCDataType * stringDataType = new PCDataType(this, "STRING", "CHAR",
                                 1000, DataTypeCategory::ARRAY);
     RegisteredDataTypes.RegisterDataType("STRING", stringDataType);
+
+    PCLogger->LogMessage(LogLevels::LOG_INFO, 
+                    "Registered all elementary datatypes!\n");
 }
 
 void PCConfiguration::RegisterAllComplexDataTypes() {
@@ -261,6 +275,8 @@ void PCConfiguration::RegisterAllComplexDataTypes() {
             }
 
             PCDataType * new_data_type = nullptr;
+            PCLogger->LogMessage(LogLevels::LOG_INFO, 
+                "Registering New DataType: " + datatype_decl.name());
 
             if (datatype_decl.has_datatype_spec()) {
                 assert (datatype_decl.datatype_category() 
@@ -274,8 +290,8 @@ void PCConfiguration::RegisterAllComplexDataTypes() {
                       datatype_decl.datatype_spec().initial_value(): "" ;
                 s64 range_min =  datatype_decl.datatype_spec().has_range_min() ? 
                       datatype_decl.datatype_spec().range_min() : LLONG_MIN;
-                s64 range_max = datatype_decl.datatype_spec().has_range_min() ? 
-                      datatype_decl.datatype_spec().range_min(): LLONG_MAX;
+                s64 range_max = datatype_decl.datatype_spec().has_range_max() ? 
+                      datatype_decl.datatype_spec().range_max(): LLONG_MAX;
                 
 
                 if (datatype_decl.datatype_spec().has_dimension_1()) {
@@ -318,12 +334,15 @@ void PCConfiguration::RegisterAllComplexDataTypes() {
                 Utils::InitializeDataType(this, new_data_type, datatype_decl);
             }
 
+            
             assert(new_data_type != nullptr);
             RegisteredDataTypes.RegisterDataType(datatype_decl.name(), 
                                         new_data_type);
         }
 
     }
+
+    PCLogger->LogMessage(LogLevels::LOG_INFO, "Registered all Complex DataTypes!");
 }
 
 PCVariable * PCConfiguration::GetVariablePointerToMem(int memType,
