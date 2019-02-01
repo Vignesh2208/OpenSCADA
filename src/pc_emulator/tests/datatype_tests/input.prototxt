@@ -1,0 +1,99 @@
+config_name: "DataType_Test_Configuration"
+log_level: LOG_INFO
+log_file_path: "/tmp/log.txt"
+enable_kronos: false
+run_time_secs: 1
+datatype_declaration {
+    name: "INT_TYPE_DEF"
+    datatype_category: INT
+    datatype_spec {
+        initial_value: "-1"
+        range_min: -10
+        range_max: 10
+    }
+}
+datatype_declaration {
+    name: "INT_1DARR_TYPE_DEF"
+    datatype_category: INT
+    datatype_spec {
+        initial_value: "-1"
+        range_min: -10
+        range_max: 10
+        dimension_1:  10
+    }   
+}
+datatype_declaration {
+    name: "INT_2DARR_TYPE_DEF"
+    datatype_category: INT
+    datatype_spec {
+        initial_value: "-1"
+        range_min: -10
+        range_max: 10
+        dimension_1:  10
+        dimension_2: 10
+    }   
+}
+datatype_declaration {
+    name: "COMPLEX_STRUCT_1"
+    datatype_category: DERIVED
+    datatype_field {
+        field_name: "string_field"
+        field_datatype_name: "STRING"
+    }
+    datatype_field {
+        field_name: "int_field"
+        field_datatype_name: "INT_TYPE_DEF"
+    }
+    datatype_field {
+        field_name: "real_field"
+        field_datatype_name: "REAL"
+        initial_value: "0.0"
+        range_min: -10
+        range_max: 10
+    }
+    datatype_field {
+        field_name: "oned_arr_field"
+        field_datatype_name: "INT_1DARR_TYPE_DEF"
+    }
+    datatype_field {
+        field_name: "twod_arr_field"
+        field_datatype_name: "INT_2DARR_TYPE_DEF"
+    }
+}
+datatype_declaration {
+    name: "COMPLEX_STRUCT_2"
+    datatype_category: DERIVED
+    datatype_field {
+        field_name: "complex_field"
+        field_datatype_name: "COMPLEX_STRUCT_1"
+    }
+    datatype_field {
+        field_name: "int_field"
+        field_datatype_name: "INT_TYPE_DEF"
+    }
+    datatype_field {
+        field_name: "word_field"
+        field_datatype_name: "WORD"
+        initial_value: "16#0"
+    }
+    datatype_field {
+        field_name: "time_field"
+        field_datatype_name: "TIME"
+    }
+    datatype_field {
+        field_name: "date_field"
+        field_datatype_name: "DATE"
+    }
+    datatype_field {
+        field_name: "date_tod_field"
+        field_datatype_name: "DT"
+    }
+    datatype_field {
+        field_name: "tod_field"
+        field_datatype_name: "TOD"
+    }
+}
+machine_spec {
+    num_cpus: 1
+    ram_mem_size_bytes: 10000
+}
