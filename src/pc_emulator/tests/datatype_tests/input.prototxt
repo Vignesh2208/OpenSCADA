@@ -46,7 +46,7 @@ datatype_declaration {
     datatype_field {
         field_name: "real_field"
         field_datatype_name: "REAL"
-        initial_value: "0.0"
+        initial_value: "0.1"
         range_min: -10
         range_max: 10
     }
@@ -73,7 +73,7 @@ datatype_declaration {
     datatype_field {
         field_name: "word_field"
         field_datatype_name: "WORD"
-        initial_value: "16#0"
+        initial_value: "16#1"
     }
     datatype_field {
         field_name: "time_field"
@@ -90,6 +90,15 @@ datatype_declaration {
     datatype_field {
         field_name: "tod_field"
         field_datatype_name: "TOD"
+    }
+}
+datatype_declaration {
+    name: "COMPLEX_STRUCT_3"
+    datatype_category: DERIVED
+    datatype_field {
+        field_name: "complex_vector"
+        field_datatype_name: "COMPLEX_STRUCT_2"
+        dimension_1: 10
     }
 }
 machine_spec {

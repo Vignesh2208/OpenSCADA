@@ -108,7 +108,7 @@ void PCVariable::ParseRemFieldAttributes(std::vector<string>& NestedFields,
     for (int i = StartPos; i < (int)NestedFields.size(); i++) {
         string AccessedFieldName = NestedFields[i];
         for (int IntfType = FieldIntfType::VAR_INPUT; 
-            IntfType != FieldIntfType::NA + 1; IntfType ++) {
+            IntfType <= FieldIntfType::NA; IntfType ++) {
             for(auto& DefinedField: DataType->__FieldsByInterfaceType[IntfType]) {
                 PCDataType * FieldDataType = DefinedField.__FieldTypePtr;
                 assert(FieldDataType != nullptr);
@@ -119,6 +119,13 @@ void PCVariable::ParseRemFieldAttributes(std::vector<string>& NestedFields,
 
                     if (i == (int)NestedFields.size() - 1)
                         return; // note theat the relative offset is already set
+
+                    // access to an internal field which is an array cannot be
+                    // succeeded by other nested fields. if an internal array
+                    // field is accessed with just the array name, it must be
+                    // the last accessed nested field.
+                    assert(DataType->__DataTypeCategory 
+                        != DataTypeCategory::ARRAY);
 
                     if (IntfType == FieldIntfType::VAR_IN_OUT || 
                         IntfType == FieldIntfType::VAR_EXTERNAL ||
@@ -420,7 +427,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
 
         default :
                 for (int IntfType = FieldIntfType::VAR_INPUT; 
-                    IntfType != FieldIntfType::NA + 1; IntfType ++) {
+                    IntfType <= FieldIntfType::NA; IntfType ++) {
                     
                     if (IntfType != FieldIntfType::VAR_IN_OUT &&
                         IntfType != FieldIntfType::VAR_EXTERNAL &&
@@ -447,7 +454,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
 }
 void PCVariable::InitializeAllNonPtrFields() {
     for (int IntfType = FieldIntfType::VAR_INPUT; 
-            IntfType != FieldIntfType::NA; IntfType ++) {
+            IntfType <= FieldIntfType::NA; IntfType ++) {
         
         if (IntfType != FieldIntfType::VAR_IN_OUT &&
             IntfType != FieldIntfType::VAR_EXTERNAL &&

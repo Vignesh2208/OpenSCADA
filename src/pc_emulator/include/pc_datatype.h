@@ -38,6 +38,10 @@ namespace pc_emulator {
             int __StorageMemType;
             int __StorageByteOffset;
             int __StorageBitOffset;
+            // These are set only if __FieldTypeCategory is an ARRAY
+            int __NDimensions;
+            int __Dimension1;
+            int __Dimension2;
 
         PCDataTypeField() : __FieldName(""), __FieldTypeName(""),
                         __RangeMin(0), __RangeMax(0),
@@ -45,7 +49,9 @@ namespace pc_emulator {
                         __FieldTypeCategory(static_cast<DataTypeCategory>(0)),
                         __FieldInterfaceType(-1),
                         __FieldTypePtr(nullptr), __StorageMemType(-1), 
-                        __StorageByteOffset(-1), __StorageBitOffset(-1) {};      
+                        __StorageByteOffset(-1), __StorageBitOffset(-1),
+                        __NDimensions(-1), __Dimension1(-1),
+                        __Dimension2(-1) {};      
 
         PCDataTypeField(string FieldName, string FieldTypeName,
                         DataTypeCategory FieldTypeCategory,
@@ -56,7 +62,9 @@ namespace pc_emulator {
             __InitialValue(InitialValue), __FieldTypeCategory(FieldTypeCategory),
             __FieldInterfaceType(FieldInterfaceType),
             __FieldTypePtr(FieldTypePtr), __StorageMemType(-1), 
-            __StorageByteOffset(-1), __StorageBitOffset(-1) {};
+            __StorageByteOffset(-1), __StorageBitOffset(-1),
+             __NDimensions(-1), __Dimension1(-1),
+             __Dimension2(-1) {};
 
         void SetExplicitStorageConstraints(int MemType, int ByteOffset,
                                             int BitOffset);

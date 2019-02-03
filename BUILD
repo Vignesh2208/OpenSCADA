@@ -63,7 +63,7 @@ cc_library(
 cc_test(
     name = "datatype_test",
     srcs = ["src/pc_emulator/tests/datatype_tests/datatype_test.cc"],
-    copts = ["-Iexternal/gtest/include"],
+    copts = ["-Iexternal/gtest/include -fpermissive -Wno-reorder"],
     deps = [":pc_emulator_lib",
            "@gtest//:main"],
     linkstatic = 1,

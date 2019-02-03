@@ -191,31 +191,66 @@ bool Utils::ExtractFromAccessStorageSpec(PCConfiguration * __configuration,
     return false;
 }
 
+string Utils::ResolveAliasName(string AliasName,
+                                        PCConfiguration * __configuration) {
+    PCDataType * field_type_ptr 
+                = __configuration->LookupDataType(AliasName);
+    while (true) {
+        if (field_type_ptr->__AliasName != field_type_ptr->__DataTypeName) {
+            field_type_ptr 
+                = __configuration->LookupDataType(
+                            field_type_ptr->__DataTypeName);
+            assert(field_type_ptr != nullptr);
+        } else {
+            return field_type_ptr->__DataTypeName;
+        }
+    }                                    
+}
+
 void Utils::InitializeDataType(PCConfiguration * __configuration,
                             PCDataType * __new_data_type,
                             const pc_specification::DataType& DataTypeSpec) {
     for (auto& field : DataTypeSpec.datatype_field()) {
+
+        string initial_value;
+        s64 range_min;
+        s64 range_max;
+        string field_datatype_name = field.field_datatype_name();
+
+        
+        PCDataType * field_type_ptr 
+            = __configuration->LookupDataType(field.field_datatype_name());
+
+        assert(field_type_ptr != nullptr);
+        initial_value = field.has_initial_value() ? field.initial_value()
+                                : field_type_ptr->__InitialValue;
+        range_min = field.has_range_min() ? field.range_min() 
+                                : field_type_ptr->__RangeMin;
+        range_max = field.has_range_max() ? field.range_max()
+                                : field_type_ptr->__RangeMax;
+    
+
         if (field.intf_type() != FieldIntfType::VAR_EXPLICIT_STORAGE) {
             if (field.has_dimension_1() && !field.has_dimension_2()) {
                 __new_data_type->AddArrayDataTypeField(field.field_name(),
-                        field.field_datatype_name(), field.dimension_1(),
-                        field.initial_value(),
-                        field.intf_type(), field.range_min(),
-                        field.range_max());
+                        field_datatype_name, field.dimension_1(),
+                        initial_value,
+                        field.intf_type(), range_min,
+                        range_max);
             } else if (field.has_dimension_1() && field.has_dimension_2()) {
 
                 __new_data_type->AddArrayDataTypeField(field.field_name(),
-                        field.field_datatype_name(), field.dimension_1(),
+                        field_datatype_name, field.dimension_1(),
                         field.dimension_2(),
-                        field.initial_value(),
-                        field.intf_type(), field.range_min(),
-                        field.range_max());
+                        initial_value,
+                        field.intf_type(), range_min,
+                        range_max);
 
             } else {
                 __new_data_type->AddDataTypeField(field.field_name(),
-                        field.field_datatype_name(), field.initial_value(),
-                        field.intf_type(), field.range_min(),
-                        field.range_max());
+                        field_datatype_name, initial_value,
+                        field.intf_type(), range_min,
+                        range_max);
             }
         }
         else if (field.intf_type() 
@@ -242,26 +277,26 @@ void Utils::InitializeDataType(PCConfiguration * __configuration,
 
             if (field.has_dimension_1() && !field.has_dimension_2()) {
                 __new_data_type->AddArrayDataTypeFieldAT(field.field_name(),
-                        field.field_datatype_name(), field.dimension_1(),
-                        field.initial_value(),
-                        field.range_min(),
-                        field.range_max(),
+                        field_datatype_name, field.dimension_1(),
+                        initial_value,
+                        range_min,
+                        range_max,
                         mem_type, ByteOffset, BitOffset);
             } else if (field.has_dimension_1() && field.has_dimension_2()) {
 
                 __new_data_type->AddArrayDataTypeFieldAT(field.field_name(),
-                        field.field_datatype_name(), field.dimension_1(),
+                        field_datatype_name, field.dimension_1(),
                         field.dimension_2(),
-                        field.initial_value(),
-                        field.range_min(),
-                        field.range_max(),
+                        initial_value,
+                        range_min,
+                        range_max,
                         mem_type, ByteOffset, BitOffset);
 
             } else {
                 __new_data_type->AddDataTypeFieldAT(field.field_name(),
-                        field.field_datatype_name(), field.initial_value(),
-                        field.range_min(),
-                        field.range_max(),
+                        field_datatype_name, initial_value,
+                        range_min,
+                        range_max,
                         mem_type, ByteOffset, BitOffset);
             }
 
@@ -277,6 +312,24 @@ void Utils::InitializeAccessDataType(PCConfiguration * __configuration,
         if (field.intf_type() == FieldIntfType::VAR_ACCESS 
                 && field.has_field_storage_spec()) {
 
+            string initial_value;
+            s64 range_min;
+            s64 range_max;
+            string field_datatype_name = field.field_datatype_name();
+
+            
+            PCDataType * field_type_ptr 
+                = __configuration->LookupDataType(field.field_datatype_name());
+
+            assert(field_type_ptr != nullptr);
+            initial_value = field.has_initial_value() ? field.initial_value()
+                                    : field_type_ptr->__InitialValue;
+            range_min = field.has_range_min() ? field.range_min() 
+                                    : field_type_ptr->__RangeMin;
+            range_max = field.has_range_max() ? field.range_max()
+                                    : field_type_ptr->__RangeMax;
+                    
+
             int mem_type = 0;
             int ByteOffset = 0;
             int BitOffset = 0;
@@ -289,24 +342,24 @@ void Utils::InitializeAccessDataType(PCConfiguration * __configuration,
                         &mem_type, &ByteOffset, &BitOffset)) {
                     if (field.has_dimension_1() && !field.has_dimension_2()) {
                         __new_data_type->AddArrayDataTypeField(field.field_name(),
-                                field.field_datatype_name(), field.dimension_1(),
-                                field.initial_value(),
-                                field.intf_type(), field.range_min(),
-                                field.range_max());
+                                field_datatype_name, field.dimension_1(),
+                                initial_value,
+                                field.intf_type(), range_min,
+                                range_max);
                     } else if (field.has_dimension_1() && field.has_dimension_2()) {
 
                         __new_data_type->AddArrayDataTypeField(field.field_name(),
-                                field.field_datatype_name(), field.dimension_1(),
+                                field_datatype_name, field.dimension_1(),
                                 field.dimension_2(),
-                                field.initial_value(),
-                                field.intf_type(), field.range_min(),
-                                field.range_max());
+                                initial_value,
+                                field.intf_type(), range_min,
+                                range_max);
 
                     } else {
                         __new_data_type->AddDataTypeField(field.field_name(),
-                                field.field_datatype_name(), field.initial_value(),
-                                field.intf_type(), field.range_min(),
-                                field.range_max());
+                                field_datatype_name, initial_value,
+                                field.intf_type(), range_min,
+                                range_max);
                     }
 
 
@@ -325,26 +378,26 @@ void Utils::InitializeAccessDataType(PCConfiguration * __configuration,
 
             if (field.has_dimension_1() && !field.has_dimension_2()) {
                 __new_data_type->AddArrayDataTypeFieldAT(field.field_name(),
-                        field.field_datatype_name(), field.dimension_1(),
-                        field.initial_value(),
-                        field.range_min(),
-                        field.range_max(),
+                        field_datatype_name, field.dimension_1(),
+                        initial_value,
+                        range_min,
+                        range_max,
                         mem_type, ByteOffset, BitOffset);
             } else if (field.has_dimension_1() && field.has_dimension_2()) {
 
                 __new_data_type->AddArrayDataTypeFieldAT(field.field_name(),
-                        field.field_datatype_name(), field.dimension_1(),
+                        field_datatype_name, field.dimension_1(),
                         field.dimension_2(),
-                        field.initial_value(),
-                        field.range_min(),
-                        field.range_max(),
+                        initial_value,
+                        range_min,
+                        range_max,
                         mem_type, ByteOffset, BitOffset);
 
             } else {
                 __new_data_type->AddDataTypeFieldAT(field.field_name(),
-                        field.field_datatype_name(), field.initial_value(),
-                        field.range_min(),
-                        field.range_max(),
+                        field_datatype_name, initial_value,
+                        range_min,
+                        range_max,
                         mem_type, ByteOffset, BitOffset);
             }
 

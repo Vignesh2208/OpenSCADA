@@ -52,6 +52,9 @@ namespace pc_emulator {
                                             int * BitOffset);
 
         static string GetInstallationDirectory();
+
+        static string ResolveAliasName(string AliasName,
+                                PCConfiguration * __configuration);
     };
 }   
 
