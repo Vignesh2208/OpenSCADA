@@ -40,6 +40,7 @@ namespace pc_emulator {
             PCVariable * __access_pou_var;
             int __NumResources;
             
+            std::unordered_map<int, string> __DataTypeDefaultInitialValues;
             std::unordered_map<string, PCVariable *> __AccessedFields;
             
             PCVariable * GetVariable(string NestedFieldName);

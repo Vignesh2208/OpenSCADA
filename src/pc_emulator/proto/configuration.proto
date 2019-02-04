@@ -57,6 +57,7 @@ enum PoUType {
     FC = 0;
     FB = 1;
     PROGRAM = 2;
+    NOA = 3;
 }
 
 enum LogLevels {
@@ -66,53 +67,78 @@ enum LogLevels {
     LOG_VERBOSE = 3;
 };
 
+// Can either be specified using the 3 fields
+// mem_type, byte_offset, bit_offset or compactly as a string
 message FieldStorageSpec {
     optional MemType mem_type = 1;
     optional int64 byte_offset = 2;
     optional int32 bit_offset = 3;
+    
     optional string full_storage_spec = 4;
 }
 
+// DataTypeField may only be specified for DataTypes where datatype_category
+// is in {POU, DERIVED}
 message DataTypeField {
     required string field_name = 1;
     required string field_datatype_name = 2;
     optional double range_min = 3;
     optional double range_max = 4;
+
+    // May only be specified if intf_type is not in 
+    // {VAR_EXPLICIT_STORAGE, VAR_ACCESS, VAR_EXTERNAL}
     optional string initial_value = 5;
-    optional int32 dimension_1 = 6; // must only be specified if this field is an array
-    optional int32 dimension_2 = 7; // // must only be specified if this field is an 2d-array
+
+    // must only be specified if this field is an array
+    optional int32 dimension_1 = 6;
+
+    // must only be specified if this field is an 2d-array 
+    optional int32 dimension_2 = 7; 
+
+    // may only be specified if parent datatype_category is POU.
+    // It can be equal to VAR_EXPLICIT_STORAGE or VAR_ACCESS only 
+    // if pou_type = PROGRAM
     optional FieldInterfaceType intf_type = 8 [default = NA];
 
-    //May only be specified if parent datatype is a POU category datatype
+    // must be specified only if intf_type in 
+    // {VAR_EXPLICIT_STORAGE, VAR_ACCESS}
     optional FieldStorageSpec field_storage_spec = 9; 
 }
 
+
+// DataTypeSpec may only be specified for DataTypes where datatype_category 
+// is not in {POU, DERIVED, ARRAY, NOT_ASSIGNED}
 message DataTypeSpec {
     optional double range_min = 1;
     optional double range_max = 2;
     optional string initial_value = 3;
 
-    // Must only be specified if this datatype is supposed to be a typedef of an ARRAY of [datatype_category]. 
-    // i.e if datatype_category is INT and if datatype_spec with dimension_1 = 10 is specified,
-    // then this datatype is a typedef of an integer array of size 10 (ARRAY[10] of INT)
-    optional int32 dimension_1 = 4; // must only be specified if this field is typedeffing an array
-    optional int32 dimension_2 = 5; // // must only be specified if this datatype is typedeffing a 2d-array
+    // Must only be specified if this datatype is supposed to be a typedef of 
+    // an ARRAY of [datatype_category] i.e if datatype_category is INT and 
+    // if datatype_spec with dimension_1 = 10 is specified, then this datatype 
+    // is a typedef of an integer array of size 10 (ARRAY[10] of INT)
+    optional int32 dimension_1 = 4; // must only be specified if this datatype is 
+                                    // typedeffing an array
+    optional int32 dimension_2 = 5; // must only be specified if this datatype is
+                                    // typedeffing a 2d-array
 
 }
 
 message DataType {
     required string name = 1;
-    // Note that the datatype_category cannot be specified as an ARRAY or NOT_ASSIGNED 
-    // This datatype will be treated as a typedef of an array if dimensions are specified in datatype_spec
-    required DataTypeCategory datatype_category = 2 [default =NOT_ASSIGNED];
+    // datatype_category cannot be in  {ARRAY, NOT_ASSIGNED}
+    // This datatype will be treated as a typedef of an array 
+    // if dimensions are specified in datatype_spec
+    optional DataTypeCategory datatype_category = 2 [default =POU];
 
-    // must be specified only if datatype category is POU or DERIVED
+    // must be specified only if datatype_category is POU or DERIVED
     repeated DataTypeField datatype_field = 3;
 
-    // must be specified only if datatype category is POU 
-    optional PoUType pou_type = 4; 
+    // will be used only if datatype_category is POU
+    optional PoUType pou_type = 4 [default = PROGRAM]; 
 
-    // datatype_spec may only be specified if category is not POU or DERIVED or ARRAY or NOT_ASSIGNED
+    // datatype_spec may only be specified if datatype_category is not in 
+    // {POU, DERIVED, ARRAY, NOT_ASSIGNED}
     optional DataTypeSpec datatype_spec = 5;
 }
 
@@ -169,6 +195,7 @@ message ResourceSpecification {
     repeated ProgramSpecification programs = 7;
     
 }
+
 message MachineSpecification {
     required int32 num_cpus = 1;
     optional int64 ram_mem_size_bytes = 2;
@@ -177,8 +204,6 @@ message MachineSpecification {
     repeated SFBSpecification sfb_spec = 5;
     repeated ResourceSpecification resource_spec = 6;
 }
-
-
 
 message Specification {
     optional string config_name = 1;

@@ -487,3 +487,96 @@ TEST(DataTypeTestSuite, ComplexDataTypeTest3) {
     EXPECT_EQ(Result.__RangeMin, -10);
     EXPECT_EQ(Result.__RangeMax, 10);
 }
+
+
+TEST(DataTypeTestSuite, GlobalVariablesTest) {
+    string TestDir = Utils::GetInstallationDirectory() 
+            + "/src/pc_emulator/tests/datatype_tests";
+
+    std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
+    PCConfiguration configuration(TestDir + "/input.prototxt");
+    auto global = configuration.LookupDataType("__CONFIG_GLOBAL__");
+    ASSERT_TRUE(global != nullptr);
+    EXPECT_EQ(global->__DataTypeCategory, DataTypeCategory::POU);
+    EXPECT_EQ(global->__InitialValue, "");
+    EXPECT_EQ(global->__AliasName, "__CONFIG_GLOBAL__");
+
+    PCDataTypeField Result;
+    ASSERT_TRUE(global->GetPCDataTypeField("global_bool_var", Result));
+    EXPECT_EQ(Result.__FieldName, "global_bool_var");
+    EXPECT_EQ(Result.__FieldTypeName, "BOOL");
+    EXPECT_EQ(Result.__FieldTypeCategory, DataTypeCategory::BOOL);
+    EXPECT_EQ(Result.__FieldTypePtr, configuration.LookupDataType("BOOL"));
+    EXPECT_EQ(Result.__StorageByteOffset, 3);
+    EXPECT_EQ(Result.__StorageBitOffset, 1);
+    EXPECT_EQ(Result.__StorageMemType, RAM_MEM);
+
+
+    ASSERT_TRUE(global->GetPCDataTypeField("global_int_var", Result));
+    EXPECT_EQ(Result.__FieldName, "global_int_var");
+    EXPECT_EQ(Result.__FieldTypeName, "INT");
+    EXPECT_EQ(Result.__FieldTypeCategory, DataTypeCategory::INT);
+    EXPECT_EQ(Result.__FieldTypePtr, configuration.LookupDataType("INT"));
+    EXPECT_EQ(Result.__StorageByteOffset, 4);
+    EXPECT_EQ(Result.__StorageBitOffset, 0);
+    EXPECT_EQ(Result.__StorageMemType, RAM_MEM);
+
+
+    ASSERT_TRUE(global->GetPCDataTypeField("global_bool_arr", Result));
+    EXPECT_EQ(Result.__FieldName, "global_bool_arr");
+    EXPECT_EQ(Result.__FieldTypeName, "BOOL");
+    EXPECT_EQ(Result.__FieldTypeCategory, DataTypeCategory::ARRAY);
+    EXPECT_EQ(Result.__FieldTypePtr, configuration.LookupDataType("BOOL"));
+    EXPECT_EQ(Result.__StorageByteOffset, 10);
+    EXPECT_EQ(Result.__StorageBitOffset, 0);
+    EXPECT_EQ(Result.__StorageMemType, RAM_MEM);
+
+    ASSERT_TRUE(global->GetPCDataTypeField("global_bool_arr[2]", Result));
+    EXPECT_EQ(Result.__FieldName, "global_bool_arr[2]");
+    EXPECT_EQ(Result.__FieldTypeName, "BOOL");
+    EXPECT_EQ(Result.__FieldTypeCategory, DataTypeCategory::BOOL);
+    EXPECT_EQ(Result.__FieldTypePtr, configuration.LookupDataType("BOOL"));
+    EXPECT_EQ(Result.__StorageByteOffset, 10);
+    EXPECT_EQ(Result.__StorageBitOffset, 1);
+    EXPECT_EQ(Result.__StorageMemType, RAM_MEM);
+
+    ASSERT_TRUE(global->GetPCDataTypeField("global_bool_arr[10]", Result));
+    EXPECT_EQ(Result.__FieldName, "global_bool_arr[10]");
+    EXPECT_EQ(Result.__FieldTypeName, "BOOL");
+    EXPECT_EQ(Result.__FieldTypeCategory, DataTypeCategory::BOOL);
+    EXPECT_EQ(Result.__FieldTypePtr, configuration.LookupDataType("BOOL"));
+    EXPECT_EQ(Result.__StorageByteOffset, 11);
+    EXPECT_EQ(Result.__StorageBitOffset, 1);
+    EXPECT_EQ(Result.__StorageMemType, RAM_MEM);
+
+    ASSERT_TRUE(global->GetPCDataTypeField("global_int_arr", Result));
+    EXPECT_EQ(Result.__FieldName, "global_int_arr");
+    EXPECT_EQ(Result.__FieldTypeName, "INT");
+    EXPECT_EQ(Result.__FieldTypeCategory, DataTypeCategory::ARRAY);
+    EXPECT_EQ(Result.__FieldTypePtr, configuration.LookupDataType("INT"));
+    EXPECT_EQ(Result.__StorageByteOffset, 20);
+    EXPECT_EQ(Result.__StorageBitOffset, 0);
+    EXPECT_EQ(Result.__NDimensions, 2);
+    EXPECT_EQ(Result.__Dimension1, 2);
+    EXPECT_EQ(Result.__Dimension2, 2);
+    EXPECT_EQ(Result.__StorageMemType, RAM_MEM);
+
+    ASSERT_TRUE(global->GetPCDataTypeField("global_int_arr[1][2]", Result));
+    EXPECT_EQ(Result.__FieldName, "global_int_arr[1][2]");
+    EXPECT_EQ(Result.__FieldTypeName, "INT");
+    EXPECT_EQ(Result.__FieldTypeCategory, DataTypeCategory::INT);
+    EXPECT_EQ(Result.__FieldTypePtr, configuration.LookupDataType("INT"));
+    EXPECT_EQ(Result.__StorageByteOffset, 22);
+    EXPECT_EQ(Result.__StorageBitOffset, 0);
+    EXPECT_EQ(Result.__StorageMemType, RAM_MEM);
+
+    ASSERT_TRUE(global->GetPCDataTypeField("global_int_arr[2][2]", Result));
+    EXPECT_EQ(Result.__FieldName, "global_int_arr[2][2]");
+    EXPECT_EQ(Result.__FieldTypeName, "INT");
+    EXPECT_EQ(Result.__FieldTypeCategory, DataTypeCategory::INT);
+    EXPECT_EQ(Result.__FieldTypePtr, configuration.LookupDataType("INT"));
+    EXPECT_EQ(Result.__StorageByteOffset, 26);
+    EXPECT_EQ(Result.__StorageBitOffset, 0);
+    EXPECT_EQ(Result.__StorageMemType, RAM_MEM);
+
+}

@@ -113,7 +113,7 @@ void PCDataType::AddDataTypeField(string FieldName, string FieldTypeName,
         FieldIntfType == FieldInterfaceType::VAR_EXTERNAL ||
         FieldIntfType == FieldInterfaceType::VAR_ACCESS ) {
         // this is a pointer
-        __SizeInBits += sizeof (PCDataType *);
+        __SizeInBits += sizeof (PCDataType *)*8;
     } else {
         __SizeInBits += DataType->__SizeInBits;
     }
@@ -164,22 +164,33 @@ void PCDataType::AddArrayDataTypeField(string FieldName, string FieldTypeName,
     boost::trim_if(InitialValue, boost::is_any_of("\t ,{}"));
     boost::split(InitialValues, InitialValue,
                 boost::is_any_of(",{}"), boost::token_compress_on); 
-    if (!InitialValue.empty())
-        assert((int)InitialValues.size() == DimensionSize);
+    
 
 
     for(int i = 0; i < DimensionSize; i++) {
+
+        string Init;
+        if (!InitialValue.empty() && i < InitialValues.size()) {
+            Init = InitialValues[i];
+        }
+        else { 
+            auto got = __configuration->__DataTypeDefaultInitialValues.find(
+                            DataType->__DataTypeCategory);
+            assert(got 
+                    != __configuration->__DataTypeDefaultInitialValues.end());
+            Init = got->second;
+        }
         PCDataTypeField NewField(FieldName + "[" + std::to_string(i+1) + "]",
                                 FieldTypeName, DataType->__DataTypeCategory, 
                                 RangeMin, RangeMax, 
-                                (InitialValue.empty() ? "" : InitialValues[i]),
+                                Init,
                                 FieldIntfType, DataType);
         __FieldsByInterfaceType[FieldIntfType].push_back(NewField);
         if (FieldIntfType == FieldInterfaceType::VAR_IN_OUT ||
             FieldIntfType == FieldInterfaceType::VAR_EXTERNAL ||
             FieldIntfType == FieldInterfaceType::VAR_ACCESS ) {
             // this is a pointer
-            __SizeInBits += sizeof (PCDataType *);
+            __SizeInBits += sizeof (PCDataType *)*8;
         } else {
             __SizeInBits += DataType->__SizeInBits;
         }
@@ -231,26 +242,34 @@ void PCDataType::AddArrayDataTypeField(string FieldName, string FieldTypeName,
     boost::trim_if(InitialValue, boost::is_any_of("\t ,{}"));
     boost::split(InitialValues, InitialValue,
                 boost::is_any_of(",{}"), boost::token_compress_on); 
-    if (!InitialValue.empty())
-        assert((int)InitialValues.size() == DimensionSize1*DimensionSize2);
-
 
     for(int i = 0; i < DimensionSize1; i++) {
         for(int j = 0; j < DimensionSize2; j++) {
+            string Init;
+            if (!InitialValue.empty() && 
+                (i*DimensionSize2 + j) < InitialValues.size()) {
+                Init = InitialValues[i*DimensionSize2 + j];
+            }
+            else { 
+                auto got = __configuration->__DataTypeDefaultInitialValues.find(
+                                DataType->__DataTypeCategory);
+                assert(got 
+                    != __configuration->__DataTypeDefaultInitialValues.end());
+                Init = got->second;
+            }
             PCDataTypeField NewField(
                                 FieldName + "[" + std::to_string(i+1) + "]"
                                 + "[" + std::to_string(j+1) + "]",
                                 FieldTypeName, DataType->__DataTypeCategory, 
                                 RangeMin, RangeMax,
-                                (InitialValue.empty() ? "" 
-                                    : InitialValues[i*DimensionSize2 + j]),
+                                Init,
                                 FieldIntfType, DataType);
             __FieldsByInterfaceType[FieldIntfType].push_back(NewField);
             if (FieldIntfType == FieldInterfaceType::VAR_IN_OUT ||
                 FieldIntfType == FieldInterfaceType::VAR_EXTERNAL ||
                 FieldIntfType == FieldInterfaceType::VAR_ACCESS ) {
                 // this is a pointer
-                __SizeInBits += sizeof (PCDataType *);
+                __SizeInBits += sizeof (PCDataType *)*8;
             } else {
                 __SizeInBits += DataType->__SizeInBits;
             }
@@ -285,7 +304,7 @@ void PCDataType::AddDataTypeFieldAT(string FieldName, string FieldTypeName,
     assert(__DataTypeCategory == DataTypeCategory::POU);
     PCDataType * DataType = LookupDataType(FieldTypeName);
     assert(DataType != nullptr);
-    
+
     if (DataType->__DataTypeCategory == DataTypeCategory::POU 
             || DataType->__DataTypeCategory == DataTypeCategory::DERIVED) {
         if (!InitialValue.empty()) {
@@ -339,7 +358,7 @@ void PCDataType::AddDataTypeFieldAT(string FieldName, string FieldTypeName,
             .push_back(NewField);    
     
     // this is a pointer
-    __SizeInBits += sizeof (PCDataType *);
+    __SizeInBits += sizeof (PCDataType *)*8;
     __NFields ++;
 
 }
@@ -390,22 +409,32 @@ void PCDataType::AddArrayDataTypeFieldAT(string FieldName, string FieldTypeName,
     boost::trim_if(InitialValue, boost::is_any_of("\t ,{}"));
     boost::split(InitialValues, InitialValue,
                 boost::is_any_of(",{}"), boost::token_compress_on); 
-    if (!InitialValue.empty())
-        assert((int)InitialValues.size() == DimensionSize);
-    int CurrBitOffset = BitOffset;
 
+    int CurrBitOffset = BitOffset;
     for(int i = 0; i < DimensionSize; i++) {
+
+        string Init;
+        if ( !InitialValue.empty() && i < InitialValues.size()) {
+            Init = InitialValues[i];
+        }
+        else { 
+            auto got = __configuration->__DataTypeDefaultInitialValues.find(
+                            DataType->__DataTypeCategory);
+            assert(got 
+                    != __configuration->__DataTypeDefaultInitialValues.end());
+            Init = got->second;
+        }
+
         PCDataTypeField NewField(FieldName + "[" + std::to_string(i+1) + "]",
                                 FieldTypeName, DataType->__DataTypeCategory, 
-                                RangeMin, RangeMax, 
-                                (InitialValue.empty() ? "" : InitialValues[i]),
+                                RangeMin, RangeMax, Init,
                                 FieldInterfaceType::VAR_EXPLICIT_STORAGE,
                                 DataType);
         
         if (DataType->__DataTypeCategory == DataTypeCategory::BOOL) {
-            CurrBitOffset ++;
             NewField.SetExplicitStorageConstraints(MemType,
                     ByteOffset + CurrBitOffset / 8, CurrBitOffset % 8);
+            CurrBitOffset ++;
         } else {
             NewField.SetExplicitStorageConstraints(MemType,
                     ByteOffset + i*(DataType->__SizeInBits / 8), 0);
@@ -414,7 +443,7 @@ void PCDataType::AddArrayDataTypeFieldAT(string FieldName, string FieldTypeName,
         __FieldsByInterfaceType[FieldInterfaceType::VAR_EXPLICIT_STORAGE]
                     .push_back(NewField);
         // this is a pointer
-        __SizeInBits += sizeof (PCDataType *);
+        __SizeInBits += sizeof (PCDataType *)*8;
         __NFields ++;
     }
 
@@ -468,28 +497,36 @@ void PCDataType::AddArrayDataTypeFieldAT(string FieldName, string FieldTypeName,
     boost::trim_if(InitialValue, boost::is_any_of("\t ,{}"));
     boost::split(InitialValues, InitialValue,
                 boost::is_any_of(",{}"), boost::token_compress_on); 
-    if (!InitialValue.empty())
-        assert((int)InitialValues.size() == DimensionSize1*DimensionSize2);
-
     
 
     int CurrBitOffset = BitOffset;
     for(int i = 0; i < DimensionSize1; i++) {
         for(int j = 0; j < DimensionSize2; j++) {
+            string Init;
+            if (!InitialValue.empty() && 
+                (i*DimensionSize2 + j) < InitialValues.size()) {
+                Init = InitialValues[i*DimensionSize2 + j];
+            }
+            else { 
+                auto got = __configuration->__DataTypeDefaultInitialValues.find(
+                                DataType->__DataTypeCategory);
+                assert(got 
+                    != __configuration->__DataTypeDefaultInitialValues.end());
+                Init = got->second;
+            }
+
             PCDataTypeField NewField(
                                 FieldName + "[" + std::to_string(i+1) + "]"
                                 + "[" + std::to_string(j+1) + "]",
                                 FieldTypeName, DataType->__DataTypeCategory, 
-                                RangeMin, RangeMax,
-                                (InitialValue.empty() ? "" 
-                                    : InitialValues[i*DimensionSize2 + j]),
+                                RangeMin, RangeMax, Init,
                                 FieldInterfaceType::VAR_EXPLICIT_STORAGE,
                                 DataType);
             
             if (DataType->__DataTypeCategory == DataTypeCategory::BOOL) {
-                CurrBitOffset ++;
                 NewField.SetExplicitStorageConstraints(MemType,
                         ByteOffset + CurrBitOffset / 8, CurrBitOffset % 8);
+                CurrBitOffset ++;
             } else {
                 NewField.SetExplicitStorageConstraints(MemType,
                         ByteOffset + (i*DimensionSize2 + j)*(
@@ -500,7 +537,7 @@ void PCDataType::AddArrayDataTypeFieldAT(string FieldName, string FieldTypeName,
                         .push_back(NewField);
             
             // this is a pointer
-            __SizeInBits += sizeof (PCDataType *);
+            __SizeInBits += sizeof (PCDataType *)*8;
             __NFields ++;
         }
     }
@@ -694,7 +731,7 @@ PCDataType::PCDataType(PCConfiguration* configuration,
                                 == FieldInterfaceType::VAR_EXTERNAL ||
                             IntfType 
                                 == FieldInterfaceType::VAR_ACCESS ) {
-                            __SizeInBits += sizeof (PCDataType *);
+                            __SizeInBits += sizeof (PCDataType *)*8;
                         } else {
                             __SizeInBits += FieldDataType->__SizeInBits;
                         } 

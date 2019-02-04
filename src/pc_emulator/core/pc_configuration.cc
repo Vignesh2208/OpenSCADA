@@ -170,6 +170,9 @@ void PCConfiguration::RegisterAllElementaryDataTypes () {
      
         }
 
+        __DataTypeDefaultInitialValues.insert(std::make_pair(
+                                                Category, InitValue));
+
         if(DataTypeName != "NA") {
             PCLogger->LogMessage(LogLevels::LOG_INFO, 
                     "Registering Elementary DataType: " + DataTypeName);
@@ -186,6 +189,13 @@ void PCConfiguration::RegisterAllElementaryDataTypes () {
                                 1000, DataTypeCategory::ARRAY);
     RegisteredDataTypes.RegisterDataType("STRING", stringDataType);
 
+    __DataTypeDefaultInitialValues.insert(std::make_pair(
+                                            DataTypeCategory::ARRAY, ""));
+    __DataTypeDefaultInitialValues.insert(std::make_pair(
+                                            DataTypeCategory::DERIVED, ""));
+    __DataTypeDefaultInitialValues.insert(std::make_pair(
+                                            DataTypeCategory::POU, ""));
+
     PCLogger->LogMessage(LogLevels::LOG_INFO, 
                     "Registered all elementary datatypes!\n");
 }
@@ -199,11 +209,11 @@ void PCConfiguration::RegisterAllComplexDataTypes() {
                     "__CONFIG_GLOBAL__", "__CONFIG_GLOBAL__",
                     DataTypeCategory::POU);
 
-        RegisteredDataTypes.RegisterDataType("__CONFIG__GLOBAL__", 
-                                        global_var_type);
-
         Utils::InitializeDataType(this, global_var_type,
              __specification.config_global_pou_var());
+        
+        RegisteredDataTypes.RegisterDataType("__CONFIG_GLOBAL__", 
+                                        global_var_type);
 
         __global_pou_var = new PCVariable(this, nullptr,
                                 "__CONFIG_GLOBAL_VAR__", "__CONFIG_GLOBAL__");

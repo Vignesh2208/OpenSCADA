@@ -115,8 +115,10 @@ int Utils::GetVarOpType(int varop) {
 
 bool Utils::ExtractFromStorageSpec(string StorageSpec, 
                         int * memType, int * ByteOffset, int * BitOffset) {
-    if (!boost::starts_with(StorageSpec, "%%") || StorageSpec.length() < 4)
+    if (!boost::starts_with(StorageSpec, "%") || StorageSpec.length() < 4) {
+        std::cout << "Incorrect storage specification !" << std::endl;
         return false;
+    }
 
     assert(memType != nullptr && ByteOffset != nullptr && BitOffset != nullptr);
     if (StorageSpec[1] == 'M') 
@@ -228,6 +230,11 @@ void Utils::InitializeDataType(PCConfiguration * __configuration,
                                 : field_type_ptr->__RangeMin;
         range_max = field.has_range_max() ? field.range_max()
                                 : field_type_ptr->__RangeMax;
+        
+        if (field.has_initial_value())
+            assert(field.intf_type() != VAR_EXPLICIT_STORAGE
+                    && field.intf_type() != VAR_ACCESS
+                    && field.intf_type() != VAR_EXTERNAL);
     
 
         if (field.intf_type() != FieldIntfType::VAR_EXPLICIT_STORAGE) {
@@ -256,7 +263,11 @@ void Utils::InitializeDataType(PCConfiguration * __configuration,
         else if (field.intf_type() 
                     == FieldIntfType::VAR_EXPLICIT_STORAGE
                 && field.has_field_storage_spec()) {
-
+                
+                assert(DataTypeSpec.datatype_category() 
+                        == DataTypeCategory::POU);
+                assert(DataTypeSpec.pou_type() 
+                        == pc_specification::PoUType::PROGRAM);
             int mem_type = 0;
             int ByteOffset = 0;
             int BitOffset = 0;
@@ -328,6 +339,11 @@ void Utils::InitializeAccessDataType(PCConfiguration * __configuration,
                                     : field_type_ptr->__RangeMin;
             range_max = field.has_range_max() ? field.range_max()
                                     : field_type_ptr->__RangeMax;
+
+            if (field.has_initial_value())
+                assert(field.intf_type() != VAR_EXPLICIT_STORAGE
+                    && field.intf_type() != VAR_ACCESS
+                    && field.intf_type() != VAR_EXTERNAL);
                     
 
             int mem_type = 0;
@@ -335,6 +351,11 @@ void Utils::InitializeAccessDataType(PCConfiguration * __configuration,
             int BitOffset = 0;
             if (field.field_storage_spec().has_full_storage_spec()) {
                 //extract memtype, byte and bit offsets from string specification
+
+                assert(DataTypeSpec.datatype_category() 
+                        == DataTypeCategory::POU);
+                assert(DataTypeSpec.pou_type() 
+                        == pc_specification::PoUType::PROGRAM);
                 
                 if (!Utils::ExtractFromAccessStorageSpec(
                         __configuration,
@@ -369,6 +390,12 @@ void Utils::InitializeAccessDataType(PCConfiguration * __configuration,
                 }
 
             } else {
+
+                assert(DataTypeSpec.datatype_category() 
+                        == DataTypeCategory::POU);
+                assert(DataTypeSpec.pou_type() 
+                        == pc_specification::PoUType::PROGRAM);
+
                 mem_type = (int)field.field_storage_spec().mem_type();
                 ByteOffset = field.field_storage_spec().byte_offset();
                 BitOffset = field.field_storage_spec().bit_offset();
