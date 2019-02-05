@@ -52,7 +52,7 @@ namespace pc_emulator {
         private:
             void AllocateStorage();
 
-            void CopyPCVariableFieldFromPointer(DataTypeFieldAttributes&
+            void CopyToPCVariableFieldFromPointer(DataTypeFieldAttributes&
                                                 Attributes, PCVariable * From);
             void GetAndStoreValue(string NestedFieldName, void * Value,
                                 int CopySize, int CategoryOfDataType);
@@ -81,6 +81,8 @@ namespace pc_emulator {
         public:
             int __ByteOffset;
             int __BitOffset;
+
+            bool __IsVariableContentTypeAPtr; // 1 - pointer, 0 - non_pointer
             string __VariableName;
             PCDataType* __VariableDataType;
             PCMemUnit __MemoryLocation;
@@ -104,28 +106,23 @@ namespace pc_emulator {
 
 
             void SetPtr(string NestedFieldName, PCVariable * ptr);
-
             PCVariable * GetPtrStoredAtField(string NestedFieldName);
 
             
             void SetPCVariableField(string NestedFieldName, string value);
-
             void SetPCVariableField(string NestedFieldName, void * value,
                                     int CopySizeBytes);
 
-            void CopyPCVariableFieldFromPointer(string NestedFieldName,
+            void CopyToPCVariableFieldFromPointer(string NestedFieldName,
                                                 PCVariable * From);
-
-
-            
-
             template <typename T> T GetFieldValue(string NestedFieldName,
                                             int CategoryOfDataType);
 
             void GetFieldAttributes(string NestedFieldName, 
                             DataTypeFieldAttributes& FieldAttributes);
-            bool InitiateOperationOnVariables(PCVariable& V, int VarOp);
 
+
+            bool InitiateOperationOnVariables(PCVariable& V, int VarOp);
             void operator=(PCVariable& V);
             PCVariable& operator+(PCVariable& V );
             PCVariable& operator-(PCVariable& V );
@@ -137,9 +134,6 @@ namespace pc_emulator {
             PCVariable& operator^(PCVariable& V );
             PCVariable& operator<<(PCVariable& V );
             PCVariable& operator>>(PCVariable& V );
-
-            
-
     };
 
     bool operator == (PCVariable& V1, PCVariable& V2);

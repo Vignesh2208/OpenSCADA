@@ -131,11 +131,11 @@ message DataType {
     // if dimensions are specified in datatype_spec
     optional DataTypeCategory datatype_category = 2 [default =POU];
 
-    // must be specified only if datatype_category is POU or DERIVED
-    repeated DataTypeField datatype_field = 3;
-
     // will be used only if datatype_category is POU
-    optional PoUType pou_type = 4 [default = PROGRAM]; 
+    optional PoUType pou_type = 3 [default = PROGRAM]; 
+
+    // must be specified only if datatype_category is POU or DERIVED
+    repeated DataTypeField datatype_field = 4;
 
     // datatype_spec may only be specified if datatype_category is not in 
     // {POU, DERIVED, ARRAY, NOT_ASSIGNED}

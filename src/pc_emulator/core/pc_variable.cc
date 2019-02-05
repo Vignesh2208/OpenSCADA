@@ -40,6 +40,7 @@ PCVariable::PCVariable(PCConfiguration * configuration,
     //__MemoryLocation = PCMemUnit();
     __MemAllocated = false;
     __IsDirectlyRepresented = false;
+    __IsVariableContentTypeAPtr = false;
 }
 
 void PCVariable::Cleanup() {
@@ -115,7 +116,7 @@ void PCVariable::ParseRemFieldAttributes(std::vector<string>& NestedFields,
                 if(AccessedFieldName == DefinedField.__FieldName) {
                     DataType = FieldDataType;
                     FieldAttributes.FieldInterfaceType = IntfType;
-                    FieldAttributes.FieldDataTypePtr = DataType;
+                    FieldAttributes.FieldDataTypePtr = FieldDataType;
 
                     if (i == (int)NestedFields.size() - 1)
                         return; // note theat the relative offset is already set
@@ -269,6 +270,17 @@ PCVariable* PCVariable::GetPCVariableToField(string NestedFieldName) {
         VariablePtrToField->__MemAllocated = true;
         __AccessedFields.insert(
                         std::make_pair(NestedFieldName, VariablePtrToField));
+
+        
+        if (Attributes.FieldInterfaceType != FieldIntfType::VAR_IN_OUT
+            && Attributes.FieldInterfaceType != FieldIntfType::VAR_EXTERNAL
+            && Attributes.FieldInterfaceType != FieldIntfType::VAR_ACCESS
+            && Attributes.FieldInterfaceType 
+                != FieldIntfType::VAR_EXPLICIT_STORAGE) {
+            VariablePtrToField->__IsVariableContentTypeAPtr = false;
+        } else {
+            VariablePtrToField->__IsVariableContentTypeAPtr = true;
+        }
         return VariablePtrToField;
         
     /*    
@@ -604,7 +616,7 @@ void PCVariable::SetPtr(string NestedFieldName, PCVariable * ptr) {
     assert(Attributes.FieldDataTypePtr->__DataTypeName
             == ptr->__VariableDataType->__DataTypeName);
 
-    CopyPCVariableFieldFromPointer(Attributes, ptr);
+    CopyToPCVariableFieldFromPointer(Attributes, ptr);
 }
 
 /*
@@ -619,7 +631,7 @@ PCVariable * PCVariable::GetPtrStoredAtField(string NestedFieldName) {
 
     if (NestedFieldName.empty())
         return nullptr;
-        
+
     GetFieldAttributes(NestedFieldName, Attributes);
 
     // Checks if the field referred to by NestedFieldName is actually holding
@@ -650,7 +662,7 @@ PCVariable * PCVariable::GetPtrStoredAtField(string NestedFieldName) {
  *  "From" iff Attributes of a non pointer field are given. It copies "From" itself
  *  iff Attributes of a pointer field are given.
  */
-void PCVariable::CopyPCVariableFieldFromPointer(
+void PCVariable::CopyToPCVariableFieldFromPointer(
         DataTypeFieldAttributes& Attributes, PCVariable * From) {
 
     // Regardless of whether the Attributes of a pointer/non-pointer field
@@ -724,7 +736,7 @@ void PCVariable::CopyPCVariableFieldFromPointer(
  *  specified but the NestedFieldName is provided as a string. It first obtains
  *  the Attributes of the Field before calling the previous function
  */
-void PCVariable::CopyPCVariableFieldFromPointer(string NestedFieldName,
+void PCVariable::CopyToPCVariableFieldFromPointer(string NestedFieldName,
                 PCVariable * From) {
     
     
@@ -768,7 +780,7 @@ void PCVariable::CopyPCVariableFieldFromPointer(string NestedFieldName,
     // Get the field attributes
     DataTypeFieldAttributes Attributes;
     GetFieldAttributes(NestedFieldName, Attributes);
-    CopyPCVariableFieldFromPointer(Attributes, From);
+    CopyToPCVariableFieldFromPointer(Attributes, From);
 }
 
 

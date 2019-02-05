@@ -13,6 +13,10 @@ void PCMemUnit::AllocateStaticMemory(int MemSize) {
         __BaseStorageLocation = std::shared_ptr<char>(new char[MemSize], 
                     [](char *p) { delete[] p; });
         __MemUnitSizeBytes = MemSize;
+
+        for (int i = 0; i < MemSize; i++) {
+            __BaseStorageLocation.get()[i] = '\0';
+        }
     }
     __Initialized = true;
 }

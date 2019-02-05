@@ -195,7 +195,9 @@ PCVariable * PCResource::GetVariablePointerToMem(int memType, int ByteOffset,
 
     assert(ByteOffset > 0 && BitOffset >= 0 && BitOffset < 8);
     assert(memType == MemType::INPUT_MEM || memType == MemType::OUTPUT_MEM);
-    string VariableName = __ResourceName + std::to_string(memType)
+    string VariableName = __ResourceName 
+                            + "." + VariableDataTypeName
+                            + "." + std::to_string(memType)
                             + "." + std::to_string(ByteOffset)
                             + "." + std::to_string(BitOffset);
 

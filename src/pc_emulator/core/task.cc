@@ -82,7 +82,7 @@ void Task::Execute() {
                     }
                 }
                 
-                container->__ExecPoUVariable->CopyPCVariableFieldFromPointer(
+                container->__ExecPoUVariable->CopyToPCVariableFieldFromPointer(
                         map.pou_variable_field_name(), mappedVariable);
                 output_vars.push_back(0);
                 
@@ -142,7 +142,7 @@ void Task::Execute() {
                 PCVariable * ptrToOutputField 
                     = container->__ExecPoUVariable->GetPCVariableToField(
                             map.pou_variable_field_name());
-                mappedVariable->CopyPCVariableFieldFromPointer("",
+                mappedVariable->CopyToPCVariableFieldFromPointer("",
                                                         ptrToOutputField);
             }
         }

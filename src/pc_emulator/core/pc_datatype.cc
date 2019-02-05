@@ -305,13 +305,21 @@ void PCDataType::AddDataTypeFieldAT(string FieldName, string FieldTypeName,
     PCDataType * DataType = LookupDataType(FieldTypeName);
     assert(DataType != nullptr);
 
+
+
+    /*
     if (DataType->__DataTypeCategory == DataTypeCategory::POU 
             || DataType->__DataTypeCategory == DataTypeCategory::DERIVED) {
         if (!InitialValue.empty()) {
             __configuration->PCLogger->RaiseException("Initial Values cannot "
                 "be specified for complex data types");
         }
-    } 
+    }
+    */
+
+    // We don't support complex directly represented variables.
+    assert(DataType->__DataTypeCategory != DataTypeCategory::POU &&
+        DataType->__DataTypeCategory != DataTypeCategory::DERIVED);
     
     if(__DataTypeCategory == DataTypeCategory::ARRAY) {
         __configuration->PCLogger->RaiseException("New fields cannot be "
@@ -342,6 +350,7 @@ void PCDataType::AddDataTypeFieldAT(string FieldName, string FieldTypeName,
     DataType = LookupDataType(FieldTypeName);
     assert(DataType != nullptr 
         && DataType->__DataTypeCategory == FieldTypeCategory);
+
 
     PCDataTypeField NewField(FieldName, FieldTypeName,
                             FieldTypeCategory, RangeMin, RangeMax,
@@ -940,6 +949,9 @@ bool PCDataType::CheckRemFields(std::vector<string>& NestedFields, int StartPos,
 
 bool PCDataType::IsFieldPresent(string NestedFieldName) {
     std::vector<std::string> NestedFields;
+    if (NestedFieldName.empty())
+        return true;
+
     boost::split(NestedFields, NestedFieldName,
                 boost::is_any_of("."), boost::token_compress_on);
     if (NestedFields.empty()) {
@@ -961,11 +973,6 @@ bool PCDataType::CheckRemFields(std::vector<string>& NestedFields, int StartPos,
         for (int IntfType = FieldInterfaceType::VAR_INPUT; 
             IntfType <= FieldInterfaceType::NA; IntfType ++) {
             for(auto& DefinedField: Current->__FieldsByInterfaceType[IntfType]) {
-                /*std::cout << "Acessed Field Name: " << AccessedFieldName 
-                << " DefinedFieldName: " << DefinedField.__FieldName
-                << " DataTypeName: " << DefinedField.__FieldTypeName
-                << " Category: " << DefinedField.__FieldTypeCategory << std::endl;
-                */
                 PCDataType * FieldDataType = DefinedField.__FieldTypePtr;
                 assert(FieldDataType != nullptr);
                 if(AccessedFieldName == DefinedField.__FieldName) {

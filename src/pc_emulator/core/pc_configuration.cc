@@ -360,7 +360,9 @@ PCVariable * PCConfiguration::GetVariablePointerToMem(int memType,
 
     assert(ByteOffset > 0 && BitOffset >= 0 && BitOffset < 8);
     assert(memType == MemType::RAM_MEM);
-    string VariableName = __ConfigurationName + std::to_string(memType)
+    string VariableName = __ConfigurationName 
+                            + "." + VariableDataTypeName
+                            + "." + std::to_string(memType)
                             + "." + std::to_string(ByteOffset)
                             + "." + std::to_string(BitOffset);
     // need to track and delete this variable later on
