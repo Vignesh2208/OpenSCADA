@@ -12,7 +12,7 @@ using MemType  = pc_specification::MemType;
 using DataTypeCategory = pc_specification::DataTypeCategory;
 using FieldInterfaceType = pc_specification::FieldInterfaceType;
 
-
+/*
 TEST(VariableTestSuite, ConfigGlobalVariableTest) {
     string TestDir = Utils::GetInstallationDirectory() 
             + "/src/pc_emulator/tests/variable_tests";
@@ -94,5 +94,23 @@ TEST(VariableTestSuite, ResourcePoUVariableTest) {
     time.SecsElapsed = 0;
     EXPECT_EQ(pou_var->GetFieldValue<TimeType>("start_time", 
                                 DataTypeCategory::TIME).SecsElapsed, 1);
-}
+}*/
 
+TEST(VariableTestSuite, ConfigComplexDirectlyRepVariableTest) {
+    string TestDir = Utils::GetInstallationDirectory() 
+            + "/src/pc_emulator/tests/variable_tests";
+
+    std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
+    PCConfiguration configuration(TestDir + "/input.prototxt");
+    PCVariable * global_var = configuration.__global_pou_var;
+    ASSERT_TRUE(global_var != nullptr);
+    EXPECT_EQ(global_var->GetPtrStoredAtField("complex_global"),
+                    configuration.GetVariablePointerToMem(RAM_MEM, 30, 0, 
+                    "COMPLEX_STRUCT_1"));
+    EXPECT_EQ(global_var->GetPtrStoredAtField("complex_global.string_field[1]"),
+                    configuration.GetVariablePointerToMem(RAM_MEM, 30, 0, 
+                    "CHAR"));
+    /*EXPECT_EQ(global_var->GetPtrStoredAtField("complex_global.string_field[2]"),
+                    configuration.GetVariablePointerToMem(RAM_MEM, 31, 0, 
+                    "CHAR"));*/
+}

@@ -78,6 +78,9 @@ namespace pc_emulator {
                             PCDataType * Current, PCDataTypeField& Result);
             void SetElementaryDataTypeAttributes(string InitialValue,
                                             s64 RangeMin, s64 RangeMax);
+            bool GetPCDataTypeFieldOfArrayElement(
+                PCDataTypeField& DefinedField,
+                PCDataTypeField& Result, int idx1, int idx2=-1);
         
         public:
             string __AliasName;

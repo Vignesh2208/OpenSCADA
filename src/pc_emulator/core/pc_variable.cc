@@ -557,7 +557,10 @@ void PCVariable::InitializeAllDirectlyRepresentedFields() {
 
                 //InitializeVariable(FieldVariable);
                 SetPtr(DefinedField.__FieldName, FieldVariable);
-                FieldVariable->SetPCVariableField("", 
+
+                if (DefinedField.__FieldTypeCategory 
+                    != DataTypeCategory::DERIVED)
+                    FieldVariable->SetPCVariableField("", 
                                     DefinedField.__InitialValue);
             }
         }
