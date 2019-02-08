@@ -168,10 +168,10 @@ namespace pc_emulator {
 
             
             static bool ValueToBool(string Value, bool& BoolValue);
-            static bool ValueToByte(string Value, int8_t & ByteValue);
-            static bool ValueToWord(string Value, int16_t & WordValue);
-            static bool ValueToDWord(string Value, int32_t& DWordValue);
-            static bool ValueToLWord(string Value, int64_t & LWordValue);
+            static bool ValueToByte(string Value, uint8_t & ByteValue);
+            static bool ValueToWord(string Value, uint16_t & WordValue);
+            static bool ValueToDWord(string Value, uint32_t& DWordValue);
+            static bool ValueToLWord(string Value, uint64_t & LWordValue);
             static bool ValueToChar(string Value, char & CharValue);
             static bool ValueToInt(string Value, int16_t& IntValue);
             static bool ValueToSint(string Value, int8_t & SintValue);

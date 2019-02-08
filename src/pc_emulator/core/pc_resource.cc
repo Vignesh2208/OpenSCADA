@@ -41,18 +41,35 @@ void PCResource::RegisterPoUVariable(string VariableName, PCVariable * Var) {
 PCVariable * PCResource::GetVariable(string NestedFieldName) {
     assert(!NestedFieldName.empty());
     std::vector<string> results;
-    boost::split(results, NestedFieldName, [](char c){return c == '.';});
+    //boost::split(results, NestedFieldName, [](char c){return c == '.';});
+    boost::split(results, NestedFieldName,
+                boost::is_any_of("."), boost::token_compress_on);
 
     if  (results.size() == 1) {
         //not . was found
         // this may belong to global variable
-            PCVariable * global_var = __ResourcePoUVars.find(
-                    "__RESOURCE_" + __ResourceName + "_GLOBAL__")->second;
-            assert(global_var != nullptr);
-            if (global_var->__VariableDataType->IsFieldPresent(NestedFieldName))
+            auto got = __ResourcePoUVars.find(
+                    "__RESOURCE_" + __ResourceName + "_GLOBAL__");
+            PCVariable * global_var;
+
+            if (got == __ResourcePoUVars.end())
+                global_var = nullptr;
+            else {
+                global_var = got->second;
+            }
+            
+            if (global_var != nullptr && 
+                global_var->__VariableDataType->IsFieldPresent(NestedFieldName))
                 return global_var->GetPCVariableToField(NestedFieldName);
-            else
-                return nullptr;
+            else {
+                // this may be referring to a PoU variable
+                auto got = __ResourcePoUVars.find(results[0]);
+                 if (got == __ResourcePoUVars.end()) {
+                    return nullptr;
+                } else {
+                    return got->second;
+                }
+            }
     } else {
         // dot was found; could be of the form resource_pou_var.field_name
         std::unordered_map<std::string, PCVariable*>::const_iterator got = 
@@ -60,10 +77,17 @@ PCVariable * PCResource::GetVariable(string NestedFieldName) {
         if (got == __ResourcePoUVars.end()) {
             
             // this may belong to global variable
-            PCVariable * global_var = __ResourcePoUVars.find(
-                    "__RESOURCE_" + __ResourceName + "_GLOBAL__")->second;
-            assert(global_var != nullptr);
-            if (global_var->__VariableDataType->IsFieldPresent(NestedFieldName))
+            auto got = __ResourcePoUVars.find(
+                    "__RESOURCE_" + __ResourceName + "_GLOBAL__");
+            PCVariable * global_var;
+
+            if (got == __ResourcePoUVars.end())
+                global_var = nullptr;
+            else {
+                global_var = got->second;
+            }
+            if (global_var != nullptr && 
+                global_var->__VariableDataType->IsFieldPresent(NestedFieldName))
                 return global_var->GetPCVariableToField(NestedFieldName);
             else
                 return nullptr;

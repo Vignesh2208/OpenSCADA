@@ -749,11 +749,6 @@ PCDataType::PCDataType(PCConfiguration* configuration,
                 }           
 
         } else {
-            /*
-            __configuration->PCLogger->LogMessage(LogLevels::LOG_INFO,
-            "Registering as an elementary datatype because category of lookup datatype was not complex!");
-            SetElementaryDataTypeAttributes(InitialValue, RangeMin, RangeMax);
-            */
            __configuration->PCLogger->RaiseException("This should never happen!\n");
         }
     } else {
@@ -762,13 +757,11 @@ PCDataType::PCDataType(PCConfiguration* configuration,
             __DataTypeCategory != DataTypeCategory::POU) {
 
             __configuration->PCLogger->LogMessage(LogLevels::LOG_INFO,
-                "Registering as an elementary datatype because category of datatype was not complex!");
+                "Registering as an elementary datatype because category of "
+                "datatype was not complex!");
                 SetElementaryDataTypeAttributes(InitialValue,
                         RangeMin, RangeMax);
-        } /*else {
-            __configuration->PCLogger->RaiseException("Data type category must"
-                " be not assigned for complex data types!\n");
-        }*/
+        } 
     }
     __DimensionSizes.push_back(1);
 }
@@ -1014,46 +1007,46 @@ bool DataTypeUtils::ValueToBool(string Value, bool& BoolValue) {
 
     return false;
 }
-bool DataTypeUtils::ValueToByte(string Value, int8_t & ByteValue) {
+bool DataTypeUtils::ValueToByte(string Value, uint8_t & ByteValue) {
     // Value can be between 16#0 to 16#FF
     if (boost::starts_with(Value, "16#")
             && Value.length() <= 5) {
         string BitString = "0x" + Value.substr(3,Value.length() - 3);
-        auto Cast = boost::lexical_cast<int>(BitString);
+        int8_t Cast = std::stoul(BitString, nullptr, 16);
         ByteValue = Cast & 0x00FF;
         return true;
     }
     return false;
 }
 
-bool DataTypeUtils::ValueToWord(string Value, int16_t & WordValue) {
+bool DataTypeUtils::ValueToWord(string Value, uint16_t & WordValue) {
 
     if (boost::starts_with(Value, "16#")
             && Value.length() <= 7) {
         string BitString = "0x" + Value.substr(3,Value.length() - 3);
-        auto Cast = boost::lexical_cast<int>(BitString);
+        int16_t Cast = std::stoul(BitString, nullptr, 16);
         WordValue = Cast & 0x00FFFF;
         return true;
     }
     return false;
 
 }
-bool DataTypeUtils::ValueToDWord(string Value, int32_t& DWordValue) {
+bool DataTypeUtils::ValueToDWord(string Value, uint32_t& DWordValue) {
     if (boost::starts_with(Value, "16#")
             && Value.length() <= 11) {
         string BitString = "0x" + Value.substr(3,Value.length() - 3);
-        auto Cast = boost::lexical_cast<int32_t>(BitString);
+        int32_t Cast = std::stoul(BitString, nullptr, 16);
         DWordValue = Cast & 0x00FFFFFFFF;
         return true;
     }
     return false;
 
 }
-bool DataTypeUtils::ValueToLWord(string Value, int64_t & LWordValue) {
+bool DataTypeUtils::ValueToLWord(string Value, uint64_t & LWordValue) {
     if (boost::starts_with(Value, "16#")
             && Value.length() <= 19) {
         string BitString = "0x" + Value.substr(3,Value.length() - 3);
-        auto Cast = boost::lexical_cast<int64_t>(BitString);
+        int64_t Cast = std::stoul(BitString, nullptr, 16);
         LWordValue = Cast & 0x00FFFFFFFFFFFFFFFF;
         return true;
     }
@@ -1126,7 +1119,7 @@ bool DataTypeUtils::ValueToTime(string Value, TimeType & Time){
 bool DataTypeUtils::ValueToTOD(string Value, TODType & TOD){
     if(boost::starts_with(Value, "tod#")
         && std::regex_match(Value.substr(4,8),
-            std::regex("^((?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d$)"))){
+            std::regex("([01]?\\d|2[0-3]):([0-5]?\\d):([0-5]?\\d)"))){
         TOD.Hr = boost::lexical_cast<int>(Value.substr(4,2));
         TOD.Min = boost::lexical_cast<int>(Value.substr(7,2));
         TOD.Sec = boost::lexical_cast<int>(Value.substr(10,2));
@@ -1138,9 +1131,9 @@ bool DataTypeUtils::ValueToTOD(string Value, TODType & TOD){
 bool DataTypeUtils::ValueToDT(string Value, DateTODDataType & Dt){
     if(boost::starts_with(Value, "dt#")
         && std::regex_match(Value.substr(3,10),            
-            std::regex("([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))"))
+            std::regex("([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))"))
         && std::regex_match(Value.substr(14,8),
-            std::regex("^((?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d$)"))){
+            std::regex("([01]?\\d|2[0-3]):([0-5]?\\d):([0-5]?\\d)"))){
         Dt.Date.Year = boost::lexical_cast<int>(Value.substr(3,4));
         Dt.Date.Month = boost::lexical_cast<int>(Value.substr(8,2));
         Dt.Date.Day = boost::lexical_cast<int>(Value.substr(11,2));
@@ -1155,7 +1148,7 @@ bool DataTypeUtils::ValueToDT(string Value, DateTODDataType & Dt){
 bool DataTypeUtils::ValueToDate(string Value, DateType& Date){
     if(boost::starts_with(Value, "d#")
         && std::regex_match(Value.substr(2,Value.length() - 2),            
-            std::regex("([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))"))){
+            std::regex("([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))"))){
         Date.Year = boost::lexical_cast<int>(Value.substr(2,4));
         Date.Month = boost::lexical_cast<int>(Value.substr(7,2));
         Date.Day = boost::lexical_cast<int>(Value.substr(10,2));

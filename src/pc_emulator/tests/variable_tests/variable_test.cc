@@ -52,3 +52,47 @@ TEST(VariableTestSuite, ConfigGlobalVariableTest) {
             configuration.GetVariablePointerToMem(RAM_MEM, 11, 1, 
             "BOOL"));
 }
+
+TEST(VariableTestSuite, ResourcePoUVariableTest) {
+    string TestDir = Utils::GetInstallationDirectory() 
+            + "/src/pc_emulator/tests/variable_tests";
+
+    std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
+    PCConfiguration configuration(TestDir + "/input.prototxt");
+    PCVariable * pou_var = configuration.GetVariable("CPU_001.PROGRAM_1");
+    
+    ASSERT_TRUE(pou_var != nullptr);
+    
+    EXPECT_EQ(pou_var->GetFieldValue<int16_t>("input_1", 
+                                        DataTypeCategory::INT), 0);
+    
+    EXPECT_EQ(pou_var->GetFieldValue<int16_t>("input_2", 
+                                        DataTypeCategory::INT), 0);
+    EXPECT_EQ(pou_var->GetFieldValue<float>("output_1", 
+                                        DataTypeCategory::REAL), 0.0);
+    EXPECT_EQ(pou_var->GetFieldValue<float>("output_2", 
+                                        DataTypeCategory::REAL), 0.0);
+    EXPECT_EQ(pou_var->GetFieldValue<int16_t>("var_1", 
+                                        DataTypeCategory::INT), 0);
+
+    EXPECT_EQ(pou_var->GetPtrStoredAtField("inout_1"), nullptr);
+    
+    EXPECT_EQ(pou_var->GetPtrStoredAtField("drv_1"), 
+            configuration.GetVariablePointerToMem(RAM_MEM, 10, 0, "INT"));
+    EXPECT_EQ(pou_var->GetPtrStoredAtField("start"), 
+            configuration.GetVariable("start"));
+    EXPECT_EQ(pou_var->GetPtrStoredAtField("start_time"), 
+            configuration.GetVariable("start_time"));
+
+    EXPECT_EQ(pou_var->GetFieldValue<int16_t>("start_int", 
+                            DataTypeCategory::INT), 10);
+    EXPECT_EQ(pou_var->GetFieldValue<bool>("start", 
+                            DataTypeCategory::BOOL), true);
+    EXPECT_EQ(pou_var->GetFieldValue<int16_t>("drv_1", 
+                                    DataTypeCategory::INT), 10);
+    TimeType time;
+    time.SecsElapsed = 0;
+    EXPECT_EQ(pou_var->GetFieldValue<TimeType>("start_time", 
+                                DataTypeCategory::TIME).SecsElapsed, 1);
+}
+

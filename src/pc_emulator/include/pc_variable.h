@@ -69,7 +69,7 @@ namespace pc_emulator {
 
             
 
-            void InitializeVariable(PCVariable * V);
+            void InitializeVariable(PCVariable * V, string InitialValue);
             void InitializeAllNonPtrFields();
             void InitializeAllDirectlyRepresentedFields();
             

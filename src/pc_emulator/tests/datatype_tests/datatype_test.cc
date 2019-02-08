@@ -580,3 +580,58 @@ TEST(DataTypeTestSuite, GlobalVariablesTest) {
     EXPECT_EQ(Result.__StorageMemType, RAM_MEM);
 
 }
+
+TEST(DataTypeTestSuite, DataTypeUtilsTest) {
+
+    bool val;
+    uint8_t byte_val;
+    uint16_t word_val;
+    uint32_t dword_val;
+    uint64_t lword_val;
+    char char_val;
+    float real_val;
+    double lreal_val;
+
+    TODType tod;
+    DateType date;
+    DateTODType dt;
+
+    ASSERT_TRUE(DataTypeUtils::ValueToBool("True", val));
+    EXPECT_EQ(val, true);
+    ASSERT_TRUE(DataTypeUtils::ValueToBool("1", val));
+    EXPECT_EQ(val, true);
+    ASSERT_TRUE(DataTypeUtils::ValueToBool("False", val));
+    EXPECT_EQ(val, false);
+    ASSERT_TRUE(DataTypeUtils::ValueToBool("0", val));
+    EXPECT_EQ(val, false);
+    
+    ASSERT_TRUE(DataTypeUtils::ValueToByte("16#01", byte_val));
+    EXPECT_EQ(byte_val, 0x1);
+    ASSERT_TRUE(DataTypeUtils::ValueToByte("16#FF", byte_val));
+    EXPECT_EQ(byte_val, 255);
+    ASSERT_TRUE(DataTypeUtils::ValueToWord("16#FFFE", word_val));
+    EXPECT_EQ(word_val, 0xFFFE);
+    ASSERT_TRUE(DataTypeUtils::ValueToDWord("16#FFFFFFFE", dword_val));
+    EXPECT_EQ(dword_val, 0xFFFFFFFE);
+    ASSERT_TRUE(DataTypeUtils::ValueToLWord("16#FFFFFFFEFFFFFFFE", lword_val));
+    EXPECT_EQ(lword_val, 0xFFFFFFFEFFFFFFFE);
+
+    ASSERT_TRUE(DataTypeUtils::ValueToChar("c", char_val));
+    EXPECT_EQ(char_val, 'c');
+    ASSERT_TRUE(DataTypeUtils::ValueToTOD("tod#23:58:59", tod));
+    EXPECT_EQ(tod.Hr, 23);
+    EXPECT_EQ(tod.Min, 58);
+    EXPECT_EQ(tod.Sec, 59);
+    ASSERT_TRUE(DataTypeUtils::ValueToDate("d#2011-12-31", date));
+    EXPECT_EQ(date.Day, 31);
+    EXPECT_EQ(date.Month, 12);
+    EXPECT_EQ(date.Year, 2011);
+    ASSERT_TRUE(DataTypeUtils::ValueToDT("dt#2011-12-31 10:30:55", dt));
+    EXPECT_EQ(dt.Date.Day, 31);
+    EXPECT_EQ(dt.Date.Month, 12);
+    EXPECT_EQ(dt.Date.Year, 2011);
+    EXPECT_EQ(dt.Tod.Hr, 10);
+    EXPECT_EQ(dt.Tod.Min, 30);
+    EXPECT_EQ(dt.Tod.Sec, 55);
+
+}

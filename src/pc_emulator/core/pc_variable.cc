@@ -88,7 +88,7 @@ void PCVariable::OnExecutorStartup() {
         
         PCVariable* FieldVariable 
             = GetPCVariableToField(DefinedField.__FieldName);
-        InitializeVariable(FieldVariable);
+        InitializeVariable(FieldVariable, DefinedField.__InitialValue);
     }
 }
 
@@ -202,7 +202,7 @@ void PCVariable::GetFieldAttributes(string NestedFieldName,
     std::vector<std::string> NestedFields;
     boost::split(NestedFields, NestedFieldName,
                 boost::is_any_of("."), boost::token_compress_on);
-    if (NestedFields.empty()) {
+    if (NestedFieldName == "") {
         
         FieldAttributes.RelativeOffset = 0;
         FieldAttributes.FieldInterfaceType = FieldIntfType::NA;
@@ -250,8 +250,7 @@ PCVariable* PCVariable::GetPCVariableToField(string NestedFieldName) {
         std::unordered_map<std::string, PCVariable*>::const_iterator got = 
                         __AccessedFields.find (NestedFieldName);
         if (got != __AccessedFields.end()) {
-            got->second->Cleanup();
-            delete got->second;
+            return got->second;
         }
 
         PCVariable *VariablePtrToField
@@ -296,13 +295,13 @@ PCVariable* PCVariable::GetPCVariableToField(string NestedFieldName) {
     */
 }
 
-void PCVariable::InitializeVariable(PCVariable * V) {
+void PCVariable::InitializeVariable(PCVariable * V, string InitialValue) {
 
     bool resbool;
-    int8_t resbyte;
-    int16_t resword;
-    int32_t resdword;
-    int64_t reslword;
+    uint8_t resbyte;
+    uint16_t resword;
+    uint32_t resdword;
+    uint64_t reslword;
     char reschar;
     int16_t resint;
     int8_t ressint;
@@ -323,30 +322,30 @@ void PCVariable::InitializeVariable(PCVariable * V) {
 
     switch(V->__VariableDataType->__DataTypeCategory) {
         case DataTypeCategory::BOOL : 
-                        assert(V->__VariableDataType->__NFields == 0);
-                        assert(DataTypeUtils::ValueToBool(
-                            V->__VariableDataType->__InitialValue, resbool));
-                        V->SetPCVariableField("", &resbool, sizeof(resbool));
-                        return;
+                assert(V->__VariableDataType->__NFields == 0);
+                assert(DataTypeUtils::ValueToBool(
+                    InitialValue, resbool));
+                V->SetPCVariableField("", &resbool, sizeof(resbool));
+                return;
 
         case DataTypeCategory::BYTE : 
-                        assert(V->__VariableDataType->__NFields == 0);
-                        assert(DataTypeUtils::ValueToByte(
-                            V->__VariableDataType->__InitialValue, resbyte));
-                        V->SetPCVariableField("", &resbyte, sizeof(resbyte));
-                        return; 
+                assert(V->__VariableDataType->__NFields == 0);
+                assert(DataTypeUtils::ValueToByte(
+                    InitialValue, resbyte));
+                V->SetPCVariableField("", &resbyte, sizeof(resbyte));
+                return; 
 
         case DataTypeCategory::WORD : 
                 assert(V->__VariableDataType->__NFields == 0);          
                 assert(DataTypeUtils::ValueToWord(
-                    V->__VariableDataType->__InitialValue, resword));
+                    InitialValue, resword));
                 V->SetPCVariableField("", &resword, sizeof(resword));
                 return;     
 
         case DataTypeCategory::DWORD : 
                 assert(V->__VariableDataType->__NFields == 0);    
                 assert(DataTypeUtils::ValueToDWord(
-                    V->__VariableDataType->__InitialValue, resdword));
+                    InitialValue, resdword));
                 V->SetPCVariableField("", &resdword, sizeof(resdword));
                 return;     
 
@@ -354,14 +353,14 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 assert(V->__VariableDataType->__NFields == 0);
                 
                 assert(DataTypeUtils::ValueToLWord(
-                    V->__VariableDataType->__InitialValue, reslword));
+                    InitialValue, reslword));
                 V->SetPCVariableField("", &reslword, sizeof(reslword));
                 return;     
 
         case DataTypeCategory::CHAR : 
                 assert(V->__VariableDataType->__NFields == 0);
                 assert(DataTypeUtils::ValueToChar(
-                    V->__VariableDataType->__InitialValue, reschar));
+                    InitialValue, reschar));
                 V->SetPCVariableField("", &reschar, sizeof(reschar));
                 return; 
                 
@@ -369,7 +368,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 assert(V->__VariableDataType->__NFields == 0);
                 
                 assert(DataTypeUtils::ValueToInt(
-                    V->__VariableDataType->__InitialValue, resint));
+                    InitialValue, resint));
                 V->SetPCVariableField("", &resint, sizeof(resint));
                 return;
 
@@ -377,7 +376,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 assert(V->__VariableDataType->__NFields == 0);
                 
                 assert(DataTypeUtils::ValueToSint(
-                    V->__VariableDataType->__InitialValue, ressint));
+                    InitialValue, ressint));
                 V->SetPCVariableField("", &ressint, sizeof(ressint));
                 return;     
 
@@ -385,7 +384,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 assert(V->__VariableDataType->__NFields == 0);
                 
                 assert(DataTypeUtils::ValueToDint(
-                    V->__VariableDataType->__InitialValue, resdint));
+                    InitialValue, resdint));
                 V->SetPCVariableField("", &resdint, sizeof(resdint));
                 return;     
 
@@ -393,7 +392,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 assert(V->__VariableDataType->__NFields == 0);
                 
                 assert(DataTypeUtils::ValueToLint(
-                    V->__VariableDataType->__InitialValue, reslint));
+                    InitialValue, reslint));
                 V->SetPCVariableField("", &reslint, sizeof(reslint));
                 return;     
 
@@ -401,7 +400,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 assert(V->__VariableDataType->__NFields == 0);
                 
                 assert(DataTypeUtils::ValueToUint(
-                    V->__VariableDataType->__InitialValue, resuint));
+                    InitialValue, resuint));
                 V->SetPCVariableField("", &resuint, sizeof(resuint));
                 return;     
 
@@ -409,7 +408,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 assert(V->__VariableDataType->__NFields == 0);
                 
                 assert(DataTypeUtils::ValueToUsint(
-                    V->__VariableDataType->__InitialValue, resusint));
+                    InitialValue, resusint));
                 V->SetPCVariableField("", &resusint, sizeof(resusint));
                 return;     
 
@@ -417,7 +416,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 assert(V->__VariableDataType->__NFields == 0);
                 
                 assert(DataTypeUtils::ValueToUdint(
-                    V->__VariableDataType->__InitialValue, resudint));
+                    InitialValue, resudint));
                 V->SetPCVariableField("", &resudint, sizeof(resudint));
                 return;
 
@@ -425,7 +424,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 assert(V->__VariableDataType->__NFields == 0);
                 
                 assert(DataTypeUtils::ValueToUlint(
-                    V->__VariableDataType->__InitialValue, resulint));
+                    InitialValue, resulint));
                 V->SetPCVariableField("", &resulint, sizeof(resulint));
                 return; 
 
@@ -433,7 +432,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 assert(V->__VariableDataType->__NFields == 0);
                 
                 assert(DataTypeUtils::ValueToReal(
-                    V->__VariableDataType->__InitialValue, resreal));
+                    InitialValue, resreal));
                 V->SetPCVariableField("", &resreal, sizeof(resreal));
                 return;     
 
@@ -441,7 +440,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 assert(V->__VariableDataType->__NFields == 0);
                 
                 assert(DataTypeUtils::ValueToLReal(
-                    V->__VariableDataType->__InitialValue, reslreal));
+                    InitialValue, reslreal));
                 V->SetPCVariableField("", &reslreal, sizeof(reslreal));
                 return;     
 
@@ -449,7 +448,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 assert(V->__VariableDataType->__NFields == 0);
                 
                 assert(DataTypeUtils::ValueToTime(
-                    V->__VariableDataType->__InitialValue, restime));
+                    InitialValue, restime));
                 V->SetPCVariableField("", &restime, sizeof(restime));
                 return;     
 
@@ -457,7 +456,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 assert(V->__VariableDataType->__NFields == 0);
                 
                 assert(DataTypeUtils::ValueToDate(
-                    V->__VariableDataType->__InitialValue, resdate));
+                    InitialValue, resdate));
                 V->SetPCVariableField("", &resdate, sizeof(resdate));
                 return;     
 
@@ -465,7 +464,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 assert(V->__VariableDataType->__NFields == 0);
                 
                 assert(DataTypeUtils::ValueToDT(
-                    V->__VariableDataType->__InitialValue, resdt));
+                    InitialValue, resdt));
                 V->SetPCVariableField("", &resdt, sizeof(resdt));
                 return;     
 
@@ -473,7 +472,7 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                 assert(V->__VariableDataType->__NFields == 0);
                 
                 assert(DataTypeUtils::ValueToTOD(
-                    V->__VariableDataType->__InitialValue, restod));
+                    InitialValue, restod));
                 V->SetPCVariableField("", &restod, sizeof(restod));
                 return;     
 
@@ -492,7 +491,9 @@ void PCVariable::InitializeVariable(PCVariable * V) {
                             PCVariable* FieldVariable 
                                 = V->GetPCVariableToField(
                                  DefinedField.__FieldName);
-                            InitializeVariable(FieldVariable);
+                            InitializeVariable(FieldVariable,
+                                    DefinedField.__InitialValue);
+                            
                         }
                     } // no need to initialize explit storage type subfields here
                       // because there would be none. The variable V or any of
@@ -520,7 +521,7 @@ void PCVariable::InitializeAllNonPtrFields() {
 
                 // Note that no subfield of this can be of explicit storage type
                 // because this field is not explicit storage type.
-                InitializeVariable(FieldVariable);
+                InitializeVariable(FieldVariable, DefinedField.__InitialValue);
             }
         } 
     }
@@ -556,6 +557,8 @@ void PCVariable::InitializeAllDirectlyRepresentedFields() {
 
                 //InitializeVariable(FieldVariable);
                 SetPtr(DefinedField.__FieldName, FieldVariable);
+                FieldVariable->SetPCVariableField("", 
+                                    DefinedField.__InitialValue);
             }
         }
     }
@@ -570,6 +573,7 @@ void PCVariable::ResolveAllExternalFields() {
             FieldVariable 
                 = __configuration->GetVariable(
                         DefinedField.__FieldName);
+            
             if (FieldVariable == nullptr 
                 && __AssociatedResource != nullptr) {
                 FieldVariable 
@@ -790,10 +794,10 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
     DataTypeFieldAttributes Attributes;
     bool BoolValue;
     int bit_off;
-    int8_t ByteValue;
-    int16_t WordValue;
-    int32_t DWordValue;
-    int64_t LWordValue;
+    uint8_t ByteValue;
+    uint16_t WordValue;
+    uint32_t DWordValue;
+    uint64_t LWordValue;
     char CharValue;
     int16_t IntValue;
     int8_t SIntValue;
@@ -883,7 +887,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
             std::memcpy(
                 FieldVariable->__MemoryLocation
                     .GetPointerToMemory(FieldVariable->__ByteOffset),
-                &ByteValue, sizeof(int8_t));
+                &ByteValue, sizeof(uint8_t));
             break;
         case DataTypeCategory::WORD :     
             
@@ -894,7 +898,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
             std::memcpy(
                 FieldVariable->__MemoryLocation
                     .GetPointerToMemory(FieldVariable->__ByteOffset),
-                &WordValue, sizeof(int16_t));
+                &WordValue, sizeof(uint16_t));
             break;
         case DataTypeCategory::DWORD :     
             
@@ -905,7 +909,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
             std::memcpy(
                 FieldVariable->__MemoryLocation
                     .GetPointerToMemory(FieldVariable->__ByteOffset),
-                &DWordValue, sizeof(int32_t));
+                &DWordValue, sizeof(uint32_t));
             break;
         case DataTypeCategory::LWORD :    
             
@@ -916,7 +920,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, string Value) {
             std::memcpy(
                 FieldVariable->__MemoryLocation
                     .GetPointerToMemory(FieldVariable->__ByteOffset),
-                &LWordValue, sizeof(int64_t));
+                &LWordValue, sizeof(uint64_t));
             break;
         case DataTypeCategory::CHAR :    
             
@@ -1100,6 +1104,7 @@ void PCVariable::SetPCVariableField(string NestedFieldName, void * Value,
                                     int CopySizeBytes) {
 
     CheckValidity();
+
     assert(__VariableDataType->IsFieldPresent(NestedFieldName) == true);
     if (!NestedFieldName.empty()) {
         DataTypeFieldAttributes Attributes;
@@ -1166,15 +1171,22 @@ void PCVariable::GetAndStoreValue(string NestedFieldName,
     assert (Value != nullptr);
     assert(__VariableDataType->IsFieldPresent(NestedFieldName) == true);
     
-    PCVariable* PointerAtFieldLocation = GetPtrStoredAtField(NestedFieldName);
-    if (PointerAtFieldLocation != nullptr) {
-        
-        return PointerAtFieldLocation->GetAndStoreValue("", Value, CopySize,
-                                                        CategoryOfDataType);
+    if (!NestedFieldName.empty()) {
+        PCVariable* PointerAtFieldLocation = GetPtrStoredAtField(NestedFieldName);
+        if (PointerAtFieldLocation != nullptr) {
+            
+            return PointerAtFieldLocation->GetAndStoreValue("", Value, CopySize,
+                                                            CategoryOfDataType);
 
-    } 
+        } 
+    }
+    PCVariable * PointedVariable;
 
-    auto PointedVariable =  GetPCVariableToField(NestedFieldName);
+    if (!NestedFieldName.empty())
+        PointedVariable =  GetPCVariableToField(NestedFieldName);
+    else
+        PointedVariable = this;
+    
     assert(PointedVariable->__VariableDataType->__DataTypeCategory
         == CategoryOfDataType);
 

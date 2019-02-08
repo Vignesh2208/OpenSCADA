@@ -230,6 +230,10 @@ void Utils::InitializeDataType(PCConfiguration * __configuration,
                                 : field_type_ptr->__RangeMin;
         range_max = field.has_range_max() ? field.range_max()
                                 : field_type_ptr->__RangeMax;
+
+        std::cout << "Utils:" << __new_data_type->__DataTypeName 
+        << " DataTypeName: " << field.field_datatype_name() 
+        << " Init Value: " << initial_value << std::endl;
         
         if (field.has_initial_value())
             assert(field.intf_type() != VAR_EXPLICIT_STORAGE

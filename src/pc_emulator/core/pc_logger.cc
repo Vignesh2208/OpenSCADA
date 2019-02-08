@@ -45,5 +45,5 @@ void Logger::RaiseException(std::string Message) {
 // this will kill one of the resource threads
 void Logger::ShutDown() {
     LogMessage(LogLevels::LOG_INFO, "Shutting Down Resource Thread ....");
-    exit(0);
+    exit(-1);
 }

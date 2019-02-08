@@ -73,7 +73,7 @@ PCConfiguration::PCConfiguration(string ConfigurationPath):
         __NumResources = __specification.machine_spec().num_cpus();
         assert(__NumResources > 0);
 
-        std::cout << "Read Configuration !" << std::endl;
+        PCLogger->LogMessage(LogLevels::LOG_INFO, "Read Configuration !");
         RegisterAllElementaryDataTypes();
         RegisterAllComplexDataTypes();
         RegisterAllResources();
@@ -201,77 +201,6 @@ void PCConfiguration::RegisterAllElementaryDataTypes () {
 }
 
 void PCConfiguration::RegisterAllComplexDataTypes() {
-    if (!__specification.has_config_global_pou_var())
-        __global_pou_var = nullptr;
-    else {
-
-        PCDataType * global_var_type = new PCDataType(this, 
-                    "__CONFIG_GLOBAL__", "__CONFIG_GLOBAL__",
-                    DataTypeCategory::POU);
-
-        Utils::InitializeDataType(this, global_var_type,
-             __specification.config_global_pou_var());
-        
-        RegisteredDataTypes.RegisterDataType("__CONFIG_GLOBAL__", 
-                                        global_var_type);
-
-        __global_pou_var = new PCVariable(this, nullptr,
-                                "__CONFIG_GLOBAL_VAR__", "__CONFIG_GLOBAL__");
-        __global_pou_var->AllocateAndInitialize();
-        
-    }
-    
-    if (!__specification.has_config_access_pou_var())
-        __access_pou_var = nullptr;
-    else {
-        PCDataType * access_var_type = new PCDataType(this, 
-                    "__CONFIG_ACCESS__", "__CONFIG_ACCESS__",
-                    DataTypeCategory::POU);
-
-        RegisteredDataTypes.RegisterDataType("__CONFIG__ACCESS__", 
-                                        access_var_type);
-
-        Utils::InitializeAccessDataType(this, access_var_type,
-             __specification.config_access_pou_var());
-        __access_pou_var = new PCVariable(this, nullptr,
-                                "__CONFIG_ACCESS_VAR__", "__CONFIG_ACCESS__");
-        __access_pou_var->AllocateAndInitialize();
-
-        // now we need to set pointers to some fields of this variable
-
-        for (auto& field : 
-                    __specification.config_access_pou_var().datatype_field()) {
-            if (field.intf_type() == FieldIntfType::VAR_ACCESS 
-                    && field.has_field_storage_spec()) {
-
-            
-                if (field.field_storage_spec().has_full_storage_spec()) {
-                    //extract memtype, byte and bit offsets from string specification
-                    int mem_type, ByteOffset, BitOffset;
-                    if (!Utils::ExtractFromAccessStorageSpec(
-                            this,
-                            field.field_storage_spec().full_storage_spec(),
-                            &mem_type, &ByteOffset, &BitOffset)) {
-                        // these are the fields which are selected
-                        string StorageSpec 
-                            = field.field_storage_spec().full_storage_spec();
-
-                        PCVariable * desired_ptr = GetVariable(StorageSpec);
-                        if(!desired_ptr) {
-                            PCLogger->RaiseException("Error in storage spec"
-                                    " of access variable!");
-                        }
-
-                        //set this as a ptr to the field of acess variable
-                        __access_pou_var->SetPtr(field.field_name(),
-                                        desired_ptr);
-
-                    }
-                }
-            }
-        }
-
-    }
 
     for (auto & datatype_decl : __specification.datatype_declaration()) {
         if (datatype_decl.datatype_category() != DataTypeCategory::POU
@@ -351,7 +280,79 @@ void PCConfiguration::RegisterAllComplexDataTypes() {
         }
 
     }
+    
+    // Now register global and access variables
+    if (!__specification.has_config_global_pou_var())
+        __global_pou_var = nullptr;
+    else {
 
+        PCDataType * global_var_type = new PCDataType(this, 
+                    "__CONFIG_GLOBAL__", "__CONFIG_GLOBAL__",
+                    DataTypeCategory::POU);
+
+        Utils::InitializeDataType(this, global_var_type,
+             __specification.config_global_pou_var());
+        
+        RegisteredDataTypes.RegisterDataType("__CONFIG_GLOBAL__", 
+                                        global_var_type);
+
+        __global_pou_var = new PCVariable(this, nullptr,
+                                "__CONFIG_GLOBAL_VAR__", "__CONFIG_GLOBAL__");
+        __global_pou_var->AllocateAndInitialize();
+        
+    }
+    
+    if (!__specification.has_config_access_pou_var())
+        __access_pou_var = nullptr;
+    else {
+        PCDataType * access_var_type = new PCDataType(this, 
+                    "__CONFIG_ACCESS__", "__CONFIG_ACCESS__",
+                    DataTypeCategory::POU);
+
+        RegisteredDataTypes.RegisterDataType("__CONFIG__ACCESS__", 
+                                        access_var_type);
+
+        Utils::InitializeAccessDataType(this, access_var_type,
+             __specification.config_access_pou_var());
+        __access_pou_var = new PCVariable(this, nullptr,
+                                "__CONFIG_ACCESS_VAR__", "__CONFIG_ACCESS__");
+        __access_pou_var->AllocateAndInitialize();
+
+        // now we need to set pointers to some fields of this variable
+
+        for (auto& field : 
+                    __specification.config_access_pou_var().datatype_field()) {
+            if (field.intf_type() == FieldIntfType::VAR_ACCESS 
+                    && field.has_field_storage_spec()) {
+
+            
+                if (field.field_storage_spec().has_full_storage_spec()) {
+                    //extract memtype, byte and bit offsets from string specification
+                    int mem_type, ByteOffset, BitOffset;
+                    if (!Utils::ExtractFromAccessStorageSpec(
+                            this,
+                            field.field_storage_spec().full_storage_spec(),
+                            &mem_type, &ByteOffset, &BitOffset)) {
+                        // these are the fields which are selected
+                        string StorageSpec 
+                            = field.field_storage_spec().full_storage_spec();
+
+                        PCVariable * desired_ptr = GetVariable(StorageSpec);
+                        if(!desired_ptr) {
+                            PCLogger->RaiseException("Error in storage spec"
+                                    " of access variable!");
+                        }
+
+                        //set this as a ptr to the field of acess variable
+                        __access_pou_var->SetPtr(field.field_name(),
+                                        desired_ptr);
+
+                    }
+                }
+            }
+        }
+
+    }
     PCLogger->LogMessage(LogLevels::LOG_INFO, "Registered all Complex DataTypes!");
 }
 
@@ -404,20 +405,23 @@ PCVariable * PCConfiguration::GetVariablePointerToResourceMem(
 PCVariable * PCConfiguration::GetVariable(string NestedFieldName) {
     assert(!NestedFieldName.empty());
     std::vector<string> results;
-    boost::split(results, NestedFieldName, [](char c){return c == '.';});
 
+    boost::split(results, NestedFieldName,
+                boost::is_any_of("."), boost::token_compress_on);
+    
     if  (results.size() == 1) {
         //no dot was found, try the global_variable
-        if (__global_pou_var 
+        if (__global_pou_var != nullptr
             && __global_pou_var->__VariableDataType->IsFieldPresent(
-                                                    NestedFieldName))
-            return __global_pou_var->GetPCVariableToField(NestedFieldName);
+                                                    NestedFieldName)) {                               
+                return __global_pou_var->GetPCVariableToField(NestedFieldName);
+            }
         return nullptr;
     } else {
         // dot was found; could be of the form resource.field_name
         PCResource * resource = RegisteredResources.GetResource(results[0]);
         if (resource == nullptr) {
-            if (__global_pou_var 
+            if (__global_pou_var != nullptr
             && __global_pou_var->__VariableDataType->IsFieldPresent(
                                                     NestedFieldName))
                 return __global_pou_var->GetPCVariableToField(NestedFieldName);
