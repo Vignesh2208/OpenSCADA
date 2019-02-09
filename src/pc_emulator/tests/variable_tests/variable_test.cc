@@ -12,7 +12,7 @@ using MemType  = pc_specification::MemType;
 using DataTypeCategory = pc_specification::DataTypeCategory;
 using FieldInterfaceType = pc_specification::FieldInterfaceType;
 
-/*
+
 TEST(VariableTestSuite, ConfigGlobalVariableTest) {
     string TestDir = Utils::GetInstallationDirectory() 
             + "/src/pc_emulator/tests/variable_tests";
@@ -21,37 +21,53 @@ TEST(VariableTestSuite, ConfigGlobalVariableTest) {
     PCConfiguration configuration(TestDir + "/input.prototxt");
     PCVariable * global_var = configuration.__global_pou_var;
     ASSERT_TRUE(global_var != nullptr);
+    
     EXPECT_EQ(global_var->GetPtrStoredAtField("global_bool_var"),
                     configuration.GetVariablePointerToMem(RAM_MEM, 3, 1, 
                     "BOOL"));
+    
     EXPECT_EQ(global_var->GetPtrStoredAtField("global_int_var"),
                     configuration.GetVariablePointerToMem(RAM_MEM, 4, 0, 
                     "INT"));
-    EXPECT_EQ(global_var->GetPtrStoredAtField("global_int_arr[1][1]"),
-                configuration.GetVariablePointerToMem(RAM_MEM, 20, 0, 
-                "INT"));
-    EXPECT_EQ(global_var->GetPtrStoredAtField("global_int_arr[1][2]"),
-                configuration.GetVariablePointerToMem(RAM_MEM, 22, 0, 
-                "INT"));
-    EXPECT_EQ(global_var->GetPtrStoredAtField("global_int_arr[2][1]"),
-                configuration.GetVariablePointerToMem(RAM_MEM, 24, 0, 
-                "INT"));
-    EXPECT_EQ(global_var->GetPtrStoredAtField("global_int_arr[2][2]"),
-                configuration.GetVariablePointerToMem(RAM_MEM, 26, 0, 
-                "INT"));
-    EXPECT_EQ(global_var->GetPtrStoredAtField("global_bool_arr[1]"),
-                configuration.GetVariablePointerToMem(RAM_MEM, 10, 0, 
-                "BOOL"));
-    EXPECT_EQ(global_var->GetPtrStoredAtField("global_bool_arr[2]"),
-                configuration.GetVariablePointerToMem(RAM_MEM, 10, 1, 
-                "BOOL"));
-    EXPECT_EQ(global_var->GetPtrStoredAtField("global_bool_arr[8]"),
-                configuration.GetVariablePointerToMem(RAM_MEM, 10, 7, 
-                "BOOL"));
-    EXPECT_EQ(global_var->GetPtrStoredAtField("global_bool_arr[10]"),
-            configuration.GetVariablePointerToMem(RAM_MEM, 11, 1, 
-            "BOOL"));
+    
+    
+    ASSERT_TRUE(Utils::TestEQPtrs(
+        global_var->GetPCVariableToField("global_int_arr[1][1]"),
+        configuration.GetVariablePointerToMem(RAM_MEM, 20, 0, "INT")));
+
+    
+    ASSERT_TRUE(Utils::TestEQPtrs(
+        global_var->GetPCVariableToField("global_int_arr[1][2]"),
+        configuration.GetVariablePointerToMem(RAM_MEM, 22, 0, "INT")));
+
+    
+    ASSERT_TRUE(Utils::TestEQPtrs(
+        global_var->GetPCVariableToField("global_int_arr[2][1]"),
+        configuration.GetVariablePointerToMem(RAM_MEM, 24, 0, "INT")));
+    
+    ASSERT_TRUE(Utils::TestEQPtrs(
+        global_var->GetPCVariableToField("global_int_arr[2][2]"),
+        configuration.GetVariablePointerToMem(RAM_MEM, 26, 0, "INT")));
+
+    
+    ASSERT_TRUE(Utils::TestEQPtrs(
+        global_var->GetPCVariableToField("global_bool_arr[1]"),
+        configuration.GetVariablePointerToMem(RAM_MEM, 10, 0, "BOOL")));
+    
+    ASSERT_TRUE(Utils::TestEQPtrs(
+        global_var->GetPCVariableToField("global_bool_arr[2]"),
+        configuration.GetVariablePointerToMem(RAM_MEM, 10, 1, "BOOL")));
+
+    ASSERT_TRUE(Utils::TestEQPtrs(
+        global_var->GetPCVariableToField("global_bool_arr[8]"),
+        configuration.GetVariablePointerToMem(RAM_MEM, 10, 7, "BOOL")));
+
+    ASSERT_TRUE(Utils::TestEQPtrs(
+        global_var->GetPCVariableToField("global_bool_arr[10]"),
+        configuration.GetVariablePointerToMem(RAM_MEM, 11, 1, "BOOL")));
+    
 }
+
 
 TEST(VariableTestSuite, ResourcePoUVariableTest) {
     string TestDir = Utils::GetInstallationDirectory() 
@@ -60,6 +76,7 @@ TEST(VariableTestSuite, ResourcePoUVariableTest) {
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
     PCConfiguration configuration(TestDir + "/input.prototxt");
     PCVariable * pou_var = configuration.GetVariable("CPU_001.PROGRAM_1");
+    PCVariable * global_var = configuration.__global_pou_var;
     
     ASSERT_TRUE(pou_var != nullptr);
     
@@ -84,6 +101,17 @@ TEST(VariableTestSuite, ResourcePoUVariableTest) {
     EXPECT_EQ(pou_var->GetPtrStoredAtField("start_time"), 
             configuration.GetVariable("start_time"));
 
+    EXPECT_EQ(pou_var->GetPtrStoredAtField("global_int_arr"), 
+            configuration.GetVariable("global_int_arr"));
+
+    ASSERT_TRUE(Utils::TestEQPtrs(
+        pou_var->GetPCVariableToField("global_int_arr[1][1]"),
+        configuration.GetVariablePointerToMem(RAM_MEM, 20, 0, "INT")));
+
+    ASSERT_TRUE(Utils::TestEQPtrs(
+        pou_var->GetPCVariableToField("global_int_arr[1][1]"),
+        global_var->GetPCVariableToField("global_int_arr[1][1]")));
+
     EXPECT_EQ(pou_var->GetFieldValue<int16_t>("start_int", 
                             DataTypeCategory::INT), 10);
     EXPECT_EQ(pou_var->GetFieldValue<bool>("start", 
@@ -94,7 +122,9 @@ TEST(VariableTestSuite, ResourcePoUVariableTest) {
     time.SecsElapsed = 0;
     EXPECT_EQ(pou_var->GetFieldValue<TimeType>("start_time", 
                                 DataTypeCategory::TIME).SecsElapsed, 1);
-}*/
+}
+
+
 
 TEST(VariableTestSuite, ConfigComplexDirectlyRepVariableTest) {
     string TestDir = Utils::GetInstallationDirectory() 
@@ -107,10 +137,16 @@ TEST(VariableTestSuite, ConfigComplexDirectlyRepVariableTest) {
     EXPECT_EQ(global_var->GetPtrStoredAtField("complex_global"),
                     configuration.GetVariablePointerToMem(RAM_MEM, 30, 0, 
                     "COMPLEX_STRUCT_1"));
-    EXPECT_EQ(global_var->GetPtrStoredAtField("complex_global.string_field[1]"),
-                    configuration.GetVariablePointerToMem(RAM_MEM, 30, 0, 
-                    "CHAR"));
-    /*EXPECT_EQ(global_var->GetPtrStoredAtField("complex_global.string_field[2]"),
-                    configuration.GetVariablePointerToMem(RAM_MEM, 31, 0, 
-                    "CHAR"));*/
+
+    ASSERT_TRUE(Utils::TestEQPtrs(
+        global_var->GetPCVariableToField("complex_global.string_field[1]"),
+        configuration.GetVariablePointerToMem(RAM_MEM, 30, 0, "CHAR")));
+
+    ASSERT_TRUE(Utils::TestEQPtrs(
+        global_var->GetPCVariableToField("complex_global.string_field[2]"),
+        configuration.GetVariablePointerToMem(RAM_MEM, 31, 0, "CHAR")));
+
+    ASSERT_TRUE(Utils::TestEQPtrs(
+        global_var->GetPCVariableToField("complex_global.string_field[40]"),
+        configuration.GetVariablePointerToMem(RAM_MEM, 69, 0, "CHAR")));
 }

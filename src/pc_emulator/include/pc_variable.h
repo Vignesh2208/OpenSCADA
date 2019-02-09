@@ -107,7 +107,6 @@ namespace pc_emulator {
 
             void SetPtr(string NestedFieldName, PCVariable * ptr);
             PCVariable * GetPtrStoredAtField(string NestedFieldName);
-
             
             void SetPCVariableField(string NestedFieldName, string value);
             void SetPCVariableField(string NestedFieldName, void * value,
@@ -117,7 +116,6 @@ namespace pc_emulator {
                                                 PCVariable * From);
             template <typename T> T GetFieldValue(string NestedFieldName,
                                             int CategoryOfDataType);
-
             void GetFieldAttributes(string NestedFieldName, 
                             DataTypeFieldAttributes& FieldAttributes);
 
@@ -134,6 +132,8 @@ namespace pc_emulator {
             PCVariable& operator^(PCVariable& V );
             PCVariable& operator<<(PCVariable& V );
             PCVariable& operator>>(PCVariable& V );
+
+            
     };
 
     bool operator == (PCVariable& V1, PCVariable& V2);
@@ -141,6 +141,7 @@ namespace pc_emulator {
     bool operator < (PCVariable& V1, PCVariable& V2);
     bool operator <= (PCVariable& V1, PCVariable& V2);
     bool operator >= (PCVariable& V1, PCVariable& V2);
+    
 }
 
 #endif

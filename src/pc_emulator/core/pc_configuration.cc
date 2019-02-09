@@ -408,13 +408,18 @@ PCVariable * PCConfiguration::GetVariable(string NestedFieldName) {
 
     boost::split(results, NestedFieldName,
                 boost::is_any_of("."), boost::token_compress_on);
+    DataTypeFieldAttributes FieldAttributes;
     
     if  (results.size() == 1) {
         //no dot was found, try the global_variable
         if (__global_pou_var != nullptr
             && __global_pou_var->__VariableDataType->IsFieldPresent(
                                                     NestedFieldName)) {                               
-                return __global_pou_var->GetPCVariableToField(NestedFieldName);
+                __global_pou_var->GetFieldAttributes(NestedFieldName, FieldAttributes);
+                if (!Utils::IsFieldTypePtr(FieldAttributes.FieldInterfaceType))
+                    return __global_pou_var->GetPCVariableToField(NestedFieldName);
+                else
+                    return __global_pou_var->GetPtrStoredAtField(NestedFieldName);
             }
         return nullptr;
     } else {
@@ -423,8 +428,13 @@ PCVariable * PCConfiguration::GetVariable(string NestedFieldName) {
         if (resource == nullptr) {
             if (__global_pou_var != nullptr
             && __global_pou_var->__VariableDataType->IsFieldPresent(
-                                                    NestedFieldName))
-                return __global_pou_var->GetPCVariableToField(NestedFieldName);
+                                                    NestedFieldName)){
+                __global_pou_var->GetFieldAttributes(NestedFieldName, FieldAttributes);
+                if (!Utils::IsFieldTypePtr(FieldAttributes.FieldInterfaceType))
+                    return __global_pou_var->GetPCVariableToField(NestedFieldName);
+                else
+                    return __global_pou_var->GetPtrStoredAtField(NestedFieldName);
+            }
             else
                 return nullptr;
             

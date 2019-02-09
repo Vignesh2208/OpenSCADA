@@ -4,11 +4,13 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/trim.hpp>
 #include <vector>
 #include <limits.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <pwd.h>
+
 
 #include "src/pc_emulator/include/pc_variable.h"
 #include "src/pc_emulator/include/pc_datatype.h"
@@ -26,6 +28,58 @@ using DataTypeCategory = pc_specification::DataTypeCategory;
 using FieldIntfType = pc_specification::FieldInterfaceType;
 
 #define STRING(s) #s
+
+bool Utils::IsFieldTypePtr(int FieldInterfaceType) {
+    if (FieldInterfaceType == FieldIntfType::VAR_IN_OUT
+        || FieldInterfaceType == FieldIntfType::VAR_ACCESS
+        || FieldInterfaceType == FieldIntfType::VAR_EXTERNAL
+        || FieldInterfaceType == FieldIntfType::VAR_EXPLICIT_STORAGE)
+        return true;
+    return false;
+}
+
+bool Utils::TestEQPtrs(PCVariable * Var1, PCVariable *  Var2) {
+    if (!Var1 || !Var2)
+        return false;
+
+    if (Var1->__MemoryLocation == Var2->__MemoryLocation
+        && Var1->__ByteOffset == Var2->__ByteOffset &&
+        Var1->__BitOffset == Var2->__BitOffset)
+        return true;
+    
+    if (Var1->__MemoryLocation == Var2->__MemoryLocation) {
+        if (Var1->__ByteOffset == Var2->__ByteOffset)
+            std::cout << "Unequal Byte Offset " << std::endl;
+        else
+            std::cout << "Unequal Bit Offset " << std::endl;
+    } else {
+        std::cout << "Unequal MemLocations " << std::endl;
+    }
+
+    return false;
+}
+
+string Utils::GetInitialValueForArrayIdx(int Idx, string InitialValue,
+                                            PCDataType * ElementDataType,
+                                            PCConfiguration * configuration) {
+    std::vector<string> InitialValues;
+    string Init;
+    boost::trim_if(InitialValue,boost::is_any_of("\t ,{}"));
+    boost::split(InitialValues, InitialValue,
+    boost::is_any_of(",{}"), boost::token_compress_on);
+    if (!InitialValue.empty() &&  Idx < InitialValues.size()) {
+        Init = InitialValues[Idx];
+    }
+    else { 
+        auto got 
+        = configuration->__DataTypeDefaultInitialValues.find(
+                ElementDataType->__DataTypeCategory);
+        assert(got 
+            != configuration->__DataTypeDefaultInitialValues.end());
+        Init = got->second;
+    }
+    return Init;
+}
 
 string Utils::GetInstallationDirectory() {
 

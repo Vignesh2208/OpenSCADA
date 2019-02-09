@@ -55,6 +55,12 @@ namespace pc_emulator {
 
         static string ResolveAliasName(string AliasName,
                                 PCConfiguration * __configuration);
+        static string GetInitialValueForArrayIdx(int Idx, string InitialValue,
+                                            PCDataType * ElementDataType,
+                                            PCConfiguration * configuration);
+        static bool TestEQPtrs(PCVariable * Var1, PCVariable *  Var2);
+
+        static bool IsFieldTypePtr(int FieldInterfaceType);
     };
 }   
 

@@ -187,6 +187,8 @@ machine_spec {
             datatype_field {
                 field_name: "global_int_arr"
                 field_datatype_name: "INT"
+                dimension_1: 2
+                dimension_2: 2
                 intf_type: VAR_EXTERNAL
             }
             datatype_field {

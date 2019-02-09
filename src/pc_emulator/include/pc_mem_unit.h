@@ -26,6 +26,11 @@ namespace pc_emulator {
                                 int CopySizeBytes, int ToStartOffset);
 
             void operator=(PCMemUnit& MemUnit);
+            friend bool operator==(const PCMemUnit& MemUnit1,
+                                    const PCMemUnit& MemUnit2) {
+                return MemUnit1.__BaseStorageLocation.get()
+                            == MemUnit2.__BaseStorageLocation.get();
+            }
 
     };
 }

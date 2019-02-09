@@ -85,6 +85,8 @@ void PCDataType::AddDataTypeField(string FieldName, string FieldTypeName,
             case 1 : AddArrayDataTypeField(FieldName, DataType->__DataTypeName,
                         DataType->__DimensionSizes[0], InitialValue,
                         FieldIntfType, RangeMin, RangeMax);
+
+                    
                     break;
             case 2 : AddArrayDataTypeField(FieldName, DataType->__DataTypeName,
                         DataType->__DimensionSizes[0], 
@@ -95,6 +97,7 @@ void PCDataType::AddDataTypeField(string FieldName, string FieldTypeName,
                         "Dimensions cannot exceed 2 "); 
         }
 
+        
         
         return;
     }
@@ -116,6 +119,9 @@ void PCDataType::AddDataTypeField(string FieldName, string FieldTypeName,
         __SizeInBits += sizeof (PCDataType *)*8;
     } else {
         __SizeInBits += DataType->__SizeInBits;
+
+        if (__SizeInBits % 8 != 0)
+            __SizeInBits += (8 - __SizeInBits%8);
     }
     
     __NFields ++;
@@ -160,46 +166,17 @@ void PCDataType::AddArrayDataTypeField(string FieldName, string FieldTypeName,
     NewField.__Dimension2 = 1;
     __FieldsByInterfaceType[FieldIntfType].push_back(NewField);
 
+    if (FieldIntfType == FieldInterfaceType::VAR_IN_OUT ||
+        FieldIntfType == FieldInterfaceType::VAR_EXTERNAL ||
+        FieldIntfType == FieldInterfaceType::VAR_ACCESS ) {
+        // this is a pointer
+        __SizeInBits += sizeof (PCDataType *)*8;
+    } else {
+        __SizeInBits += DataType->__SizeInBits*NewField.__Dimension1;
 
-    /*
-    std::vector<std::string> InitialValues;
-    boost::trim_if(InitialValue, boost::is_any_of("\t ,{}"));
-    boost::split(InitialValues, InitialValue,
-                boost::is_any_of(",{}"), boost::token_compress_on); 
-    
-
-
-    for(int i = 0; i < DimensionSize; i++) {
-
-        string Init;
-        if (!InitialValue.empty() && i < InitialValues.size()) {
-            Init = InitialValues[i];
-        }
-        else { 
-            auto got = __configuration->__DataTypeDefaultInitialValues.find(
-                            DataType->__DataTypeCategory);
-            assert(got 
-                    != __configuration->__DataTypeDefaultInitialValues.end());
-            Init = got->second;
-        }
-        PCDataTypeField NewField(FieldName + "[" + std::to_string(i+1) + "]",
-                                FieldTypeName, DataType->__DataTypeCategory, 
-                                RangeMin, RangeMax, 
-                                Init,
-                                FieldIntfType, DataType);
-        __FieldsByInterfaceType[FieldIntfType].push_back(NewField);
-        if (FieldIntfType == FieldInterfaceType::VAR_IN_OUT ||
-            FieldIntfType == FieldInterfaceType::VAR_EXTERNAL ||
-            FieldIntfType == FieldInterfaceType::VAR_ACCESS ) {
-            // this is a pointer
-            __SizeInBits += sizeof (PCDataType *)*8;
-        } else {
-            __SizeInBits += DataType->__SizeInBits;
-        }
-        __NFields ++;
+        if (__SizeInBits % 8 != 0)
+            __SizeInBits += (8 - __SizeInBits%8);
     }
-    */
-    
     
 }
 
@@ -239,47 +216,18 @@ void PCDataType::AddArrayDataTypeField(string FieldName, string FieldTypeName,
     NewField.__Dimension2 = DimensionSize2;
     __FieldsByInterfaceType[FieldIntfType].push_back(NewField);
 
+    if (FieldIntfType == FieldInterfaceType::VAR_IN_OUT ||
+        FieldIntfType == FieldInterfaceType::VAR_EXTERNAL ||
+        FieldIntfType == FieldInterfaceType::VAR_ACCESS ) {
+        // this is a pointer
+        __SizeInBits += sizeof (PCDataType *)*8;
+    } else {
+        __SizeInBits += DataType->__SizeInBits*NewField.__Dimension1
+                                        *NewField.__Dimension2;
 
-    /*
-    std::vector<std::string> InitialValues;
-    boost::trim_if(InitialValue, boost::is_any_of("\t ,{}"));
-    boost::split(InitialValues, InitialValue,
-                boost::is_any_of(",{}"), boost::token_compress_on); 
-
-    for(int i = 0; i < DimensionSize1; i++) {
-        for(int j = 0; j < DimensionSize2; j++) {
-            string Init;
-            if (!InitialValue.empty() && 
-                (i*DimensionSize2 + j) < InitialValues.size()) {
-                Init = InitialValues[i*DimensionSize2 + j];
-            }
-            else { 
-                auto got = __configuration->__DataTypeDefaultInitialValues.find(
-                                DataType->__DataTypeCategory);
-                assert(got 
-                    != __configuration->__DataTypeDefaultInitialValues.end());
-                Init = got->second;
-            }
-            PCDataTypeField NewField(
-                                FieldName + "[" + std::to_string(i+1) + "]"
-                                + "[" + std::to_string(j+1) + "]",
-                                FieldTypeName, DataType->__DataTypeCategory, 
-                                RangeMin, RangeMax,
-                                Init,
-                                FieldIntfType, DataType);
-            __FieldsByInterfaceType[FieldIntfType].push_back(NewField);
-            if (FieldIntfType == FieldInterfaceType::VAR_IN_OUT ||
-                FieldIntfType == FieldInterfaceType::VAR_EXTERNAL ||
-                FieldIntfType == FieldInterfaceType::VAR_ACCESS ) {
-                // this is a pointer
-                __SizeInBits += sizeof (PCDataType *)*8;
-            } else {
-                __SizeInBits += DataType->__SizeInBits;
-            }
-            __NFields ++;
-        }
+        if (__SizeInBits % 8 != 0)
+            __SizeInBits += (8 - __SizeInBits%8);
     }
-    */
     
 }
 
@@ -409,51 +357,8 @@ void PCDataType::AddArrayDataTypeFieldAT(string FieldName, string FieldTypeName,
     NewField.__Dimension2 = 1;
     NewField.SetExplicitStorageConstraints(MemType, ByteOffset, 0);
     __FieldsByInterfaceType[FieldInterfaceType::VAR_EXPLICIT_STORAGE]
-                .push_back(NewField); 
-
-    /*
-    std::vector<std::string> InitialValues;
-    boost::trim_if(InitialValue, boost::is_any_of("\t ,{}"));
-    boost::split(InitialValues, InitialValue,
-                boost::is_any_of(",{}"), boost::token_compress_on); 
-
-    int CurrBitOffset = BitOffset;
-    for(int i = 0; i < DimensionSize; i++) {
-
-        string Init;
-        if ( !InitialValue.empty() && i < InitialValues.size()) {
-            Init = InitialValues[i];
-        }
-        else { 
-            auto got = __configuration->__DataTypeDefaultInitialValues.find(
-                            DataType->__DataTypeCategory);
-            assert(got 
-                    != __configuration->__DataTypeDefaultInitialValues.end());
-            Init = got->second;
-        }
-
-        PCDataTypeField NewField(FieldName + "[" + std::to_string(i+1) + "]",
-                                FieldTypeName, DataType->__DataTypeCategory, 
-                                RangeMin, RangeMax, Init,
-                                FieldInterfaceType::VAR_EXPLICIT_STORAGE,
-                                DataType);
-        
-        if (DataType->__DataTypeCategory == DataTypeCategory::BOOL) {
-            NewField.SetExplicitStorageConstraints(MemType,
-                    ByteOffset + CurrBitOffset / 8, CurrBitOffset % 8);
-            CurrBitOffset ++;
-        } else {
-            NewField.SetExplicitStorageConstraints(MemType,
-                    ByteOffset + i*(DataType->__SizeInBits / 8), 0);
-        }
-        
-        __FieldsByInterfaceType[FieldInterfaceType::VAR_EXPLICIT_STORAGE]
-                    .push_back(NewField);
-        // this is a pointer
-        __SizeInBits += sizeof (PCDataType *)*8;
-        __NFields ++;
-    }    
-    */
+                .push_back(NewField);
+    __SizeInBits += sizeof (PCDataType *)*8; 
 }
 
 void PCDataType::AddArrayDataTypeFieldAT(string FieldName, string FieldTypeName,
@@ -495,59 +400,8 @@ void PCDataType::AddArrayDataTypeFieldAT(string FieldName, string FieldTypeName,
     NewField.SetExplicitStorageConstraints(MemType, ByteOffset, 0);
     __FieldsByInterfaceType[FieldInterfaceType::VAR_EXPLICIT_STORAGE]
                 .push_back(NewField); 
-
+     __SizeInBits += sizeof (PCDataType *)*8;
     assert(__DataTypeCategory == DataTypeCategory::POU);
-
-    /*
-    std::vector<std::string> InitialValues;
-    boost::trim_if(InitialValue, boost::is_any_of("\t ,{}"));
-    boost::split(InitialValues, InitialValue,
-                boost::is_any_of(",{}"), boost::token_compress_on); 
-    
-
-    int CurrBitOffset = BitOffset;
-    for(int i = 0; i < DimensionSize1; i++) {
-        for(int j = 0; j < DimensionSize2; j++) {
-            string Init;
-            if (!InitialValue.empty() && 
-                (i*DimensionSize2 + j) < InitialValues.size()) {
-                Init = InitialValues[i*DimensionSize2 + j];
-            }
-            else { 
-                auto got = __configuration->__DataTypeDefaultInitialValues.find(
-                                DataType->__DataTypeCategory);
-                assert(got 
-                    != __configuration->__DataTypeDefaultInitialValues.end());
-                Init = got->second;
-            }
-
-            PCDataTypeField NewField(
-                                FieldName + "[" + std::to_string(i+1) + "]"
-                                + "[" + std::to_string(j+1) + "]",
-                                FieldTypeName, DataType->__DataTypeCategory, 
-                                RangeMin, RangeMax, Init,
-                                FieldInterfaceType::VAR_EXPLICIT_STORAGE,
-                                DataType);
-            
-            if (DataType->__DataTypeCategory == DataTypeCategory::BOOL) {
-                NewField.SetExplicitStorageConstraints(MemType,
-                        ByteOffset + CurrBitOffset / 8, CurrBitOffset % 8);
-                CurrBitOffset ++;
-            } else {
-                NewField.SetExplicitStorageConstraints(MemType,
-                        ByteOffset + (i*DimensionSize2 + j)*(
-                            DataType->__SizeInBits / 8), 0);
-            }
-
-            __FieldsByInterfaceType[FieldInterfaceType::VAR_EXPLICIT_STORAGE]
-                        .push_back(NewField);
-            
-            // this is a pointer
-            __SizeInBits += sizeof (PCDataType *)*8;
-            __NFields ++;
-        }
-    }
-    */
 }
 
 
@@ -558,7 +412,7 @@ void PCDataType::SetElementaryDataTypeAttributes(string InitialValue,
     string InitValue, DataTypeName;
     switch(__DataTypeCategory) {
         case DataTypeCategory::BOOL :     
-                            __SizeInBits = 8, DataTypeName = "BOOL";
+                            __SizeInBits = 1, DataTypeName = "BOOL";
                             InitValue = is_empty ? "0" : InitialValue;
                             break;
         case DataTypeCategory::BYTE :     
@@ -739,7 +593,30 @@ PCDataType::PCDataType(PCConfiguration* configuration,
                                 == FieldInterfaceType::VAR_ACCESS ) {
                             __SizeInBits += sizeof (PCDataType *)*8;
                         } else {
-                            __SizeInBits += FieldDataType->__SizeInBits;
+
+                            if (field.__FieldTypeCategory
+                                == DataTypeCategory::ARRAY
+                                && field.__FieldTypePtr->__DataTypeCategory
+                                == DataTypeCategory::BOOL) {
+                                // this field is a boolean array
+                                // round the datatype size to be byte aligned
+                                int TotalElements  = field.__Dimension1;
+                                if (field.__NDimensions == 2)
+                                    TotalElements *= field.__Dimension2;
+                                
+                                __SizeInBits += TotalElements;
+                                if (TotalElements %8 != 0)
+                                    __SizeInBits += (8 - TotalElements%8);
+                                assert(__SizeInBits % 8 == 0);
+
+                            } else if (field.__FieldTypePtr->__DataTypeCategory
+                                        == DataTypeCategory::BOOL) {
+                                // this field is a boolean variable
+                                // round the datatype size to nearest byte
+                                __SizeInBits += 8;
+                            } else {
+                                __SizeInBits += FieldDataType->__SizeInBits;
+                            }
                         } 
 
                     }
@@ -822,22 +699,6 @@ PCDataType::PCDataType(PCConfiguration* configuration,
     assert (InitialValue == "" ||
             (int)InitialValues.size() == DimSize);                                       
 
-    /*
-    for(int i = 0; i < DimSize; i++) {
-        string Init = (InitialValue == "") ? DataType->__InitialValue :
-                            InitialValues[i];
-        PCDataTypeField NewField(
-                            "[" + std::to_string(i+1) + "]", 
-                            DataTypeName,
-                            DataType->__DataTypeCategory, 
-                            __RangeMin, __RangeMax,
-                            Init, FieldInterfaceType::NA, DataType);
-        __FieldsByInterfaceType[FieldInterfaceType::NA].push_back(
-            NewField);
-        
-        
-    }*/
-
 
     __NFields = DimSize;
     __SizeInBits = DimSize*DataType->__SizeInBits;
@@ -895,24 +756,6 @@ PCDataType::PCDataType(PCConfiguration* configuration,
     assert (InitialValue == "" ||
             (int)InitialValues.size() == Dim1Size*Dim2Size);                                       
 
-    /*
-    for(int i = 0; i < Dim1Size; i++) {
-        for(int j = 0; j < Dim2Size; j++) {
-            string Init = (InitialValue == "") ? DataType->__InitialValue :
-                                InitialValues[i*Dim2Size + j];
-            PCDataTypeField NewField(
-                    "[" + std::to_string(i+1) + "][" + std::to_string(j+1) + "]", 
-                    DataTypeName,
-                    DataType->__DataTypeCategory, 
-                    __RangeMin, __RangeMax,
-                    Init, FieldInterfaceType::NA, DataType);
-            __FieldsByInterfaceType[FieldInterfaceType::NA].push_back(
-                NewField);
-            
-        }
-    }*/
-
-
    __NFields = Dim1Size*Dim2Size;
     __SizeInBits = __NFields*DataType->__SizeInBits;
     __DimensionSizes.push_back(Dim1Size);
@@ -935,43 +778,47 @@ bool PCDataType::CheckRemFields(std::vector<string>& NestedFields, int StartPos,
             IntfType <= FieldInterfaceType::NA; IntfType ++) {
             for(auto& DefinedField: Current->__FieldsByInterfaceType[IntfType]) {
                 PCDataType * FieldDataType = DefinedField.__FieldTypePtr;
+                if(AccessedFieldName == DefinedField.__FieldName) {
+                    
+                    if (DefinedField.__FieldTypeCategory 
+                            != DataTypeCategory::ARRAY) {
 
-                if (DefinedField.__FieldTypeCategory 
-                        != DataTypeCategory::ARRAY) {
-
-                    assert(FieldDataType != nullptr);
-                    if(AccessedFieldName == DefinedField.__FieldName) {
+                        assert(FieldDataType != nullptr);                
                         return CheckRemFields(NestedFields, i+1, FieldDataType);
-                    }
-                } else {
-                    if (i == (int)NestedFields.size() - 1)
-                        return true;
-
-                    int NDims = FieldDataType->__DimensionSizes.size();
-
-                    if (NDims == 1) {
-                        assert(i + 1 < (int)NestedFields.size());
-                        int idx = std::stoi(NestedFields[i+1]);
-                        if (idx < FieldDataType->__DimensionSizes[0])
-                            return CheckRemFields(NestedFields, i+2,
-                                LookupDataType(FieldDataType->__DataTypeName));
-                        else 
-                            return false;
-                    } else if (NDims == 2) {
-                        assert(i + 2 < (int)NestedFields.size());
-                        int idx1 = std::stoi(NestedFields[i+1]);
-                        int idx2 = std::stoi(NestedFields[i+2]);
-                        if (idx1 < FieldDataType->__DimensionSizes[0]
-                            && idx2 < FieldDataType->__DimensionSizes[1])
-                            return CheckRemFields(NestedFields, i+3,
-                                LookupDataType(FieldDataType->__DataTypeName));
-                        else
-                            return false;
-
+        
                     } else {
-                        return false;
-                    }
-                } 
+                        std::cout << " Found Array Field!: " 
+                            << DefinedField.__FieldName << std::endl;
+                        if (i == (int)NestedFields.size() - 1)
+                            return true;
+
+                        int NDims = DefinedField.__NDimensions;
+
+                        if (NDims == 1) {
+                            assert(i + 1 < (int)NestedFields.size());
+                            int idx = std::stoi(NestedFields[i+1]);
+                            if (idx <= DefinedField.__Dimension1)
+                                return CheckRemFields(NestedFields, i+2,
+                                    LookupDataType(FieldDataType->__DataTypeName));
+                            else 
+                                return false;
+                        } else if (NDims == 2) {
+                            assert(i + 2 < (int)NestedFields.size());
+                            int idx1 = std::stoi(NestedFields[i+1]);
+                            int idx2 = std::stoi(NestedFields[i+2]);
+                            std::cout << " Idx1, Idx2: " << idx1 << "," << idx2 << std::endl;
+                            if (idx1 <= DefinedField.__Dimension1
+                                && idx2 <= DefinedField.__Dimension2)
+                                return CheckRemFields(NestedFields, i+3,
+                                    LookupDataType(FieldDataType->__DataTypeName));
+                            else
+                                return false;
+
+                        } else {
+                            return false;
+                        }
+                    } 
+                }
             }
         }
     }
@@ -989,6 +836,32 @@ bool PCDataType::IsFieldPresent(string NestedFieldName) {
                 boost::is_any_of(".[]"), boost::token_compress_on);
     if (NestedFields.empty()) {
         return true;           
+    }
+
+    std:: cout << " DataTypeName: " << __DataTypeName
+                << " NestedFieldName: " << NestedFieldName << std::endl;
+    if (__DataTypeCategory == DataTypeCategory::ARRAY) {
+        int NDims = __DimensionSizes.size();
+        int idx1, idx2, nxt_nested_field;
+        if (NDims == 1) {
+            assert(0 < NestedFields.size());
+            idx1 = std::stoi(NestedFields[0]);
+            if (idx1 > __DimensionSizes[0])
+                return false;
+            nxt_nested_field = 1;
+        } else if (NDims == 2) {
+            assert(1 < NestedFields.size());
+            idx1 = std::stoi(NestedFields[0]);
+            idx2 = std::stoi(NestedFields[1]);
+
+            if (idx1 > __DimensionSizes[0] || idx2 > __DimensionSizes[1])
+                return false;
+            nxt_nested_field = 2;
+        } else {
+            return false;
+        }
+        return CheckRemFields(NestedFields, nxt_nested_field, 
+                                LookupDataType(__DataTypeName));
     }
     
     return CheckRemFields(NestedFields, 0, this);
@@ -1054,23 +927,21 @@ bool PCDataType::GetPCDataTypeFieldOfArrayElement(
         } else
             return false;
     }
-
-    if (DefinedField.__FieldInterfaceType == VAR_EXPLICIT_STORAGE) {    
-        if (Result.__FieldTypePtr->__DataTypeCategory
-            == DataTypeCategory::BOOL) {
-            FieldStorageByteOffset = 
-                (DefinedField.__StorageByteOffset +
-                tot_offset/8);
-            FieldStorageBitOffset = 
-                (DefinedField.__StorageBitOffset +
-                tot_offset%8);
-        } else {
-            FieldStorageByteOffset = 
-                (DefinedField.__StorageByteOffset +
-                tot_offset*(Result
-                .__FieldTypePtr->__SizeInBits/8)); 
-            FieldStorageBitOffset = 0;
-        }
+ 
+    if (Result.__FieldTypePtr->__DataTypeCategory
+        == DataTypeCategory::BOOL) {
+        FieldStorageByteOffset = 
+            (DefinedField.__StorageByteOffset +
+            tot_offset/8);
+        FieldStorageBitOffset = 
+            (DefinedField.__StorageBitOffset +
+            tot_offset%8);
+    } else {
+        FieldStorageByteOffset = 
+            (DefinedField.__StorageByteOffset +
+            tot_offset*(Result
+            .__FieldTypePtr->__SizeInBits/8)); 
+        FieldStorageBitOffset = 0;
     }
 
     if (!InitialValue.empty() && 
@@ -1180,6 +1051,8 @@ bool PCDataType::GetPCDataTypeField(string NestedFieldName,
     if (__DataTypeCategory == ARRAY) {
         int NDims = __DimensionSizes.size();
         int idx1, idx2, tot_offset;
+        int FieldStorageByteOffset;
+        int FieldStorageBitOffset;
 
         string InitialValue = __InitialValue;
         std::vector<std::string> InitialValues;
@@ -1201,8 +1074,6 @@ bool PCDataType::GetPCDataTypeField(string NestedFieldName,
             Result.__Dimension2 
             = Result.__FieldTypePtr->__DimensionSizes[1];
         Result.__StorageMemType = -1;
-        Result.__StorageByteOffset = -1;
-        Result.__StorageBitOffset = -1;
         Result.__FieldTypeCategory = Result.__FieldTypePtr->__DataTypeCategory;
         Result.__FieldTypeName = Result.__FieldTypePtr->__DataTypeName;
         if (NDims == 1) {
@@ -1229,6 +1100,18 @@ bool PCDataType::GetPCDataTypeField(string NestedFieldName,
         } else {
             return false;
         }
+
+        if (Result.__FieldTypePtr->__DataTypeCategory
+            == DataTypeCategory::BOOL) {
+            FieldStorageByteOffset = tot_offset/8;
+            FieldStorageBitOffset = tot_offset%8;
+        } else {
+            FieldStorageByteOffset = tot_offset*(Result
+                .__FieldTypePtr->__SizeInBits/8); 
+            FieldStorageBitOffset = 0;
+        }
+        Result.__StorageByteOffset = FieldStorageByteOffset;
+        Result.__StorageBitOffset = FieldStorageBitOffset;
 
         if (!InitialValue.empty() && 
             (tot_offset) < InitialValues.size()) {

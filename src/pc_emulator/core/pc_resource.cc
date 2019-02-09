@@ -45,6 +45,9 @@ PCVariable * PCResource::GetVariable(string NestedFieldName) {
     boost::split(results, NestedFieldName,
                 boost::is_any_of("."), boost::token_compress_on);
 
+    DataTypeFieldAttributes FieldAttributes;
+            
+
     if  (results.size() == 1) {
         //not . was found
         // this may belong to global variable
@@ -59,8 +62,15 @@ PCVariable * PCResource::GetVariable(string NestedFieldName) {
             }
             
             if (global_var != nullptr && 
-                global_var->__VariableDataType->IsFieldPresent(NestedFieldName))
-                return global_var->GetPCVariableToField(NestedFieldName);
+                global_var->__VariableDataType->IsFieldPresent(NestedFieldName)){
+
+                global_var->GetFieldAttributes(NestedFieldName, FieldAttributes);
+
+                if (!Utils::IsFieldTypePtr(FieldAttributes.FieldInterfaceType))
+                    return global_var->GetPCVariableToField(NestedFieldName);
+                else
+                    return global_var->GetPtrStoredAtField(NestedFieldName);
+            }
             else {
                 // this may be referring to a PoU variable
                 auto got = __ResourcePoUVars.find(results[0]);
@@ -87,8 +97,13 @@ PCVariable * PCResource::GetVariable(string NestedFieldName) {
                 global_var = got->second;
             }
             if (global_var != nullptr && 
-                global_var->__VariableDataType->IsFieldPresent(NestedFieldName))
-                return global_var->GetPCVariableToField(NestedFieldName);
+                global_var->__VariableDataType->IsFieldPresent(NestedFieldName)){
+                global_var->GetFieldAttributes(NestedFieldName, FieldAttributes);
+                if (!Utils::IsFieldTypePtr(FieldAttributes.FieldInterfaceType))
+                    return global_var->GetPCVariableToField(NestedFieldName);
+                else
+                    return global_var->GetPtrStoredAtField(NestedFieldName);
+            }
             else
                 return nullptr;
 
@@ -97,8 +112,15 @@ PCVariable * PCResource::GetVariable(string NestedFieldName) {
             assert(Base != nullptr);
             string Field = NestedFieldName.substr(
                     NestedFieldName.find('.') + 1, string::npos);
-            if (Base->__VariableDataType->IsFieldPresent(Field))
+            if (Base->__VariableDataType->IsFieldPresent(Field)) {
+                Base->GetFieldAttributes(NestedFieldName, FieldAttributes);
+
+                if (!Utils::IsFieldTypePtr(FieldAttributes.FieldInterfaceType))
+                    return Base->GetPCVariableToField(NestedFieldName);
+                else
+                    return Base->GetPtrStoredAtField(NestedFieldName);
                 return Base->GetPCVariableToField(Field);
+            }
             else
                 return nullptr;
         }
@@ -116,7 +138,8 @@ PCVariable * PCResource::GetPoUVariable(string PoUName) {
 PCVariable * PCResource::GetGlobalVariable(string NestedFieldName) {
     assert(!NestedFieldName.empty());
     std::vector<string> results;
-    boost::split(results, NestedFieldName, [](char c){return c == '.';});
+    boost::split(results, NestedFieldName,
+                boost::is_any_of("."), boost::token_compress_on);
 
     for (auto it = __ResourcePoUVars.begin(); 
                     it != __ResourcePoUVars.end(); it ++) {
@@ -126,10 +149,12 @@ PCVariable * PCResource::GetGlobalVariable(string NestedFieldName) {
             var->GetFieldAttributes(NestedFieldName, 
                                     FieldAttributes);
             if (FieldAttributes.FieldInterfaceType 
-                == FieldIntfType::VAR_GLOBAL
-                || FieldAttributes.FieldInterfaceType 
-                == FieldIntfType::VAR_EXPLICIT_STORAGE) {
+                == FieldIntfType::VAR_GLOBAL)
                 return var->GetPCVariableToField(NestedFieldName);
+
+            if (FieldAttributes.FieldInterfaceType 
+                == FieldIntfType::VAR_EXPLICIT_STORAGE) {
+                return var->GetPtrStoredAtField(NestedFieldName);
             }
         }
     }

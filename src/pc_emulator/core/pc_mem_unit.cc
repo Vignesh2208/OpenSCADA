@@ -38,7 +38,8 @@ void PCMemUnit::SetMemUnitLocation(PCMemUnit * From) {
 }
 
 void * PCMemUnit::GetPointerToMemory(int Offset) {
-    if (__Initialized && Offset < __MemUnitSizeBytes) {
+    if (__Initialized) {
+        assert(Offset < __MemUnitSizeBytes);
         return (void *)&__BaseStorageLocation.get()[Offset];
     }
 
