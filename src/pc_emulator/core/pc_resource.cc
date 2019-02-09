@@ -40,91 +40,36 @@ void PCResource::RegisterPoUVariable(string VariableName, PCVariable * Var) {
 
 PCVariable * PCResource::GetVariable(string NestedFieldName) {
     assert(!NestedFieldName.empty());
-    std::vector<string> results;
-    //boost::split(results, NestedFieldName, [](char c){return c == '.';});
-    boost::split(results, NestedFieldName,
-                boost::is_any_of("."), boost::token_compress_on);
-
     DataTypeFieldAttributes FieldAttributes;
-            
+    auto got = __ResourcePoUVars.find(
+            "__RESOURCE_" + __ResourceName + "_GLOBAL__");
+    PCVariable * global_var;
 
-    if  (results.size() == 1) {
-        //not . was found
-        // this may belong to global variable
-            auto got = __ResourcePoUVars.find(
-                    "__RESOURCE_" + __ResourceName + "_GLOBAL__");
-            PCVariable * global_var;
+    if (got == __ResourcePoUVars.end())
+        global_var = nullptr;
+    else {
+        global_var = got->second;
+    }
+    
+    if (global_var != nullptr && 
+        global_var->__VariableDataType->IsFieldPresent(NestedFieldName)){
 
-            if (got == __ResourcePoUVars.end())
-                global_var = nullptr;
-            else {
-                global_var = got->second;
-            }
-            
-            if (global_var != nullptr && 
-                global_var->__VariableDataType->IsFieldPresent(NestedFieldName)){
+        global_var->GetFieldAttributes(NestedFieldName, FieldAttributes);
 
-                global_var->GetFieldAttributes(NestedFieldName, FieldAttributes);
-
-                if (!Utils::IsFieldTypePtr(FieldAttributes.FieldInterfaceType))
-                    return global_var->GetPCVariableToField(NestedFieldName);
-                else
-                    return global_var->GetPtrStoredAtField(NestedFieldName);
-            }
-            else {
-                // this may be referring to a PoU variable
-                auto got = __ResourcePoUVars.find(results[0]);
-                 if (got == __ResourcePoUVars.end()) {
-                    return nullptr;
-                } else {
-                    return got->second;
-                }
-            }
-    } else {
-        // dot was found; could be of the form resource_pou_var.field_name
-        std::unordered_map<std::string, PCVariable*>::const_iterator got = 
-                        __ResourcePoUVars.find(results[0]);
-        if (got == __ResourcePoUVars.end()) {
-            
-            // this may belong to global variable
-            auto got = __ResourcePoUVars.find(
-                    "__RESOURCE_" + __ResourceName + "_GLOBAL__");
-            PCVariable * global_var;
-
-            if (got == __ResourcePoUVars.end())
-                global_var = nullptr;
-            else {
-                global_var = got->second;
-            }
-            if (global_var != nullptr && 
-                global_var->__VariableDataType->IsFieldPresent(NestedFieldName)){
-                global_var->GetFieldAttributes(NestedFieldName, FieldAttributes);
-                if (!Utils::IsFieldTypePtr(FieldAttributes.FieldInterfaceType))
-                    return global_var->GetPCVariableToField(NestedFieldName);
-                else
-                    return global_var->GetPtrStoredAtField(NestedFieldName);
-            }
-            else
+        if (!Utils::IsFieldTypePtr(FieldAttributes.FieldInterfaceType))
+            return global_var->GetPCVariableToField(NestedFieldName);
+        else
+            return global_var->GetPtrStoredAtField(NestedFieldName);
+    }
+    else {
+        // this may be referring to a PoU variable
+        auto got = __ResourcePoUVars.find(NestedFieldName);
+            if (got == __ResourcePoUVars.end()) {
                 return nullptr;
-
         } else {
-            PCVariable * Base = got->second;
-            assert(Base != nullptr);
-            string Field = NestedFieldName.substr(
-                    NestedFieldName.find('.') + 1, string::npos);
-            if (Base->__VariableDataType->IsFieldPresent(Field)) {
-                Base->GetFieldAttributes(NestedFieldName, FieldAttributes);
-
-                if (!Utils::IsFieldTypePtr(FieldAttributes.FieldInterfaceType))
-                    return Base->GetPCVariableToField(NestedFieldName);
-                else
-                    return Base->GetPtrStoredAtField(NestedFieldName);
-                return Base->GetPCVariableToField(Field);
-            }
-            else
-                return nullptr;
+            return got->second;
         }
-    } 
+    }
 }
 
 PCVariable * PCResource::GetPoUVariable(string PoUName) {
@@ -135,7 +80,9 @@ PCVariable * PCResource::GetPoUVariable(string PoUName) {
     return got->second;
 }
 
-PCVariable * PCResource::GetGlobalVariable(string NestedFieldName) {
+// Returns a global variable or a directly represented variable declared
+// by any of the POUs defined in this resource provided the NestedFieldName matches
+PCVariable * PCResource::GetPOUGlobalVariable(string NestedFieldName) {
     assert(!NestedFieldName.empty());
     std::vector<string> results;
     boost::split(results, NestedFieldName,
@@ -211,27 +158,46 @@ void PCResource::InitializeAllPoUVars() {
                 Utils::InitializeDataType(__configuration, new_var_type,
                                         pou_var);
 
-                if (pou_var.pou_type() != PoUType::FC) {
-                    PCVariable * new_pou_var = new PCVariable(
-                        __configuration,
-                        this, pou_var.name(), pou_var.name());
-                    
+                
+                PCVariable * new_pou_var = new PCVariable(
+                    __configuration,
+                    this, pou_var.name(), pou_var.name());
+                RegisterPoUVariable(pou_var.name(), new_pou_var);
 
-                    RegisterPoUVariable(pou_var.name(), new_pou_var);
-                }
+                if (pou_var.pou_type() == PoUType::FC)
+                    new_pou_var->__VariableDataType->__PoUType = PoUType::FC;
+                else if (pou_var.pou_type() == PoUType::FB)
+                    new_pou_var->__VariableDataType->__PoUType = PoUType::FB;
+                else
+                    new_pou_var->__VariableDataType->__PoUType = PoUType::PROGRAM;
             }
 
             for(auto it = __ResourcePoUVars.begin();
                     it != __ResourcePoUVars.end(); it ++) {
                 PCVariable * pou_var = it->second;
                 pou_var->AllocateAndInitialize();
+            
+                Utils::ValidatePOUDefinition(pou_var, __configuration);
             }
 
             for(auto it = __ResourcePoUVars.begin();
                     it != __ResourcePoUVars.end(); it ++) {
                 PCVariable * pou_var = it->second;
-                pou_var->ResolveAllExternalFields();
+
+                if (pou_var->__VariableDataType->__PoUType 
+                    == pc_specification::PoUType::PROGRAM)
+                    pou_var->ResolveAllExternalFields(); // First resolve external fields in all programs
             }
+
+            for(auto it = __ResourcePoUVars.begin();
+                    it != __ResourcePoUVars.end(); it ++) {
+                PCVariable * pou_var = it->second;
+
+                if (pou_var->__VariableDataType->__PoUType 
+                    == pc_specification::PoUType::FB)
+                    pou_var->ResolveAllExternalFields(); //  Next resolve external fields in all Function Blocks
+            }
+            // No need to do this for FCs because they wouldn't have any external fields
 
             break;
         }
@@ -380,7 +346,7 @@ Task * PCResource::GetInterruptTaskToExecute() {
         PCVariable * trigger;
         trigger = __configuration->GetVariable(it->first);
         if(!trigger) {
-            trigger = GetGlobalVariable(it->first);
+            trigger = GetPOUGlobalVariable(it->first);
             if(!trigger)
                 __configuration->PCLogger->RaiseException("Invalid trigger: "
                         + it->first);

@@ -63,8 +63,8 @@ namespace pc_emulator {
             __FieldInterfaceType(FieldInterfaceType),
             __FieldTypePtr(FieldTypePtr), __StorageMemType(-1), 
             __StorageByteOffset(-1), __StorageBitOffset(-1),
-             __NDimensions(-1), __Dimension1(-1),
-             __Dimension2(-1) {};
+            __NDimensions(-1), __Dimension1(-1),
+            __Dimension2(-1) {};
 
         void SetExplicitStorageConstraints(int MemType, int ByteOffset,
                                             int BitOffset);
@@ -88,6 +88,7 @@ namespace pc_emulator {
             PCConfiguration * __configuration;
             unordered_map<int, std::vector<PCDataTypeField>> __FieldsByInterfaceType;
             DataTypeCategory __DataTypeCategory;
+            int __PoUType;
             int __SizeInBits;
             int __NFields;
             s64 __RangeMin, __RangeMax;

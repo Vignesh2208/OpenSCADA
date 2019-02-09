@@ -61,6 +61,9 @@ namespace pc_emulator {
         static bool TestEQPtrs(PCVariable * Var1, PCVariable *  Var2);
 
         static bool IsFieldTypePtr(int FieldInterfaceType);
+
+        static void ValidatePOUDefinition(PCVariable * POUVar, 
+                                            PCConfiguration * configuration);
     };
 }   
 

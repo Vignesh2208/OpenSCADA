@@ -299,6 +299,9 @@ void PCConfiguration::RegisterAllComplexDataTypes() {
         __global_pou_var = new PCVariable(this, nullptr,
                                 "__CONFIG_GLOBAL_VAR__", "__CONFIG_GLOBAL__");
         __global_pou_var->AllocateAndInitialize();
+        __global_pou_var->__VariableDataType->__PoUType 
+                = pc_specification::PoUType::PROGRAM;
+        Utils::ValidatePOUDefinition(__global_pou_var, this);
         
     }
     
@@ -317,7 +320,9 @@ void PCConfiguration::RegisterAllComplexDataTypes() {
         __access_pou_var = new PCVariable(this, nullptr,
                                 "__CONFIG_ACCESS_VAR__", "__CONFIG_ACCESS__");
         __access_pou_var->AllocateAndInitialize();
-
+        __access_pou_var->__VariableDataType->__PoUType 
+                        = pc_specification::PoUType::PROGRAM;
+        Utils::ValidatePOUDefinition(__access_pou_var, this);
         // now we need to set pointers to some fields of this variable
 
         for (auto& field : 
@@ -409,42 +414,27 @@ PCVariable * PCConfiguration::GetVariable(string NestedFieldName) {
     boost::split(results, NestedFieldName,
                 boost::is_any_of("."), boost::token_compress_on);
     DataTypeFieldAttributes FieldAttributes;
-    
-    if  (results.size() == 1) {
-        //no dot was found, try the global_variable
+    PCResource * resource = RegisteredResources.GetResource(results[0]);
+    if (resource == nullptr) {
         if (__global_pou_var != nullptr
-            && __global_pou_var->__VariableDataType->IsFieldPresent(
-                                                    NestedFieldName)) {                               
-                __global_pou_var->GetFieldAttributes(NestedFieldName, FieldAttributes);
-                if (!Utils::IsFieldTypePtr(FieldAttributes.FieldInterfaceType))
-                    return __global_pou_var->GetPCVariableToField(NestedFieldName);
-                else
-                    return __global_pou_var->GetPtrStoredAtField(NestedFieldName);
-            }
-        return nullptr;
-    } else {
-        // dot was found; could be of the form resource.field_name
-        PCResource * resource = RegisteredResources.GetResource(results[0]);
-        if (resource == nullptr) {
-            if (__global_pou_var != nullptr
-            && __global_pou_var->__VariableDataType->IsFieldPresent(
-                                                    NestedFieldName)){
-                __global_pou_var->GetFieldAttributes(NestedFieldName, FieldAttributes);
-                if (!Utils::IsFieldTypePtr(FieldAttributes.FieldInterfaceType))
-                    return __global_pou_var->GetPCVariableToField(NestedFieldName);
-                else
-                    return __global_pou_var->GetPtrStoredAtField(NestedFieldName);
-            }
+        && __global_pou_var->__VariableDataType->IsFieldPresent(
+                                                NestedFieldName)){
+            __global_pou_var->GetFieldAttributes(NestedFieldName, FieldAttributes);
+            if (!Utils::IsFieldTypePtr(FieldAttributes.FieldInterfaceType))
+                return __global_pou_var->GetPCVariableToField(NestedFieldName);
             else
-                return nullptr;
-            
-        } else {
-            
-            string ResourceVariableName = NestedFieldName.substr(
-                    NestedFieldName.find('.') + 1, string::npos);
-            return resource->GetVariable(ResourceVariableName);
+                return __global_pou_var->GetPtrStoredAtField(NestedFieldName);
         }
-    } 
+        else
+            return nullptr;
+        
+    } else {
+        
+        string ResourceVariableName = NestedFieldName.substr(
+                NestedFieldName.find('.') + 1, string::npos);
+        return resource->GetVariable(ResourceVariableName);
+    }
+
 }
 
 PCVariable * PCConfiguration::GetAccessVariable(string NestedFieldName) {

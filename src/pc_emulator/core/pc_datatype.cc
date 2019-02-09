@@ -533,6 +533,7 @@ PCDataType::PCDataType(PCConfiguration* configuration,
     __InitialValue = InitialValue;
     __RangeMax = RangeMax;
     __RangeMin = RangeMin;
+    __PoUType = pc_specification::PoUType::NOA; // It is set later for datatypes of POU category
 
     for (int IntfType = FieldInterfaceType::VAR_INPUT; 
             IntfType <= FieldInterfaceType::NA; IntfType ++) {
@@ -659,6 +660,7 @@ PCDataType::PCDataType(PCConfiguration* configuration,
     __NFields = 0, __SizeInBits = 0;
     __AliasName = AliasName;
     __InitialValue = InitialValue;
+    __PoUType = pc_specification::PoUType::NOA; // It is set later for datatypes of POU category
  
 
     for (int IntfType = FieldInterfaceType::VAR_INPUT; 
@@ -718,6 +720,7 @@ PCDataType::PCDataType(PCConfiguration* configuration,
     __NFields = 0, __SizeInBits = 0;
     __AliasName = AliasName;
     __InitialValue = InitialValue;
+    __PoUType = pc_specification::PoUType::NOA; // It is set later for datatypes of POU category
     
 
     for (int IntfType = FieldInterfaceType::VAR_INPUT; 

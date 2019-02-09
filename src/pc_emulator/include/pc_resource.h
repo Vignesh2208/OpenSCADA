@@ -107,7 +107,7 @@ namespace pc_emulator {
             void RegisterPoUVariable(string VariableName, PCVariable * Var);
             PCVariable * GetVariable(string NestedFieldName);
             PCVariable * GetPoUVariable(string PoUName);
-            PCVariable * GetGlobalVariable(string NestedFieldName);
+            PCVariable * GetPOUGlobalVariable(string NestedFieldName);
             PCVariable * GetVariablePointerToMem(int MemType, int ByteOffset,
                                 int BitOffset, string VariableDataTypeName);
             

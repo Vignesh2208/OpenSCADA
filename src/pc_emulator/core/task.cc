@@ -73,7 +73,7 @@ void Task::Execute() {
 
                 if (mappedVariable == nullptr) {
                     mappedVariable 
-                    = __AssociatedResource->GetGlobalVariable(
+                    = __AssociatedResource->GetPOUGlobalVariable(
                         map.mapped_variable_field_name());
                     if(!mappedVariable) {
                         __configuration->PCLogger->RaiseException(
@@ -99,7 +99,7 @@ void Task::Execute() {
 
                 if (mappedVariable == nullptr) {
                     mappedVariable 
-                    = __AssociatedResource->GetGlobalVariable(
+                    = __AssociatedResource->GetPOUGlobalVariable(
                         map.mapped_variable_field_name());
                     if(!mappedVariable) {
                         __configuration->PCLogger->RaiseException(
@@ -130,7 +130,7 @@ void Task::Execute() {
 
                 if (mappedVariable == nullptr) {
                     mappedVariable 
-                    = __AssociatedResource->GetGlobalVariable(
+                    = __AssociatedResource->GetPOUGlobalVariable(
                         map.mapped_variable_field_name());
                     if(!mappedVariable) {
                         __configuration->PCLogger->RaiseException(

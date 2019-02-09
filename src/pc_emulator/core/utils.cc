@@ -26,8 +26,108 @@ using namespace pc_specification;
 using MemType  = pc_specification::MemType;
 using DataTypeCategory = pc_specification::DataTypeCategory;
 using FieldIntfType = pc_specification::FieldInterfaceType;
+using PoUType = pc_specification::PoUType;
 
 #define STRING(s) #s
+
+
+void Utils::ValidatePOUDefinition(PCVariable * POUVar, 
+                                            PCConfiguration * configuration) {
+
+    PCDataType * PoUDataType = POUVar->__VariableDataType;
+    if (PoUDataType->__PoUType == PoUType::NOA) {
+        if (PoUDataType->__FieldsByInterfaceType[
+           FieldIntfType::VAR_ACCESS].size()) {
+               configuration->PCLogger->RaiseException("A non POU datatype: "
+                + POUVar->__VariableName + " cannot have access fields!");
+        }
+        if (PoUDataType->__FieldsByInterfaceType[
+           FieldIntfType::VAR_EXPLICIT_STORAGE].size()) {
+               configuration->PCLogger->RaiseException("A non POU datatype: "
+                + POUVar->__VariableName + " cannot have Directly Represented fields!");
+        }
+        if (PoUDataType->__FieldsByInterfaceType[
+           FieldIntfType::VAR_EXTERNAL].size()) {
+               configuration->PCLogger->RaiseException("A non POU datatype: "
+                + POUVar->__VariableName + " cannot have external fields!");
+        }
+        if (PoUDataType->__FieldsByInterfaceType[
+           FieldIntfType::VAR_IN_OUT].size()) {
+               configuration->PCLogger->RaiseException("A non POU datatype: "
+                + POUVar->__VariableName + " cannot have IN_OUT fields!");
+        }
+        if (PoUDataType->__FieldsByInterfaceType[
+           FieldIntfType::VAR_GLOBAL].size()) {
+               configuration->PCLogger->RaiseException("A non POU datatype: "
+                + POUVar->__VariableName + " cannot have GLOBAL fields!");
+        }
+        if (PoUDataType->__FieldsByInterfaceType[
+           FieldIntfType::VAR_INPUT].size()) {
+               configuration->PCLogger->RaiseException("A non POU datatype: "
+                + POUVar->__VariableName + " cannot have INPUT fields!");
+        }
+        if (PoUDataType->__FieldsByInterfaceType[
+           FieldIntfType::VAR_OUTPUT].size()) {
+               configuration->PCLogger->RaiseException("A non POU datatype: "
+                + POUVar->__VariableName + " cannot have OUTPUT fields!");
+        }
+        if (PoUDataType->__FieldsByInterfaceType[
+           FieldIntfType::VAR].size()) {
+               configuration->PCLogger->RaiseException("A non POU datatype: "
+                + POUVar->__VariableName + " cannot have VAR fields!");
+        }
+        if (PoUDataType->__FieldsByInterfaceType[
+           FieldIntfType::VAR_TEMP].size()) {
+               configuration->PCLogger->RaiseException("A non POU datatype: "
+                + POUVar->__VariableName + " cannot have VAR_TEMP fields!");
+        }
+       
+        return;
+
+    } else if (PoUDataType->__PoUType == PoUType::FC) {
+        if (PoUDataType->__FieldsByInterfaceType[
+           FieldIntfType::VAR_ACCESS].size()) {
+               configuration->PCLogger->RaiseException("A FC: "
+                + POUVar->__VariableName + " cannot have access fields!");
+        }
+        if (PoUDataType->__FieldsByInterfaceType[
+           FieldIntfType::VAR_EXPLICIT_STORAGE].size()) {
+               configuration->PCLogger->RaiseException("A FC: "
+                + POUVar->__VariableName + " cannot have Directly Represented fields!");
+        }
+        if (PoUDataType->__FieldsByInterfaceType[
+           FieldIntfType::VAR_EXTERNAL].size()) {
+               configuration->PCLogger->RaiseException("A FC: "
+                + POUVar->__VariableName + " cannot have external fields!");
+        }
+        if (PoUDataType->__FieldsByInterfaceType[
+           FieldIntfType::VAR_GLOBAL].size()) {
+               configuration->PCLogger->RaiseException("A FC: "
+                + POUVar->__VariableName + " cannot have GLOBAL fields!");
+        }
+        if (PoUDataType->__FieldsByInterfaceType[
+           FieldIntfType::VAR].size()) {
+               configuration->PCLogger->RaiseException("A FC: "
+                + POUVar->__VariableName + " cannot have VAR fields!");
+        }   
+    } else if (PoUDataType->__PoUType == PoUType::FB) {
+        if (PoUDataType->__FieldsByInterfaceType[
+           FieldIntfType::VAR_ACCESS].size()) {
+               configuration->PCLogger->RaiseException("A FB: "
+                + POUVar->__VariableName + " cannot have access fields!");
+        }
+        if (PoUDataType->__FieldsByInterfaceType[
+           FieldIntfType::VAR_EXPLICIT_STORAGE].size()) {
+               configuration->PCLogger->RaiseException("A FB: "
+                + POUVar->__VariableName + " cannot have Directly Represented fields!");
+        }
+        if (PoUDataType->__FieldsByInterfaceType[
+           FieldIntfType::VAR_GLOBAL].size()) {
+               configuration->PCLogger->RaiseException("A FB: "
+                + POUVar->__VariableName + " cannot have GLOBAL fields!");
+        }
+    } 
+}
 
 bool Utils::IsFieldTypePtr(int FieldInterfaceType) {
     if (FieldInterfaceType == FieldIntfType::VAR_IN_OUT

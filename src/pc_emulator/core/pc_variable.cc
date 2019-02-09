@@ -639,22 +639,36 @@ void PCVariable::ResolveAllExternalFields() {
         for(auto& DefinedField: 
                 __VariableDataType->__FieldsByInterfaceType[
                     FieldIntfType::VAR_EXTERNAL]) {        
-            PCVariable* FieldVariable;        
-        
-            FieldVariable = __configuration->GetVariable(
-                        DefinedField.__FieldName);
+            PCVariable* FieldVariable;      
+
+            assert(__VariableDataType->__PoUType 
+                                != pc_specification::PoUType::FC);
             
-            if (FieldVariable == nullptr 
-                && __AssociatedResource != nullptr) {
-
-                FieldVariable 
-                    = __AssociatedResource->GetGlobalVariable(
-                                    DefinedField.__FieldName);
-
+            FieldVariable = __configuration->GetVariable(
+                            DefinedField.__FieldName);
+                
+            if (__VariableDataType->__PoUType 
+                                == pc_specification::PoUType::PROGRAM) {
+                // A program's extern can only be global variables defined in configuration/resource
+                // definition
                 if (FieldVariable == nullptr) {
                     __configuration->PCLogger->RaiseException(
-                            "Cannot resolve an external field: "
-                            + DefinedField.__FieldName);
+                        "Undefined extern reference to: " + DefinedField.__FieldName
+                        + " in definition of " + __VariableName);
+                }
+            } else {
+            
+                if (FieldVariable == nullptr 
+                    && __AssociatedResource != nullptr) {
+                    FieldVariable 
+                        = __AssociatedResource->GetPOUGlobalVariable(
+                                        DefinedField.__FieldName);
+
+                    if (FieldVariable == nullptr) {
+                        __configuration->PCLogger->RaiseException(
+                        "Undefined extern reference to: " + DefinedField.__FieldName
+                        + " in definition of " + __VariableName);
+                    }
                 }
             }
             SetPtr(DefinedField.__FieldName, FieldVariable);
