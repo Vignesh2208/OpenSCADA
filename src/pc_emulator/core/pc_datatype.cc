@@ -387,7 +387,7 @@ void PCDataType::AddArrayDataTypeFieldAT(string FieldName, string FieldTypeName,
         __configuration->PCLogger->RaiseException("New fields cannot be "
             "added to a data type of ARRAY category");
     }
-
+    assert(__DataTypeCategory == DataTypeCategory::POU);
 
     PCDataTypeField NewField(FieldName, DataType->__DataTypeName,
                             DataTypeCategory::ARRAY, RangeMin, RangeMax,
@@ -401,7 +401,7 @@ void PCDataType::AddArrayDataTypeFieldAT(string FieldName, string FieldTypeName,
     __FieldsByInterfaceType[FieldInterfaceType::VAR_EXPLICIT_STORAGE]
                 .push_back(NewField); 
      __SizeInBits += sizeof (PCDataType *)*8;
-    assert(__DataTypeCategory == DataTypeCategory::POU);
+    
 }
 
 

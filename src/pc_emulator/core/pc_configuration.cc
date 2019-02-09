@@ -425,14 +425,24 @@ PCVariable * PCConfiguration::GetVariable(string NestedFieldName) {
             else
                 return __global_pou_var->GetPtrStoredAtField(NestedFieldName);
         }
-        else
+        else if (__access_pou_var != nullptr
+        && __access_pou_var->__VariableDataType->IsFieldPresent(
+                                                NestedFieldName)) {
+            __access_pou_var->GetFieldAttributes(NestedFieldName,
+                                                FieldAttributes);                                       
+            assert(Utils::IsFieldTypePtr(FieldAttributes.FieldInterfaceType));
+            return __access_pou_var->GetPtrStoredAtField(NestedFieldName);
+        } else
             return nullptr;
         
     } else {
         
-        string ResourceVariableName = NestedFieldName.substr(
-                NestedFieldName.find('.') + 1, string::npos);
-        return resource->GetVariable(ResourceVariableName);
+        if (results.size() > 1) {
+            string ResourceVariableName = NestedFieldName.substr(
+                    NestedFieldName.find('.') + 1, string::npos);
+            return resource->GetVariable(ResourceVariableName);
+        }
+        return nullptr;
     }
 
 }

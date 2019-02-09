@@ -178,6 +178,15 @@ void PCResource::InitializeAllPoUVars() {
                 pou_var->AllocateAndInitialize();
             
                 Utils::ValidatePOUDefinition(pou_var, __configuration);
+                if (pou_var->__VariableDataType->__PoUType 
+                    == pc_specification::PoUType::PROGRAM) {
+                        if (pou_var->__VariableDataType
+                            ->__FieldsByInterfaceType[
+                                FieldIntfType::VAR_ACCESS].size())
+                        __configuration->PCLogger->RaiseException(
+                            "A PROGRAM: " + pou_var->__VariableName
+                            + " cannot define ACCESS variables!");
+                }
             }
 
             for(auto it = __ResourcePoUVars.begin();
