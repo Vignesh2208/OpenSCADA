@@ -57,7 +57,7 @@ PCVariable * PCResource::GetVariable(string NestedFieldName) {
         global_var->GetFieldAttributes(NestedFieldName, FieldAttributes);
 
         if (!Utils::IsFieldTypePtr(FieldAttributes.FieldInterfaceType))
-            return global_var->GetPCVariableToField(NestedFieldName);
+            return global_var->GetPtrToField(NestedFieldName);
         else
             return global_var->GetPtrStoredAtField(NestedFieldName);
     }
@@ -97,7 +97,7 @@ PCVariable * PCResource::GetPOUGlobalVariable(string NestedFieldName) {
                                     FieldAttributes);
             if (FieldAttributes.FieldInterfaceType 
                 == FieldIntfType::VAR_GLOBAL)
-                return var->GetPCVariableToField(NestedFieldName);
+                return var->GetPtrToField(NestedFieldName);
 
             if (FieldAttributes.FieldInterfaceType 
                 == FieldIntfType::VAR_EXPLICIT_STORAGE) {
@@ -354,7 +354,7 @@ Task * PCResource::GetInterruptTaskToExecute() {
         }
         assert(trigger->__VariableDataType->__DataTypeCategory 
                     == DataTypeCategory::BOOL); //trigger must be a boolean
-        auto curr_value = trigger->GetFieldValue<bool>("",
+        auto curr_value = trigger->GetValueStoredAtField<bool>("",
                                         DataTypeCategory::BOOL);
         
         

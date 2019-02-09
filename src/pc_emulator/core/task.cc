@@ -82,8 +82,8 @@ void Task::Execute() {
                     }
                 }
                 
-                container->__ExecPoUVariable->CopyToPCVariableFieldFromPointer(
-                        map.pou_variable_field_name(), mappedVariable);
+                container->__ExecPoUVariable->SetField(
+                                map.pou_variable_field_name(), mappedVariable);
                 output_vars.push_back(0);
                 
             } else if (Attributes.FieldInterfaceType 
@@ -108,7 +108,7 @@ void Task::Execute() {
                     }
                 }
                 
-                container->__ExecPoUVariable->SetPtr(
+                container->__ExecPoUVariable->SetField(
                         map.pou_variable_field_name(), mappedVariable);
                 output_vars.push_back(0);
             } else {
@@ -140,10 +140,9 @@ void Task::Execute() {
                 }
 
                 PCVariable * ptrToOutputField 
-                    = container->__ExecPoUVariable->GetPCVariableToField(
+                    = container->__ExecPoUVariable->GetPtrToField(
                             map.pou_variable_field_name());
-                mappedVariable->CopyToPCVariableFieldFromPointer("",
-                                                        ptrToOutputField);
+                mappedVariable->SetField("", ptrToOutputField);
             }
         }
 

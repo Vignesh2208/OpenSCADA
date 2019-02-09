@@ -32,38 +32,38 @@ TEST(VariableTestSuite, ConfigGlobalVariableTest) {
     
     
     ASSERT_TRUE(Utils::TestEQPtrs(
-        global_var->GetPCVariableToField("global_int_arr[1][1]"),
+        global_var->GetPtrToField("global_int_arr[1][1]"),
         configuration.GetVariablePointerToMem(RAM_MEM, 20, 0, "INT")));
 
     
     ASSERT_TRUE(Utils::TestEQPtrs(
-        global_var->GetPCVariableToField("global_int_arr[1][2]"),
+        global_var->GetPtrToField("global_int_arr[1][2]"),
         configuration.GetVariablePointerToMem(RAM_MEM, 22, 0, "INT")));
 
     
     ASSERT_TRUE(Utils::TestEQPtrs(
-        global_var->GetPCVariableToField("global_int_arr[2][1]"),
+        global_var->GetPtrToField("global_int_arr[2][1]"),
         configuration.GetVariablePointerToMem(RAM_MEM, 24, 0, "INT")));
     
     ASSERT_TRUE(Utils::TestEQPtrs(
-        global_var->GetPCVariableToField("global_int_arr[2][2]"),
+        global_var->GetPtrToField("global_int_arr[2][2]"),
         configuration.GetVariablePointerToMem(RAM_MEM, 26, 0, "INT")));
 
     
     ASSERT_TRUE(Utils::TestEQPtrs(
-        global_var->GetPCVariableToField("global_bool_arr[1]"),
+        global_var->GetPtrToField("global_bool_arr[1]"),
         configuration.GetVariablePointerToMem(RAM_MEM, 10, 0, "BOOL")));
     
     ASSERT_TRUE(Utils::TestEQPtrs(
-        global_var->GetPCVariableToField("global_bool_arr[2]"),
+        global_var->GetPtrToField("global_bool_arr[2]"),
         configuration.GetVariablePointerToMem(RAM_MEM, 10, 1, "BOOL")));
 
     ASSERT_TRUE(Utils::TestEQPtrs(
-        global_var->GetPCVariableToField("global_bool_arr[8]"),
+        global_var->GetPtrToField("global_bool_arr[8]"),
         configuration.GetVariablePointerToMem(RAM_MEM, 10, 7, "BOOL")));
 
     ASSERT_TRUE(Utils::TestEQPtrs(
-        global_var->GetPCVariableToField("global_bool_arr[10]"),
+        global_var->GetPtrToField("global_bool_arr[10]"),
         configuration.GetVariablePointerToMem(RAM_MEM, 11, 1, "BOOL")));
     
 }
@@ -80,16 +80,16 @@ TEST(VariableTestSuite, ResourcePoUVariableTest) {
     
     ASSERT_TRUE(pou_var != nullptr);
     
-    EXPECT_EQ(pou_var->GetFieldValue<int16_t>("input_1", 
+    EXPECT_EQ(pou_var->GetValueStoredAtField<int16_t>("input_1", 
                                         DataTypeCategory::INT), 0);
     
-    EXPECT_EQ(pou_var->GetFieldValue<int16_t>("input_2", 
+    EXPECT_EQ(pou_var->GetValueStoredAtField<int16_t>("input_2", 
                                         DataTypeCategory::INT), 0);
-    EXPECT_EQ(pou_var->GetFieldValue<float>("output_1", 
+    EXPECT_EQ(pou_var->GetValueStoredAtField<float>("output_1", 
                                         DataTypeCategory::REAL), 0.0);
-    EXPECT_EQ(pou_var->GetFieldValue<float>("output_2", 
+    EXPECT_EQ(pou_var->GetValueStoredAtField<float>("output_2", 
                                         DataTypeCategory::REAL), 0.0);
-    EXPECT_EQ(pou_var->GetFieldValue<int16_t>("var_1", 
+    EXPECT_EQ(pou_var->GetValueStoredAtField<int16_t>("var_1", 
                                         DataTypeCategory::INT), 0);
 
     EXPECT_EQ(pou_var->GetPtrStoredAtField("inout_1"), nullptr);
@@ -105,22 +105,22 @@ TEST(VariableTestSuite, ResourcePoUVariableTest) {
             configuration.GetVariable("global_int_arr"));
 
     ASSERT_TRUE(Utils::TestEQPtrs(
-        pou_var->GetPCVariableToField("global_int_arr[1][1]"),
+        pou_var->GetPtrToField("global_int_arr[1][1]"),
         configuration.GetVariablePointerToMem(RAM_MEM, 20, 0, "INT")));
 
     ASSERT_TRUE(Utils::TestEQPtrs(
-        pou_var->GetPCVariableToField("global_int_arr[1][1]"),
-        global_var->GetPCVariableToField("global_int_arr[1][1]")));
+        pou_var->GetPtrToField("global_int_arr[1][1]"),
+        global_var->GetPtrToField("global_int_arr[1][1]")));
 
-    EXPECT_EQ(pou_var->GetFieldValue<int16_t>("start_int", 
+    EXPECT_EQ(pou_var->GetValueStoredAtField<int16_t>("start_int", 
                             DataTypeCategory::INT), 10);
-    EXPECT_EQ(pou_var->GetFieldValue<bool>("start", 
+    EXPECT_EQ(pou_var->GetValueStoredAtField<bool>("start", 
                             DataTypeCategory::BOOL), true);
-    EXPECT_EQ(pou_var->GetFieldValue<int16_t>("drv_1", 
+    EXPECT_EQ(pou_var->GetValueStoredAtField<int16_t>("drv_1", 
                                     DataTypeCategory::INT), 10);
     TimeType time;
     time.SecsElapsed = 0;
-    EXPECT_EQ(pou_var->GetFieldValue<TimeType>("start_time", 
+    EXPECT_EQ(pou_var->GetValueStoredAtField<TimeType>("start_time", 
                                 DataTypeCategory::TIME).SecsElapsed, 1);
 }
 
@@ -139,14 +139,14 @@ TEST(VariableTestSuite, ConfigComplexDirectlyRepVariableTest) {
                     "COMPLEX_STRUCT_1"));
 
     ASSERT_TRUE(Utils::TestEQPtrs(
-        global_var->GetPCVariableToField("complex_global.string_field[1]"),
+        global_var->GetPtrToField("complex_global.string_field[1]"),
         configuration.GetVariablePointerToMem(RAM_MEM, 30, 0, "CHAR")));
 
     ASSERT_TRUE(Utils::TestEQPtrs(
-        global_var->GetPCVariableToField("complex_global.string_field[2]"),
+        global_var->GetPtrToField("complex_global.string_field[2]"),
         configuration.GetVariablePointerToMem(RAM_MEM, 31, 0, "CHAR")));
 
     ASSERT_TRUE(Utils::TestEQPtrs(
-        global_var->GetPCVariableToField("complex_global.string_field[40]"),
+        global_var->GetPtrToField("complex_global.string_field[40]"),
         configuration.GetVariablePointerToMem(RAM_MEM, 69, 0, "CHAR")));
 }

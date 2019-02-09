@@ -349,7 +349,7 @@ void PCConfiguration::RegisterAllComplexDataTypes() {
                         }
 
                         //set this as a ptr to the field of acess variable
-                        __access_pou_var->SetPtr(field.field_name(),
+                        __access_pou_var->SetField(field.field_name(),
                                         desired_ptr);
 
                     }
@@ -421,7 +421,7 @@ PCVariable * PCConfiguration::GetVariable(string NestedFieldName) {
                                                 NestedFieldName)){
             __global_pou_var->GetFieldAttributes(NestedFieldName, FieldAttributes);
             if (!Utils::IsFieldTypePtr(FieldAttributes.FieldInterfaceType))
-                return __global_pou_var->GetPCVariableToField(NestedFieldName);
+                return __global_pou_var->GetPtrToField(NestedFieldName);
             else
                 return __global_pou_var->GetPtrStoredAtField(NestedFieldName);
         }
@@ -443,7 +443,7 @@ PCVariable * PCConfiguration::GetAccessVariable(string NestedFieldName) {
         return nullptr;
     
     if (__access_pou_var->__VariableDataType->IsFieldPresent(NestedFieldName))
-        return __access_pou_var->GetPCVariableToField(NestedFieldName);
+        return __access_pou_var->GetPtrToField(NestedFieldName);
     else
         return nullptr;
     

@@ -102,20 +102,17 @@ namespace pc_emulator {
             void AllocateAndInitialize();
             void ResolveAllExternalFields();
             void OnExecutorStartup();
-            PCVariable* GetPCVariableToField(string NestedFieldName);
-
-
-            void SetPtr(string NestedFieldName, PCVariable * ptr);
-            PCVariable * GetPtrStoredAtField(string NestedFieldName);
             
-            void SetPCVariableField(string NestedFieldName, string value);
-            void SetPCVariableField(string NestedFieldName, void * value,
-                                    int CopySizeBytes);
 
-            void CopyToPCVariableFieldFromPointer(string NestedFieldName,
-                                                PCVariable * From);
-            template <typename T> T GetFieldValue(string NestedFieldName,
-                                            int CategoryOfDataType);
+            void SetField(string NestedFieldName, string value);
+            void SetField(string NestedFieldName, void * value,
+                            int CopySizeBytes);
+            void SetField(string NestedFieldName, PCVariable * From);
+
+            PCVariable* GetPtrToField(string NestedFieldName);
+            template <typename T> T GetValueStoredAtField(string NestedFieldName,
+                                                        int CategoryOfDataType);
+            PCVariable * GetPtrStoredAtField(string NestedFieldName);
             void GetFieldAttributes(string NestedFieldName, 
                             DataTypeFieldAttributes& FieldAttributes);
 
