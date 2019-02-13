@@ -66,7 +66,8 @@ PCConfiguration::PCConfiguration(string ConfigurationPath):
         if (__specification.has_log_file_path())
             logFilePath = __specification.log_file_path();
 
-        PCLogger = new Logger(this, logFilePath, logLevel);
+        PCLogger = std::unique_ptr<Logger>(new Logger(
+            this, logFilePath, logLevel));
         __RAMmemSize = __specification.machine_spec().ram_mem_size_bytes();
         assert(__RAMmemSize > 0);
         __RAMMemory.AllocateStaticMemory(__RAMmemSize);
@@ -83,14 +84,15 @@ PCConfiguration::PCConfiguration(string ConfigurationPath):
 
 void PCConfiguration::RegisterAllResources() {
     for (auto& resource_spec : __specification.machine_spec().resource_spec()) {
-        PCResource * new_resource = new PCResource(this,
+        auto new_resource = 
+            std::unique_ptr<PCResource>(new PCResource(this,
                                         resource_spec.resource_name(),
                                         resource_spec.input_mem_size_bytes(),
-                                        resource_spec.output_mem_size_bytes());
-        RegisteredResources.RegisterResource(
-                        resource_spec.resource_name(), new_resource);
-
+                                        resource_spec.output_mem_size_bytes()));
         new_resource->InitializeAllPoUVars();
+        RegisteredResources.RegisterResource(
+                        resource_spec.resource_name(), std::move(new_resource));
+        
     }
 }
 
@@ -98,7 +100,7 @@ void PCConfiguration::RegisterAllElementaryDataTypes () {
     for (int Category = DataTypeCategory::BOOL ; 
                 Category != DataTypeCategory::ARRAY; Category++) {
 
-        PCDataType * newDataType;
+        
         string DataTypeName, InitValue;
 
         PCLogger->LogMessage(LogLevels::LOG_INFO, "Next Elementary Category "
@@ -176,18 +178,19 @@ void PCConfiguration::RegisterAllElementaryDataTypes () {
         if(DataTypeName != "NA") {
             PCLogger->LogMessage(LogLevels::LOG_INFO, 
                     "Registering Elementary DataType: " + DataTypeName);
-            newDataType = new PCDataType(this, DataTypeName, DataTypeName,
-                                        static_cast<DataTypeCategory>(Category),
-                                        InitValue);   
-            RegisteredDataTypes.RegisterDataType(DataTypeName, newDataType);  
+            auto newDataType = std::unique_ptr<PCDataType>(new PCDataType(
+                this, DataTypeName, DataTypeName,
+                static_cast<DataTypeCategory>(Category), InitValue));   
+            RegisteredDataTypes.RegisterDataType(DataTypeName,
+                                    std::move(newDataType));  
         } 
     }
 
     PCLogger->LogMessage(LogLevels::LOG_INFO, "Registering STRING DataType");
     // note that max string length is 1000 chars
-    PCDataType * stringDataType = new PCDataType(this, "STRING", "CHAR",
-                                1000, DataTypeCategory::ARRAY);
-    RegisteredDataTypes.RegisterDataType("STRING", stringDataType);
+    auto stringDataType = std::unique_ptr<PCDataType>(new PCDataType(
+        this, "STRING", "CHAR", 1000, DataTypeCategory::ARRAY));
+    RegisteredDataTypes.RegisterDataType("STRING", std::move(stringDataType));
 
     __DataTypeDefaultInitialValues.insert(std::make_pair(
                                             DataTypeCategory::ARRAY, ""));
@@ -213,7 +216,7 @@ void PCConfiguration::RegisterAllComplexDataTypes() {
                      "at the same time!");
             }
 
-            PCDataType * new_data_type = nullptr;
+            std::unique_ptr<PCDataType> new_data_type;
             PCLogger->LogMessage(LogLevels::LOG_INFO, 
                 "Registering New DataType: " + datatype_decl.name());
 
@@ -237,27 +240,30 @@ void PCConfiguration::RegisterAllComplexDataTypes() {
                     if (!datatype_decl.datatype_spec().has_dimension_2()) {
                         assert(datatype_decl.datatype_spec().dimension_1() > 0);
                         
-                        new_data_type = new PCDataType(this, 
-                        datatype_decl.name(), elementary_datatype_name,
-                        datatype_decl.datatype_spec().dimension_1(),
-                        datatype_decl.datatype_category(), InitValue,
-                        range_min, range_max);
+                        new_data_type = std::unique_ptr<PCDataType>(
+                            new PCDataType(this, 
+                            datatype_decl.name(), elementary_datatype_name,
+                            datatype_decl.datatype_spec().dimension_1(),
+                            datatype_decl.datatype_category(), InitValue,
+                            range_min, range_max));
 
                     } else {// 2-d array datatype
                         assert(datatype_decl.datatype_spec().dimension_1() > 0
                             && datatype_decl.datatype_spec().dimension_2() > 0);
-                        new_data_type = new PCDataType(this, 
-                        datatype_decl.name(), elementary_datatype_name,
-                        datatype_decl.datatype_spec().dimension_1(),
-                        datatype_decl.datatype_spec().dimension_2(),
-                        datatype_decl.datatype_category(), InitValue,
-                        range_min, range_max);
+                        new_data_type = std::unique_ptr<PCDataType>(
+                                new PCDataType(this, 
+                                datatype_decl.name(), elementary_datatype_name,
+                                datatype_decl.datatype_spec().dimension_1(),
+                                datatype_decl.datatype_spec().dimension_2(),
+                                datatype_decl.datatype_category(), InitValue,
+                                range_min, range_max));
                     }
                 } else {
-                    new_data_type = new PCDataType(this, 
-                        datatype_decl.name(), elementary_datatype_name,
+                    new_data_type = std::unique_ptr<PCDataType>(
+                        new PCDataType(this, datatype_decl.name(), 
+                        elementary_datatype_name,
                         datatype_decl.datatype_category(),
-                        InitValue, range_min, range_max);
+                        InitValue, range_min, range_max));
                 }
 
                 
@@ -267,16 +273,17 @@ void PCConfiguration::RegisterAllComplexDataTypes() {
                 assert(datatype_decl.datatype_category() 
                     == DataTypeCategory::DERIVED 
                     && datatype_decl.datatype_field_size() > 0);
-                new_data_type = new PCDataType(this,
-                    datatype_decl.name(), datatype_decl.name(),
-                    DataTypeCategory::DERIVED);
-                Utils::InitializeDataType(this, new_data_type, datatype_decl);
+                new_data_type = std::unique_ptr<PCDataType>(
+                    new PCDataType(this, datatype_decl.name(),
+                    datatype_decl.name(), DataTypeCategory::DERIVED));
+                Utils::InitializeDataType(this, new_data_type.get(),
+                                        datatype_decl);
             }
 
             
-            assert(new_data_type != nullptr);
+            assert(new_data_type.get() != nullptr);
             RegisteredDataTypes.RegisterDataType(datatype_decl.name(), 
-                                        new_data_type);
+                                        std::move(new_data_type));
         }
 
     }
@@ -286,43 +293,46 @@ void PCConfiguration::RegisterAllComplexDataTypes() {
         __global_pou_var = nullptr;
     else {
 
-        PCDataType * global_var_type = new PCDataType(this, 
-                    "__CONFIG_GLOBAL__", "__CONFIG_GLOBAL__",
-                    DataTypeCategory::POU);
+        auto global_var_type = std::unique_ptr<PCDataType>(
+                    new PCDataType(this, "__CONFIG_GLOBAL__",
+                    "__CONFIG_GLOBAL__", DataTypeCategory::POU));
 
-        Utils::InitializeDataType(this, global_var_type,
+        Utils::InitializeDataType(this, global_var_type.get(),
              __specification.config_global_pou_var());
         
         RegisteredDataTypes.RegisterDataType("__CONFIG_GLOBAL__", 
-                                        global_var_type);
+                                        std::move(global_var_type));
 
-        __global_pou_var = new PCVariable(this, nullptr,
-                                "__CONFIG_GLOBAL_VAR__", "__CONFIG_GLOBAL__");
+        __global_pou_var = std::unique_ptr<PCVariable>
+                (new PCVariable(this, nullptr,
+                                "__CONFIG_GLOBAL_VAR__", "__CONFIG_GLOBAL__"));
         __global_pou_var->AllocateAndInitialize();
         __global_pou_var->__VariableDataType->__PoUType 
                 = pc_specification::PoUType::PROGRAM;
-        Utils::ValidatePOUDefinition(__global_pou_var, this);
+        Utils::ValidatePOUDefinition(__global_pou_var.get(), this);
         
     }
     
     if (!__specification.has_config_access_pou_var())
         __access_pou_var = nullptr;
     else {
-        PCDataType * access_var_type = new PCDataType(this, 
-                    "__CONFIG_ACCESS__", "__CONFIG_ACCESS__",
-                    DataTypeCategory::POU);
+        auto access_var_type = std::unique_ptr<PCDataType>(
+                new PCDataType(this, "__CONFIG_ACCESS__", "__CONFIG_ACCESS__",
+                    DataTypeCategory::POU));
+
+        Utils::InitializeAccessDataType(this, access_var_type.get(),
+             __specification.config_access_pou_var());
 
         RegisteredDataTypes.RegisterDataType("__CONFIG__ACCESS__", 
-                                        access_var_type);
-
-        Utils::InitializeAccessDataType(this, access_var_type,
-             __specification.config_access_pou_var());
-        __access_pou_var = new PCVariable(this, nullptr,
-                                "__CONFIG_ACCESS_VAR__", "__CONFIG_ACCESS__");
+                                        std::move(access_var_type));
+        
+        __access_pou_var = std::unique_ptr<PCVariable>
+                    (new PCVariable(this, nullptr,
+                                "__CONFIG_ACCESS_VAR__", "__CONFIG_ACCESS__"));
         __access_pou_var->AllocateAndInitialize();
         __access_pou_var->__VariableDataType->__PoUType 
                         = pc_specification::PoUType::PROGRAM;
-        Utils::ValidatePOUDefinition(__access_pou_var, this);
+        Utils::ValidatePOUDefinition(__access_pou_var.get(), this);
         // now we need to set pointers to some fields of this variable
 
         for (auto& field : 
@@ -374,8 +384,10 @@ PCVariable * PCConfiguration::GetVariablePointerToMem(int memType,
     // need to track and delete this variable later on
     auto got = __AccessedFields.find(VariableName);
     if(got == __AccessedFields.end()) {
-        PCVariable* V = new PCVariable(this, nullptr, VariableName,
-                                    VariableDataTypeName);
+        __AccessedFields.insert(std::make_pair(VariableName,
+            std::unique_ptr<PCVariable>(new PCVariable(this, nullptr,
+                    VariableName, VariableDataTypeName))));
+        auto V = __AccessedFields.find(VariableName)->second.get();
         assert(V != nullptr);
 
         
@@ -385,11 +397,11 @@ PCVariable * PCConfiguration::GetVariablePointerToMem(int memType,
         V->__IsDirectlyRepresented = true;
         V->__MemAllocated = true;
         V->AllocateAndInitialize();
-        __AccessedFields.insert(std::make_pair(VariableName, V));
+        
 
         return V;
     } else {
-        return got->second;
+        return got->second.get();
     }
 }
 
@@ -466,19 +478,16 @@ PCDataType * PCConfiguration::LookupDataType(string DataTypeName) {
 void PCConfiguration::Cleanup() {
     for ( auto it = __AccessedFields.begin(); it != __AccessedFields.end(); 
             ++it ) {
-            PCVariable * __AccessedVariable = it->second;
+            PCVariable * __AccessedVariable = it->second.get();
             __AccessedVariable->Cleanup();
-            delete __AccessedVariable;
     }
 
-    if (__global_pou_var) {
+    if (__global_pou_var != nullptr) {
         __global_pou_var->Cleanup();
-        delete __global_pou_var;
     }
 
-    if (__access_pou_var) {
+    if (__access_pou_var != nullptr) {
         __access_pou_var->Cleanup();
-        delete __access_pou_var;
     }
 
     RegisteredResources.Cleanup();

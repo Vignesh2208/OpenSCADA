@@ -3,6 +3,7 @@
 #include "src/pc_emulator/include/pc_logger.h"
 #include "src/pc_emulator/include/pc_configuration.h"
 #include "src/pc_emulator/include/pc_resource.h"
+#include "src/pc_emulator/include/task.h"
 
 using namespace pc_emulator;
 using namespace std;
@@ -15,22 +16,19 @@ using LogLevels = pc_specification::LogLevels;
 
 
 void ResourceRegistry::RegisterResource(string ResourceName,
-                                        PCResource* Resource) {
+                                        std::unique_ptr<PCResource> Resource) {
     assert (__configuration != nullptr);
     assert (__configuration->PCLogger != nullptr);
-    Logger * PCLogger = __configuration->PCLogger;
     std::string LogMsg;
 
-    std::unordered_map<std::string, PCResource*>::const_iterator got = 
-                        __Registry.find (ResourceName);
+    auto got = __Registry.find (ResourceName);
     if (got != __Registry.end()) {
         LogMsg = "Resource " + ResourceName + " Already Defined !";
-        PCLogger->RaiseException(LogMsg);
+        __configuration->PCLogger->RaiseException(LogMsg);
     } else {
-        __Registry.insert(std::make_pair(ResourceName,
-                                        Resource));
+        __Registry.insert(std::make_pair(ResourceName, std::move(Resource)));
         LogMsg =  "Registered New Resource: " + ResourceName;
-        PCLogger->LogMessage(LogLevels::LOG_INFO, LogMsg);
+        __configuration->PCLogger->LogMessage(LogLevels::LOG_INFO, LogMsg);
     }
 }
 
@@ -39,20 +37,18 @@ PCResource * ResourceRegistry::GetResource(string ResourceName) {
     assert (__configuration->PCLogger != nullptr);
     std::string LogMsg;
 
-    std::unordered_map<std::string, PCResource*>::const_iterator got = 
-                        __Registry.find (ResourceName);
+    auto got = __Registry.find (ResourceName);
     if (got == __Registry.end()) {
         return nullptr;
     } else {
-        return got->second;
+        return got->second.get();
     }
 }
 
 void ResourceRegistry::Cleanup() {
     for ( auto it = __Registry.begin(); it != __Registry.end(); 
             ++it ) {
-            PCResource * __AccessedResource = it->second;
+            PCResource * __AccessedResource = it->second.get();
             __AccessedResource->Cleanup();
-            delete __AccessedResource;
     }
 }

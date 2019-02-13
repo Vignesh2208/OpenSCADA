@@ -89,7 +89,8 @@ namespace pc_emulator {
             PCConfiguration * __configuration;
             PCResource * __AssociatedResource; // if null, associated with all
                                                // resources or entire configuration
-            std::unordered_map<std::string,  PCVariable*> __AccessedFields;
+            std::unordered_map<std::string,
+            std::unique_ptr<PCVariable>> __AccessedFields;
             bool __MemAllocated, __IsDirectlyRepresented;
 
 

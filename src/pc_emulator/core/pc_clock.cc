@@ -10,6 +10,7 @@
 
 #include "src/pc_emulator/include/pc_clock.h"
 #include "src/pc_emulator/include/pc_resource.h"
+#include "src/pc_emulator/include/task.h"
 
 using namespace std;
 using namespace std::chrono;

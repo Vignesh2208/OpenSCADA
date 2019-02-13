@@ -23,17 +23,17 @@ using DataTypeCategory = pc_specification::DataTypeCategory;
 using FieldIntfType = pc_specification::FieldInterfaceType;
 
 
-void PCResource::RegisterPoUVariable(string VariableName, PCVariable * Var) {
-    std::unordered_map<std::string, PCVariable*>::const_iterator got = 
-                        __ResourcePoUVars.find (VariableName);
+void PCResource::RegisterPoUVariable(string VariableName,
+                                std::unique_ptr<PCVariable> Var) {
+    auto got = __ResourcePoUVars.find (VariableName);
     if (got != __ResourcePoUVars.end()) {
         
         __configuration->PCLogger->RaiseException("Variable already defined !");
-    } else {
-        __ResourcePoUVars.insert(std::make_pair(VariableName, Var));
-       
+    } else {   
         __configuration->PCLogger->LogMessage(LogLevels::LOG_INFO,
-                                        "Registered new resource pou variable!");
+                                "Registered new resource pou variable!");
+        __ResourcePoUVars.insert(std::make_pair(VariableName,
+                                            std::move(Var)));
     }
 
 }
@@ -48,7 +48,7 @@ PCVariable * PCResource::GetVariable(string NestedFieldName) {
     if (got == __ResourcePoUVars.end())
         global_var = nullptr;
     else {
-        global_var = got->second;
+        global_var = got->second.get();
     }
     
     if (global_var != nullptr && 
@@ -67,7 +67,7 @@ PCVariable * PCResource::GetVariable(string NestedFieldName) {
             if (got == __ResourcePoUVars.end()) {
                 return nullptr;
         } else {
-            return got->second;
+            return got->second.get();
         }
     }
 }
@@ -77,7 +77,7 @@ PCVariable * PCResource::GetPoUVariable(string PoUName) {
     if (got == __ResourcePoUVars.end()) {
         return nullptr;
     }
-    return got->second;
+    return got->second.get();
 }
 
 // Returns a global variable or a directly represented variable declared
@@ -90,7 +90,7 @@ PCVariable * PCResource::GetPOUGlobalVariable(string NestedFieldName) {
 
     for (auto it = __ResourcePoUVars.begin(); 
                     it != __ResourcePoUVars.end(); it ++) {
-        PCVariable * var = it->second;
+        PCVariable * var = it->second.get();
         if (var->__VariableDataType->IsFieldPresent(NestedFieldName)) {
             DataTypeFieldAttributes FieldAttributes;
             var->GetFieldAttributes(NestedFieldName, 
@@ -116,25 +116,30 @@ void PCResource::InitializeAllPoUVars() {
             __configuration->__specification.machine_spec().resource_spec()) {
         if (resource_spec.resource_name() == __ResourceName) {
             if (resource_spec.has_resource_global_var()) {
-                PCDataType * global_var_type = new PCDataType(
+                auto global_var_type = std::unique_ptr<PCDataType>
+                ( new PCDataType(
                     __configuration, 
                     "__RESOURCE_" + __ResourceName + "_GLOBAL__",
                     "__RESOURCE_" + __ResourceName + "_GLOBAL__",
-                    DataTypeCategory::POU);
+                    DataTypeCategory::POU));
+
+                Utils::InitializeDataType(__configuration, global_var_type.get(),
+                        resource_spec.resource_global_var());
 
                 __configuration->RegisteredDataTypes.RegisterDataType(
-                "__RESOURCE_" + __ResourceName + "_GLOBAL__", global_var_type);
+                                "__RESOURCE_" + __ResourceName + "_GLOBAL__",
+                                std::move(global_var_type));
 
-                Utils::InitializeDataType(__configuration, global_var_type,
-                        resource_spec.resource_global_var());
                 
-                PCVariable * __global_pou_var = new PCVariable(__configuration,
+                
+                auto __global_pou_var = std::unique_ptr<PCVariable>(
+                    new PCVariable(__configuration,
                         this, "__RESOURCE_" + __ResourceName + "_GLOBAL_VAR__",
-                        "__RESOURCE_" + __ResourceName + "_GLOBAL__");
+                        "__RESOURCE_" + __ResourceName + "_GLOBAL__"));
 
                 RegisterPoUVariable(
                     "__RESOURCE_" + __ResourceName + "_GLOBAL_VAR__",
-                    __global_pou_var);
+                    std::move(__global_pou_var));
 
             }
 
@@ -146,35 +151,37 @@ void PCResource::InitializeAllPoUVars() {
                         pou_var.pou_type() == PoUType::FB ||
                         pou_var.pou_type() == PoUType::PROGRAM));
                          
-                PCDataType * new_var_type = new PCDataType(
-                    __configuration, 
-                    pou_var.name(),
-                    pou_var.name(),
-                    DataTypeCategory::POU);
+                auto new_var_type = std::unique_ptr<PCDataType>(
+                    new PCDataType(__configuration, 
+                        pou_var.name(), pou_var.name(), DataTypeCategory::POU));
 
-                __configuration->RegisteredDataTypes.RegisterDataType(
-                                            pou_var.name(), new_var_type);
-
-                Utils::InitializeDataType(__configuration, new_var_type,
+                Utils::InitializeDataType(__configuration, new_var_type.get(),
                                         pou_var);
 
                 
-                PCVariable * new_pou_var = new PCVariable(
-                    __configuration,
-                    this, pou_var.name(), pou_var.name());
-                RegisterPoUVariable(pou_var.name(), new_pou_var);
+                __configuration->RegisteredDataTypes.RegisterDataType(
+                                            pou_var.name(),
+                                            std::move(new_var_type));
+
+                
+                auto new_pou_var = std::unique_ptr<PCVariable>(new PCVariable(
+                    __configuration, this, pou_var.name(), pou_var.name()));
+                
 
                 if (pou_var.pou_type() == PoUType::FC)
                     new_pou_var->__VariableDataType->__PoUType = PoUType::FC;
                 else if (pou_var.pou_type() == PoUType::FB)
                     new_pou_var->__VariableDataType->__PoUType = PoUType::FB;
                 else
-                    new_pou_var->__VariableDataType->__PoUType = PoUType::PROGRAM;
+                    new_pou_var->__VariableDataType->__PoUType 
+                                                            = PoUType::PROGRAM;
+
+                RegisterPoUVariable(pou_var.name(), std::move(new_pou_var));
             }
 
             for(auto it = __ResourcePoUVars.begin();
                     it != __ResourcePoUVars.end(); it ++) {
-                PCVariable * pou_var = it->second;
+                PCVariable * pou_var = it->second.get();
                 pou_var->AllocateAndInitialize();
             
                 Utils::ValidatePOUDefinition(pou_var, __configuration);
@@ -191,7 +198,7 @@ void PCResource::InitializeAllPoUVars() {
 
             for(auto it = __ResourcePoUVars.begin();
                     it != __ResourcePoUVars.end(); it ++) {
-                PCVariable * pou_var = it->second;
+                PCVariable * pou_var = it->second.get();
 
                 if (pou_var->__VariableDataType->__PoUType 
                     == pc_specification::PoUType::PROGRAM)
@@ -200,7 +207,7 @@ void PCResource::InitializeAllPoUVars() {
 
             for(auto it = __ResourcePoUVars.begin();
                     it != __ResourcePoUVars.end(); it ++) {
-                PCVariable * pou_var = it->second;
+                PCVariable * pou_var = it->second.get();
 
                 if (pou_var->__VariableDataType->__PoUType 
                     == pc_specification::PoUType::FB)
@@ -229,8 +236,12 @@ PCVariable * PCResource::GetVariablePointerToMem(int memType, int ByteOffset,
     auto got = __AccessedFields.find(VariableName);
 
     if(got == __AccessedFields.end()) {
-        PCVariable* V = new PCVariable(__configuration, this, VariableName,
-                                    VariableDataTypeName);
+
+        __AccessedFields.insert(std::make_pair(VariableName,
+                    std::unique_ptr<PCVariable>(
+                        new PCVariable(__configuration, this, VariableName,
+                                    VariableDataTypeName))));
+        PCVariable* V = __AccessedFields.find(VariableName)->second.get();
         assert(V != nullptr);
 
         if(memType == MemType::INPUT_MEM)
@@ -243,10 +254,10 @@ PCVariable * PCResource::GetVariablePointerToMem(int memType, int ByteOffset,
         V->__IsDirectlyRepresented = true;
         V->__MemAllocated = true;
         V->AllocateAndInitialize();
-        __AccessedFields.insert(std::make_pair(VariableName, V));
+        
         return V;
     } else {
-        return got->second;
+        return got->second.get();
     }
    
 }
@@ -254,16 +265,20 @@ PCVariable * PCResource::GetVariablePointerToMem(int memType, int ByteOffset,
 void PCResource::Cleanup() {
     for ( auto it = __AccessedFields.begin(); it != __AccessedFields.end(); 
             ++it ) {
-            PCVariable * __AccessedVariable = it->second;
+            PCVariable * __AccessedVariable = it->second.get();
             __AccessedVariable->Cleanup();
-            delete __AccessedVariable;
     }
 
     for ( auto it = __ResourcePoUVars.begin(); it != __ResourcePoUVars.end(); 
             ++it ) {
-            PCVariable * __AccessedVariable = it->second;
+            PCVariable * __AccessedVariable = it->second.get();
             __AccessedVariable->Cleanup();
-            delete __AccessedVariable;
+    }
+
+    for ( auto it = __Tasks.begin(); it != __Tasks.end(); 
+            ++it ) {
+            auto __AccessedTask = it->second.get();
+            __AccessedTask->Cleanup();
     }
 }
 
@@ -277,13 +292,17 @@ PoUCodeContainer * PCResource::CreateNewCodeContainer(string PoUDataTypeName) {
         __configuration->PCLogger->RaiseException("Cannot define two code "
                                         "bodies for same POU");
     }
-    PoUCodeContainer * new_container = new PoUCodeContainer(__configuration,
-                                                this);
+    auto new_container = 
+        std::unique_ptr<PoUCodeContainer>(new PoUCodeContainer(__configuration,
+                                                this));
     new_container->SetPoUDataType(PoUDataType);
 
-    __CodeContainers.insert(std::make_pair(PoUDataTypeName, new_container));
+    PoUCodeContainer * return_val = new_container.get();
 
-    return new_container;
+    __CodeContainers.insert(std::make_pair(PoUDataTypeName,
+                        std::move(new_container)));
+
+    return return_val;
 
     
 }
@@ -293,14 +312,14 @@ PoUCodeContainer * PCResource::GetCodeContainer(string PoUDataTypeName) {
     if (got == __CodeContainers.end())
         return nullptr;
     
-    return got->second;
+    return got->second.get();
 }
 
 
-void PCResource::AddTask(Task * Tsk) {
+void PCResource::AddTask(std::unique_ptr<Task> Tsk) {
 
     if (Tsk && __Tasks.find(Tsk->__TaskName) == __Tasks.end()) {
-        __Tasks.insert(std::make_pair(Tsk->__TaskName, Tsk));
+        __Tasks.insert(std::make_pair(Tsk->__TaskName, std::move(Tsk)));
         return;
     }
 
@@ -310,7 +329,7 @@ void PCResource::AddTask(Task * Tsk) {
 Task * PCResource::GetTask(string TaskName) {
     auto got = __Tasks.find(TaskName);
     if (got != __Tasks.end())
-        return got->second;
+        return got->second.get();
     return nullptr;
 }
 
@@ -426,15 +445,18 @@ void PCResource::InitializeAllTasks() {
            __configuration->__specification.machine_spec().resource_spec()) {
         if(__ResourceName == resource_spec.resource_name()) {
             for (auto task_spec : resource_spec.tasks()) {
-                    Task * new_task = new Task(__configuration, this, task_spec);
+                    auto new_task = 
+                        std::unique_ptr<Task>(
+                            new Task(__configuration, this, task_spec));
+                    auto new_task_ptr = new_task.get();
 
                     if (new_task->type == TaskType::INTERVAL) {
                         new_task->SetNextScheduleTime(clock->GetCurrentTime()
                             + (float)new_task->__interval_ms);
                     }
 
-                    AddTask(new_task);
-                    QueueTask(new_task);
+                    AddTask(std::move(new_task));
+                    QueueTask(new_task_ptr);
             }   
 
             for (auto program_spec : resource_spec.programs()) {
@@ -454,9 +476,9 @@ void PCResource::InitializeAllTasks() {
  void PCResource::InitializeClock() {
      if (__configuration->__specification.has_enable_kronos() && 
             __configuration->__specification.enable_kronos())
-        clock = new Clock(true, this);
+        clock = std::unique_ptr<Clock>(new Clock(true, this));
     else {
-        clock = new Clock(false, this);
+        clock = std::unique_ptr<Clock>(new Clock(false, this));
     }
 
 }

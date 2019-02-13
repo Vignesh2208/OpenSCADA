@@ -11,6 +11,7 @@
 #include "pc_mem_unit.h"
 #include "pc_pou_code_container.h"
 #include "pc_clock.h"
+#include "task.h"
 #include "src/pc_emulator/proto/configuration.pb.h"
 
 using namespace std;
@@ -67,10 +68,14 @@ namespace pc_emulator {
             int __OutputMemSize;
             PCMemUnit __InputMemory;
             PCMemUnit __OutputMemory;
-            std::unordered_map<std::string,  PCVariable*> __ResourcePoUVars;
-            std::unordered_map<std::string, PCVariable*> __AccessedFields;
-            std::unordered_map<std::string, PoUCodeContainer*> __CodeContainers;
-            std::unordered_map<std::string, Task *> __Tasks;
+            std::unordered_map<std::string,  std::unique_ptr<PCVariable>> 
+                                                __ResourcePoUVars;
+            std::unordered_map<std::string, std::unique_ptr<PCVariable>> 
+                                                __AccessedFields;
+
+            std::unordered_map<std::string,
+                    std::unique_ptr<PoUCodeContainer>> __CodeContainers;
+            std::unordered_map<std::string, std::unique_ptr<Task>> __Tasks;
             std::unordered_map<int, priority_queue<CompactTaskDescription>> 
                                             __IntervalTasksByPriority;
             std::unordered_map<string, std::vector<Task*>> __InterruptTasks;
@@ -80,7 +85,7 @@ namespace pc_emulator {
         public :
             string __ResourceName;
             PCConfiguration * __configuration;
-            Clock *clock;
+            std::unique_ptr<Clock> clock;
             PCResource(PCConfiguration * configuration, 
                 string ResourceName, int InputMemSize, int OutputMemSize):
                 __configuration(configuration), __ResourceName(ResourceName),
@@ -98,13 +103,14 @@ namespace pc_emulator {
             void OnStartup();
 
 
-            void AddTask(Task * Tsk);
+            void AddTask(std::unique_ptr<Task> Tsk);
             Task * GetTask(string TskName);
             Task * GetInterruptTaskToExecute();
             Task * GetIntervalTaskToExecuteAt(double schedule_time);
-            void QueueTask(Task * Tsk);
+            void QueueTask(Task* Tsk);
             
-            void RegisterPoUVariable(string VariableName, PCVariable * Var);
+            void RegisterPoUVariable(string VariableName,
+                                        std::unique_ptr<PCVariable> Var);
             PCVariable * GetVariable(string NestedFieldName);
             PCVariable * GetPoUVariable(string PoUName);
             PCVariable * GetPOUGlobalVariable(string NestedFieldName);

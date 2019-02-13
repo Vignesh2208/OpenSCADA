@@ -34,28 +34,29 @@ ProgramContainer::ProgramContainer(PCResource * AssociatedResource,
         __initialization_map.push_back(initialization_map);
     }
     __AssociatedTask = __AssociatedTask;
-    __AssociatedExecutor = new Executor(__AssociatedResource->__configuration,
-                                        __AssociatedResource, AssociatedTask); 
+    __AssociatedExecutor = std::unique_ptr<Executor>(
+        new Executor(__AssociatedResource->__configuration,
+                    __AssociatedResource, AssociatedTask)); 
 
     __AssociatedExecutor->SetExecPoUVariable(__ExecPoUVariable);   
 }
 
 void ProgramContainer::Cleanup() {
-    delete __AssociatedExecutor;
 }
 
 void Task::AddProgramToTask(const ProgramSpecification& program_spec) {
-    ProgramContainer * ProgContainer 
-            = new ProgramContainer(__AssociatedResource, program_spec, this);
+    auto ProgContainer 
+            = std::unique_ptr<ProgramContainer>(new ProgramContainer(
+                __AssociatedResource, program_spec, this));
     
-    __AssociatedPrograms.push_back(ProgContainer);
+    __AssociatedPrograms.push_back(std::move(ProgContainer));
 }
 
 void Task::Execute() {
 
     std::vector<int> output_vars;
     for (int i = 0; i < (int)__AssociatedPrograms.size(); i++) {
-        ProgramContainer * container = __AssociatedPrograms[i];
+        ProgramContainer * container = __AssociatedPrograms[i].get();
         output_vars.clear();
         for (auto map : container->__initialization_map) {
             DataTypeFieldAttributes Attributes;
@@ -155,7 +156,6 @@ void Task::Execute() {
 void Task::Cleanup() {
     for (int i = 0; i <  (int)__AssociatedPrograms.size(); i++) {
             __AssociatedPrograms[i]->Cleanup();
-            delete __AssociatedPrograms[i];
     }
     __AssociatedPrograms.clear();
 }

@@ -765,10 +765,7 @@ PCDataType::PCDataType(PCConfiguration* configuration,
     __DimensionSizes.push_back(Dim2Size);
 }
 
-void PCDataType::RegisterDataType() {
-    __configuration->RegisteredDataTypes.RegisterDataType(__AliasName,
-            this);
-}
+
 
 bool PCDataType::CheckRemFields(std::vector<string>& NestedFields, int StartPos,
                             PCDataType * Current) {
@@ -790,8 +787,6 @@ bool PCDataType::CheckRemFields(std::vector<string>& NestedFields, int StartPos,
                         return CheckRemFields(NestedFields, i+1, FieldDataType);
         
                     } else {
-                        std::cout << " Found Array Field!: " 
-                            << DefinedField.__FieldName << std::endl;
                         if (i == (int)NestedFields.size() - 1)
                             return true;
 
@@ -809,7 +804,6 @@ bool PCDataType::CheckRemFields(std::vector<string>& NestedFields, int StartPos,
                             assert(i + 2 < (int)NestedFields.size());
                             int idx1 = std::stoi(NestedFields[i+1]);
                             int idx2 = std::stoi(NestedFields[i+2]);
-                            std::cout << " Idx1, Idx2: " << idx1 << "," << idx2 << std::endl;
                             if (idx1 <= DefinedField.__Dimension1
                                 && idx2 <= DefinedField.__Dimension2)
                                 return CheckRemFields(NestedFields, i+3,
@@ -841,8 +835,6 @@ bool PCDataType::IsFieldPresent(string NestedFieldName) {
         return true;           
     }
 
-    std:: cout << " DataTypeName: " << __DataTypeName
-                << " NestedFieldName: " << NestedFieldName << std::endl;
     if (__DataTypeCategory == DataTypeCategory::ARRAY) {
         int NDims = __DimensionSizes.size();
         int idx1, idx2, nxt_nested_field;
@@ -1012,9 +1004,6 @@ bool PCDataType::CheckRemFields(std::vector<string>& NestedFields, int StartPos,
                             return false;
                         }
 
-                        std::cout << "Testing : " << AccessedFieldName
-                                    << " idx1: " << idx1 << " idx2: " << idx2 << std::endl;
-                        
                         if (!GetPCDataTypeFieldOfArrayElement(
                             DefinedField, Result, idx1, idx2))
                             return false;
@@ -1045,11 +1034,6 @@ bool PCDataType::GetPCDataTypeField(string NestedFieldName,
         return true;           
     }
 
-    
-    for(int i = 0; i < NestedFields.size(); i++) {
-        std::cout << NestedFields[i] << " ";
-    }
-    std::cout << std::endl;
     int nxt_nested_field = 0;
     if (__DataTypeCategory == ARRAY) {
         int NDims = __DimensionSizes.size();

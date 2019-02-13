@@ -14,7 +14,9 @@ using namespace pc_emulator;
 
 PoUCodeContainer& PoUCodeContainer::AddInstruction(string InsnString) {
     std::vector<string> results;
-    boost::split(results, InsnString, [](char c){return c == ' ';});
+    boost::trim_if(InsnString, boost::is_any_of(" "));
+    boost::split(results, InsnString,
+                boost::is_any_of(" "), boost::token_compress_on);
     string InsnLabel;
     string InsnName;
     size_t StartIdx = 1;
@@ -32,8 +34,8 @@ PoUCodeContainer& PoUCodeContainer::AddInstruction(string InsnString) {
         InsnName = results[0];
     }
 
-    InsnContainer * container = new InsnContainer(InsnName, InsnLabel,
-                                                __InsnCount);
+    auto container = std::unique_ptr<InsnContainer>(new InsnContainer(
+                                            InsnName, InsnLabel, __InsnCount));
     __InsnCount ++;
 
     if(!InsnLabel.empty()) {
@@ -44,7 +46,7 @@ PoUCodeContainer& PoUCodeContainer::AddInstruction(string InsnString) {
                     "assigned more than once!");
         }
         __InsnContainerByLabel.insert(std::make_pair(InsnLabel, 
-                            container));
+                                                        container.get()));
         StartIdx ++;
     }
 
@@ -52,15 +54,11 @@ PoUCodeContainer& PoUCodeContainer::AddInstruction(string InsnString) {
         container->AddOperand(results[StartIdx]);
     }
 
-    __Insns.push_back(container);
+    __Insns.push_back(std::move(container));
     return *this;
 }
 
 void PoUCodeContainer::Cleanup() {
-    for(auto it = __Insns.begin(); it != __Insns.end(); it ++) {
-        delete *it;
-    }
-
     __Insns.clear();
 }
 
@@ -70,7 +68,7 @@ int PoUCodeContainer::GetTotalNumberInsns() {
 
 InsnContainer * PoUCodeContainer::GetInsn(int pos) {
     if (pos < __InsnCount && pos >= 0) {
-        return __Insns[pos];
+        return __Insns[pos].get();
     }
     return nullptr;
 }

@@ -39,7 +39,7 @@ namespace pc_emulator {
             bool __Initialized;
             int __InsnCount;
 
-            std::vector<InsnContainer *> __Insns;
+            std::vector<std::unique_ptr<InsnContainer>> __Insns;
             std::unordered_map<string, InsnContainer*> __InsnContainerByLabel;
 
             PoUCodeContainer(PCConfiguration* configuration, 

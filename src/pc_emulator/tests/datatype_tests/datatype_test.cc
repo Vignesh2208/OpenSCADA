@@ -1,6 +1,7 @@
 
 #include "src/pc_emulator/include/pc_configuration.h"
 #include "src/pc_emulator/include/pc_datatype.h"
+#include "src/pc_emulator/include/pc_variable.h"
 #include "src/pc_emulator/include/utils.h"
 #include "gtest/gtest.h"
 

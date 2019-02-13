@@ -99,9 +99,6 @@ namespace pc_emulator {
 
         PCDataType* LookupDataType(string DataTypeName);
 
-        // Data-Type has to be registered using the provided Alias Name
-        void RegisterDataType();
-
         void AddDataTypeField(string FieldName, string FieldTypeName,
             string InitialValue, int FieldInterfaceType, 
             s64 RangeMin, s64 RangeMax);

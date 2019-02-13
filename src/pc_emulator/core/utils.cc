@@ -44,7 +44,8 @@ void Utils::ValidatePOUDefinition(PCVariable * POUVar,
         if (PoUDataType->__FieldsByInterfaceType[
            FieldIntfType::VAR_EXPLICIT_STORAGE].size()) {
                configuration->PCLogger->RaiseException("A non POU datatype: "
-                + POUVar->__VariableName + " cannot have Directly Represented fields!");
+                + POUVar->__VariableName + " cannot have Directly "
+                "Represented fields!");
         }
         if (PoUDataType->__FieldsByInterfaceType[
            FieldIntfType::VAR_EXTERNAL].size()) {
@@ -93,7 +94,8 @@ void Utils::ValidatePOUDefinition(PCVariable * POUVar,
         if (PoUDataType->__FieldsByInterfaceType[
            FieldIntfType::VAR_EXPLICIT_STORAGE].size()) {
                configuration->PCLogger->RaiseException("A FC: "
-                + POUVar->__VariableName + " cannot have Directly Represented fields!");
+                + POUVar->__VariableName + " cannot have Directly "
+                "Represented fields!");
         }
         if (PoUDataType->__FieldsByInterfaceType[
            FieldIntfType::VAR_EXTERNAL].size()) {
@@ -119,7 +121,8 @@ void Utils::ValidatePOUDefinition(PCVariable * POUVar,
         if (PoUDataType->__FieldsByInterfaceType[
            FieldIntfType::VAR_EXPLICIT_STORAGE].size()) {
                configuration->PCLogger->RaiseException("A FB: "
-                + POUVar->__VariableName + " cannot have Directly Represented fields!");
+                + POUVar->__VariableName + " cannot have Directly "
+                "Represented fields!");
         }
         if (PoUDataType->__FieldsByInterfaceType[
            FieldIntfType::VAR_GLOBAL].size()) {
@@ -184,22 +187,6 @@ string Utils::GetInitialValueForArrayIdx(int Idx, string InitialValue,
 string Utils::GetInstallationDirectory() {
 
     string InstallationDir = getpwuid(getuid())->pw_dir;
-
- 
-    /*
-    vector<string> splits;
-    boost::split(splits, InstallationDir, boost::is_any_of("/"));
-    InstallationDir = "";
-    for(int i = 0; i < (int)splits.size(); i++) {
-
-        if (splits[i] == "OpenSCADA" || splits[i] == "SCADA_Sim") {
-            InstallationDir += splits[i];
-            break;
-        } else {
-            InstallationDir += splits[i] + "/";
-        }
-    }
-    */
     return InstallationDir + "/OpenSCADA";
 }
 
@@ -384,10 +371,6 @@ void Utils::InitializeDataType(PCConfiguration * __configuration,
                                 : field_type_ptr->__RangeMin;
         range_max = field.has_range_max() ? field.range_max()
                                 : field_type_ptr->__RangeMax;
-
-        std::cout << "Utils:" << __new_data_type->__DataTypeName 
-        << " DataTypeName: " << field.field_datatype_name() 
-        << " Init Value: " << initial_value << std::endl;
         
         if (field.has_initial_value())
             assert(field.intf_type() != VAR_EXPLICIT_STORAGE

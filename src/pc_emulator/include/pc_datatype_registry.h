@@ -4,6 +4,9 @@
 #include <iostream>
 #include <unordered_map>
 
+
+#include "pc_datatype.h"
+
 using namespace std;
 
 
@@ -14,11 +17,13 @@ namespace pc_emulator {
     class DataTypeRegistry {
         private:
             PCConfiguration * __configuration;
-            std::unordered_map<std::string,  PCDataType*> __Registry;
+            std::unordered_map<std::string,
+                    std::unique_ptr<PCDataType>> __Registry;
         public:
             DataTypeRegistry(PCConfiguration* configuration) : 
                     __configuration(configuration) {};
-            void RegisterDataType(string DataTypeName, PCDataType* DataType);
+            void RegisterDataType(string DataTypeName, 
+                                std::unique_ptr<PCDataType> DataType);
             PCDataType * GetDataType(string DataTypeName);
 
             void Cleanup();

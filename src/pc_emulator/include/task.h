@@ -36,7 +36,7 @@ namespace pc_emulator {
             string __ProgramName;
             PCResource * __AssociatedResource;
             PCVariable * __ExecPoUVariable;
-            Executor * __AssociatedExecutor;
+            std::unique_ptr<Executor> __AssociatedExecutor;
             std::vector<ProgramVariableInitialization> __initialization_map;
             Task * __AssociatedTask;
 
@@ -59,7 +59,7 @@ namespace pc_emulator {
             bool __trigger_variable_previous_value;
             bool __IsReady;
             double __nxt_schedule_time_ms;
-            std::vector<ProgramContainer*> __AssociatedPrograms;
+            std::vector<std::unique_ptr<ProgramContainer>> __AssociatedPrograms;
             
 
             Task(PCConfiguration * configuration,

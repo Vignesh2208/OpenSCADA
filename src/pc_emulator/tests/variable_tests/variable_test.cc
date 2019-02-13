@@ -19,7 +19,7 @@ TEST(VariableTestSuite, ConfigGlobalVariableTest) {
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
     PCConfiguration configuration(TestDir + "/input.prototxt");
-    PCVariable * global_var = configuration.__global_pou_var;
+    PCVariable * global_var = configuration.__global_pou_var.get();
     ASSERT_TRUE(global_var != nullptr);
     
     EXPECT_EQ(global_var->GetPtrStoredAtField("global_bool_var"),
@@ -76,7 +76,7 @@ TEST(VariableTestSuite, ResourcePoUVariableTest) {
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
     PCConfiguration configuration(TestDir + "/input.prototxt");
     PCVariable * pou_var = configuration.GetVariable("CPU_001.PROGRAM_1");
-    PCVariable * global_var = configuration.__global_pou_var;
+    PCVariable * global_var = configuration.__global_pou_var.get();
     
     ASSERT_TRUE(pou_var != nullptr);
     
@@ -132,7 +132,7 @@ TEST(VariableTestSuite, ConfigComplexDirectlyRepVariableTest) {
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
     PCConfiguration configuration(TestDir + "/input.prototxt");
-    PCVariable * global_var = configuration.__global_pou_var;
+    PCVariable * global_var = configuration.__global_pou_var.get();
     ASSERT_TRUE(global_var != nullptr);
     EXPECT_EQ(global_var->GetPtrStoredAtField("complex_global"),
                     configuration.GetVariablePointerToMem(RAM_MEM, 30, 0, 

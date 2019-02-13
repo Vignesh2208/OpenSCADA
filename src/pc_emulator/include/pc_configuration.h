@@ -11,6 +11,7 @@
 #include "pc_mem_unit.h"
 #include "pc_datatype_registry.h"
 #include "pc_resource_registry.h"
+#include "task.h"
 #include "src/pc_emulator/proto/configuration.pb.h"
 
 using namespace std;
@@ -28,7 +29,7 @@ namespace pc_emulator {
             
 
         public:
-            Logger * PCLogger;
+            std::unique_ptr<Logger> PCLogger;
             DataTypeRegistry RegisteredDataTypes;
             ResourceRegistry RegisteredResources;
             int __RAMmemSize;
@@ -36,12 +37,13 @@ namespace pc_emulator {
             string __ConfigurationPath;
             string __ConfigurationName;
             Specification __specification;
-            PCVariable * __global_pou_var;
-            PCVariable * __access_pou_var;
+            std::unique_ptr<PCVariable> __global_pou_var;
+            std::unique_ptr<PCVariable> __access_pou_var;
             int __NumResources;
             
             std::unordered_map<int, string> __DataTypeDefaultInitialValues;
-            std::unordered_map<string, PCVariable *> __AccessedFields;
+            std::unordered_map<string, std::unique_ptr<PCVariable>> 
+                                                __AccessedFields;
             
             PCVariable * GetVariable(string NestedFieldName);
             PCVariable * GetAccessVariable(string NestedFieldName);

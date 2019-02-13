@@ -1,5 +1,6 @@
 #include "src/pc_emulator/include/pc_logger.h"
 #include "src/pc_emulator/include/pc_configuration.h"
+#include "src/pc_emulator/include/task.h"
 
 using namespace std;
 using namespace pc_emulator;
