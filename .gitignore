@@ -1,0 +1,9 @@
+SCADA_on_CORE.code-workspace
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+bazel-bin
+bazel-OpenSCADA
+bazel-out
+bazel-testlogs
+bazel-genfiles

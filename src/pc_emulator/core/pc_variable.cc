@@ -1229,7 +1229,6 @@ void PCVariable::GetAndStoreValue(string NestedFieldName,
         }
         return;
     }
-
     std::memcpy(Value, 
         PointedVariable->__MemoryLocation.GetPointerToMemory(
             PointedVariable->__ByteOffset),  CopySize);    
