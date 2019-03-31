@@ -1,0 +1,106 @@
+#include <assert.h>
+#include "src/pc_emulator/include/insn_registry.h"
+#include "src/pc_emulator/include/pc_logger.h"
+#include "src/pc_emulator/include/pc_configuration.h"
+#include "src/pc_emulator/include/pc_resource.h"
+
+using namespace pc_emulator;
+using namespace std;
+using namespace pc_specification;
+
+InsnRegistry::InsnRegistry(PCResource* AssociatedResource) {
+    __InsnRegistry.insert(
+        std::make_pair("LD",
+        std::unique_ptr<Insn>(new LD_Insn(AssociatedResource))
+    ));
+    
+    __InsnRegistry.insert(
+        std::make_pair("ST",
+        std::unique_ptr<Insn>(new ST_Insn(AssociatedResource))
+    ));
+
+    __InsnRegistry.insert(
+        std::make_pair("ADD",
+        std::unique_ptr<Insn>(new ADD_Insn(AssociatedResource))
+    ));
+
+    __InsnRegistry.insert(
+        std::make_pair("DIV",
+        std::unique_ptr<Insn>(new DIV_Insn(AssociatedResource))
+    ));
+
+    __InsnRegistry.insert(
+        std::make_pair("EQ",
+        std::unique_ptr<Insn>(new EQ_Insn(AssociatedResource))
+    ));
+
+    __InsnRegistry.insert(
+        std::make_pair("GE",
+        std::unique_ptr<Insn>(new GE_Insn(AssociatedResource))
+    ));
+
+    __InsnRegistry.insert(
+        std::make_pair("GT",
+        std::unique_ptr<Insn>(new GT_Insn(AssociatedResource))
+    ));
+
+    __InsnRegistry.insert(
+        std::make_pair("LE",
+        std::unique_ptr<Insn>(new LE_Insn(AssociatedResource))
+    ));
+
+    __InsnRegistry.insert(
+        std::make_pair("LT",
+        std::unique_ptr<Insn>(new LT_Insn(AssociatedResource))
+    ));
+
+    __InsnRegistry.insert(
+        std::make_pair("MOD",
+        std::unique_ptr<Insn>(new MOD_Insn(AssociatedResource))
+    ));
+
+    __InsnRegistry.insert(
+        std::make_pair("MUL",
+        std::unique_ptr<Insn>(new MUL_Insn(AssociatedResource))
+    ));
+
+    __InsnRegistry.insert(
+        std::make_pair("NE",
+        std::unique_ptr<Insn>(new NE_Insn(AssociatedResource))
+    ));
+
+    __InsnRegistry.insert(
+        std::make_pair("NOT",
+        std::unique_ptr<Insn>(new NOT_Insn(AssociatedResource))
+    ));
+
+    __InsnRegistry.insert(
+        std::make_pair("OR",
+        std::unique_ptr<Insn>(new OR_Insn(AssociatedResource))
+    ));
+
+    __InsnRegistry.insert(
+        std::make_pair("AND",
+        std::unique_ptr<Insn>(new AND_Insn(AssociatedResource))
+    ));
+
+    __InsnRegistry.insert(
+        std::make_pair("SUB",
+        std::unique_ptr<Insn>(new SUB_Insn(AssociatedResource))
+    ));
+
+    __InsnRegistry.insert(
+        std::make_pair("XOR",
+        std::unique_ptr<Insn>(new XOR_Insn(AssociatedResource))
+    ));
+};
+
+Insn* InsnRegistry::GetInsn(string InsnName) {
+    auto got = __InsnRegistry.find(InsnName);
+
+    if (got == __InsnRegistry.end())
+        return nullptr; // Unknown Insn
+    else {
+        return got->second.get();
+    }
+}

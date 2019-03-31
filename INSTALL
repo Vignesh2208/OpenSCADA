@@ -1,0 +1,21 @@
+Dependencies:
+    - libboost
+        Download from https://www.boost.org/users/history/version_1_61_0.html
+        Extract to folder /src/boost
+        cd /src/boost/boost_1_61_0
+        ./bootstrap.sh --prefix=release
+        sudo ./b2 install -j4
+    - bazel
+        sudo apt-get install openjdk-8-jdk
+        echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
+        curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
+        sudo apt-get update && sudo apt-get install bazel
+        sudo apt-get install --only-upgrade bazel
+
+        Make sure the version of bazel is atleast 0.21.0 or greater (run command: bazel version)
+
+    -protobuf
+        -install v3.6.1 from https://github.com/protocolbuffers/protobuf/releases
+            -download https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-all-3.6.1.tar.gz
+            -cd ~/protobuf-3.6.1
+            ./configure && sudo make -j8 && sudo make install
