@@ -6,6 +6,8 @@
 #include <regex>
 #include <vector>
 #include <queue>
+#include <fstream>
+#include <cstdio>
 
 #include "src/pc_emulator/include/pc_pou_code_container.h"
 #include "src/pc_emulator/include/pc_datatype.h"
@@ -25,7 +27,7 @@ using DataTypeCategory = pc_specification::DataTypeCategory;
 using FieldIntfType = pc_specification::FieldInterfaceType;
 
 
-PCResource::PCResource(PCConfiguration * configuration, 
+PCResourceImpl::PCResourceImpl(PCConfigurationImpl * configuration, 
     string ResourceName, int InputMemSize, int OutputMemSize) {
     __configuration = configuration;
     __ResourceName = ResourceName;
@@ -33,15 +35,21 @@ PCResource::PCResource(PCConfiguration * configuration,
     __OutputMemSize = OutputMemSize;
 
     assert(__InputMemSize > 0 && __OutputMemSize > 0);
-    __InputMemory.AllocateStaticMemory(__InputMemSize);
-    __OutputMemory.AllocateStaticMemory(__OutputMemSize);
-    __CurrentResult = new PCVariable(configuration, this,
-                        "__CurrentResult", "BOOL");
+    //__InputMemory.AllocateStaticMemory(__InputMemSize);
+    //__OutputMemory.AllocateStaticMemory(__OutputMemSize);
+    __InputMemory.AllocateSharedMemory(__InputMemSize,
+                "/tmp/Output_" + ResourceName,
+                ResourceName + "_IMemLock");
+    __OutputMemory.AllocateSharedMemory(__OutputMemSize,
+                "/tmp/Input_" + ResourceName,
+                ResourceName + "_OMemLock");
+    __CurrentResult = new PCVariable((PCConfiguration *)configuration,
+                        (PCResource *) this, "__CurrentResult", "BOOL");
     __CurrentResult->AllocateAndInitialize();
     __InsnRegistry = new InsnRegistry(this);
 }
 
-void PCResource::RegisterPoUVariable(string VariableName,
+void PCResourceImpl::RegisterPoUVariable(string VariableName,
                                 std::unique_ptr<PCVariable> Var) {
     auto got = __ResourcePoUVars.find (VariableName);
     if (got != __ResourcePoUVars.end()) {
@@ -56,7 +64,7 @@ void PCResource::RegisterPoUVariable(string VariableName,
 
 }
 
-PCVariable * PCResource::GetVariable(string NestedFieldName) {
+PCVariable * PCResourceImpl::GetExternVariable(string NestedFieldName) {
     assert(!NestedFieldName.empty());
     DataTypeFieldAttributes FieldAttributes;
     auto got = __ResourcePoUVars.find(
@@ -74,23 +82,26 @@ PCVariable * PCResource::GetVariable(string NestedFieldName) {
 
         global_var->GetFieldAttributes(NestedFieldName, FieldAttributes);
 
-        if (!Utils::IsFieldTypePtr(FieldAttributes.FieldInterfaceType))
+        if (!Utils::IsFieldTypePtr(FieldAttributes.FieldDetails.__FieldInterfaceType))
             return global_var->GetPtrToField(NestedFieldName);
         else
             return global_var->GetPtrStoredAtField(NestedFieldName);
     }
     else {
-        // this may be referring to a PoU variable
-        auto got = __ResourcePoUVars.find(NestedFieldName);
-            if (got == __ResourcePoUVars.end()) {
-                return nullptr;
+        // this may be referring to a PoU itself
+        auto got = GetPOU(NestedFieldName);
+        if (got == nullptr) {
+            // This may be referring to a POUGlobalVariable
+            return GetPOUGlobalVariable(NestedFieldName);
         } else {
-            return got->second.get();
+            // we don't return POUs itself here
+
+            return nullptr;
         }
     }
 }
 
-PCVariable * PCResource::GetPoUVariable(string PoUName) {
+PCVariable * PCResourceImpl::GetPOU(string PoUName) {
     auto got =  __ResourcePoUVars.find(PoUName);
     if (got == __ResourcePoUVars.end()) {
         return nullptr;
@@ -100,34 +111,54 @@ PCVariable * PCResource::GetPoUVariable(string PoUName) {
 
 // Returns a global variable or a directly represented variable declared
 // by any of the POUs defined in this resource provided the NestedFieldName matches
-PCVariable * PCResource::GetPOUGlobalVariable(string NestedFieldName) {
+PCVariable * PCResourceImpl::GetPOUGlobalVariable(string NestedFieldName) {
     assert(!NestedFieldName.empty());
     std::vector<string> results;
-    boost::split(results, NestedFieldName,
-                boost::is_any_of("."), boost::token_compress_on);
+    boost::split(results, NestedFieldName, boost::is_any_of("."),
+            boost::token_compress_on);
 
-    for (auto it = __ResourcePoUVars.begin(); 
-                    it != __ResourcePoUVars.end(); it ++) {
-        PCVariable * var = it->second.get();
-        if (var->__VariableDataType->IsFieldPresent(NestedFieldName)) {
-            DataTypeFieldAttributes FieldAttributes;
-            var->GetFieldAttributes(NestedFieldName, 
-                                    FieldAttributes);
-            if (FieldAttributes.FieldInterfaceType 
-                == FieldIntfType::VAR_GLOBAL)
-                return var->GetPtrToField(NestedFieldName);
+    std::cout << "GetPOUGlobalVariable: " << NestedFieldName 
+    << " ResourceName: " << __ResourceName << std::endl;
+    PCVariable * AssociatedPOU = nullptr;
+    if (results.size() > 1 
+        && __ResourcePoUVars.find(results[0]) != __ResourcePoUVars.end()) {
+        AssociatedPOU = __ResourcePoUVars.find(results[0])->second.get();
+    } 
+    
+    if (AssociatedPOU == nullptr)
+        return nullptr;
+    
 
-            if (FieldAttributes.FieldInterfaceType 
-                == FieldIntfType::VAR_EXPLICIT_STORAGE) {
-                return var->GetPtrStoredAtField(NestedFieldName);
-            }
+    std:: cout << "NOT NULL: " << AssociatedPOU->__VariableName << std::endl;
+    string RemFieldName = NestedFieldName.substr(NestedFieldName.find('.') + 1,
+                                string::npos);
+    
+    if (AssociatedPOU->__VariableDataType->IsFieldPresent(RemFieldName)) {
+        DataTypeFieldAttributes FieldAttributes;
+        AssociatedPOU->GetFieldAttributes(RemFieldName, 
+                                FieldAttributes);
+        if (FieldAttributes.FieldDetails.__FieldInterfaceType
+            == FieldIntfType::VAR_GLOBAL)
+            return AssociatedPOU->GetPtrToField(RemFieldName);
+
+        
+
+        if (FieldAttributes.FieldDetails.__FieldInterfaceType 
+            == FieldIntfType::VAR_EXPLICIT_STORAGE) {
+            std::cout << "Returned: " 
+            << FieldAttributes.FieldDetails.__StorageMemType
+            << " Byte: " << FieldAttributes.FieldDetails.__StorageByteOffset
+            << " Bit: " << FieldAttributes.FieldDetails.__StorageBitOffset
+            << std::endl;
+            return AssociatedPOU->GetPtrStoredAtField(RemFieldName);
         }
     }
+
 
     return nullptr;
 }
 
-void PCResource::InitializeAllPoUVars() {
+void PCResourceImpl::InitializeAllPoUVars() {
 
     
     for (auto & resource_spec : 
@@ -136,7 +167,7 @@ void PCResource::InitializeAllPoUVars() {
             if (resource_spec.has_resource_global_var()) {
                 auto global_var_type = std::unique_ptr<PCDataType>
                 ( new PCDataType(
-                    __configuration, 
+                    (PCConfiguration *)__configuration, 
                     "__RESOURCE_" + __ResourceName + "_GLOBAL__",
                     "__RESOURCE_" + __ResourceName + "_GLOBAL__",
                     DataTypeCategory::POU));
@@ -144,15 +175,16 @@ void PCResource::InitializeAllPoUVars() {
                 Utils::InitializeDataType(__configuration, global_var_type.get(),
                         resource_spec.resource_global_var());
 
-                __configuration->RegisteredDataTypes.RegisterDataType(
+                __configuration->RegisteredDataTypes->RegisterDataType(
                                 "__RESOURCE_" + __ResourceName + "_GLOBAL__",
                                 std::move(global_var_type));
 
                 
                 
                 auto __global_pou_var = std::unique_ptr<PCVariable>(
-                    new PCVariable(__configuration,
-                        this, "__RESOURCE_" + __ResourceName + "_GLOBAL_VAR__",
+                    new PCVariable((PCConfiguration *) __configuration,
+                        (PCResource *)this, 
+                        "__RESOURCE_" + __ResourceName + "_GLOBAL_VAR__",
                         "__RESOURCE_" + __ResourceName + "_GLOBAL__"));
 
                 RegisterPoUVariable(
@@ -170,20 +202,21 @@ void PCResource::InitializeAllPoUVars() {
                         pou_var.pou_type() == PoUType::PROGRAM));
                          
                 auto new_var_type = std::unique_ptr<PCDataType>(
-                    new PCDataType(__configuration, 
+                    new PCDataType((PCConfiguration *)__configuration, 
                         pou_var.name(), pou_var.name(), DataTypeCategory::POU));
 
                 Utils::InitializeDataType(__configuration, new_var_type.get(),
                                         pou_var);
 
                 
-                __configuration->RegisteredDataTypes.RegisterDataType(
+                __configuration->RegisteredDataTypes->RegisterDataType(
                                             pou_var.name(),
                                             std::move(new_var_type));
 
                 
                 auto new_pou_var = std::unique_ptr<PCVariable>(new PCVariable(
-                    __configuration, this, pou_var.name(), pou_var.name()));
+                    (PCConfiguration *)__configuration,
+                    (PCResource *) this, pou_var.name(), pou_var.name()));
                 
 
                 if (pou_var.pou_type() == PoUType::FC)
@@ -200,7 +233,8 @@ void PCResource::InitializeAllPoUVars() {
             for(auto it = __ResourcePoUVars.begin();
                     it != __ResourcePoUVars.end(); it ++) {
                 PCVariable * pou_var = it->second.get();
-                pou_var->AllocateAndInitialize();
+                pou_var->AllocateAndInitialize("/tmp/" + __ResourceName
+                    + "_" + pou_var->__VariableName);
             
                 Utils::ValidatePOUDefinition(pou_var, __configuration);
                 if (pou_var->__VariableDataType->__PoUType 
@@ -214,23 +248,7 @@ void PCResource::InitializeAllPoUVars() {
                 }
             }
 
-            for(auto it = __ResourcePoUVars.begin();
-                    it != __ResourcePoUVars.end(); it ++) {
-                PCVariable * pou_var = it->second.get();
-
-                if (pou_var->__VariableDataType->__PoUType 
-                    == pc_specification::PoUType::PROGRAM)
-                    pou_var->ResolveAllExternalFields(); // First resolve external fields in all programs
-            }
-
-            for(auto it = __ResourcePoUVars.begin();
-                    it != __ResourcePoUVars.end(); it ++) {
-                PCVariable * pou_var = it->second.get();
-
-                if (pou_var->__VariableDataType->__PoUType 
-                    == pc_specification::PoUType::FB)
-                    pou_var->ResolveAllExternalFields(); //  Next resolve external fields in all Function Blocks
-            }
+            
             // No need to do this for FCs because they wouldn't have any external fields
 
             break;
@@ -239,7 +257,29 @@ void PCResource::InitializeAllPoUVars() {
 
 }
 
-PCVariable * PCResource::GetVariablePointerToMem(int memType, int ByteOffset,
+void PCResourceImpl::ResolveAllExternalFields() {
+    for(auto it = __ResourcePoUVars.begin();
+            it != __ResourcePoUVars.end(); it ++) {
+        PCVariable * pou_var = it->second.get();
+
+        if (pou_var->__VariableDataType->__PoUType 
+            == pc_specification::PoUType::PROGRAM)
+            pou_var->ResolveAllExternalFields(); 
+            // First resolve external fields in all programs
+    }
+
+    for(auto it = __ResourcePoUVars.begin();
+            it != __ResourcePoUVars.end(); it ++) {
+        PCVariable * pou_var = it->second.get();
+
+        if (pou_var->__VariableDataType->__PoUType 
+            == pc_specification::PoUType::FB)
+            pou_var->ResolveAllExternalFields(); 
+            //  Next resolve external fields in all Function Blocks
+    }
+}
+
+PCVariable * PCResourceImpl::GetVariablePointerToMem(int memType, int ByteOffset,
                         int BitOffset, string VariableDataTypeName) {
 
     assert(ByteOffset > 0 && BitOffset >= 0 && BitOffset < 8);
@@ -257,7 +297,8 @@ PCVariable * PCResource::GetVariablePointerToMem(int memType, int ByteOffset,
 
         __AccessedFields.insert(std::make_pair(VariableName,
                     std::unique_ptr<PCVariable>(
-                        new PCVariable(__configuration, this, VariableName,
+                        new PCVariable((PCConfiguration *)__configuration,
+                            (PCResource *) this, VariableName,
                                     VariableDataTypeName))));
         PCVariable* V = __AccessedFields.find(VariableName)->second.get();
         assert(V != nullptr);
@@ -280,7 +321,7 @@ PCVariable * PCResource::GetVariablePointerToMem(int memType, int ByteOffset,
    
 }
 
-void PCResource::Cleanup() {
+void PCResourceImpl::Cleanup() {
     for ( auto it = __AccessedFields.begin(); it != __AccessedFields.end(); 
             ++it ) {
             PCVariable * __AccessedVariable = it->second.get();
@@ -299,14 +340,21 @@ void PCResource::Cleanup() {
             __AccessedTask->Cleanup();
     }
 
+    std::cout << "Removing MMap files: " << __ResourceName << std::endl;
+    __InputMemory.Cleanup();
+    __OutputMemory.Cleanup();
+    std::remove(("/tmp/Output_" + __ResourceName).c_str());
+    std::remove(("/tmp/Input_" + __ResourceName).c_str());
+
     __CurrentResult->Cleanup();
     delete __CurrentResult;
     delete __InsnRegistry;
 }
 
-PoUCodeContainer * PCResource::CreateNewCodeContainer(string PoUDataTypeName) {
+PoUCodeContainer * PCResourceImpl::CreateNewCodeContainer(
+                                            string PoUDataTypeName) {
     PCDataType * PoUDataType 
-        = __configuration->RegisteredDataTypes.GetDataType(PoUDataTypeName);
+        = __configuration->RegisteredDataTypes->GetDataType(PoUDataTypeName);
     if (!PoUDataType)
         return nullptr;
     
@@ -328,7 +376,7 @@ PoUCodeContainer * PCResource::CreateNewCodeContainer(string PoUDataTypeName) {
 
     
 }
-PoUCodeContainer * PCResource::GetCodeContainer(string PoUDataTypeName) {
+PoUCodeContainer * PCResourceImpl::GetCodeContainer(string PoUDataTypeName) {
 
     auto got = __CodeContainers.find(PoUDataTypeName);
     if (got == __CodeContainers.end())
@@ -338,7 +386,7 @@ PoUCodeContainer * PCResource::GetCodeContainer(string PoUDataTypeName) {
 }
 
 
-void PCResource::AddTask(std::unique_ptr<Task> Tsk) {
+void PCResourceImpl::AddTask(std::unique_ptr<Task> Tsk) {
 
     if (Tsk && __Tasks.find(Tsk->__TaskName) == __Tasks.end()) {
         __Tasks.insert(std::make_pair(Tsk->__TaskName, std::move(Tsk)));
@@ -348,14 +396,14 @@ void PCResource::AddTask(std::unique_ptr<Task> Tsk) {
     __configuration->PCLogger->RaiseException("Couldn't add tsk to resource !");
 }
 
-Task * PCResource::GetTask(string TaskName) {
+Task * PCResourceImpl::GetTask(string TaskName) {
     auto got = __Tasks.find(TaskName);
     if (got != __Tasks.end())
         return got->second.get();
     return nullptr;
 }
 
-void PCResource::QueueTask (Task * Tsk) {
+void PCResourceImpl::QueueTask (Task * Tsk) {
 
     if (Tsk == nullptr)
         __configuration->PCLogger->RaiseException("Cannot queue null task!");
@@ -388,13 +436,14 @@ void PCResource::QueueTask (Task * Tsk) {
     }
 }
 
-Task * PCResource::GetInterruptTaskToExecute() {
+Task * PCResourceImpl::GetInterruptTaskToExecute() {
     Task * EligibleTask = nullptr;
     int highest_priority = 10000;
 
-    for (auto it = __InterruptTasks.begin(); it != __InterruptTasks.end(); it++) {
+    for (auto it = __InterruptTasks.begin(); 
+                        it != __InterruptTasks.end(); it++) {
         PCVariable * trigger;
-        trigger = __configuration->GetVariable(it->first);
+        trigger = __configuration->GetExternVariable(it->first);
         if(!trigger) {
             trigger = GetPOUGlobalVariable(it->first);
             if(!trigger)
@@ -432,7 +481,7 @@ Task * PCResource::GetInterruptTaskToExecute() {
     return nullptr;
 }
 
-Task * PCResource::GetIntervalTaskToExecuteAt(double schedule_time) {
+Task * PCResourceImpl::GetIntervalTaskToExecuteAt(double schedule_time) {
 
     
 
@@ -462,7 +511,7 @@ Task * PCResource::GetIntervalTaskToExecuteAt(double schedule_time) {
 
 }
 
-void PCResource::InitializeAllTasks() {
+void PCResourceImpl::InitializeAllTasks() {
     for (auto resource_spec : 
            __configuration->__specification.machine_spec().resource_spec()) {
         if(__ResourceName == resource_spec.resource_name()) {
@@ -495,7 +544,7 @@ void PCResource::InitializeAllTasks() {
     }
 }
 
- void PCResource::InitializeClock() {
+ void PCResourceImpl::InitializeClock() {
      if (__configuration->__specification.has_enable_kronos() && 
             __configuration->__specification.enable_kronos())
         clock = std::unique_ptr<Clock>(new Clock(true, this));
@@ -505,7 +554,7 @@ void PCResource::InitializeAllTasks() {
 
 }
 
-void PCResource::ExecuteInsn(string InsnName, std::vector<PCVariable*>& Ops,
+void PCResourceImpl::ExecuteInsn(string InsnName, std::vector<PCVariable*>& Ops,
                             bool isNegated) {
 
     auto InsnObj = __InsnRegistry->GetInsn(InsnName);
@@ -515,36 +564,56 @@ void PCResource::ExecuteInsn(string InsnName, std::vector<PCVariable*>& Ops,
     }
 }
 
-PCVariable * PCResource::GetTmpVariable(string VariableDataTypeName,
+PCVariable * PCResourceImpl::GetTmpVariable(string VariableDataTypeName,
                                 string InitialValue) {
 
     // need to track and delete this variable later on
     string VariableName = VariableDataTypeName + "_" + InitialValue;
     auto got = __AccessedFields.find(VariableName);
+    PCDataType * VarDataType 
+            = __configuration->LookupDataType(VariableDataTypeName);
+    assert(VarDataType != nullptr);
+    PCVariable* V;
 
     if(got == __AccessedFields.end()) {
 
         __AccessedFields.insert(std::make_pair(VariableName,
                     std::unique_ptr<PCVariable>(
-                        new PCVariable(__configuration, this, VariableName,
+                        new PCVariable((PCConfiguration *)__configuration,
+                                    (PCResource *) this, VariableName,
                                     VariableDataTypeName))));
-        PCVariable* V = __AccessedFields.find(VariableName)->second.get();
+        V = __AccessedFields.find(VariableName)->second.get();
         assert(V != nullptr);
-        V->AllocateAndInitialize();
-        V->SetField("", InitialValue);
-        return V;
+        V->AllocateAndInitialize();    
     } else {
-        auto V =  got->second.get();
-        V->SetField("", InitialValue);
-        return V;
+        V =  got->second.get();
     }
+
+    if (VarDataType->__DataTypeCategory != DataTypeCategory::DERIVED
+        && VarDataType->__DataTypeCategory != DataTypeCategory::POU) {
+        if (VariableDataTypeName == "STRING") {
+            string Init = "{";
+            for (int i = 0; i < InitialValue.length(); i++) {
+                Init += InitialValue[i];
+                Init += ",";
+            }
+            Init += "}";
+            std:: cout << "Init = " << Init << std::endl;
+            V->SetField("",Init);
+        } else {
+            V->SetField("", InitialValue);
+        }
+    }
+
+    return V;
 }
 
 /*
  * Convert an immediate operand value string of form: <DataTypeName>Value into
  * a PCVariable object
  */
-PCVariable * PCResource::GetVariableForImmediateOperand(string OperandValue) {
+PCVariable * PCResourceImpl::GetVariableForImmediateOperand(
+                                                        string OperandValue) {
     std::vector<string> results;
     boost::split(results, OperandValue,
                 boost::is_any_of("<>"), boost::token_compress_on);
@@ -556,7 +625,7 @@ PCVariable * PCResource::GetVariableForImmediateOperand(string OperandValue) {
     return GetTmpVariable(results[0], results[1]);
 }
 
-void PCResource::OnStartup() {
+void PCResourceImpl::OnStartup() {
     InitializeClock();
     InitializeAllTasks();
 }

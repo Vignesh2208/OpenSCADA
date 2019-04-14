@@ -7,7 +7,7 @@
 namespace pc_emulator {
     class GT_Insn: public Insn {
         public:
-            GT_Insn(PCResource * AssociatedResource) {
+            GT_Insn(PCResourceImpl * AssociatedResource) {
                 __AssociatedResource = AssociatedResource;
                 __InsnName = "GT";
             };

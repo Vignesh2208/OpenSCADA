@@ -20,6 +20,10 @@ void MOD_Insn::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
 
     PCVariable * Operand = Operands[0];
     assert(Operand != nullptr);
+    if (Operand->__IsVariableContentTypeAPtr) {
+        Operand = Operand->GetPtrStoredAtField("");
+        assert(Operand != nullptr);
+    }
     assert(Operand->__VariableDataType->__DataTypeCategory
             != DataTypeCategory::POU);
 
@@ -29,5 +33,6 @@ void MOD_Insn::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
     assert(Operand->__VariableDataType->__DataTypeCategory
             != DataTypeCategory::ARRAY);    
     auto CurrentResult = __AssociatedResource->__CurrentResult;
+
     *CurrentResult = (*CurrentResult) % (*Operand);
 }

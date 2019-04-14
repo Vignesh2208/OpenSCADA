@@ -11,9 +11,9 @@ using namespace std;
 namespace pc_emulator {
     class ResourceManager {
         public :
-            PCResource * __AssociatedResource;
+            PCResourceImpl * __AssociatedResource;
 
-            ResourceManager(PCResource * AssociatedResource) : 
+            ResourceManager(PCResourceImpl * AssociatedResource) : 
                     __AssociatedResource(AssociatedResource) {};
 
             void ExecuteResource();

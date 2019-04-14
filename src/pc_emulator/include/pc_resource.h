@@ -11,6 +11,8 @@
 #include "pc_mem_unit.h"
 #include "pc_pou_code_container.h"
 #include "pc_clock.h"
+#include "configuration.h"
+#include "resource.h"
 #include "task.h"
 #include "src/pc_emulator/proto/configuration.pb.h"
 
@@ -21,7 +23,7 @@ using DataTypeCategory = pc_specification::DataTypeCategory;
 using FieldInterfaceType = pc_specification::FieldInterfaceType;
 
 namespace pc_emulator {
-    class PCConfiguration;
+    class PCConfigurationImpl;
     class Task;
     class InsnRegistry;
 
@@ -61,56 +63,43 @@ namespace pc_emulator {
 
     };
 
-    class PCResource {
+    class PCResourceImpl: public PCResource {
         private:
-            
-            
-            int __InputMemSize;
-            int __OutputMemSize;
-            PCMemUnit __InputMemory;
-            PCMemUnit __OutputMemory;
-            InsnRegistry *  __InsnRegistry;
-            std::unordered_map<std::string,  std::unique_ptr<PCVariable>> 
-                                                __ResourcePoUVars;
-            std::unordered_map<std::string, std::unique_ptr<PCVariable>> 
-                                                __AccessedFields;
 
+            InsnRegistry *  __InsnRegistry;
             std::unordered_map<std::string,
                     std::unique_ptr<PoUCodeContainer>> __CodeContainers;
             std::unordered_map<std::string, std::unique_ptr<Task>> __Tasks;
             std::unordered_map<int, priority_queue<CompactTaskDescription>> 
                                             __IntervalTasksByPriority;
             std::unordered_map<string, std::vector<Task*>> __InterruptTasks;
+                   
             
-            
+            PCVariable * GetPOUGlobalVariable(string NestedFieldName);
+            void RegisterPoUVariable(string VariableName,
+                                    std::unique_ptr<PCVariable> Var);
 
         public :
-            string __ResourceName;
-            PCConfiguration * __configuration;
+            PCConfigurationImpl * __configuration;
             std::unique_ptr<Clock> clock;
             PCVariable * __CurrentResult;
             
-            PCResource(PCConfiguration * configuration, string ResourceName,
-                        int InputMemSize, int OutputMemSize);
+            PCResourceImpl(PCConfigurationImpl * configuration,
+                string ResourceName, int InputMemSize, int OutputMemSize);
             void InitializeClock() ;
             void InitializeAllPoUVars();
+            void ResolveAllExternalFields();
             void InitializeAllTasks();
             void OnStartup();
-
-
             void AddTask(std::unique_ptr<Task> Tsk);
             Task * GetTask(string TskName);
             Task * GetInterruptTaskToExecute();
             Task * GetIntervalTaskToExecuteAt(double schedule_time);
             void ExecuteInsn(string InsnName, std::vector<PCVariable*>& Ops,
                             bool isNegated);
-            void QueueTask(Task* Tsk);
-            
-            void RegisterPoUVariable(string VariableName,
-                                        std::unique_ptr<PCVariable> Var);
-            PCVariable * GetVariable(string NestedFieldName);
-            PCVariable * GetPoUVariable(string PoUName);
-            PCVariable * GetPOUGlobalVariable(string NestedFieldName);
+            void QueueTask(Task* Tsk);   
+            PCVariable * GetExternVariable(string NestedFieldName);
+            PCVariable * GetPOU(string PoUName);
             PCVariable * GetVariablePointerToMem(int MemType, int ByteOffset,
                                 int BitOffset, string VariableDataTypeName);
             PCVariable * GetTmpVariable(string VariableDataTypeName,

@@ -7,7 +7,7 @@
 namespace pc_emulator {
     class EQ_Insn: public Insn {
         public:
-            EQ_Insn(PCResource * AssociatedResource) {
+            EQ_Insn(PCResourceImpl * AssociatedResource) {
                 __AssociatedResource = AssociatedResource;
                 __InsnName = "EQ";
             };

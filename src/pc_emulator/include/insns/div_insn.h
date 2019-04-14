@@ -7,7 +7,7 @@
 namespace pc_emulator {
     class DIV_Insn: public Insn {
         public:
-            DIV_Insn(PCResource * AssociatedResource) {
+            DIV_Insn(PCResourceImpl * AssociatedResource) {
                 __AssociatedResource = AssociatedResource;
                 __InsnName = "DIV";
             };

@@ -1,7 +1,9 @@
 SCADA_on_CORE.code-workspace
+.vscode/ipch
 .vscode/settings.json
 .vscode/tasks.json
 .vscode/launch.json
+.vscode
 bazel-bin
 bazel-OpenSCADA
 bazel-out

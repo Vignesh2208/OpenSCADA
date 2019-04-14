@@ -15,7 +15,7 @@ using namespace std;
 using namespace std::chrono;
 
 namespace pc_emulator {
-    class PCResource;
+    class PCResourceImpl;
 
     class Clock {
         
@@ -23,16 +23,17 @@ namespace pc_emulator {
             double __time;
             bool  __is_virtual;
             double __expected_time;
-            PCResource * __AssociatedResource;
+            PCResourceImpl * __AssociatedResource;
 
-            Clock(bool is_virtual, PCResource * AssociatedResource);
+            Clock(bool is_virtual, PCResourceImpl * AssociatedResource);
 
             double GetCurrentTime() {
                 if (__is_virtual)
                     return __time;
                 
                 __time  = (duration_cast<milliseconds >(
-                                system_clock::now().time_since_epoch())).count()/1000.0;
+                                system_clock::now()
+                                .time_since_epoch())).count()/1000.0;
                 return __time;
             }
 

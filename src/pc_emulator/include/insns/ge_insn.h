@@ -7,7 +7,7 @@
 namespace pc_emulator {
     class GE_Insn: public Insn {
         public:
-            GE_Insn(PCResource * AssociatedResource) {
+            GE_Insn(PCResourceImpl * AssociatedResource) {
                 __AssociatedResource = AssociatedResource;
                 __InsnName = "GE";
             };

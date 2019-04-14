@@ -7,7 +7,7 @@
 namespace pc_emulator {
     class AND_Insn: public Insn {
         public:
-            AND_Insn(PCResource * AssociatedResource) {
+            AND_Insn(PCResourceImpl * AssociatedResource) {
                 __AssociatedResource = AssociatedResource;
                 __InsnName = "AND";
             };

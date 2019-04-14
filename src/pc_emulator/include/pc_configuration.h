@@ -12,6 +12,7 @@
 #include "pc_datatype_registry.h"
 #include "pc_resource_registry.h"
 #include "task.h"
+#include "configuration.h"
 #include "src/pc_emulator/proto/configuration.pb.h"
 
 using namespace std;
@@ -20,40 +21,24 @@ using namespace pc_specification;
 namespace pc_emulator {
     class PCVariable;
     
-    class PCConfiguration {
-        private :
+    class PCConfigurationImpl: public PCConfiguration {
+        private:
+            int __NumResources;
             void RegisterAllResources();
             void RegisterAllElementaryDataTypes();
             void RegisterAllComplexDataTypes();
-            
-            
-
+            void InitializeAllPOUVariables();
         public:
-            std::unique_ptr<Logger> PCLogger;
-            DataTypeRegistry RegisteredDataTypes;
-            ResourceRegistry RegisteredResources;
-            int __RAMmemSize;
-            PCMemUnit __RAMMemory;
-            string __ConfigurationPath;
-            string __ConfigurationName;
-            Specification __specification;
-            std::unique_ptr<PCVariable> __global_pou_var;
-            std::unique_ptr<PCVariable> __access_pou_var;
-            int __NumResources;
-            
-            std::unordered_map<int, string> __DataTypeDefaultInitialValues;
-            std::unordered_map<string, std::unique_ptr<PCVariable>> 
-                                                __AccessedFields;
-            
-            PCVariable * GetVariable(string NestedFieldName);
-            PCVariable * GetAccessVariable(string NestedFieldName);
+            PCVariable * GetExternVariable(string NestedFieldName);
+            PCVariable * GetPOU(string PoUName);
+            PCVariable * GetAccessPathVariable(string AccessPath);
             PCDataType * LookupDataType(string DataTypeName);
-            PCConfiguration(string ConfigurationPath);
-            PCVariable * GetVariablePointerToMem(int MemType, int ByteOffset,
-                        int BitOffset, string VariableDataTypeName);
+            PCConfigurationImpl(string ConfigurationPath);
+            PCVariable * GetVariablePointerToMem(int ByteOffset, int BitOffset,
+                        string VariableDataTypeName);
             PCVariable * GetVariablePointerToResourceMem(string ResourceName,
                         int MemType, int ByteOffset,
-                        int BitOffset, string VariableDataTypeName); 
+                        int BitOffset, string VariableDataTypeName);
             void Cleanup();
 
     };

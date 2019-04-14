@@ -4,6 +4,8 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string.hpp>
 #include <vector>
+#include <fstream>
+#include <cstdio>
 
 #include "src/pc_emulator/include/pc_variable.h"
 #include "src/pc_emulator/include/pc_datatype.h"
@@ -26,11 +28,7 @@ using std::unordered_map;
 using std::to_string;
 
 
-PCConfiguration::PCConfiguration(string ConfigurationPath):
-    __ConfigurationPath(ConfigurationPath),
-    RegisteredDataTypes(this), RegisteredResources(this) {
-
-
+PCConfigurationImpl::PCConfigurationImpl(string ConfigurationPath) {
         int fileDescriptor = open(ConfigurationPath.c_str(),
                                 O_RDONLY);
 
@@ -54,6 +52,8 @@ PCConfiguration::PCConfiguration(string ConfigurationPath):
 
         
         __ConfigurationName = "Default_Configuration";
+        __ConfigurationPath = ConfigurationPath;
+        
         int logLevel = LogLevels::LOG_INFO;
         string logFilePath = "";
         if (__specification.has_config_name())
@@ -68,35 +68,47 @@ PCConfiguration::PCConfiguration(string ConfigurationPath):
 
         PCLogger = std::unique_ptr<Logger>(new Logger(
             this, logFilePath, logLevel));
+        RegisteredDataTypes = std::unique_ptr<DataTypeRegistry>(new 
+            DataTypeRegistry((PCConfiguration *)this));
+        RegisteredResources = new ResourceRegistry((PCConfiguration *)this);
         __RAMmemSize = __specification.machine_spec().ram_mem_size_bytes();
         assert(__RAMmemSize > 0);
-        __RAMMemory.AllocateStaticMemory(__RAMmemSize);
+        
+        std::cout << "Allocating Shared Memory " << std::endl;
+
+        __RAMMemory.AllocateSharedMemory(__RAMmemSize,
+                "/tmp/" + __ConfigurationName + "_RAM",
+                __ConfigurationName + "_RamLock");
+
+        //__RAMMemory.AllocateStaticMemory(__RAMmemSize);
+        std::cout << "Allocated Shared Memory " << std::endl;
         __NumResources = __specification.machine_spec().num_cpus();
         assert(__NumResources > 0);
 
         PCLogger->LogMessage(LogLevels::LOG_INFO, "Read Configuration !");
         RegisterAllElementaryDataTypes();
-        RegisterAllComplexDataTypes();
         RegisterAllResources();
+        RegisterAllComplexDataTypes();
+
+        InitializeAllPOUVariables();
 
 };
 
-
-void PCConfiguration::RegisterAllResources() {
+ void PCConfigurationImpl::RegisterAllResources() {
     for (auto& resource_spec : __specification.machine_spec().resource_spec()) {
         auto new_resource = 
-            std::unique_ptr<PCResource>(new PCResource(this,
+            std::unique_ptr<PCResourceImpl>(new PCResourceImpl(this,
                                         resource_spec.resource_name(),
                                         resource_spec.input_mem_size_bytes(),
                                         resource_spec.output_mem_size_bytes()));
-        new_resource->InitializeAllPoUVars();
-        RegisteredResources.RegisterResource(
-                        resource_spec.resource_name(), std::move(new_resource));
+        //new_resource->InitializeAllPoUVars();
+        RegisteredResources->RegisterResource(
+                resource_spec.resource_name(), std::move(new_resource));
         
     }
 }
 
-void PCConfiguration::RegisterAllElementaryDataTypes () {
+void PCConfigurationImpl::RegisterAllElementaryDataTypes () {
     for (int Category = DataTypeCategory::BOOL ; 
                 Category != DataTypeCategory::ARRAY; Category++) {
 
@@ -179,9 +191,9 @@ void PCConfiguration::RegisterAllElementaryDataTypes () {
             PCLogger->LogMessage(LogLevels::LOG_INFO, 
                     "Registering Elementary DataType: " + DataTypeName);
             auto newDataType = std::unique_ptr<PCDataType>(new PCDataType(
-                this, DataTypeName, DataTypeName,
+                (PCConfiguration *) this, DataTypeName, DataTypeName,
                 static_cast<DataTypeCategory>(Category), InitValue));   
-            RegisteredDataTypes.RegisterDataType(DataTypeName,
+            RegisteredDataTypes->RegisterDataType(DataTypeName,
                                     std::move(newDataType));  
         } 
     }
@@ -189,8 +201,10 @@ void PCConfiguration::RegisterAllElementaryDataTypes () {
     PCLogger->LogMessage(LogLevels::LOG_INFO, "Registering STRING DataType");
     // note that max string length is 1000 chars
     auto stringDataType = std::unique_ptr<PCDataType>(new PCDataType(
-        this, "STRING", "CHAR", 1000, DataTypeCategory::ARRAY));
-    RegisteredDataTypes.RegisterDataType("STRING", std::move(stringDataType));
+        (PCConfiguration *)this, "STRING", "CHAR", 1000,
+        DataTypeCategory::ARRAY));
+    RegisteredDataTypes->RegisterDataType(
+            "STRING", std::move(stringDataType));
 
     __DataTypeDefaultInitialValues.insert(std::make_pair(
                                             DataTypeCategory::ARRAY, ""));
@@ -200,10 +214,10 @@ void PCConfiguration::RegisterAllElementaryDataTypes () {
                                             DataTypeCategory::POU, ""));
 
     PCLogger->LogMessage(LogLevels::LOG_INFO, 
-                    "Registered all elementary datatypes!\n");
+            "Registered all elementary datatypes!\n");
 }
 
-void PCConfiguration::RegisterAllComplexDataTypes() {
+void PCConfigurationImpl::RegisterAllComplexDataTypes() {
 
     for (auto & datatype_decl : __specification.datatype_declaration()) {
         if (datatype_decl.datatype_category() != DataTypeCategory::POU
@@ -241,7 +255,7 @@ void PCConfiguration::RegisterAllComplexDataTypes() {
                         assert(datatype_decl.datatype_spec().dimension_1() > 0);
                         
                         new_data_type = std::unique_ptr<PCDataType>(
-                            new PCDataType(this, 
+                            new PCDataType((PCConfiguration *)this, 
                             datatype_decl.name(), elementary_datatype_name,
                             datatype_decl.datatype_spec().dimension_1(),
                             datatype_decl.datatype_category(), InitValue,
@@ -251,7 +265,7 @@ void PCConfiguration::RegisterAllComplexDataTypes() {
                         assert(datatype_decl.datatype_spec().dimension_1() > 0
                             && datatype_decl.datatype_spec().dimension_2() > 0);
                         new_data_type = std::unique_ptr<PCDataType>(
-                                new PCDataType(this, 
+                                new PCDataType((PCConfiguration *)this, 
                                 datatype_decl.name(), elementary_datatype_name,
                                 datatype_decl.datatype_spec().dimension_1(),
                                 datatype_decl.datatype_spec().dimension_2(),
@@ -260,7 +274,8 @@ void PCConfiguration::RegisterAllComplexDataTypes() {
                     }
                 } else {
                     new_data_type = std::unique_ptr<PCDataType>(
-                        new PCDataType(this, datatype_decl.name(), 
+                        new PCDataType((PCConfiguration *)this,
+                        datatype_decl.name(), 
                         elementary_datatype_name,
                         datatype_decl.datatype_category(),
                         InitValue, range_min, range_max));
@@ -274,7 +289,8 @@ void PCConfiguration::RegisterAllComplexDataTypes() {
                     == DataTypeCategory::DERIVED 
                     && datatype_decl.datatype_field_size() > 0);
                 new_data_type = std::unique_ptr<PCDataType>(
-                    new PCDataType(this, datatype_decl.name(),
+                    new PCDataType((PCConfiguration *)this,
+                    datatype_decl.name(),
                     datatype_decl.name(), DataTypeCategory::DERIVED));
                 Utils::InitializeDataType(this, new_data_type.get(),
                                         datatype_decl);
@@ -282,7 +298,7 @@ void PCConfiguration::RegisterAllComplexDataTypes() {
 
             
             assert(new_data_type.get() != nullptr);
-            RegisteredDataTypes.RegisterDataType(datatype_decl.name(), 
+            RegisteredDataTypes->RegisterDataType(datatype_decl.name(), 
                                         std::move(new_data_type));
         }
 
@@ -294,86 +310,161 @@ void PCConfiguration::RegisterAllComplexDataTypes() {
     else {
 
         auto global_var_type = std::unique_ptr<PCDataType>(
-                    new PCDataType(this, "__CONFIG_GLOBAL__",
+                    new PCDataType((PCConfiguration *)this,
+                    "__CONFIG_GLOBAL__",
                     "__CONFIG_GLOBAL__", DataTypeCategory::POU));
 
         Utils::InitializeDataType(this, global_var_type.get(),
              __specification.config_global_pou_var());
         
-        RegisteredDataTypes.RegisterDataType("__CONFIG_GLOBAL__", 
-                                        std::move(global_var_type));
+        RegisteredDataTypes->RegisterDataType("__CONFIG_GLOBAL__", 
+                                std::move(global_var_type));
 
         __global_pou_var = std::unique_ptr<PCVariable>
-                (new PCVariable(this, nullptr,
+                (new PCVariable((PCConfiguration *)this, nullptr,
                                 "__CONFIG_GLOBAL_VAR__", "__CONFIG_GLOBAL__"));
-        __global_pou_var->AllocateAndInitialize();
+    }
+    
+    PCLogger->LogMessage(LogLevels::LOG_INFO,
+                "Registered all Complex DataTypes!");
+}
+
+void PCConfigurationImpl::InitializeAllPOUVariables() {
+    if (__global_pou_var) {
+        std::cout << "Initializing GLOBAL VAR ****\n";
+
+        __global_pou_var->AllocateAndInitialize("/tmp/" + __ConfigurationName
+                + "_" + "__CONFIG_GLOBAL__");
+        
         __global_pou_var->__VariableDataType->__PoUType 
                 = pc_specification::PoUType::PROGRAM;
         Utils::ValidatePOUDefinition(__global_pou_var.get(), this);
-        
+        std::cout << "Finished Initializing Global VAR *****\n";
     }
-    
+
+    for (auto& resource_spec 
+            : __specification.machine_spec().resource_spec()) {
+        auto new_resource = (PCResourceImpl *)
+            RegisteredResources->GetResource(
+                resource_spec.resource_name());            
+        new_resource->InitializeAllPoUVars();
+    }
+
     if (!__specification.has_config_access_pou_var())
         __access_pou_var = nullptr;
     else {
         auto access_var_type = std::unique_ptr<PCDataType>(
-                new PCDataType(this, "__CONFIG_ACCESS__", "__CONFIG_ACCESS__",
+                new PCDataType((PCConfiguration *)this,
+                "__CONFIG_ACCESS__", "__CONFIG_ACCESS__",
                     DataTypeCategory::POU));
 
         Utils::InitializeAccessDataType(this, access_var_type.get(),
              __specification.config_access_pou_var());
 
-        RegisteredDataTypes.RegisterDataType("__CONFIG__ACCESS__", 
-                                        std::move(access_var_type));
+        RegisteredDataTypes->RegisterDataType("__CONFIG_ACCESS__", 
+                                std::move(access_var_type));
         
         __access_pou_var = std::unique_ptr<PCVariable>
-                    (new PCVariable(this, nullptr,
+                    (new PCVariable((PCConfiguration *)this, nullptr,
                                 "__CONFIG_ACCESS_VAR__", "__CONFIG_ACCESS__"));
-        __access_pou_var->AllocateAndInitialize();
+        
+    }
+
+    if (__access_pou_var) {
+
+        std::cout << "Initializing ACCESS VAR ****\n";
+        __access_pou_var->AllocateAndInitialize("/tmp/" + __ConfigurationName
+            + "_" + "__CONFIG_ACCESS__");
         __access_pou_var->__VariableDataType->__PoUType 
                         = pc_specification::PoUType::PROGRAM;
         Utils::ValidatePOUDefinition(__access_pou_var.get(), this);
         // now we need to set pointers to some fields of this variable
 
+ 
+
         for (auto& field : 
                     __specification.config_access_pou_var().datatype_field()) {
-            if (field.intf_type() == FieldIntfType::VAR_ACCESS 
-                    && field.has_field_storage_spec()) {
-
             
-                if (field.field_storage_spec().has_full_storage_spec()) {
-                    //extract memtype, byte and bit offsets from string specification
-                    int mem_type, ByteOffset, BitOffset;
-                    if (!Utils::ExtractFromAccessStorageSpec(
-                            this,
-                            field.field_storage_spec().full_storage_spec(),
-                            &mem_type, &ByteOffset, &BitOffset)) {
-                        // these are the fields which are selected
-                        string StorageSpec 
-                            = field.field_storage_spec().full_storage_spec();
+            if (field.field_storage_spec().has_full_storage_spec()) {
+                //extract memtype, byte and bit offsets from string specification
+                int mem_type, ByteOffset, BitOffset;
+                string CandidateResourceName;
+                if (!Utils::ExtractFromAccessStorageSpec(
+                        this,
+                        field.field_storage_spec().full_storage_spec(),
+                        &mem_type, &ByteOffset, &BitOffset,
+                        CandidateResourceName)) {
+                    // these are the fields which are selected
+                    string StorageSpec 
+                        = field.field_storage_spec().full_storage_spec();
 
-                        PCVariable * desired_ptr = GetVariable(StorageSpec);
-                        if(!desired_ptr) {
-                            PCLogger->RaiseException("Error in storage spec"
-                                    " of access variable!");
-                        }
+                    std::cout << "Getting Ptr for: " << StorageSpec << std::endl;
 
-                        //set this as a ptr to the field of acess variable
-                        __access_pou_var->SetField(field.field_name(),
-                                        desired_ptr);
-
+                    PCVariable * desired_ptr = Utils::GetVariable(
+                        StorageSpec, this);
+                    std::cout << "Got Ptr for: " << StorageSpec << std::endl;
+                    if(!desired_ptr) {
+                        PCLogger->RaiseException("Error in storage spec"
+                                " of access variable: " + StorageSpec);
                     }
+
+                    if (desired_ptr->__IsVariableContentTypeAPtr) {
+                        throw std::domain_error("ACCESS path: " 
+                            + field.field_name()
+                            + " points to another pointer ! ACCESS paths "
+                            " can only be set for VAR_GLOBAL, VAR_INPUT,"
+                            "VAR_OUTPUT or directly represented variables");
+                    }
+
+                    //set this as a ptr to the field of acess variable
+                    __access_pou_var->SetField(field.field_name(),
+                                    desired_ptr);
+
                 }
             }
         }
 
+        
+    } else {
+
+        /*for (auto& resource_spec : __specification.machine_spec().resource_spec()) {
+            auto new_resource = (PCResourceImpl *)RegisteredResources->GetResource(
+                    resource_spec.resource_name());
+            
+            new_resource->ResolveAllExternalFields();
+        
+        }*/
     }
-    PCLogger->LogMessage(LogLevels::LOG_INFO, "Registered all Complex DataTypes!");
+
+    for (auto& resource_spec : __specification.machine_spec().resource_spec()) {
+            auto new_resource = (PCResourceImpl *)
+                    RegisteredResources->GetResource(
+                            resource_spec.resource_name());            
+            new_resource->ResolveAllExternalFields();
+    }
+    std::cout << "Finished Initializing ACCESS VAR *****\n";
+    std::cout << "Finished Initializing Resource POU Variables *****\n";
 }
 
-PCVariable * PCConfiguration::GetVariablePointerToMem(int memType,
-                int ByteOffset, int BitOffset,string VariableDataTypeName) {
+PCVariable * PCConfigurationImpl::GetPOU(string NestedPoUName) {
+    assert(!NestedPoUName.empty());
+    std::vector<string> results;
 
+    boost::split(results, NestedPoUName,
+                boost::is_any_of("."), boost::token_compress_on);
+    DataTypeFieldAttributes FieldAttributes;
+    PCResourceImpl * resource = (PCResourceImpl *)
+                RegisteredResources->GetResource(results[0]);
+    if (resource != nullptr && results.size() == 2) {
+        return resource->GetPOU(results[1]);
+    }
+    return nullptr;
+}
+
+PCVariable * PCConfigurationImpl::GetVariablePointerToMem(int ByteOffset,
+        int BitOffset,string VariableDataTypeName) {
+
+    int memType = MemType::RAM_MEM;
     assert(ByteOffset > 0 && BitOffset >= 0 && BitOffset < 8);
     assert(memType == MemType::RAM_MEM);
     string VariableName = __ConfigurationName 
@@ -381,12 +472,14 @@ PCVariable * PCConfiguration::GetVariablePointerToMem(int memType,
                             + "." + std::to_string(memType)
                             + "." + std::to_string(ByteOffset)
                             + "." + std::to_string(BitOffset);
+    std::cout << "Called VariablePointerToMem for TypeName: " << VariableDataTypeName
+        << std::endl;
     // need to track and delete this variable later on
     auto got = __AccessedFields.find(VariableName);
     if(got == __AccessedFields.end()) {
         __AccessedFields.insert(std::make_pair(VariableName,
-            std::unique_ptr<PCVariable>(new PCVariable(this, nullptr,
-                    VariableName, VariableDataTypeName))));
+            std::unique_ptr<PCVariable>(new PCVariable((PCConfiguration *)this,
+                    nullptr, VariableName, VariableDataTypeName))));
         auto V = __AccessedFields.find(VariableName)->second.get();
         assert(V != nullptr);
 
@@ -405,11 +498,10 @@ PCVariable * PCConfiguration::GetVariablePointerToMem(int memType,
     }
 }
 
-PCVariable * PCConfiguration::GetVariablePointerToResourceMem(
-                        string ResourceName,
-                        int MemType, int ByteOffset,
+PCVariable * PCConfigurationImpl::GetVariablePointerToResourceMem(
+                        string ResourceName, int MemType, int ByteOffset,
                         int BitOffset, string VariableDataTypeName){
-    PCResource * desired_resource = RegisteredResources.GetResource(
+    PCResource * desired_resource = RegisteredResources->GetResource(
                                         ResourceName);
     if (!desired_resource)
         return nullptr;
@@ -419,63 +511,68 @@ PCVariable * PCConfiguration::GetVariablePointerToResourceMem(
 
 }
 
-PCVariable * PCConfiguration::GetVariable(string NestedFieldName) {
+PCVariable * PCConfigurationImpl::GetExternVariable(string NestedFieldName) {
     assert(!NestedFieldName.empty());
     std::vector<string> results;
 
     boost::split(results, NestedFieldName,
                 boost::is_any_of("."), boost::token_compress_on);
     DataTypeFieldAttributes FieldAttributes;
-    PCResource * resource = RegisteredResources.GetResource(results[0]);
+    PCResource * resource = RegisteredResources->GetResource(results[0]);
     if (resource == nullptr) {
         if (__global_pou_var != nullptr
         && __global_pou_var->__VariableDataType->IsFieldPresent(
                                                 NestedFieldName)){
             __global_pou_var->GetFieldAttributes(NestedFieldName, FieldAttributes);
-            if (!Utils::IsFieldTypePtr(FieldAttributes.FieldInterfaceType))
+            if (!Utils::IsFieldTypePtr(
+                FieldAttributes.FieldDetails.__FieldInterfaceType))
                 return __global_pou_var->GetPtrToField(NestedFieldName);
             else
                 return __global_pou_var->GetPtrStoredAtField(NestedFieldName);
         }
-        else if (__access_pou_var != nullptr
-        && __access_pou_var->__VariableDataType->IsFieldPresent(
-                                                NestedFieldName)) {
-            __access_pou_var->GetFieldAttributes(NestedFieldName,
-                                                FieldAttributes);                                       
-            assert(Utils::IsFieldTypePtr(FieldAttributes.FieldInterfaceType));
-            return __access_pou_var->GetPtrStoredAtField(NestedFieldName);
-        } else
-            return nullptr;
+        // Note: ACCESS Paths are not checked here because they are only
+        // intended for inter configuration communication. POUs within one
+        // configuration may not access these ACCESS paths.
+        return nullptr;
         
     } else {
         
         if (results.size() > 1) {
             string ResourceVariableName = NestedFieldName.substr(
                     NestedFieldName.find('.') + 1, string::npos);
-            return resource->GetVariable(ResourceVariableName);
+            return resource->GetExternVariable(ResourceVariableName);
         }
         return nullptr;
     }
 
 }
 
-PCVariable * PCConfiguration::GetAccessVariable(string NestedFieldName) {
+PCVariable * PCConfigurationImpl::GetAccessPathVariable(string AccessPath) {
 
-    if (!__access_pou_var || NestedFieldName.empty())
+    DataTypeFieldAttributes FieldAttributes;
+
+    if (!__access_pou_var || AccessPath.empty())
         return nullptr;
     
-    if (__access_pou_var->__VariableDataType->IsFieldPresent(NestedFieldName))
-        return __access_pou_var->GetPtrToField(NestedFieldName);
-    else
+    if (__access_pou_var->__VariableDataType->IsFieldPresent(AccessPath)) {
+        __access_pou_var->GetFieldAttributes(AccessPath,
+                                            FieldAttributes);                                       
+        if (!Utils::IsFieldTypePtr(
+            FieldAttributes.FieldDetails.__FieldInterfaceType))
+            return __access_pou_var->GetPtrToField(AccessPath);
+        else
+            return __access_pou_var->GetPtrStoredAtField(AccessPath);
+    
+    } else
         return nullptr;
     
 }
 
-PCDataType * PCConfiguration::LookupDataType(string DataTypeName) {
-    return RegisteredDataTypes.GetDataType(DataTypeName);
+PCDataType * PCConfigurationImpl::LookupDataType(string DataTypeName) {
+    return RegisteredDataTypes->GetDataType(DataTypeName);
 }
 
-void PCConfiguration::Cleanup() {
+void PCConfigurationImpl::Cleanup() {
     for ( auto it = __AccessedFields.begin(); it != __AccessedFields.end(); 
             ++it ) {
             PCVariable * __AccessedVariable = it->second.get();
@@ -490,6 +587,11 @@ void PCConfiguration::Cleanup() {
         __access_pou_var->Cleanup();
     }
 
-    RegisteredResources.Cleanup();
-    RegisteredDataTypes.Cleanup();
+    std::cout << "Configuration: Removing MMap Files" << std::endl;
+    __RAMMemory.Cleanup();
+    std::remove(("/tmp/" + __ConfigurationName).c_str());
+    RegisteredResources->Cleanup();
+    RegisteredDataTypes->Cleanup();
+
+    delete RegisteredResources;
 }

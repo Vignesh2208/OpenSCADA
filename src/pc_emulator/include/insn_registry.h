@@ -35,7 +35,7 @@ namespace pc_emulator{
             std::unordered_map<std::string,
                     std::unique_ptr<Insn>> __InsnRegistry;
         public:
-            InsnRegistry(PCResource* AssociatedResource);
+            InsnRegistry(PCResourceImpl * AssociatedResource);
             Insn* GetInsn(string InsnName);
     };
 }

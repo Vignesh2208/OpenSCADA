@@ -22,12 +22,12 @@ using DataTypeCategory = pc_specification::DataTypeCategory;
 using FieldIntfType = pc_specification::FieldInterfaceType;
 
 
-ProgramContainer::ProgramContainer(PCResource * AssociatedResource,
+ProgramContainer::ProgramContainer(PCResourceImpl * AssociatedResource,
     const ProgramSpecification& program_spec, Task * AssociatedTask) {
     __ProgramName = program_spec.program_name();
     __AssociatedResource = AssociatedResource;
     assert(__AssociatedResource != nullptr);
-    __ExecPoUVariable = __AssociatedResource->GetPoUVariable(
+    __ExecPoUVariable = __AssociatedResource->GetPOU(
                                 program_spec.pou_variable_type());
     assert(__ExecPoUVariable != nullptr);
     for (auto initialization_map : program_spec.initialization_maps()) {
@@ -65,48 +65,41 @@ void Task::Execute() {
 
             
             
-            if (Attributes.FieldInterfaceType 
+            if (Attributes.FieldDetails.__FieldInterfaceType 
                         == FieldIntfType::VAR_INPUT) {
 
                 // Copy to mapped input variables
                 PCVariable * mappedVariable 
-                = __configuration->GetVariable(map.mapped_variable_field_name());
-
-                if (mappedVariable == nullptr) {
-                    mappedVariable 
-                    = __AssociatedResource->GetPOUGlobalVariable(
+                = __configuration->GetExternVariable(
                         map.mapped_variable_field_name());
-                    if(!mappedVariable) {
-                        __configuration->PCLogger->RaiseException(
-                            "Mapped variable"
-                            + map.mapped_variable_field_name() + " not found!");
-                    }
+
+                if (mappedVariable == nullptr) { 
+                    __configuration->PCLogger->RaiseException(
+                        "Mapped variable"
+                        + map.mapped_variable_field_name() + " not found!");
                 }
                 
                 container->__ExecPoUVariable->SetField(
                                 map.pou_variable_field_name(), mappedVariable);
                 output_vars.push_back(0);
                 
-            } else if (Attributes.FieldInterfaceType 
+            } else if (Attributes.FieldDetails.__FieldInterfaceType 
                         == FieldIntfType::VAR_OUTPUT) {
                 output_vars.push_back(1);
 
-            } else if (Attributes.FieldInterfaceType 
+            } else if (Attributes.FieldDetails.__FieldInterfaceType 
                         == FieldIntfType::VAR_IN_OUT) {
 
                 // Set pointers to some inout variables
                 PCVariable * mappedVariable 
-                = __configuration->GetVariable(map.mapped_variable_field_name());
+                = __configuration->GetExternVariable(
+                        map.mapped_variable_field_name());
 
                 if (mappedVariable == nullptr) {
-                    mappedVariable 
-                    = __AssociatedResource->GetPOUGlobalVariable(
-                        map.mapped_variable_field_name());
-                    if(!mappedVariable) {
-                        __configuration->PCLogger->RaiseException(
-                            "Mapped variable"
-                            + map.mapped_variable_field_name() + " not found!");
-                    }
+                    
+                    __configuration->PCLogger->RaiseException(
+                        "Mapped variable"
+                        + map.mapped_variable_field_name() + " not found!");
                 }
                 
                 container->__ExecPoUVariable->SetField(
@@ -127,17 +120,13 @@ void Task::Execute() {
             if (output_vars[i] == 1) {
                 auto map = container->__initialization_map[i];
                 PCVariable * mappedVariable 
-                = __configuration->GetVariable(map.mapped_variable_field_name());
+                = __configuration->GetExternVariable(
+                        map.mapped_variable_field_name());
 
                 if (mappedVariable == nullptr) {
-                    mappedVariable 
-                    = __AssociatedResource->GetPOUGlobalVariable(
-                        map.mapped_variable_field_name());
-                    if(!mappedVariable) {
-                        __configuration->PCLogger->RaiseException(
-                            "Mapped variable"
-                            + map.mapped_variable_field_name() + " not found!");
-                    }
+                     __configuration->PCLogger->RaiseException(
+                        "Mapped variable"
+                        + map.mapped_variable_field_name() + " not found!");
                 }
 
                 PCVariable * ptrToOutputField 

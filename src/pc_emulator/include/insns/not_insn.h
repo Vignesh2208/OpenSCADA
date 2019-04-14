@@ -7,7 +7,7 @@
 namespace pc_emulator {
     class NOT_Insn: public Insn {
         public:
-            NOT_Insn(PCResource * AssociatedResource) {
+            NOT_Insn(PCResourceImpl * AssociatedResource) {
                 __AssociatedResource = AssociatedResource;
                 __InsnName = "NOT";
             };

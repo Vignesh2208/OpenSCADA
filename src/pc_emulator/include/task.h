@@ -24,9 +24,9 @@ using FieldInterfaceType = pc_specification::FieldInterfaceType;
 
 namespace pc_emulator {
 
-    class PCConfiguration;
+    class PCConfigurationImpl;
     class PCVariable;
-    class PCResource;
+    class PCResourceImpl;
     class Task;
     
 
@@ -34,13 +34,13 @@ namespace pc_emulator {
     class ProgramContainer {
         public:
             string __ProgramName;
-            PCResource * __AssociatedResource;
+            PCResourceImpl * __AssociatedResource;
             PCVariable * __ExecPoUVariable;
             std::unique_ptr<Executor> __AssociatedExecutor;
             std::vector<ProgramVariableInitialization> __initialization_map;
             Task * __AssociatedTask;
 
-            ProgramContainer(PCResource * AssociatedResource, 
+            ProgramContainer(PCResourceImpl * AssociatedResource, 
                 const ProgramSpecification& program_spec, Task * AssociatedTask);
 
             void Cleanup();
@@ -53,8 +53,8 @@ namespace pc_emulator {
             int __priority;
             TaskType type;
             int __interval_ms;
-            PCConfiguration * __configuration;
-            PCResource * __AssociatedResource;
+            PCConfigurationImpl * __configuration;
+            PCResourceImpl * __AssociatedResource;
             string __trigger_variable_name;
             bool __trigger_variable_previous_value;
             bool __IsReady;
@@ -62,8 +62,8 @@ namespace pc_emulator {
             std::vector<std::unique_ptr<ProgramContainer>> __AssociatedPrograms;
             
 
-            Task(PCConfiguration * configuration,
-                PCResource * AssociatedResource,
+            Task(PCConfigurationImpl * configuration,
+                PCResourceImpl * AssociatedResource,
                 const TaskSpecification& task_spec):
                          __configuration(configuration),
                          __AssociatedResource(AssociatedResource) {

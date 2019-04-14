@@ -39,18 +39,17 @@ namespace pc_emulator {
     };
 
     typedef struct DataTypeFieldAttributesStruct {
-        unsigned long RelativeOffset;
-        unsigned long SizeInBits;
-        int FieldInterfaceType;
-        PCDataType* FieldDataTypePtr;
-        PCVariable* HoldVariablePtr;
         string NestedFieldName;
+        unsigned long RelativeOffset;
+        PCDataTypeField FieldDetails;
+        PCVariable* HoldVariablePtr;
+        PCVariable* ParentVariablePtr;
     } DataTypeFieldAttributes;
 
     class PCVariable {
 
         private:
-            void AllocateStorage();
+            
 
             void CopyToPCVariableFieldFromPointer(DataTypeFieldAttributes&
                                                 Attributes, PCVariable * From);
@@ -76,13 +75,25 @@ namespace pc_emulator {
             void CheckValidity();
             void ParseRemFieldAttributes(std::vector<string>& Fields,
                         int StartPos, DataTypeFieldAttributes& FieldAttributes,
-                        PCVariable * HolderVariable);
+                        PCVariable * HolderVariable, PCDataType * Current);
+
+            
+            void SafeMemRead(void * dst, PCMemUnit * From, int CopySizeBytes,
+                                int Offset);
+            void SafeMemWrite(PCMemUnit * To, int CopySizeBytes, int Offset,
+                            void * src);
+            bool SafeBitRead(PCMemUnit * From, int ByteOffset, int BitOffset);
+            void SafeBitWrite(PCMemUnit * To, int ByteOffset, int BitOffset,
+                            bool value);
+            
 
         public:
             int __ByteOffset;
             int __BitOffset;
+            int __TotalSizeInBits;
 
             bool __IsVariableContentTypeAPtr; // 1 - pointer, 0 - non_pointer
+            bool __PrevValue;
             string __VariableName;
             PCDataType* __VariableDataType;
             PCMemUnit __MemoryLocation;
@@ -92,6 +103,7 @@ namespace pc_emulator {
             std::unordered_map<std::string,
             std::unique_ptr<PCVariable>> __AccessedFields;
             bool __MemAllocated, __IsDirectlyRepresented;
+            DataTypeFieldAttributes __VariableAttributes;
 
 
             PCVariable(PCConfiguration * configuration,
@@ -99,8 +111,11 @@ namespace pc_emulator {
                     string VariableName,
                     string VariableDataTypeName);
 
-            void Cleanup();    
+            void Cleanup(); 
+            void AllocateStorage();
+            void AllocateStorage(string SharedMemFileName);   
             void AllocateAndInitialize();
+            void AllocateAndInitialize(string SharedMemFileName);
             void ResolveAllExternalFields();
             void OnExecutorStartup();
 
@@ -134,16 +149,30 @@ namespace pc_emulator {
             PCVariable& operator>>(PCVariable& V );
             PCVariable& operator!();
 
-            /*
-            friend bool operator == (PCVariable& V1, PCVariable& V2);
-            friend bool operator > (PCVariable& V1, PCVariable& V2);
-            friend bool operator < (PCVariable& V1, PCVariable& V2);
-            friend bool operator <= (PCVariable& V1, PCVariable& V2);
-            friend bool operator >= (PCVariable& V1, PCVariable& V2);
-            */
-
 
             friend bool operator==(PCVariable& V1, PCVariable& V2) {
+                int CopySize = V1.__TotalSizeInBits / 8;
+
+                if (V1.__VariableDataType->__DataTypeCategory 
+                        == DataTypeCategory::ARRAY
+                    || V1.__VariableDataType->__DataTypeCategory 
+                        == DataTypeCategory::DERIVED
+                    || V1.__VariableDataType->__DataTypeCategory 
+                        == DataTypeCategory::POU) {
+                    if (V1.__TotalSizeInBits != V2.__TotalSizeInBits)
+                        return false;
+                    for (int i = 0 ; i < CopySize; i++) {
+                        char * val1 
+                            = V1.__MemoryLocation.GetPointerToMemory(
+                                V1.__ByteOffset + i);
+                        char * val2 = V2.__MemoryLocation.GetPointerToMemory(
+                                V2.__ByteOffset + i);
+                        if (*val1 != *val2)
+                            return false;
+                    }
+                    return true;
+                }
+                
                 return V1.InitiateOperationOnVariables(V2, VariableOps::EQ);
             }
 
@@ -165,14 +194,6 @@ namespace pc_emulator {
 
             
     };
-
-    /*
-    bool operator == (PCVariable& V1, PCVariable& V2);
-    bool operator > (PCVariable& V1, PCVariable& V2);
-    bool operator < (PCVariable& V1, PCVariable& V2);
-    bool operator <= (PCVariable& V1, PCVariable& V2);
-    bool operator >= (PCVariable& V1, PCVariable& V2);
-    */
     
 }
 

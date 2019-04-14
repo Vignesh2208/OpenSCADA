@@ -9,6 +9,8 @@
 #include <assert.h>
 #include <unordered_map>
 #include "src/pc_emulator/proto/configuration.pb.h"
+#include <fcntl.h>
+#include <sys/mman.h>
 
 
 using namespace std;
@@ -26,6 +28,7 @@ namespace pc_emulator {
     class PCDataType;
     class PCVariable;
     class PCConfiguration;
+    struct DataTypeFieldAttributesStruct;
 
     class Utils {
 
@@ -49,7 +52,8 @@ namespace pc_emulator {
         static bool ExtractFromAccessStorageSpec(
             PCConfiguration * __configuration, string StorageSpec, 
                                             int * MemType, int * ByteOffset,
-                                            int * BitOffset);
+                                            int * BitOffset,
+                                            string& CandidateResourceName);
 
         static string GetInstallationDirectory();
 
@@ -64,6 +68,24 @@ namespace pc_emulator {
 
         static void ValidatePOUDefinition(PCVariable * POUVar, 
                                             PCConfiguration * configuration);
+
+        static bool does_file_exist(const char * filename);
+        static char * make_mmap_shared(int nElements, string FileName);
+
+        static PCVariable * GetVariable(string NestedFieldName,
+                PCConfiguration * configuration);
+
+        static bool GetFieldAttributesForAccessPath(string AccessPath,
+                PCConfiguration * configuration,
+                struct DataTypeFieldAttributesStruct& FieldAttributes);
+
+
+        static bool ReadAccessCheck(PCConfiguration * configuration,
+                string CallingPoUType, string NestedFieldName);
+        
+        static bool WriteAccessCheck(PCConfiguration * configuration,
+                string CallingPoUType, string NestedFieldName);
+            
     };
 }   
 

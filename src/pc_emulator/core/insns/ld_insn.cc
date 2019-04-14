@@ -20,10 +20,16 @@ void LD_Insn::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
 
     PCVariable * Operand = Operands[0];
     assert(Operand != nullptr);
-    assert(Operand->__VariableDataType->__DataTypeCategory
-            != DataTypeCategory::POU);
+   if (Operand->__IsVariableContentTypeAPtr) {
+        Operand = Operand->GetPtrStoredAtField("");
+        assert(Operand != nullptr);
+    }
+ 
 
     if (isNegated) {
+        assert(Operand->__VariableDataType->__DataTypeCategory
+            != DataTypeCategory::POU);
+
         auto tmp = Operand->GetCopy();
         *__AssociatedResource->__CurrentResult = !(*tmp.get());
     } else {

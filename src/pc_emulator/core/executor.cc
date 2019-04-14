@@ -115,7 +115,7 @@ void Executor::RestoreCPURegisters() {
 void Executor::ResetCPURegisters() {
     __AssociatedResource->__CurrentResult->__configuration = __configuration;
     __AssociatedResource->__CurrentResult->__VariableDataType
-         = __configuration->RegisteredDataTypes.GetDataType("BOOL");
+         = __configuration->RegisteredDataTypes->GetDataType("BOOL");
     __AssociatedResource->__CurrentResult->__AssociatedResource 
             = __AssociatedResource;
     __AssociatedResource->__CurrentResult->__ByteOffset = 0;

@@ -7,7 +7,7 @@
 namespace pc_emulator {
     class XOR_Insn: public Insn {
         public:
-            XOR_Insn(PCResource * AssociatedResource) {
+            XOR_Insn(PCResourceImpl * AssociatedResource) {
                 __AssociatedResource = AssociatedResource;
                 __InsnName = "XOR";
             };

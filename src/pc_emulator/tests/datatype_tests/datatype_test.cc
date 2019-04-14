@@ -19,7 +19,7 @@ TEST(DataTypeTestSuite, BasicDataTypeTest) {
             + "/src/pc_emulator/tests/datatype_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfiguration configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
     auto int_type_def = configuration.LookupDataType("INT_TYPE_DEF");
     auto int_1d = configuration.LookupDataType("INT_1DARR_TYPE_DEF");
     auto int_2d = configuration.LookupDataType("INT_2DARR_TYPE_DEF");
@@ -101,6 +101,8 @@ TEST(DataTypeTestSuite, BasicDataTypeTest) {
 
     EXPECT_EQ(int_2d->GetPCDataTypeField("[2][3]", Result), false);
 
+    configuration.Cleanup();
+
 }
 
 
@@ -110,7 +112,7 @@ TEST(DataTypeTestSuite, ComplexDataTypeTest1) {
             + "/src/pc_emulator/tests/datatype_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfiguration configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
     auto complex_1 = configuration.LookupDataType("COMPLEX_STRUCT_1");
     ASSERT_TRUE(complex_1 != nullptr);
     EXPECT_EQ(complex_1->__AliasName, "COMPLEX_STRUCT_1");
@@ -205,6 +207,8 @@ TEST(DataTypeTestSuite, ComplexDataTypeTest1) {
     EXPECT_EQ(Result.__RangeMax, 10);
     EXPECT_EQ(Result.__RangeMin, -10);
     EXPECT_EQ(Result.__FieldTypePtr, configuration.LookupDataType("INT"));
+
+    configuration.Cleanup();
 }
 
 
@@ -214,7 +218,7 @@ TEST(DataTypeTestSuite, ComplexDataTypeTest2) {
             + "/src/pc_emulator/tests/datatype_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfiguration configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
     auto complex_1 = configuration.LookupDataType("COMPLEX_STRUCT_2");
     ASSERT_TRUE(complex_1 != nullptr);
     EXPECT_EQ(complex_1->__AliasName, "COMPLEX_STRUCT_2");
@@ -328,6 +332,7 @@ TEST(DataTypeTestSuite, ComplexDataTypeTest2) {
     EXPECT_EQ(Result.__RangeMin, -10);
     EXPECT_EQ(Result.__FieldTypePtr, configuration.LookupDataType("INT"));
     
+    configuration.Cleanup();
 }
 
 
@@ -336,7 +341,7 @@ TEST(DataTypeTestSuite, ComplexDataTypeTest3) {
             + "/src/pc_emulator/tests/datatype_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfiguration configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
     auto complex_3 = configuration.LookupDataType("COMPLEX_STRUCT_3");
     ASSERT_TRUE(complex_3 != nullptr);
     EXPECT_EQ(complex_3->__AliasName, "COMPLEX_STRUCT_3");
@@ -488,6 +493,8 @@ TEST(DataTypeTestSuite, ComplexDataTypeTest3) {
                     configuration.LookupDataType("REAL"));
     EXPECT_EQ(Result.__RangeMin, -10);
     EXPECT_EQ(Result.__RangeMax, 10);
+
+    configuration.Cleanup();
 }
 
 
@@ -496,7 +503,7 @@ TEST(DataTypeTestSuite, GlobalVariablesTest) {
             + "/src/pc_emulator/tests/datatype_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfiguration configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
     auto global = configuration.LookupDataType("__CONFIG_GLOBAL__");
     ASSERT_TRUE(global != nullptr);
     EXPECT_EQ(global->__DataTypeCategory, DataTypeCategory::POU);
@@ -581,6 +588,8 @@ TEST(DataTypeTestSuite, GlobalVariablesTest) {
     EXPECT_EQ(Result.__StorageBitOffset, 0);
     EXPECT_EQ(Result.__StorageMemType, RAM_MEM);
 
+    configuration.Cleanup();
+
 }
 
 TEST(DataTypeTestSuite, DataTypeUtilsTest) {
@@ -635,6 +644,8 @@ TEST(DataTypeTestSuite, DataTypeUtilsTest) {
     EXPECT_EQ(dt.Tod.Hr, 10);
     EXPECT_EQ(dt.Tod.Min, 30);
     EXPECT_EQ(dt.Tod.Sec, 55);
+
+    
 
 }
 

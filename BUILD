@@ -21,11 +21,13 @@ cc_library(
     name="pc_emulator_lib",
     hdrs = glob([
         "src/pc_emulator/include/**/*.h",
-        "src/pc_emulator/include/*.h"
+        "src/pc_emulator/include/*.h",
+        "src/pc_emulator/ext_modules/include/*.h"
     ]),
     srcs = glob([
         "src/pc_emulator/core/**/*.cc",
-        "src/pc_emulator/core/*.cc"
+        "src/pc_emulator/core/*.cc",
+        "src/pc_emulator/ext_modules/*.cc"
     ]),
     deps = ["@boost//:algorithm",
             "@boost//:lexical_cast",
@@ -59,6 +61,15 @@ cc_test(
 cc_test(
     name = "insn_test",
     srcs = ["src/pc_emulator/tests/insn_tests/insn_test.cc"],
+    copts = ["-Iexternal/gtest/include -fpermissive -Wno-reorder"],
+    deps = [":pc_emulator_lib",
+           "@gtest//:main"],
+    linkstatic = 1,
+)
+
+cc_test(
+    name = "access_test",
+    srcs = ["src/pc_emulator/tests/access_variable_tests/access_variable_test.cc"],
     copts = ["-Iexternal/gtest/include -fpermissive -Wno-reorder"],
     deps = [":pc_emulator_lib",
            "@gtest//:main"],

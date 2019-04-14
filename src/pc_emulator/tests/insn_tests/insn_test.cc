@@ -1,4 +1,5 @@
 #include "src/pc_emulator/include/pc_configuration.h"
+#include "src/pc_emulator/include/pc_resource.h"
 #include "src/pc_emulator/include/pc_datatype.h"
 #include "src/pc_emulator/include/pc_variable.h"
 #include "src/pc_emulator/include/utils.h"
@@ -21,27 +22,48 @@ TEST(InsnTestSuite, LD_ST_InsnTest) {
             + "/src/pc_emulator/tests/insn_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfiguration configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
 
-    PCResource * resource 
-        = configuration.RegisteredResources.GetResource("CPU_001");
+    // For testing if mmap works
+    PCConfigurationImpl configuration2(TestDir + "/input.prototxt");
+
+    PCResourceImpl * resource 
+        = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
+                    "CPU_001");
     PCVariable * Op = resource->GetTmpVariable("INT", "15");
     PCVariable * Storage_INT = configuration.GetVariablePointerToMem(
-        MemType::RAM_MEM, 1, 0, "INT");
+        1, 0, "INT");
     PCVariable * Storage_BOOL = configuration.GetVariablePointerToMem(
-        MemType::RAM_MEM, 10, 0, "BOOL");
+        10, 0, "BOOL");
     PCVariable * Storage_CHAR = configuration.GetVariablePointerToMem(
-        MemType::RAM_MEM, 12, 0, "CHAR");
+        12, 0, "CHAR");
     PCVariable * Storage_REAL = configuration.GetVariablePointerToMem(
-        MemType::RAM_MEM, 13, 0, "REAL");
+        13, 0, "REAL");
     PCVariable * Storage_TIME = configuration.GetVariablePointerToMem(
-        MemType::RAM_MEM, 17, 0, "TIME");
+        17, 0, "TIME");
     PCVariable * Storage_DATE = configuration.GetVariablePointerToMem(
-        MemType::RAM_MEM, 23, 0, "DATE");
+        23, 0, "DATE");
     PCVariable * Storage_DT = configuration.GetVariablePointerToMem(
-        MemType::RAM_MEM, 29, 0, "DT");
+         29, 0, "DT");
     PCVariable * Storage_BYTE = configuration.GetVariablePointerToMem(
-        MemType::RAM_MEM, 35, 0, "BYTE");
+         35, 0, "BYTE");
+
+    PCVariable * Storage_INT2 = configuration2.GetVariablePointerToMem(
+         1, 0, "INT");
+    PCVariable * Storage_BOOL2 = configuration2.GetVariablePointerToMem(
+         10, 0, "BOOL");
+    PCVariable * Storage_CHAR2 = configuration2.GetVariablePointerToMem(
+         12, 0, "CHAR");
+    PCVariable * Storage_REAL2 = configuration2.GetVariablePointerToMem(
+         13, 0, "REAL");
+    PCVariable * Storage_TIME2 = configuration2.GetVariablePointerToMem(
+         17, 0, "TIME");
+    PCVariable * Storage_DATE2 = configuration2.GetVariablePointerToMem(
+         23, 0, "DATE");
+    PCVariable * Storage_DT2 = configuration2.GetVariablePointerToMem(
+         29, 0, "DT");
+    PCVariable * Storage_BYTE2 = configuration2.GetVariablePointerToMem(
+         35, 0, "BYTE");
 
     std::vector<PCVariable*> Ops;
     std::vector<PCVariable*> Ops2;
@@ -61,9 +83,12 @@ TEST(InsnTestSuite, LD_ST_InsnTest) {
 
     ASSERT_TRUE(*resource->__CurrentResult == *Storage_INT);
     ASSERT_TRUE(Utils::TestEQPtrs(Storage_INT,
-        configuration.GetVariablePointerToMem(RAM_MEM, 1, 0, "INT")));
+        configuration.GetVariablePointerToMem( 1, 0, "INT")));
     EXPECT_EQ(Storage_INT->GetValueStoredAtField<int16_t>(
         "", DataTypeCategory::INT), 15);
+    EXPECT_EQ(Storage_INT2->GetValueStoredAtField<int16_t>(
+        "", DataTypeCategory::INT), 15);
+
 
     std::cout << "Testing BOOL " << std::endl;
 
@@ -83,8 +108,10 @@ TEST(InsnTestSuite, LD_ST_InsnTest) {
 
     ASSERT_TRUE(*resource->__CurrentResult == *Storage_BOOL);
     ASSERT_TRUE(Utils::TestEQPtrs(Storage_BOOL,
-        configuration.GetVariablePointerToMem(RAM_MEM, 10, 0, "BOOL")));
+        configuration.GetVariablePointerToMem( 10, 0, "BOOL")));
     EXPECT_EQ(Storage_BOOL->GetValueStoredAtField<bool>(
+        "", DataTypeCategory::BOOL), false);
+    EXPECT_EQ(Storage_BOOL2->GetValueStoredAtField<bool>(
         "", DataTypeCategory::BOOL), false);
 
     std::cout << "Testing CHAR " << std::endl;
@@ -104,8 +131,10 @@ TEST(InsnTestSuite, LD_ST_InsnTest) {
 
     ASSERT_TRUE(*resource->__CurrentResult == *Storage_CHAR);
     ASSERT_TRUE(Utils::TestEQPtrs(Storage_CHAR,
-        configuration.GetVariablePointerToMem(RAM_MEM, 12, 0, "CHAR")));
+        configuration.GetVariablePointerToMem( 12, 0, "CHAR")));
     EXPECT_EQ(Storage_CHAR->GetValueStoredAtField<int8_t>(
+        "", DataTypeCategory::CHAR), 'a');
+    EXPECT_EQ(Storage_CHAR2->GetValueStoredAtField<int8_t>(
         "", DataTypeCategory::CHAR), 'a');
 
     std::cout << "Testing REAL " << std::endl;
@@ -113,10 +142,11 @@ TEST(InsnTestSuite, LD_ST_InsnTest) {
     Ops.clear();
     Ops.push_back(resource->GetTmpVariable("REAL", "1.1"));
     resource->ExecuteInsn("LD", Ops, false);
-
+    std::cout << "Executed LD\n";
     Ops2.clear();
     Ops2.push_back(Storage_REAL);
     resource->ExecuteInsn("ST", Ops2, false);
+    std::cout << "Executed ST\n";
 
     ASSERT_TRUE(*resource->__CurrentResult == *Ops[0]);
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
@@ -124,9 +154,12 @@ TEST(InsnTestSuite, LD_ST_InsnTest) {
 
     ASSERT_TRUE(*resource->__CurrentResult == *Storage_REAL);
     ASSERT_TRUE(Utils::TestEQPtrs(Storage_REAL,
-        configuration.GetVariablePointerToMem(RAM_MEM, 13, 0, "REAL")));
+        configuration.GetVariablePointerToMem( 13, 0, "REAL")));
     EXPECT_EQ(Storage_REAL->GetValueStoredAtField<float>(
         "", DataTypeCategory::REAL), (float)1.1);
+    EXPECT_EQ(Storage_REAL2->GetValueStoredAtField<float>(
+        "", DataTypeCategory::REAL), (float)1.1);
+
 
     std::cout << "Testing TIME " << std::endl;
 
@@ -144,8 +177,10 @@ TEST(InsnTestSuite, LD_ST_InsnTest) {
 
     ASSERT_TRUE(*resource->__CurrentResult == *Storage_TIME);
     ASSERT_TRUE(Utils::TestEQPtrs(Storage_TIME,
-        configuration.GetVariablePointerToMem(RAM_MEM, 17, 0, "TIME")));
+        configuration.GetVariablePointerToMem( 17, 0, "TIME")));
     EXPECT_EQ(Storage_TIME->GetValueStoredAtField<TimeType>(
+        "", DataTypeCategory::TIME).SecsElapsed, 13);
+    EXPECT_EQ(Storage_TIME2->GetValueStoredAtField<TimeType>(
         "", DataTypeCategory::TIME).SecsElapsed, 13);
 
 
@@ -167,14 +202,21 @@ TEST(InsnTestSuite, LD_ST_InsnTest) {
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<DateType>("",
                 DataTypeCategory::DATE).Day, 11);
 
+
     ASSERT_TRUE(*resource->__CurrentResult == *Storage_DATE);
     ASSERT_TRUE(Utils::TestEQPtrs(Storage_DATE,
-        configuration.GetVariablePointerToMem(RAM_MEM, 23, 0, "DATE")));
+        configuration.GetVariablePointerToMem( 23, 0, "DATE")));
     EXPECT_EQ(Storage_DATE->GetValueStoredAtField<DateType>("",
                 DataTypeCategory::DATE).Year, 2020);
     EXPECT_EQ(Storage_DATE->GetValueStoredAtField<DateType>("",
                 DataTypeCategory::DATE).Month, 01);
     EXPECT_EQ(Storage_DATE->GetValueStoredAtField<DateType>("",
+                DataTypeCategory::DATE).Day, 11);
+    EXPECT_EQ(Storage_DATE2->GetValueStoredAtField<DateType>("",
+                DataTypeCategory::DATE).Year, 2020);
+    EXPECT_EQ(Storage_DATE2->GetValueStoredAtField<DateType>("",
+                DataTypeCategory::DATE).Month, 01);
+    EXPECT_EQ(Storage_DATE2->GetValueStoredAtField<DateType>("",
                 DataTypeCategory::DATE).Day, 11);
     
     std::cout << "Testing DT " << std::endl;
@@ -203,7 +245,7 @@ TEST(InsnTestSuite, LD_ST_InsnTest) {
 
     ASSERT_TRUE(*resource->__CurrentResult == *Storage_DT);
     ASSERT_TRUE(Utils::TestEQPtrs(Storage_DT,
-        configuration.GetVariablePointerToMem(RAM_MEM, 29, 0, "DT")));
+        configuration.GetVariablePointerToMem( 29, 0, "DT")));
     EXPECT_EQ(Storage_DT->GetValueStoredAtField<DateTODType>("",
                 DataTypeCategory::DATE_AND_TIME).Date.Year, 2020);
     EXPECT_EQ(Storage_DT->GetValueStoredAtField<DateTODType>("",
@@ -215,6 +257,19 @@ TEST(InsnTestSuite, LD_ST_InsnTest) {
     EXPECT_EQ(Storage_DT->GetValueStoredAtField<DateTODType>("",
                 DataTypeCategory::DATE_AND_TIME).Tod.Min, 1);
     EXPECT_EQ(Storage_DT->GetValueStoredAtField<DateTODType>("",
+                DataTypeCategory::DATE_AND_TIME).Tod.Sec, 5);
+    
+    EXPECT_EQ(Storage_DT2->GetValueStoredAtField<DateTODType>("",
+                DataTypeCategory::DATE_AND_TIME).Date.Year, 2020);
+    EXPECT_EQ(Storage_DT2->GetValueStoredAtField<DateTODType>("",
+                DataTypeCategory::DATE_AND_TIME).Date.Month, 01);
+    EXPECT_EQ(Storage_DT2->GetValueStoredAtField<DateTODType>("",
+                DataTypeCategory::DATE_AND_TIME).Date.Day, 11);
+    EXPECT_EQ(Storage_DT2->GetValueStoredAtField<DateTODType>("",
+                DataTypeCategory::DATE_AND_TIME).Tod.Hr, 10);
+    EXPECT_EQ(Storage_DT2->GetValueStoredAtField<DateTODType>("",
+                DataTypeCategory::DATE_AND_TIME).Tod.Min, 1);
+    EXPECT_EQ(Storage_DT2->GetValueStoredAtField<DateTODType>("",
                 DataTypeCategory::DATE_AND_TIME).Tod.Sec, 5);
 
     std::cout << "Testing BYTE " << std::endl;
@@ -234,11 +289,127 @@ TEST(InsnTestSuite, LD_ST_InsnTest) {
 
     
     ASSERT_TRUE(Utils::TestEQPtrs(Storage_BYTE,
-        configuration.GetVariablePointerToMem(RAM_MEM, 35, 0, "BYTE")));
+        configuration.GetVariablePointerToMem( 35, 0, "BYTE")));
     EXPECT_EQ(Storage_BYTE->GetValueStoredAtField<int8_t>("",
+                DataTypeCategory::BYTE), (int8_t)0x1);
+    EXPECT_EQ(Storage_BYTE2->GetValueStoredAtField<int8_t>("",
                 DataTypeCategory::BYTE), (int8_t)0x1);
 
     configuration.Cleanup();
+    configuration2.Cleanup();
+    std::cout << "Finished Test !" << std::endl;
+}
+
+
+TEST(InsnTestSuite, LD_ST_ComplexDataTypeTest) {
+    string TestDir = Utils::GetInstallationDirectory() 
+            + "/src/pc_emulator/tests/insn_tests";
+
+    std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+
+    // For testing if mmap works
+    PCConfigurationImpl configuration2(TestDir + "/input.prototxt");
+
+    PCResourceImpl * resource 
+        = (PCResourceImpl *) configuration.RegisteredResources->GetResource(
+                        "CPU_001");
+    PCVariable * Op = resource->GetTmpVariable("STRING", "abc");
+    PCVariable * Storage_STR = configuration.GetVariablePointerToMem(
+         1, 0, "STRING");
+    
+    std::vector<PCVariable*> Ops;
+    std::vector<PCVariable*> Ops2;
+    Ops.push_back(Op);
+    Ops2.push_back(Storage_STR);
+
+    std::cout << "Testing STRING " << std::endl;
+    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("ST", Ops2, false);
+
+    ASSERT_TRUE(*resource->__CurrentResult == *Op);
+
+    EXPECT_EQ(Op->GetValueStoredAtField<char>(
+                "[1]", DataTypeCategory::CHAR), 'a');
+    EXPECT_EQ(Op->GetValueStoredAtField<char>(
+                "[2]", DataTypeCategory::CHAR), 'b');
+    EXPECT_EQ(Op->GetValueStoredAtField<char>(
+                "[3]", DataTypeCategory::CHAR), 'c');
+
+    
+    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<char>(
+                "[1]", DataTypeCategory::CHAR), 'a');
+    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<char>(
+                "[2]", DataTypeCategory::CHAR), 'b');
+    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<char>(
+                "[3]", DataTypeCategory::CHAR), 'c');
+
+    EXPECT_EQ(Storage_STR->GetValueStoredAtField<char>(
+                "[1]", DataTypeCategory::CHAR), 'a');
+    EXPECT_EQ(Storage_STR->GetValueStoredAtField<char>(
+                "[2]", DataTypeCategory::CHAR), 'b');
+    EXPECT_EQ(Storage_STR->GetValueStoredAtField<char>(
+                "[3]", DataTypeCategory::CHAR), 'c');
+
+    std::cout << "Testing DERIVED " << std::endl;
+
+    Ops.clear();
+    Ops2.clear();
+
+    PCVariable * Storage_complex_struct
+        = configuration.GetVariablePointerToMem( 1, 0,
+                                        "COMPLEX_STRUCT_1");
+
+    Ops.push_back(resource->GetTmpVariable("COMPLEX_STRUCT_1", ""));
+    Ops2.push_back(Storage_complex_struct);
+
+    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("ST", Ops2, false);
+
+    ASSERT_TRUE(*resource->__CurrentResult == *Ops[0]);
+    ASSERT_TRUE(*resource->__CurrentResult == *Storage_complex_struct);
+
+
+    Ops.clear();
+    Ops2.clear();
+
+    Storage_complex_struct
+        = configuration.GetVariablePointerToMem( 2500, 0,
+                                        "COMPLEX_STRUCT_1");
+
+    Ops.push_back(configuration.GetVariable("complex_global"));
+    Ops2.push_back(Storage_complex_struct);
+
+    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("ST", Ops2, false);
+
+    ASSERT_TRUE(*resource->__CurrentResult == *Ops[0]);
+    ASSERT_TRUE(*resource->__CurrentResult == *Storage_complex_struct);
+
+
+    std::cout << "Testing SUPER COMPLEX DERIVED " << std::endl;
+
+    Ops.clear();
+    Ops2.clear();
+
+    Storage_complex_struct
+        = configuration.GetVariablePointerToMem( 1, 0,
+                                        "COMPLEX_STRUCT_3");
+
+    Ops.push_back(resource->GetTmpVariable("COMPLEX_STRUCT_3", ""));
+    Ops2.push_back(Storage_complex_struct);
+
+    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("ST", Ops2, false);
+
+    ASSERT_TRUE(*resource->__CurrentResult == *Ops[0]);
+    ASSERT_TRUE(*resource->__CurrentResult == *Storage_complex_struct);
+
+
+    
+
+    configuration.Cleanup();
+    configuration2.Cleanup();
     std::cout << "Finished Test !" << std::endl;
 }
 
@@ -249,10 +420,11 @@ TEST(InsnTestSuite,ADD_SUB_InsnTest) {
             + "/src/pc_emulator/tests/insn_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfiguration configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
 
-    PCResource * resource 
-        = configuration.RegisteredResources.GetResource("CPU_001");
+    PCResourceImpl * resource 
+        = (PCResourceImpl *) configuration.RegisteredResources->GetResource(
+                "CPU_001");
 
     std::vector<PCVariable*> Ops;
     Ops.clear();
@@ -388,10 +560,11 @@ TEST(InsnTestSuite, MUL_DIV_InsnTest) {
             + "/src/pc_emulator/tests/insn_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfiguration configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
 
-    PCResource * resource 
-        = configuration.RegisteredResources.GetResource("CPU_001");
+    PCResourceImpl * resource 
+        = (PCResourceImpl *) configuration.RegisteredResources->GetResource(
+                "CPU_001");
 
     std::vector<PCVariable*> Ops;
     Ops.clear();
@@ -507,10 +680,11 @@ TEST(InsnTestSuite,LE_LT_InsnTest) {
             + "/src/pc_emulator/tests/insn_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfiguration configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
 
-    PCResource * resource 
-        = configuration.RegisteredResources.GetResource("CPU_001");
+    PCResourceImpl * resource 
+        = (PCResourceImpl *) configuration.RegisteredResources->GetResource(
+                    "CPU_001");
 
     std::vector<PCVariable*> Ops;
     std::vector<PCVariable*> Ops2;
@@ -669,10 +843,11 @@ TEST(InsnTestSuite,GE_GT_InsnTest) {
             + "/src/pc_emulator/tests/insn_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfiguration configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
 
-    PCResource * resource 
-        = configuration.RegisteredResources.GetResource("CPU_001");
+    PCResourceImpl * resource 
+        = (PCResourceImpl *) configuration.RegisteredResources->GetResource(
+                "CPU_001");
 
     std::vector<PCVariable*> Ops;
     std::vector<PCVariable*> Ops2;
@@ -851,10 +1026,11 @@ TEST(InsnTestSuite,EQ_NE_InsnTest) {
             + "/src/pc_emulator/tests/insn_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfiguration configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
 
-    PCResource * resource 
-        = configuration.RegisteredResources.GetResource("CPU_001");
+    PCResourceImpl * resource 
+        = (PCResourceImpl *) configuration.RegisteredResources->GetResource(
+                "CPU_001");
 
     std::vector<PCVariable*> Ops;
     std::vector<PCVariable*> Ops2;
@@ -1033,10 +1209,11 @@ TEST(InsnTestSuite, BitwiseOps_InsnTest) {
             + "/src/pc_emulator/tests/insn_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfiguration configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
 
-    PCResource * resource 
-        = configuration.RegisteredResources.GetResource("CPU_001");
+    PCResourceImpl * resource 
+        = (PCResourceImpl *) configuration.RegisteredResources->GetResource(
+                "CPU_001");
 
     std::vector<PCVariable*> Ops;
     std::vector<PCVariable*> Ops2;

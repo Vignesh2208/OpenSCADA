@@ -7,7 +7,7 @@
 namespace pc_emulator {
     class MUL_Insn: public Insn {
         public:
-            MUL_Insn(PCResource * AssociatedResource) {
+            MUL_Insn(PCResourceImpl * AssociatedResource) {
                 __AssociatedResource = AssociatedResource;
                 __InsnName = "MUL";
             };

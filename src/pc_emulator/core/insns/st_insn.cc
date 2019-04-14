@@ -20,8 +20,13 @@ void ST_Insn::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
 
     PCVariable * Operand = Operands[0];
     assert(Operand != nullptr);
-    assert(Operand->__VariableDataType->__DataTypeCategory
-            != DataTypeCategory::POU);
+    if (Operand->__IsVariableContentTypeAPtr) {
+        std::cout << "ST Variable Content Type is Ptr: " << std::endl;
+        Operand = Operand->GetPtrStoredAtField("");
+        assert(Operand != nullptr);
+    }
+
+    
 
     if (__AssociatedResource->__CurrentResult
         ->__VariableDataType->__DataTypeName !=
@@ -31,6 +36,9 @@ void ST_Insn::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
     }
 
     if (isNegated) {
+        assert(Operand->__VariableDataType->__DataTypeCategory
+            != DataTypeCategory::POU);
+        std:: cout << "ST Insn Getting Copy\n";
         auto tmp = __AssociatedResource->__CurrentResult->GetCopy();
         *tmp = !(*tmp);
         Operand->SetField("", tmp.get());

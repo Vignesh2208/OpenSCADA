@@ -8,7 +8,7 @@ using namespace pc_emulator;
 using namespace std;
 using namespace pc_specification;
 
-InsnRegistry::InsnRegistry(PCResource* AssociatedResource) {
+InsnRegistry::InsnRegistry(PCResourceImpl * AssociatedResource) {
     __InsnRegistry.insert(
         std::make_pair("LD",
         std::unique_ptr<Insn>(new LD_Insn(AssociatedResource))

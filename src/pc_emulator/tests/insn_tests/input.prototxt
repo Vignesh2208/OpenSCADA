@@ -71,6 +71,48 @@ datatype_declaration {
         field_datatype_name: "INT_2DARR_TYPE_DEF"
     }
 }
+datatype_declaration {
+    name: "COMPLEX_STRUCT_2"
+    datatype_category: DERIVED
+    datatype_field {
+        field_name: "complex_field"
+        field_datatype_name: "COMPLEX_STRUCT_1"
+    }
+    datatype_field {
+        field_name: "int_field"
+        field_datatype_name: "INT_TYPE_DEF"
+    }
+    datatype_field {
+        field_name: "word_field"
+        field_datatype_name: "WORD"
+        initial_value: "16#1"
+    }
+    datatype_field {
+        field_name: "time_field"
+        field_datatype_name: "TIME"
+    }
+    datatype_field {
+        field_name: "date_field"
+        field_datatype_name: "DATE"
+    }
+    datatype_field {
+        field_name: "date_tod_field"
+        field_datatype_name: "DT"
+    }
+    datatype_field {
+        field_name: "tod_field"
+        field_datatype_name: "TOD"
+    }
+}
+datatype_declaration {
+    name: "COMPLEX_STRUCT_3"
+    datatype_category: DERIVED
+    datatype_field {
+        field_name: "complex_vector"
+        field_datatype_name: "COMPLEX_STRUCT_2"
+        dimension_1: 2
+    }
+}
 config_global_pou_var {
     name: "__CONFIG_GLOBAL__"
     datatype_field {

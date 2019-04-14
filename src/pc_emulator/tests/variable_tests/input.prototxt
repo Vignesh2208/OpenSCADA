@@ -71,6 +71,48 @@ datatype_declaration {
         field_datatype_name: "INT_2DARR_TYPE_DEF"
     }
 }
+datatype_declaration {
+    name: "COMPLEX_STRUCT_2"
+    datatype_category: DERIVED
+    datatype_field {
+        field_name: "complex_field"
+        field_datatype_name: "COMPLEX_STRUCT_1"
+    }
+    datatype_field {
+        field_name: "int_field"
+        field_datatype_name: "INT_TYPE_DEF"
+    }
+    datatype_field {
+        field_name: "word_field"
+        field_datatype_name: "WORD"
+        initial_value: "16#1"
+    }
+    datatype_field {
+        field_name: "time_field"
+        field_datatype_name: "TIME"
+    }
+    datatype_field {
+        field_name: "date_field"
+        field_datatype_name: "DATE"
+    }
+    datatype_field {
+        field_name: "date_tod_field"
+        field_datatype_name: "DT"
+    }
+    datatype_field {
+        field_name: "tod_field"
+        field_datatype_name: "TOD"
+    }
+}
+datatype_declaration {
+    name: "COMPLEX_STRUCT_3"
+    datatype_category: DERIVED
+    datatype_field {
+        field_name: "complex_vector"
+        field_datatype_name: "COMPLEX_STRUCT_2"
+        dimension_1: 2
+    }
+}
 config_global_pou_var {
     name: "__CONFIG_GLOBAL__"
     datatype_field {
@@ -125,9 +167,19 @@ config_global_pou_var {
     datatype_field {
         field_name: "complex_global"
         field_datatype_name: "COMPLEX_STRUCT_1"
+        dimension_1: 1
         intf_type: VAR_EXPLICIT_STORAGE
         field_storage_spec {
             full_storage_spec: "%MW30"
+        }
+    }
+    datatype_field {
+        field_name: "complex_global_2"
+        field_datatype_name: "COMPLEX_STRUCT_3"
+        dimension_1: 2
+        intf_type: VAR_EXPLICIT_STORAGE
+        field_storage_spec {
+            full_storage_spec: "%MW2500"
         }
     }
 }
@@ -138,6 +190,104 @@ machine_spec {
         resource_name: "CPU_001"
         input_mem_size_bytes: 10000
         output_mem_size_bytes: 10000
+
+        pou_var {
+            name: "FB_2"
+            pou_type: FB
+
+            datatype_field {
+                field_name: "input_1"
+                field_datatype_name: "INT"
+                intf_type: VAR_INPUT
+            }
+            datatype_field {
+                field_name: "output_1"
+                field_datatype_name: "REAL"
+                intf_type: VAR_OUTPUT
+            }
+            datatype_field {
+                field_name: "inout_1"
+                field_datatype_name: "INT"
+                intf_type: VAR_IN_OUT
+            }
+            datatype_field {
+                field_name: "var_1"
+                field_datatype_name: "INT"
+                intf_type: VAR
+            }
+            datatype_field {
+                field_name: "global_int_arr"
+                field_datatype_name: "INT"
+                dimension_1: 2
+                dimension_2: 2
+                intf_type: VAR_EXTERNAL
+            }
+            datatype_field {
+                field_name: "start"
+                field_datatype_name: "BOOL_TYPE_DEF"
+                intf_type: VAR_EXTERNAL
+            }
+            datatype_field {
+                field_name: "start_int"
+                field_datatype_name: "INT_TYPE_DEF"
+                intf_type: VAR_EXTERNAL
+            }
+            datatype_field {
+                field_name: "start_time"
+                field_datatype_name: "TIME_TYPE_DEF"
+                intf_type: VAR_EXTERNAL
+            }
+        }
+
+        pou_var {
+            name: "FB_1"
+            pou_type: FB
+
+            datatype_field {
+                field_name: "input_1"
+                field_datatype_name: "INT"
+                intf_type: VAR_INPUT
+            }
+            datatype_field {
+                field_name: "output_1"
+                field_datatype_name: "REAL"
+                intf_type: VAR_OUTPUT
+            }
+            datatype_field {
+                field_name: "inout_1"
+                field_datatype_name: "FB_2"
+                intf_type: VAR_IN_OUT
+            }
+            datatype_field {
+                field_name: "var_1"
+                field_datatype_name: "FB_2"
+                intf_type: VAR
+            }
+            datatype_field {
+                field_name: "global_int_arr"
+                field_datatype_name: "INT"
+                dimension_1: 2
+                dimension_2: 2
+                intf_type: VAR_EXTERNAL
+            }
+            datatype_field {
+                field_name: "start"
+                field_datatype_name: "BOOL_TYPE_DEF"
+                intf_type: VAR_EXTERNAL
+            }
+            datatype_field {
+                field_name: "start_int"
+                field_datatype_name: "INT_TYPE_DEF"
+                intf_type: VAR_EXTERNAL
+            }
+            datatype_field {
+                field_name: "start_time"
+                field_datatype_name: "TIME_TYPE_DEF"
+                intf_type: VAR_EXTERNAL
+            }
+            
+        }
+
         pou_var {
             name: "PROGRAM_1"
             pou_type: PROGRAM
@@ -174,6 +324,11 @@ machine_spec {
             datatype_field {
                 field_name: "var_1"
                 field_datatype_name: "INT"
+                intf_type: VAR
+            }
+            datatype_field {
+                field_name: "FB_1_Instance"
+                field_datatype_name: "FB_1"
                 intf_type: VAR
             }
             datatype_field {

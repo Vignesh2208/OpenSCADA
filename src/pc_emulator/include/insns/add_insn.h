@@ -7,7 +7,7 @@
 namespace pc_emulator {
     class ADD_Insn: public Insn {
         public:
-            ADD_Insn(PCResource * AssociatedResource) {
+            ADD_Insn(PCResourceImpl * AssociatedResource) {
                 __AssociatedResource = AssociatedResource;
                 __InsnName = "ADD";
             };

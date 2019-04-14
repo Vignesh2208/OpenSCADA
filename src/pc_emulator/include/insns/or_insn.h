@@ -7,7 +7,7 @@
 namespace pc_emulator {
     class OR_Insn: public Insn {
         public:
-            OR_Insn(PCResource * AssociatedResource) {
+            OR_Insn(PCResourceImpl * AssociatedResource) {
                 __AssociatedResource = AssociatedResource;
                 __InsnName = "OR";
             };

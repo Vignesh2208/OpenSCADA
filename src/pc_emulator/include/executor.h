@@ -13,22 +13,22 @@ using namespace std;
 
 namespace pc_emulator {
     class PCConfiguration;
-    class PCResource;
+    class PCResourceImpl;
     class Task;
 
     class Executor {
         public :
-            PCConfiguration * __configuration;
+            PCConfigurationImpl * __configuration;
             PCVariable * __ExecPoUVariable;
-            PCResource* __AssociatedResource;
+            PCResourceImpl* __AssociatedResource;
             PoUCodeContainer * __CodeContainer;
             bool __Initialized;
             Task* __AssociatedTask;
             PCVariable * __CR; // local copy of the current result register of
                                // the associated resource
 
-            Executor(PCConfiguration* configuration,
-                    PCResource * AssociatedResource,
+            Executor(PCConfigurationImpl* configuration,
+                    PCResourceImpl* AssociatedResource,
                     Task * AssociatedTask):
                 __configuration(configuration),
                 __ExecPoUVariable(nullptr), 
@@ -36,7 +36,8 @@ namespace pc_emulator {
                 __CodeContainer(nullptr),
                 __Initialized(false),
                 __AssociatedTask(AssociatedTask) {
-                    __CR = new PCVariable(configuration, AssociatedResource,
+                    __CR = new PCVariable((PCConfiguration *)configuration,
+                                (PCResource *) AssociatedResource,
                                 "__CR", "BOOL");
                     __CR->AllocateAndInitialize();
                 };

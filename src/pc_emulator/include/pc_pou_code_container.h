@@ -13,8 +13,8 @@ using namespace std;
 using namespace std;
 
 namespace pc_emulator {
-    class PCConfiguration;
-    class PCResource;
+    class PCConfigurationImpl;
+    class PCResourceImpl;
 
     class InsnContainer {
         public:
@@ -33,17 +33,17 @@ namespace pc_emulator {
 
     class PoUCodeContainer {
         public :
-            PCConfiguration * __configuration;
+            PCConfigurationImpl * __configuration;
             PCDataType * __PoUDataType;
-            PCResource * __Resource;
+            PCResourceImpl * __Resource;
             bool __Initialized;
             int __InsnCount;
 
             std::vector<std::unique_ptr<InsnContainer>> __Insns;
             std::unordered_map<string, InsnContainer*> __InsnContainerByLabel;
 
-            PoUCodeContainer(PCConfiguration* configuration, 
-                            PCResource * Resource):
+            PoUCodeContainer(PCConfigurationImpl * configuration, 
+                            PCResourceImpl * Resource):
                 __configuration(configuration), __Resource(Resource),
                 __PoUDataType(nullptr), __Initialized(false),
                 __InsnCount(0) {};

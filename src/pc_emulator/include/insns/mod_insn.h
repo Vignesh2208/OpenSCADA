@@ -7,7 +7,7 @@
 namespace pc_emulator {
     class MOD_Insn: public Insn {
         public:
-            MOD_Insn(PCResource * AssociatedResource) {
+            MOD_Insn(PCResourceImpl * AssociatedResource) {
                 __AssociatedResource = AssociatedResource;
                 __InsnName = "MOD";
             };

@@ -6,7 +6,7 @@
 namespace pc_emulator {
     class LD_Insn: public Insn {
         public:
-            LD_Insn(PCResource * AssociatedResource) {
+            LD_Insn(PCResourceImpl * AssociatedResource) {
                 __AssociatedResource = AssociatedResource;
                 __InsnName = "LD";
             };

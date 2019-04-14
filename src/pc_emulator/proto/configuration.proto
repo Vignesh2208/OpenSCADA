@@ -42,6 +42,14 @@ enum FieldInterfaceType {
     NA = 9;
 }
 
+enum FieldQualifiers {
+    R_EDGE = 0;
+    F_EDGE = 1;
+    READ_ONLY = 2;
+    READ_WRITE = 3;
+    NONE = 4;
+}
+
 enum MemType {
     INPUT_MEM = 0;
     OUTPUT_MEM = 1;
@@ -103,6 +111,17 @@ message DataTypeField {
     // must be specified only if intf_type in 
     // {VAR_EXPLICIT_STORAGE, VAR_ACCESS}
     optional FieldStorageSpec field_storage_spec = 9; 
+
+    // May only be specified (optionally) for VAR_INPUT, VAR_EXPLICIT_STORAGE 
+    // and VAR_ACCESS intf_types. Otherwise it is ignored.
+    //
+    // May equal R_EDGE/F_EDGE only iff intf_type is 
+    // VAR_INPUT/VAR_EXPLICIT_STORAGE and field_datatype_name is BOOL.
+    // Otherwise it is ignored.
+    //
+    // May equal READ_ONLY/READ_WRITE only iff intf_type is VAR_ACCESS.
+    // Otherwise it is ignored.
+    optional FieldQualifiers field_qualifier = 10 [default=NONE];
 }
 
 

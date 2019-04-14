@@ -18,7 +18,7 @@ using namespace pc_emulator;
 
 
 
-Clock::Clock(bool is_virtual, PCResource * AssociatedResource) 
+Clock::Clock(bool is_virtual, PCResourceImpl * AssociatedResource) 
     : __is_virtual(is_virtual), 
     __AssociatedResource(AssociatedResource) {
         if (__is_virtual) {

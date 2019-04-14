@@ -15,7 +15,7 @@ using namespace pc_specification;
 namespace pc_emulator {
     class Insn {
         public:
-            PCResource * __AssociatedResource;
+            PCResourceImpl * __AssociatedResource;
             string __InsnName;
             virtual void Execute(std::vector<PCVariable*>& Operands,
                     bool isNegated) = 0;

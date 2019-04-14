@@ -7,7 +7,7 @@
 namespace pc_emulator {
     class SUB_Insn: public Insn {
         public:
-            SUB_Insn(PCResource * AssociatedResource) {
+            SUB_Insn(PCResourceImpl * AssociatedResource) {
                 __AssociatedResource = AssociatedResource;
                 __InsnName = "SUB";
             };

@@ -1,5 +1,6 @@
 
 #include <assert.h>
+#include "src/pc_emulator/include/utils.h"
 #include "src/pc_emulator/include/pc_mem_unit.h"
 
 using namespace std;
@@ -21,7 +22,44 @@ void PCMemUnit::AllocateStaticMemory(int MemSize) {
     __Initialized = true;
 }
 
+void PCMemUnit::AllocateSharedMemory(int MemSize, string mmap_file_name,
+                        string lock_name) {
+    if (!__Initialized) {
+        //__BaseStorageLocation = make_mmap_shared<char>(MemSize, fd_mem);
+
+        bool file_exists = Utils::does_file_exist(mmap_file_name.c_str());
+        std::cout << "Opening sem lock: " << lock_name << std::endl;
+        assert((__sem_lock = sem_open(lock_name.c_str(), O_CREAT, 0644, 1))
+                != SEM_FAILED);
+        std::cout << "Opening sem lock: " << lock_name 
+                  << " success" << std::endl;
+        __sem_name = lock_name;
+
+        sem_wait(__sem_lock);
+        auto ptr = Utils::make_mmap_shared(MemSize, mmap_file_name);
+        sem_post(__sem_lock);
+        
+        __BaseStorageLocation = std::shared_ptr<char>(new(ptr) char[MemSize],
+                [](char *p) {});
+        __MemUnitSizeBytes = MemSize;
+
+        std::cout << "MMAP memory allocated !: " << MemSize << std::endl;
+        assert((char *)ptr != (char *)-1);
+
+        if (!file_exists) {
+            for (int i = 0; i < MemSize; i++) {
+                __BaseStorageLocation.get()[i] = '\0';
+            }
+        }
+        
+    }
+    __Initialized = true;
+    __isMemControllerActive = true;
+}
+
 void PCMemUnit::ReallocateStaticMemory(int MemSize) {
+
+    assert(!__isMemControllerActive);
     __BaseStorageLocation.reset();
     __BaseStorageLocation = std::shared_ptr<char>(new char[MemSize], 
                     [](char *p) { delete[] p; });
@@ -39,6 +77,17 @@ std::shared_ptr<char> PCMemUnit::GetStorageLocation() {
 
 int PCMemUnit::GetMemUnitSize() {
     return __MemUnitSizeBytes;
+}
+
+void PCMemUnit::Cleanup() {
+    if (__isMemControllerActive) {
+        sem_close(__sem_lock);
+        sem_unlink(__sem_name.c_str());
+        std::cout << "MunMapping ... " << std::endl;
+        munmap(__BaseStorageLocation.get(), __MemUnitSizeBytes);
+
+        std::remove((__mmap_file_name).c_str());
+    }
 }
 
 void PCMemUnit::SetMemUnitLocation(PCMemUnit * From) {
@@ -77,13 +126,41 @@ void PCMemUnit::CopyFromMemUnit(PCMemUnit * From, int FromStartOffset,
         for (int i = 0; i < __MemUnitSizeBytes; i++) {
             __BaseStorageLocation.get()[i] = '\0';
         }
+        __isMemControllerActive = false;
 
     }
 
-    for (int i = ToStartOffset, j = FromStartOffset; 
+
+    if (From->__isMemControllerActive) {
+
+        char * tmp = new char[CopySizeBytes];
+        assert(tmp != nullptr);
+
+        sem_wait(From->__sem_lock);
+        for(int i = 0; i < CopySizeBytes; i++)
+            tmp[i] = From->GetStorageLocation().get()[FromStartOffset + i];
+        sem_post(From->__sem_lock);
+
+        for (int i = ToStartOffset, j = 0; 
                             i < ToStartOffset + CopySizeBytes; i++, j++) {
-        __BaseStorageLocation.get()[i] 
-            = From->GetStorageLocation().get()[j];
+            if (__isMemControllerActive)
+                sem_wait(__sem_lock);
+            __BaseStorageLocation.get()[i] = tmp[j];
+
+            if (__isMemControllerActive)
+                sem_post(__sem_lock);
+        }
+    } else {
+        for (int i = ToStartOffset, j = FromStartOffset; 
+                                i < ToStartOffset + CopySizeBytes; i++, j++) {
+            if (__isMemControllerActive)
+                sem_wait(__sem_lock);
+            __BaseStorageLocation.get()[i] 
+                = From->GetStorageLocation().get()[j];
+
+            if (__isMemControllerActive)
+                sem_post(__sem_lock);
+        }
     }
 
 }
