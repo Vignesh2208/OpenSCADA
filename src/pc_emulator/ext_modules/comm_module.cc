@@ -20,13 +20,13 @@ using FieldIntfType = pc_specification::FieldInterfaceType;
 
 
 std::unique_ptr<PCVariableContainer>
-            CommModule::GetVariableContainer(string AccessPath) {
+            CommModule::GetVariableContainer(string NestedAccessPath) {
 
     std::vector<string> results;
 
-    boost::split(results, AccessPath,
+    boost::split(results, NestedAccessPath,
                 boost::is_any_of(".[]"), boost::token_compress_on);
-    if (AccessPath.empty())
+    if (NestedAccessPath.empty())
         return nullptr;
 
     auto V = __ConfigInterface.GetExternVariable(results[0]);
@@ -34,30 +34,9 @@ std::unique_ptr<PCVariableContainer>
         return nullptr;
     string RemField;
     if (results.size() > 1)
-        RemField = AccessPath.substr(AccessPath.find('.') + 1,
+        RemField = NestedAccessPath.substr(NestedAccessPath.find('.') + 1,
                                         string::npos);
 
     V = V->GetPtrToField(RemField);
     return std::unique_ptr<PCVariableContainer>(new PCVariableContainer(V));
 };
-
-/*
-std::unique_ptr<PCVariableContainer> ExtModule::GetVariableContainer(
-    int RamByteOffset,int RamBitOffset, string VariableDataTypeName) {
-    auto V = __ConfigInterface.GetVariablePointerToMem(
-                RamByteOffset, RamBitOffset, VariableDataTypeName);
-    if (V == nullptr)
-        return nullptr;
-    return std::unique_ptr<PCVariableContainer>(new PCVariableContainer(V));
-};
-std::unique_ptr<PCVariableContainer> ExtModule::GetVariableContainer(
-    string ResourceName, int MemType, int ByteOffset, int BitOffset,
-    string VariableDataTypeName) {
-
-    auto V = __ConfigInterface.GetVariablePointerToResourceMem(
-                ResourceName, MemType, ByteOffset, BitOffset,
-                VariableDataTypeName);
-    if (V == nullptr)
-        return nullptr;
-    return std::unique_ptr<PCVariableContainer>(new PCVariableContainer(V));
-};*/

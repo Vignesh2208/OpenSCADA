@@ -187,6 +187,11 @@ PCVariable * PCResourceInterface::GetVariablePointerToMem(
 
     string memTypeStr;
 
+    if (Utils::ResolveAliasName(VariableDataTypeName, 
+                            __configuration) != "BOOL")
+        BitOffset = 0;
+
+
     if (memType == MemType::INPUT_MEM)
         memTypeStr = "%%I";
     else 

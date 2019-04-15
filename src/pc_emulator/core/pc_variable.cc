@@ -2111,6 +2111,7 @@ std::unique_ptr<PCVariable> PCVariable::GetCopy() {
     p->__ByteOffset = 0;
     p->__BitOffset = 0;
     p->__MemAllocated = true;
+    p->ResolveAllExternalFields();
 
     if (p->__VariableDataType->__DataTypeCategory 
             == DataTypeCategory::BOOL) {

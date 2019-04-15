@@ -29,13 +29,23 @@ using namespace std;
 
 
 namespace pc_emulator{
+
+    //! Class which registers and tracks all valid instructions
     class InsnRegistry {
         private:
             
-            std::unordered_map<std::string,
-                    std::unique_ptr<Insn>> __InsnRegistry;
+            std::unordered_map<std::string, std::unique_ptr<Insn>> 
+                __InsnRegistry; /*!< Hash map of instruction name, Insn obj */
         public:
+
+            //! Constructor
             InsnRegistry(PCResourceImpl * AssociatedResource);
+
+            //! Retrieve Insn object with the specified instruction name
+            /*!
+                \param InsnName Name of the instruction
+                \return Insn object
+            */
             Insn* GetInsn(string InsnName);
     };
 }

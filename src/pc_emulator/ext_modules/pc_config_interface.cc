@@ -405,6 +405,10 @@ PCVariable * PCConfigurationInterface::GetVariablePointerToMem(int ByteOffset,
     int memType = MemType::RAM_MEM;
     assert(ByteOffset > 0 && BitOffset >= 0 && BitOffset < 8);
     assert(memType == MemType::RAM_MEM);
+
+    if (Utils::ResolveAliasName(VariableDataTypeName, this) != "BOOL")
+        BitOffset = 0;
+
     string VariableName =   "%%M" + std::to_string(ByteOffset)
                             + "." + std::to_string(BitOffset);
     // need to track and delete this variable later on
@@ -436,6 +440,15 @@ PCVariable * PCConfigurationInterface::GetVariablePointerToMem(int ByteOffset,
 PCVariable * PCConfigurationInterface::GetVariablePointerToResourceMem(
                         string ResourceName, int MemType, int ByteOffset,
                         int BitOffset, string VariableDataTypeName){
+
+    if (MemType == MemType::RAM_MEM)
+        return GetVariablePointerToMem(ByteOffset, BitOffset,
+                        VariableDataTypeName);
+
+    if (Utils::ResolveAliasName(VariableDataTypeName, this) != "BOOL")
+        BitOffset = 0;
+
+                        
     PCResourceInterface * desired_resource = (PCResourceInterface *)
             RegisteredResources->GetResource(ResourceName);
     if (!desired_resource)

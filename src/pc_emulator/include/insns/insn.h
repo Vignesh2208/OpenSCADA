@@ -13,10 +13,19 @@ using namespace std;
 using namespace pc_specification;
 
 namespace pc_emulator {
+
+    //! Generic abstract class for an IL instruction
     class Insn {
         public:
-            PCResourceImpl * __AssociatedResource;
-            string __InsnName;
+
+            PCResourceImpl * __AssociatedResource; /*!< Associated resource */
+            string __InsnName;  /*!< Instruction name */
+
+            //! Called to execute the instruction
+            /*!
+                \param Operands     Operands to the instruction
+                \param isNegated    Should operands be negated before instruction operation
+            */
             virtual void Execute(std::vector<PCVariable*>& Operands,
                     bool isNegated) = 0;
     };

@@ -284,6 +284,11 @@ PCVariable * PCResourceImpl::GetVariablePointerToMem(int memType, int ByteOffset
 
     assert(ByteOffset > 0 && BitOffset >= 0 && BitOffset < 8);
     assert(memType == MemType::INPUT_MEM || memType == MemType::OUTPUT_MEM);
+
+    if (Utils::ResolveAliasName(VariableDataTypeName,
+        __configuration) != "BOOL")
+        BitOffset = 0;
+
     string VariableName = __ResourceName 
                             + "." + VariableDataTypeName
                             + "." + std::to_string(memType)
