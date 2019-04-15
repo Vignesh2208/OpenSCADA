@@ -5,6 +5,8 @@
 #include "src/pc_emulator/include/insns/insn.h"
 
 namespace pc_emulator {
+
+    //! Lesser than or equal instruction
     class LE_Insn: public Insn {
         public:
             LE_Insn(PCResourceImpl * AssociatedResource) {
@@ -12,6 +14,11 @@ namespace pc_emulator {
                 __InsnName = "LE";
             };
 
+           //! Called to execute the instruction
+            /*!
+                \param Operands     Operands to the instruction
+                \param isNegated    Should operands be negated before instruction operation
+            */
             void Execute(std::vector<PCVariable*>& Operands,
                     bool isNegated);
     };

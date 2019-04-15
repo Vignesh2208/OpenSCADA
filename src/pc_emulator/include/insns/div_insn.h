@@ -5,6 +5,8 @@
 #include "src/pc_emulator/include/insns/insn.h"
 
 namespace pc_emulator {
+
+    //! DIV instruction
     class DIV_Insn: public Insn {
         public:
             DIV_Insn(PCResourceImpl * AssociatedResource) {
@@ -12,6 +14,11 @@ namespace pc_emulator {
                 __InsnName = "DIV";
             };
 
+           //! Called to execute the instruction
+            /*!
+                \param Operands     Operands to the instruction
+                \param isNegated    Should operands be negated before instruction operation
+            */
             void Execute(std::vector<PCVariable*>& Operands,
                     bool isNegated);
     };
