@@ -555,6 +555,70 @@ namespace pc_emulator {
             //! Convert passed value to date. Return True on success
             static bool ValueToDate(string Value, DateType& Date);
 
+
+            static bool BoolToAny(bool Value, int DataTypeCategory,
+                    string& Result);
+
+            
+            static bool ByteToAny(uint8_t Value, int DataTypeCategory,
+                    string& Result);
+
+            
+            static bool WordToAny(uint16_t Value, int DataTypeCategory,
+                    string& Result);
+
+            
+            static bool DWordToAny(uint32_t Value, int DataTypeCategory,
+                    string& Result);
+
+            
+            static bool LWordToAny(uint64_t Value, int DataTypeCategory,
+                    string& Result);
+
+            
+            static bool CharToAny(char Value, int DataTypeCategory,
+                    string& Result);
+
+            
+            static bool IntToAny(int16_t Value, int DataTypeCategory,
+                    string& Result);
+
+            
+            static bool SIntToAny(int8_t Value, int DataTypeCategory,
+                    string& Result);
+
+            
+            static bool DIntToAny(int32_t Value, int DataTypeCategory,
+                    string& Result);
+
+            
+            static bool LIntToAny(int64_t Value, int DataTypeCategory,
+                    string& Result);
+
+            
+            static bool UIntToAny(uint16_t Value, int DataTypeCategory,
+                    string& Result);
+
+
+            static bool USintToAny(uint8_t Value, int DataTypeCategory,
+                    string& Result);
+
+
+            static bool UDintToAny(uint32_t Value, int DataTypeCategory,
+                    string& Result);
+
+            
+            static bool UlintToAny(uint64_t Value, int DataTypeCategory,
+                    string& Result);
+
+            
+            static bool RealToAny(float Value, int DataTypeCategory,
+                    string& Result);
+
+            
+            static bool LRealToAny(double Value, int DataTypeCategory,
+                    string& Result);
+
     };
 }
 #endif

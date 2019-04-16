@@ -1,0 +1,9 @@
+syntax = "proto2";
+
+package pc_system_pous;
+
+import "src/pc_emulator/proto/configuration.proto";
+
+message SystemPOUs {
+    repeated pc_specification.DataType system_pou = 1;
+}

@@ -1384,3 +1384,277 @@ bool DataTypeUtils::ValueToDate(string Value, DateType& Date){
     }
     return false;
 }
+
+     
+
+bool DataTypeUtils::BoolToAny(bool Value, int Category,
+        string& Result) {
+
+    string Temp;
+    switch(Category) {
+        case DataTypeCategory::BOOL : Result = (Value == true ? "1" : "0"); 
+                                        return true;
+        case DataTypeCategory::BYTE :
+        case DataTypeCategory::WORD :
+        case DataTypeCategory::DWORD :
+        case DataTypeCategory::LWORD :  Result = (Value == true ? 
+                                                "16#1" : "16#0"); 
+                                        return true;
+        case DataTypeCategory::CHAR :   
+        case DataTypeCategory::INT :
+        case DataTypeCategory::SINT :
+        case DataTypeCategory::DINT :
+        case DataTypeCategory::LINT :
+        case DataTypeCategory::UINT :
+        case DataTypeCategory::USINT :
+        case DataTypeCategory::UDINT :  
+        case DataTypeCategory::ULINT :  Result = (Value == true ? "1" : "0"); 
+                                        break;
+        case DataTypeCategory::REAL :
+        case DataTypeCategory::LREAL :  Result = (Value == true ? "1.0" : "0.0"); 
+                                        return true;
+        default     : return false;
+        
+    }
+
+    return true;
+}
+
+
+bool DataTypeUtils::ByteToAny(uint8_t Value, int DataTypeCategory,
+        string& Result) {
+
+    return LWordToAny((uint64_t)Value, DataTypeCategory, Result);
+}
+
+
+bool DataTypeUtils::WordToAny(uint16_t Value, int DataTypeCategory,
+        string& Result) {
+    return LWordToAny((uint64_t)Value, DataTypeCategory, Result);
+}
+
+
+bool DataTypeUtils::DWordToAny(uint32_t Value, int DataTypeCategory,
+        string& Result) {
+    return LWordToAny((uint64_t)Value, DataTypeCategory, Result);
+}
+
+
+bool DataTypeUtils::LWordToAny(uint64_t Value, int DataTypeCategory,
+        string& Result) {
+
+    std::stringstream stream;
+    
+    switch(DataTypeCategory) {
+        case DataTypeCategory::BOOL : Result = (Value > 0 ? "1" : "0");
+                                      return true;
+        case DataTypeCategory::BYTE :   Value = Value & 0x00FF;
+                                        stream << std::hex << Value;
+                                        Result = "16#" + stream.str();
+                                        return true;
+        case DataTypeCategory::WORD :   Value = Value & 0xFFFF;
+                                        stream << std::hex << Value;
+                                        Result = "16#" + stream.str();
+                                        return true;
+        case DataTypeCategory::DWORD :  Value = Value & 0xFFFFFFFF;
+                                        stream << std::hex << Value;
+                                        Result = "16#" + stream.str();
+                                        return true;
+        case DataTypeCategory::LWORD :  Value = Value & 0xFFFFFFFFFFFFFFFF;
+                                        stream << std::hex << Value;
+                                        Result = "16#" + stream.str();
+                                        return true;
+        case DataTypeCategory::CHAR :   Result = (char )(Value & 0x00FF);
+                                        return true;
+        case DataTypeCategory::INT :    Result = std::to_string((int16_t )(Value));
+                                        return true;
+        case DataTypeCategory::SINT :   Result = std::to_string((int8_t )(Value));
+                                        return true;
+        case DataTypeCategory::DINT :   Result = std::to_string((int32_t )(Value));
+                                        return true;
+        case DataTypeCategory::LINT :   Result = std::to_string((int64_t )(Value));
+                                        return true;
+        case DataTypeCategory::UINT :   Result = std::to_string((uint16_t )(Value));
+                                        return true;
+        case DataTypeCategory::USINT :  Result = std::to_string((uint8_t )(Value));
+                                        return true;
+        case DataTypeCategory::UDINT :  Result = std::to_string((uint32_t )(Value));
+                                        return true;
+        case DataTypeCategory::ULINT :  Result = std::to_string((uint64_t )(Value));
+                                        return true;
+        case DataTypeCategory::REAL :   Result = std::to_string((float)(Value));
+                                        return true;
+        case DataTypeCategory::LREAL :  Result = std::to_string((double)(Value));
+                                        return true;
+        default: return false;
+    }
+}
+
+
+bool DataTypeUtils::CharToAny(char Value, int DataTypeCategory,
+        string& Result) {
+
+    std::stringstream stream;
+
+    switch(DataTypeCategory) {
+        case DataTypeCategory::BOOL :   Result = (Value == '0' ? "0" : "1");
+                                        return true;
+        case DataTypeCategory::BYTE :
+        case DataTypeCategory::WORD :
+        case DataTypeCategory::DWORD :
+        case DataTypeCategory::LWORD :  stream << std::hex << (uint8_t)Value;
+                                        Result = "16#" + stream.str();
+                                        return true;
+
+        case DataTypeCategory::CHAR :   Result = Value;
+                                        return true;
+        case DataTypeCategory::INT :    
+        case DataTypeCategory::SINT :
+        case DataTypeCategory::DINT :
+        case DataTypeCategory::LINT :
+        case DataTypeCategory::UINT :
+        case DataTypeCategory::USINT :
+        case DataTypeCategory::UDINT :
+        case DataTypeCategory::ULINT :  Result = std::to_string((uint8_t)Value);
+                                        return true;
+        case DataTypeCategory::REAL :
+        case DataTypeCategory::LREAL :  Result = std::to_string((uint8_t)Value) + ".0";
+                                        return true;
+        default: return false;
+    }
+}
+
+
+bool DataTypeUtils::IntToAny(int16_t Value, int DataTypeCategory,
+        string& Result) {
+    return LIntToAny((int64_t)Value, DataTypeCategory, Result);
+}
+
+
+bool DataTypeUtils::SIntToAny(int8_t Value, int DataTypeCategory,
+        string& Result) {
+    return LIntToAny((int64_t)Value, DataTypeCategory, Result);
+}
+
+
+bool DataTypeUtils::DIntToAny(int32_t Value, int DataTypeCategory,
+        string& Result) {
+    return LIntToAny((int64_t)Value, DataTypeCategory, Result);
+}
+
+
+bool DataTypeUtils::LIntToAny(int64_t Value, int DataTypeCategory,
+        string& Result) {
+
+    std::stringstream stream;
+    
+    switch(DataTypeCategory) {
+        case DataTypeCategory::BOOL : Result = (Value > 0 ? "1" : "0");
+                                      return true;
+        case DataTypeCategory::BYTE :   Value = Value & 0x00FF;
+                                        stream << std::hex << Value;
+                                        Result = "16#" + stream.str();
+                                        return true;
+        case DataTypeCategory::WORD :   Value = Value & 0xFFFF;
+                                        stream << std::hex << Value;
+                                        Result = "16#" + stream.str();
+                                        return true;
+        case DataTypeCategory::DWORD :  Value = Value & 0xFFFFFFFF;
+                                        stream << std::hex << Value;
+                                        Result = "16#" + stream.str();
+                                        return true;
+        case DataTypeCategory::LWORD :  Value = Value & 0xFFFFFFFFFFFFFFFF;
+                                        stream << std::hex << Value;
+                                        Result = "16#" + stream.str();
+                                        return true;
+        case DataTypeCategory::CHAR :   Result = (char )(Value & 0x00FF);
+                                        return true;
+        case DataTypeCategory::INT :    Result = std::to_string((int16_t )(Value));
+                                        return true;
+        case DataTypeCategory::SINT :   Result = std::to_string((int8_t )(Value));
+                                        return true;
+        case DataTypeCategory::DINT :   Result = std::to_string((int32_t )(Value));
+                                        return true;
+        case DataTypeCategory::LINT :   Result = std::to_string((int64_t)(Value));
+                                        return true;
+        case DataTypeCategory::UINT :   Result = std::to_string((uint16_t )(Value));
+                                        return true;
+        case DataTypeCategory::USINT :  Result = std::to_string((uint8_t )(Value));
+                                        return true;
+        case DataTypeCategory::UDINT :  Result = std::to_string((uint32_t )(Value));
+                                        return true;
+        case DataTypeCategory::ULINT :  Result = std::to_string((uint64_t )(Value));
+                                        return true;
+        case DataTypeCategory::REAL :   Result = std::to_string((float)(Value));
+                                        return true;
+        case DataTypeCategory::LREAL :  Result = std::to_string((double)(Value));
+                                        return true;
+        default: return false;
+    }
+}
+
+
+bool DataTypeUtils::UIntToAny(uint16_t Value, int DataTypeCategory,
+        string& Result) {
+    return UlintToAny((uint64_t)Value, DataTypeCategory, Result);
+}
+
+bool DataTypeUtils::USintToAny(uint8_t Value, int DataTypeCategory,
+                    string& Result) {
+    return UlintToAny((uint64_t)Value, DataTypeCategory, Result);
+}
+
+
+bool DataTypeUtils::UDintToAny(uint32_t Value, int DataTypeCategory,
+        string& Result) {
+    return UlintToAny((uint64_t)Value, DataTypeCategory, Result);
+}
+
+
+bool DataTypeUtils::UlintToAny(uint64_t Value, int DataTypeCategory,
+        string& Result) {
+    return LWordToAny(Value, DataTypeCategory, Result);
+}
+
+
+bool DataTypeUtils::RealToAny(float Value, int DataTypeCategory,
+        string& Result) {
+    return LRealToAny((double)Value, DataTypeCategory, Result);
+}
+
+
+bool DataTypeUtils::LRealToAny(double Value, int DataTypeCategory,
+        string& Result) {
+
+    switch(DataTypeCategory) {
+        case DataTypeCategory::BOOL :  Result = (Value > 0.0 ? "1" : "0");
+                                        return true;
+
+        case DataTypeCategory::BYTE :   
+        case DataTypeCategory::WORD :
+        case DataTypeCategory::DWORD :
+        case DataTypeCategory::LWORD :
+        case DataTypeCategory::CHAR :   return false;
+        case DataTypeCategory::INT :    Result = std::to_string((int16_t )(Value));
+                                        return true;
+        case DataTypeCategory::SINT :   Result = std::to_string((int8_t )(Value));
+                                        return true;
+        case DataTypeCategory::DINT :   Result = std::to_string((int32_t )(Value));
+                                        return true;
+        case DataTypeCategory::LINT :   Result = std::to_string((int64_t)(Value));
+                                        return true;
+        case DataTypeCategory::UINT :   Result = std::to_string((uint16_t )(Value));
+                                        return true;
+        case DataTypeCategory::USINT :  Result = std::to_string((uint8_t )(Value));
+                                        return true;
+        case DataTypeCategory::UDINT :  Result = std::to_string((uint32_t )(Value));
+                                        return true;
+        case DataTypeCategory::ULINT :  Result = std::to_string((uint64_t )(Value));
+                                        return true;
+        case DataTypeCategory::REAL :   Result = std::to_string((float)(Value));
+                                        return true;
+        case DataTypeCategory::LREAL :  Result = std::to_string((double)(Value));
+                                        return true;
+        default: return false;
+    }
+}

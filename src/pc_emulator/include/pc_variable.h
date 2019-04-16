@@ -260,7 +260,7 @@ namespace pc_emulator {
                 __AccessedFields; /*!< Hashmap to maintain ready to use variables
                     which describe any of the subfields of this variable */
 
-            bool __MemAllocated, __IsDirectlyRepresented;
+            bool __MemAllocated, __IsDirectlyRepresented, __IsTemporary;
 
             DataTypeFieldAttributes __VariableAttributes; /*!< Stores details
                 about this variable and its datatype */

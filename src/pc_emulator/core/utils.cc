@@ -33,6 +33,445 @@ using FieldQualifiers = pc_specification::FieldQualifiers;
 #define STRING(s) #s
 
 
+bool Utils::ReallocateTmpVariable(PCConfiguration * configuration,
+                PCVariable * Var, PCDataType * new_data_type) {
+
+    assert(Var != nullptr && new_data_type != nullptr);
+    assert(Var->__IsTemporary);
+    assert(new_data_type->__DataTypeCategory != DataTypeCategory::ARRAY
+    && new_data_type->__DataTypeCategory != DataTypeCategory::DERIVED
+    && new_data_type->__DataTypeCategory != DataTypeCategory::POU);
+
+    if (Var->__VariableDataType->__DataTypeCategory 
+        == new_data_type->__DataTypeCategory
+        || !Var->__IsTemporary)
+        return false;
+    
+    int new_size = new_data_type->__SizeInBits/8;
+
+    if (new_size == 0)
+        new_size ++;
+
+    Var->__MemoryLocation.ReallocateStaticMemory(new_size);
+        
+    Var->__ByteOffset = 0;
+    Var->__BitOffset = 0;
+    Var->__IsTemporary = true;
+    Var->__VariableDataType = new_data_type;
+    Var->__TotalSizeInBits = new_size * 8;
+
+    Var->__VariableAttributes.RelativeOffset = 0;
+    Var->__VariableAttributes.HoldVariablePtr = Var;
+    Var->__VariableAttributes.NestedFieldName = "";
+    Var->__VariableAttributes.ParentVariablePtr = Var;
+    Var->__VariableAttributes.FieldDetails.__InitialValue
+                    = new_data_type->__InitialValue;
+    Var->__VariableAttributes.FieldDetails.__FieldTypeName
+                    = new_data_type->__DataTypeName;
+    Var->__VariableAttributes.FieldDetails.__FieldName = "";
+    Var->__VariableAttributes.FieldDetails.__FieldTypeCategory
+                    = new_data_type->__DataTypeCategory;
+    
+    Var->__VariableAttributes.FieldDetails.__RangeMax = 
+                    new_data_type->__RangeMax;
+    Var->__VariableAttributes.FieldDetails.__RangeMin = 
+                    new_data_type->__RangeMin;
+    Var->__VariableAttributes.FieldDetails.__FieldTypePtr = 
+                    new_data_type;
+    Var->__VariableAttributes.FieldDetails.__FieldInterfaceType = 
+                    FieldInterfaceType::NA;
+    Var->__VariableAttributes.FieldDetails.__FieldQualifier = 
+                    FieldQualifiers::NONE;
+
+    
+    Var->__VariableAttributes.FieldDetails.__NDimensions = 1;
+
+    Var->__VariableAttributes.FieldDetails.__Dimension1 = -1; 
+    Var->__VariableAttributes.FieldDetails.__Dimension2 = -1;
+    Var->__PrevValue = false;
+
+    return true;    
+    
+}
+
+bool Utils::BOOL_TO_ANY(PCConfiguration * configuration, 
+    PCVariable * Var, PCDataType * new_data_type) {
+
+    if(!Var 
+    || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::BOOL)
+        return false;
+
+    auto StoredValue = Var->GetValueStoredAtField<bool>("",
+            DataTypeCategory::BOOL);
+
+    if(ReallocateTmpVariable(configuration, Var, new_data_type)) {
+        string Result;
+        assert(DataTypeUtils::BoolToAny(StoredValue,
+            new_data_type->__DataTypeCategory,Result));
+        Var->SetField("", Result);
+        return true;
+    }
+    return false;
+}
+
+
+bool Utils::BYTE_TO_ANY(PCConfiguration * configuration, 
+    PCVariable * Var, PCDataType * new_datatype) {
+
+    
+    if(!Var 
+    || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::BYTE)
+        return false;
+
+    auto StoredValue = Var->GetValueStoredAtField<uint8_t>("",
+            DataTypeCategory::BYTE);
+
+    if(ReallocateTmpVariable(configuration, Var, new_datatype)) {
+        string Result;
+        assert(DataTypeUtils::ByteToAny(StoredValue,
+            new_datatype->__DataTypeCategory,Result));
+        Var->SetField("", Result);
+        return true;
+    }
+    return false;
+
+};
+
+bool Utils::WORD_TO_ANY(PCConfiguration * configuration, 
+    PCVariable * Var, PCDataType * new_datatype) {
+
+    if(!Var 
+    || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::WORD)
+        return false;
+
+    auto StoredValue = Var->GetValueStoredAtField<uint16_t>("",
+            DataTypeCategory::WORD);
+
+    if(ReallocateTmpVariable(configuration, Var, new_datatype)) {
+        string Result;
+        assert(DataTypeUtils::WordToAny(StoredValue,
+            new_datatype->__DataTypeCategory,Result));
+        Var->SetField("", Result);
+        return true;
+    }
+    return false;
+}
+
+bool Utils::DWORD_TO_ANY(PCConfiguration * configuration, 
+    PCVariable * Var, PCDataType * new_datatype) {
+
+
+    if(!Var 
+    || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::DWORD)
+        return false;
+
+    auto StoredValue = Var->GetValueStoredAtField<uint32_t>("",
+            DataTypeCategory::DWORD);
+
+    if(ReallocateTmpVariable(configuration, Var, new_datatype)) {
+        string Result;
+        assert(DataTypeUtils::DWordToAny(StoredValue,
+            new_datatype->__DataTypeCategory,Result));
+        Var->SetField("", Result);
+        return true;
+    }
+    return false;
+}
+
+bool Utils::LWORD_TO_ANY(PCConfiguration * configuration, 
+    PCVariable * Var, PCDataType * new_datatype) {
+
+
+    if(!Var 
+    || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::LWORD)
+        return false;
+
+    auto StoredValue = Var->GetValueStoredAtField<uint64_t>("",
+            DataTypeCategory::LWORD);
+
+    if(ReallocateTmpVariable(configuration, Var, new_datatype)) {
+        string Result;
+        assert(DataTypeUtils::LWordToAny(StoredValue,
+            new_datatype->__DataTypeCategory,Result));
+        Var->SetField("", Result);
+        return true;
+    }
+    return false;
+}
+
+bool Utils::INT_TO_ANY(PCConfiguration * configuration, 
+    PCVariable * Var, PCDataType * new_datatype) {
+
+
+    if(!Var 
+    || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::INT)
+        return false;
+
+    auto StoredValue = Var->GetValueStoredAtField<int16_t>("",
+            DataTypeCategory::INT);
+
+    if(ReallocateTmpVariable(configuration, Var, new_datatype)) {
+        string Result;
+        assert(DataTypeUtils::IntToAny(StoredValue,
+            new_datatype->__DataTypeCategory,Result));
+        Var->SetField("", Result);
+        return true;
+    }
+    return false;
+}
+
+bool Utils::SINT_TO_ANY(PCConfiguration * configuration, 
+    PCVariable * Var, PCDataType * new_datatype) {
+
+
+    if(!Var 
+    || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::SINT)
+        return false;
+
+    auto StoredValue = Var->GetValueStoredAtField<int8_t>("",
+            DataTypeCategory::SINT);
+
+    if(ReallocateTmpVariable(configuration, Var, new_datatype)) {
+        string Result;
+        assert(DataTypeUtils::SIntToAny(StoredValue,
+            new_datatype->__DataTypeCategory,Result));
+        Var->SetField("", Result);
+        return true;
+    }
+    return false;
+
+}
+
+bool Utils::DINT_TO_ANY(PCConfiguration * configuration, 
+    PCVariable * Var, PCDataType * new_datatype) {
+
+
+    if(!Var 
+    || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::DINT)
+        return false;
+
+    auto StoredValue = Var->GetValueStoredAtField<int32_t>("",
+            DataTypeCategory::DINT);
+
+    if(ReallocateTmpVariable(configuration, Var, new_datatype)) {
+        string Result;
+        assert(DataTypeUtils::DIntToAny(StoredValue,
+            new_datatype->__DataTypeCategory,Result));
+        Var->SetField("", Result);
+        return true;
+    }
+    return false;
+
+}
+
+bool Utils::LINT_TO_ANY(PCConfiguration * configuration, 
+    PCVariable * Var, PCDataType * new_datatype) {
+
+
+    if(!Var 
+    || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::LINT)
+        return false;
+
+    auto StoredValue = Var->GetValueStoredAtField<int64_t>("",
+            DataTypeCategory::LINT);
+
+    if(ReallocateTmpVariable(configuration, Var, new_datatype)) {
+        string Result;
+        assert(DataTypeUtils::LIntToAny(StoredValue,
+            new_datatype->__DataTypeCategory,Result));
+        Var->SetField("", Result);
+        return true;
+    }
+    return false;
+
+}
+
+bool Utils::UINT_TO_ANY(PCConfiguration * configuration, 
+    PCVariable * Var, PCDataType * new_datatype) {
+
+
+    if(!Var 
+    || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::UINT)
+        return false;
+
+    auto StoredValue = Var->GetValueStoredAtField<uint16_t>("",
+            DataTypeCategory::UINT);
+
+    if(ReallocateTmpVariable(configuration, Var, new_datatype)) {
+        string Result;
+        assert(DataTypeUtils::UIntToAny(StoredValue,
+            new_datatype->__DataTypeCategory,Result));
+        Var->SetField("", Result);
+        return true;
+    }
+    return false;
+}
+
+bool Utils::USINT_TO_ANY(PCConfiguration * configuration, 
+    PCVariable * Var, PCDataType * new_datatype) {
+
+
+    if(!Var 
+    || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::USINT)
+        return false;
+
+    auto StoredValue = Var->GetValueStoredAtField<uint8_t>("",
+            DataTypeCategory::USINT);
+
+    if(ReallocateTmpVariable(configuration, Var, new_datatype)) {
+        string Result;
+        assert(DataTypeUtils::USintToAny(StoredValue,
+            new_datatype->__DataTypeCategory,Result));
+        Var->SetField("", Result);
+        return true;
+    }
+    return false;
+}
+
+bool Utils::UDINT_TO_ANY(PCConfiguration * configuration, 
+    PCVariable * Var, PCDataType * new_datatype) {
+
+
+    if(!Var 
+    || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::UDINT)
+        return false;
+
+    auto StoredValue = Var->GetValueStoredAtField<uint32_t>("",
+            DataTypeCategory::UDINT);
+
+    if(ReallocateTmpVariable(configuration, Var, new_datatype)) {
+        string Result;
+        assert(DataTypeUtils::UDintToAny(StoredValue,
+            new_datatype->__DataTypeCategory,Result));
+        Var->SetField("", Result);
+        return true;
+    }
+    return false;
+}
+
+bool Utils::ULINT_TO_ANY(PCConfiguration * configuration, 
+    PCVariable * Var, PCDataType * new_datatype) {
+
+
+    if(!Var 
+    || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::ULINT)
+        return false;
+
+    auto StoredValue = Var->GetValueStoredAtField<uint64_t>("",
+            DataTypeCategory::ULINT);
+
+    if(ReallocateTmpVariable(configuration, Var, new_datatype)) {
+        string Result;
+        assert(DataTypeUtils::UlintToAny(StoredValue,
+            new_datatype->__DataTypeCategory,Result));
+        Var->SetField("", Result);
+        return true;
+    }
+    return false;
+}
+
+bool Utils::REAL_TO_ANY(PCConfiguration * configuration, 
+    PCVariable * Var, PCDataType * new_datatype) {
+
+
+    if(!Var 
+    || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::REAL)
+        return false;
+
+    auto StoredValue = Var->GetValueStoredAtField<float>("",
+            DataTypeCategory::REAL);
+
+    if(ReallocateTmpVariable(configuration, Var, new_datatype)) {
+        string Result;
+        assert(DataTypeUtils::RealToAny(StoredValue,
+            new_datatype->__DataTypeCategory,Result));
+        Var->SetField("", Result);
+        return true;
+    }
+    return false;
+}
+
+bool Utils::LREAL_TO_ANY(PCConfiguration * configuration, 
+    PCVariable * Var, PCDataType * new_datatype) {
+
+
+    if(!Var 
+    || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::LREAL)
+        return false;
+
+    auto StoredValue = Var->GetValueStoredAtField<double>("",
+            DataTypeCategory::LREAL);
+
+    if(ReallocateTmpVariable(configuration, Var, new_datatype)) {
+        string Result;
+        assert(DataTypeUtils::LRealToAny(StoredValue,
+            new_datatype->__DataTypeCategory,Result));
+        Var->SetField("", Result);
+        return true;
+    }
+    return false;
+}
+
+
+bool Utils::DT_TO_TOD(PCConfiguration * configuration, 
+    PCVariable * Var, PCDataType * new_datatype) {
+    
+    if(!Var 
+    || Var->__VariableDataType->__DataTypeCategory 
+        != DataTypeCategory::DATE_AND_TIME)
+        return false;
+    auto StoredValue = Var->GetValueStoredAtField<DateTODDataType>("",
+            DataTypeCategory::DATE_AND_TIME);
+
+    if(ReallocateTmpVariable(configuration, Var, new_datatype)) {
+        string Result, Hr, Min, Sec;
+        Hr = std::to_string(StoredValue.Tod.Hr);
+        Min = std::to_string(StoredValue.Tod.Min);
+        Sec = std::to_string(StoredValue.Tod.Sec);
+
+        if (Hr.length() < 2)
+            Hr = "0" + Hr;
+        if (Min.length() < 2)
+            Min = "0" + Min;
+        if (Sec.length() < 2)
+            Sec = "0" + Sec;
+
+        Result = "tod#" + Hr + ":" + Min + ":" + Sec;
+        Var->SetField("", Result);
+        return true;
+    }
+    return false;
+}
+
+bool Utils::DT_TO_DATE(PCConfiguration * configuration, 
+    PCVariable * Var, PCDataType * new_datatype) {
+
+    if(!Var 
+    || Var->__VariableDataType->__DataTypeCategory 
+        != DataTypeCategory::DATE_AND_TIME)
+        return false;
+
+    auto StoredValue = Var->GetValueStoredAtField<DateTODDataType>("",
+            DataTypeCategory::DATE_AND_TIME);
+
+    if(ReallocateTmpVariable(configuration, Var, new_datatype)) {
+        string Result;
+        string Month = std::to_string(StoredValue.Date.Month);
+        string Day = std::to_string(StoredValue.Date.Day);
+
+        if (Month.length() < 2)
+            Month = "0" + Month;
+        if (Day.length() < 2)
+            Day = "0" + Day;
+
+        Result = "d#" + std::to_string(StoredValue.Date.Year) + "-"
+                    + Month + "-" + Day;
+        Var->SetField("", Result);
+        return true;
+    }
+    return false;
+
+}
 
 bool Utils::ReadAccessCheck(PCConfiguration * configuration,
         string CallingPoUType, string NestedFieldName) {

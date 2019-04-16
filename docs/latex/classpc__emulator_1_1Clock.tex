@@ -1,0 +1,68 @@
+\hypertarget{classpc__emulator_1_1Clock}{}\section{pc\+\_\+emulator\+:\+:Clock Class Reference}
+\label{classpc__emulator_1_1Clock}\index{pc\+\_\+emulator\+::\+Clock@{pc\+\_\+emulator\+::\+Clock}}
+
+
+\hyperlink{classpc__emulator_1_1Clock}{Clock} associated with a resource.  
+
+
+
+
+{\ttfamily \#include $<$pc\+\_\+clock.\+h$>$}
+
+
+
+Collaboration diagram for pc\+\_\+emulator\+:\+:Clock\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classpc__emulator_1_1Clock__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classpc__emulator_1_1Clock_a512ea6e88d7df5ac3658cfb7e2206a3b}{Clock} (bool is\+\_\+virtual, \hyperlink{classpc__emulator_1_1PCResourceImpl}{P\+C\+Resource\+Impl} $\ast$Associated\+Resource)\hypertarget{classpc__emulator_1_1Clock_a512ea6e88d7df5ac3658cfb7e2206a3b}{}\label{classpc__emulator_1_1Clock_a512ea6e88d7df5ac3658cfb7e2206a3b}
+
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+double \hyperlink{classpc__emulator_1_1Clock_a17eec248287f3b57b699eea5b5a8e43f}{Get\+Current\+Time} ()\hypertarget{classpc__emulator_1_1Clock_a17eec248287f3b57b699eea5b5a8e43f}{}\label{classpc__emulator_1_1Clock_a17eec248287f3b57b699eea5b5a8e43f}
+
+\begin{DoxyCompactList}\small\item\em Returns current time. \end{DoxyCompactList}\item 
+void \hyperlink{classpc__emulator_1_1Clock_a4c54d7f36d90db5ddae81fca94d835c9}{Update\+Current\+Time} (double inc\+\_\+amount)\hypertarget{classpc__emulator_1_1Clock_a4c54d7f36d90db5ddae81fca94d835c9}{}\label{classpc__emulator_1_1Clock_a4c54d7f36d90db5ddae81fca94d835c9}
+
+\begin{DoxyCompactList}\small\item\em Increments current time by the specifiede amount. \end{DoxyCompactList}\item 
+void \hyperlink{classpc__emulator_1_1Clock_afab6f601e53dab4ef79792e4e57d5247}{Sleep\+For} (int sleep\+\_\+duration\+\_\+us)\hypertarget{classpc__emulator_1_1Clock_afab6f601e53dab4ef79792e4e57d5247}{}\label{classpc__emulator_1_1Clock_afab6f601e53dab4ef79792e4e57d5247}
+
+\begin{DoxyCompactList}\small\item\em Sleep for specified duration in microseconds. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+double \hyperlink{classpc__emulator_1_1Clock_ad9198c0f45039a5b22c1404bdd245679}{\+\_\+\+\_\+time}
+\item 
+bool \hyperlink{classpc__emulator_1_1Clock_a0f6af10c0d261885b85149902e273725}{\+\_\+\+\_\+is\+\_\+virtual}
+\item 
+double {\bfseries \+\_\+\+\_\+expected\+\_\+time}\hypertarget{classpc__emulator_1_1Clock_a7adf6bf1c1ad60171c37fc2e86932b12}{}\label{classpc__emulator_1_1Clock_a7adf6bf1c1ad60171c37fc2e86932b12}
+
+\item 
+\hyperlink{classpc__emulator_1_1PCResourceImpl}{P\+C\+Resource\+Impl} $\ast$ \hyperlink{classpc__emulator_1_1Clock_aba91d4760a2681b29264c021b519b10b}{\+\_\+\+\_\+\+Associated\+Resource}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\hyperlink{classpc__emulator_1_1Clock}{Clock} associated with a resource. 
+
+\subsection{Member Data Documentation}
+\index{pc\+\_\+emulator\+::\+Clock@{pc\+\_\+emulator\+::\+Clock}!\+\_\+\+\_\+\+Associated\+Resource@{\+\_\+\+\_\+\+Associated\+Resource}}
+\index{\+\_\+\+\_\+\+Associated\+Resource@{\+\_\+\+\_\+\+Associated\+Resource}!pc\+\_\+emulator\+::\+Clock@{pc\+\_\+emulator\+::\+Clock}}
+\subsubsection[{\texorpdfstring{\+\_\+\+\_\+\+Associated\+Resource}{__AssociatedResource}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+C\+Resource\+Impl}$\ast$ pc\+\_\+emulator\+::\+Clock\+::\+\_\+\+\_\+\+Associated\+Resource}\hypertarget{classpc__emulator_1_1Clock_aba91d4760a2681b29264c021b519b10b}{}\label{classpc__emulator_1_1Clock_aba91d4760a2681b29264c021b519b10b}
+Associated Resource \index{pc\+\_\+emulator\+::\+Clock@{pc\+\_\+emulator\+::\+Clock}!\+\_\+\+\_\+is\+\_\+virtual@{\+\_\+\+\_\+is\+\_\+virtual}}
+\index{\+\_\+\+\_\+is\+\_\+virtual@{\+\_\+\+\_\+is\+\_\+virtual}!pc\+\_\+emulator\+::\+Clock@{pc\+\_\+emulator\+::\+Clock}}
+\subsubsection[{\texorpdfstring{\+\_\+\+\_\+is\+\_\+virtual}{__is_virtual}}]{\setlength{\rightskip}{0pt plus 5cm}bool pc\+\_\+emulator\+::\+Clock\+::\+\_\+\+\_\+is\+\_\+virtual}\hypertarget{classpc__emulator_1_1Clock_a0f6af10c0d261885b85149902e273725}{}\label{classpc__emulator_1_1Clock_a0f6af10c0d261885b85149902e273725}
+Is clock virtual ? \index{pc\+\_\+emulator\+::\+Clock@{pc\+\_\+emulator\+::\+Clock}!\+\_\+\+\_\+time@{\+\_\+\+\_\+time}}
+\index{\+\_\+\+\_\+time@{\+\_\+\+\_\+time}!pc\+\_\+emulator\+::\+Clock@{pc\+\_\+emulator\+::\+Clock}}
+\subsubsection[{\texorpdfstring{\+\_\+\+\_\+time}{__time}}]{\setlength{\rightskip}{0pt plus 5cm}double pc\+\_\+emulator\+::\+Clock\+::\+\_\+\+\_\+time}\hypertarget{classpc__emulator_1_1Clock_ad9198c0f45039a5b22c1404bdd245679}{}\label{classpc__emulator_1_1Clock_ad9198c0f45039a5b22c1404bdd245679}
+Current time 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/pc\+\_\+emulator/include/pc\+\_\+clock.\+h\end{DoxyCompactItemize}

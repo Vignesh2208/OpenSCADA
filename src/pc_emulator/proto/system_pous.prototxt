@@ -1,0 +1,364 @@
+system_pou {
+    name: "SR"
+    pou_type: FB
+    datatype_field {
+        field_name: "S1"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_INPUT
+    }
+    datatype_field {
+        field_name: "R"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_INPUT
+    }
+    datatype_field {
+        field_name: "Q1"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_OUTPUT
+    }
+
+    code_body {
+        insn: "LD R"
+        insn: "AND Q1"
+        insn: "OR S1"
+        insn: "ST Q1"
+    }
+}
+
+system_pou {
+    name: "RS"
+    pou_type: FB
+    datatype_field {
+        field_name: "S"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_INPUT
+    }
+    datatype_field {
+        field_name: "R1"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_INPUT
+    }
+    datatype_field {
+        field_name: "Q1"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_OUTPUT
+    }
+
+    code_body {
+        insn: "LD S"
+        insn: "OR Q1"
+        insn: "ANDN R1"
+    }
+}
+
+system_pou {
+    name: "R_TRIG"
+    pou_type: FB
+    datatype_field {
+        field_name: "CLK"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_INPUT
+    }
+    datatype_field {
+        field_name: "Q"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_OUTPUT
+    }
+    datatype_field {
+        field_name: "MEM"
+        field_datatype_name: "BOOL"
+        intf_type: VAR
+    }
+
+
+    code_body {
+        insn: "NOT MEM"
+        insn: "AND CLK"
+        insn: "ST Q"
+        insn: "LD CLK"
+        insn: "ST MEM"
+    }
+}
+
+system_pou {
+    name: "F_TRIG"
+    pou_type: FB
+    datatype_field {
+        field_name: "CLK"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_INPUT
+    }
+    datatype_field {
+        field_name: "Q"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_OUTPUT
+    }
+    datatype_field {
+        field_name: "MEM"
+        field_datatype_name: "BOOL"
+        initial_value: "1"
+        intf_type: VAR
+    }
+
+    code_body {
+        insn: "NOT MEM"
+        insn: "ANDN CLK"
+        insn: "ST Q"
+        insn: "NOT CLK"
+        insn: "ST MEM"
+    }
+}
+
+system_pou {
+    name: "CTU"
+    pou_type: FB
+    datatype_field {
+        field_name: "CU"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_INPUT
+        field_qualifier: R_EDGE
+    }
+    datatype_field {
+        field_name: "R"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_INPUT
+    }
+    datatype_field {
+        field_name: "PV"
+        field_datatype_name: "INT"
+        intf_type: VAR_INPUT
+    }
+    datatype_field {
+        field_name: "Q"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_OUTPUT
+    }
+    datatype_field {
+        field_name: "CV"
+        field_datatype_name: "INT"
+        intf_type: VAR_OUTPUT
+    }
+
+    code_body {
+        insn: "LD R"
+        insn: "JMPCN else"
+        insn: "LD 0"
+        insn: "ST CV"
+        insn: "JMP end"
+        insn: "else: LD CU"
+        insn: "JMPCN end"
+        insn: "LD PV"
+        insn: "GT CV"
+        insn: "JMPCN end"
+        insn: "LD CV"
+        insn: "ADD 1"
+        insn: "ST CV"
+        insn: "end: LD CV"
+        insn: "GE PV"
+        insn: "ST Q"
+
+    }
+}
+
+system_pou {
+    name: "CTD"
+    pou_type: FB
+    datatype_field {
+        field_name: "CD"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_INPUT
+        field_qualifier: R_EDGE
+    }
+    datatype_field {
+        field_name: "LD"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_INPUT
+    }
+    datatype_field {
+        field_name: "PV"
+        field_datatype_name: "INT"
+        intf_type: VAR_INPUT
+    }
+    datatype_field {
+        field_name: "Q"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_OUTPUT
+    }
+    datatype_field {
+        field_name: "CV"
+        field_datatype_name: "INT"
+        intf_type: VAR_OUTPUT
+    }
+
+    code_body {
+        insn: "LD LD"
+        insn: "JMPCN else"
+        insn: "LD PV"
+        insn: "ST CV"
+        insn: "JMP end"
+        insn: "else: LD CD"
+        insn: "JMPCN end"
+        insn: "LD CV"
+        insn: "GT 0"
+        insn: "JMPCN end"
+        insn: "LD CV"
+        insn: "SUB 1"
+        insn: "ST CV"
+        insn: "end: LD CV"
+        insn: "GE 0"
+        insn: "ST Q"
+
+    }
+}
+
+system_pou {
+    name: "CTUD"
+    pou_type: FB
+    datatype_field {
+        field_name: "CU"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_INPUT
+        field_qualifier: R_EDGE
+    }
+    datatype_field {
+        field_name: "CD"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_INPUT
+        field_qualifier: R_EDGE
+    }
+    datatype_field {
+        field_name: "R"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_INPUT
+    }
+    datatype_field {
+        field_name: "LD"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_INPUT
+    }
+    datatype_field {
+        field_name: "PV"
+        field_datatype_name: "INT"
+        intf_type: VAR_INPUT
+    }
+    datatype_field {
+        field_name: "QU"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_OUTPUT
+    }
+    datatype_field {
+        field_name: "QD"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_OUTPUT
+    }
+    datatype_field {
+        field_name: "CV"
+        field_datatype_name: "INT"
+        intf_type: VAR_OUTPUT
+    }
+}
+
+system_pou {
+    name: "TP"
+    pou_type: FB
+    datatype_field {
+        field_name: "IN"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_INPUT
+    }
+    datatype_field {
+        field_name: "PT"
+        field_datatype_name: "TIME"
+        intf_type: VAR_INPUT
+    }
+    datatype_field {
+        field_name: "Q"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_OUTPUT
+    }
+    datatype_field {
+        field_name: "ET"
+        field_datatype_name: "TIME"
+        intf_type: VAR_OUTPUT
+    }
+    datatype_field {
+        field_name: "IN_RISE"
+        field_datatype_name: "BOOL"
+        intf_type: VAR
+    }
+    datatype_field {
+        field_name: "IN_FALL"
+        field_datatype_name: "BOOL"
+        intf_type: VAR
+    }
+}
+
+system_pou {
+    name: "TON"
+    pou_type: FB
+    datatype_field {
+        field_name: "IN"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_INPUT
+    }
+    datatype_field {
+        field_name: "PT"
+        field_datatype_name: "TIME"
+        intf_type: VAR_INPUT
+    }
+    datatype_field {
+        field_name: "Q"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_OUTPUT
+    }
+    datatype_field {
+        field_name: "ET"
+        field_datatype_name: "TIME"
+        intf_type: VAR_OUTPUT
+    }
+    datatype_field {
+        field_name: "IN_RISE"
+        field_datatype_name: "BOOL"
+        intf_type: VAR
+    }
+    datatype_field {
+        field_name: "IN_FALL"
+        field_datatype_name: "BOOL"
+        intf_type: VAR
+    }
+}
+
+system_pou {
+    name: "TOF"
+    pou_type: FB
+    datatype_field {
+        field_name: "IN"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_INPUT
+    }
+    datatype_field {
+        field_name: "PT"
+        field_datatype_name: "TIME"
+        intf_type: VAR_INPUT
+    }
+    datatype_field {
+        field_name: "Q"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_OUTPUT
+    }
+    datatype_field {
+        field_name: "ET"
+        field_datatype_name: "TIME"
+        intf_type: VAR_OUTPUT
+    }
+    datatype_field {
+        field_name: "IN_RISE"
+        field_datatype_name: "BOOL"
+        intf_type: VAR
+    }
+    datatype_field {
+        field_name: "IN_FALL"
+        field_datatype_name: "BOOL"
+        intf_type: VAR
+    }
+}

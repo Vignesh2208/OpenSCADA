@@ -143,6 +143,10 @@ message DataTypeSpec {
 
 }
 
+message PoUCode {
+    repeated string insn = 1;
+}
+
 message DataType {
     required string name = 1;
     // datatype_category cannot be in  {ARRAY, NOT_ASSIGNED}
@@ -159,6 +163,9 @@ message DataType {
     // datatype_spec may only be specified if datatype_category is not in 
     // {POU, DERIVED, ARRAY, NOT_ASSIGNED}
     optional DataTypeSpec datatype_spec = 5;
+
+    // can only be specified if datatype_category is POU
+    optional PoUCode code_body = 6;
 }
 
 message SFBSpecification {

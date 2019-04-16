@@ -88,6 +88,8 @@ PCVariable::PCVariable(PCConfiguration * configuration,
     } else {
         __PrevValue = false;
     }
+
+    __IsTemporary = false;
 }
 
 void PCVariable::Cleanup() {

@@ -1,0 +1,12 @@
+<map id="pc_emulator::Clock" name="pc_emulator::Clock">
+<area shape="rect" id="node2" href="$classpc__emulator_1_1PCResourceImpl.html" title="Specific implementation of the PCResource class. It defines one CPU on a PLC. " alt="" coords="1573,200,1775,227"/>
+<area shape="rect" id="node3" href="$classpc__emulator_1_1PCResource.html" title="Abstract class definition of a resource. " alt="" coords="751,273,927,300"/>
+<area shape="rect" id="node5" href="$classpc__emulator_1_1PCVariable.html" title="A class which wraps a variable and provides API to get/set its value. " alt="" coords="1218,111,1385,137"/>
+<area shape="rect" id="node4" href="$classpc__emulator_1_1PCMemUnit.html" title="Describes a memory unit and provides api to access it. " alt="" coords="22,207,195,233"/>
+<area shape="rect" id="node6" href="$classpc__emulator_1_1PCConfiguration.html" title="Abstract programmable controller config specification. " alt="" coords="391,101,588,128"/>
+<area shape="rect" id="node9" href="$structpc__emulator_1_1DataTypeFieldAttributesStruct.html" title="Details of a data&#45;type field. " alt="" coords="1581,58,1767,99"/>
+<area shape="rect" id="node8" href="$classpc__emulator_1_1PCDataType.html" title="Class which describes a PCDataType. " alt="" coords="751,43,928,69"/>
+<area shape="rect" id="node11" href="$classpc__emulator_1_1PCConfigurationImpl.html" title="Specific implementation of the PCConfiguration abstract class. " alt="" coords="952,164,1175,191"/>
+<area shape="rect" id="node7" href="$classpc__emulator_1_1ResourceRegistry.html" title="Registers and tracks resources. " alt="" coords="5,101,212,128"/>
+<area shape="rect" id="node10" href="$classpc__emulator_1_1PCDataTypeField.html" title="Class to hold information about a data type field. " alt="" coords="1199,5,1404,32"/>
+</map>

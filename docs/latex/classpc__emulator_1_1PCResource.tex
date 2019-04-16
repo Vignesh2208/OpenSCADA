@@ -1,0 +1,166 @@
+\hypertarget{classpc__emulator_1_1PCResource}{}\section{pc\+\_\+emulator\+:\+:P\+C\+Resource Class Reference}
+\label{classpc__emulator_1_1PCResource}\index{pc\+\_\+emulator\+::\+P\+C\+Resource@{pc\+\_\+emulator\+::\+P\+C\+Resource}}
+
+
+Abstract class definition of a resource.  
+
+
+
+
+{\ttfamily \#include $<$resource.\+h$>$}
+
+
+
+Inheritance diagram for pc\+\_\+emulator\+:\+:P\+C\+Resource\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=231pt]{classpc__emulator_1_1PCResource__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for pc\+\_\+emulator\+:\+:P\+C\+Resource\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=222pt]{classpc__emulator_1_1PCResource__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classpc__emulator_1_1PCResource_af36e5647ce9cd1b05765f5225d69faa5}{P\+C\+Resource} (void)\hypertarget{classpc__emulator_1_1PCResource_af36e5647ce9cd1b05765f5225d69faa5}{}\label{classpc__emulator_1_1PCResource_af36e5647ce9cd1b05765f5225d69faa5}
+
+\begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
+\hyperlink{classpc__emulator_1_1PCResource_a7cf56b58f18c50a36894ede2a8cf22e4}{$\sim$\+P\+C\+Resource} (void)\hypertarget{classpc__emulator_1_1PCResource_a7cf56b58f18c50a36894ede2a8cf22e4}{}\label{classpc__emulator_1_1PCResource_a7cf56b58f18c50a36894ede2a8cf22e4}
+
+\begin{DoxyCompactList}\small\item\em Default destructor. \end{DoxyCompactList}\item 
+virtual void \hyperlink{classpc__emulator_1_1PCResource_a9fafb1da52428dc64831392fde44de7f}{Initialize\+All\+Po\+U\+Vars} ()=0
+\begin{DoxyCompactList}\small\item\em Initialize all P\+OU variables. \end{DoxyCompactList}\item 
+virtual void \hyperlink{classpc__emulator_1_1PCResource_adf08fafb3739903aaa90812a2ec80fca}{On\+Startup} ()=0\hypertarget{classpc__emulator_1_1PCResource_adf08fafb3739903aaa90812a2ec80fca}{}\label{classpc__emulator_1_1PCResource_adf08fafb3739903aaa90812a2ec80fca}
+
+\begin{DoxyCompactList}\small\item\em Called on resource startup. \end{DoxyCompactList}\item 
+virtual \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1PCResource_aed5f515dbf5a2e5b680430741f49cfa0}{Get\+Extern\+Variable} (string Nested\+Field\+Name)=0
+\begin{DoxyCompactList}\small\item\em Returns a variable defined as global. \end{DoxyCompactList}\item 
+virtual \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1PCResource_a511c581ba122a73010f836c84947f332}{Get\+Variable\+Pointer\+To\+Mem} (int Mem\+Type, int Byte\+Offset, int Bit\+Offset, string Variable\+Data\+Type\+Name)=0
+\begin{DoxyCompactList}\small\item\em Given location details, returns a \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} pointing to that location. \end{DoxyCompactList}\item 
+virtual void \hyperlink{classpc__emulator_1_1PCResource_ad334064c7ae38db2fa54d7dd12b3ac26}{Cleanup} ()=0\hypertarget{classpc__emulator_1_1PCResource_ad334064c7ae38db2fa54d7dd12b3ac26}{}\label{classpc__emulator_1_1PCResource_ad334064c7ae38db2fa54d7dd12b3ac26}
+
+\begin{DoxyCompactList}\small\item\em Cleanup operations. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{classpc__emulator_1_1PCResource_afb2356d0dcf4db0b6a04302861a26f18}{\+\_\+\+\_\+\+Input\+Mem\+Size}
+\item 
+int \hyperlink{classpc__emulator_1_1PCResource_a9b24906c7b1fcaee0ce72018c75bae9f}{\+\_\+\+\_\+\+Output\+Mem\+Size}
+\item 
+\hyperlink{classpc__emulator_1_1PCMemUnit}{P\+C\+Mem\+Unit} \hyperlink{classpc__emulator_1_1PCResource_a8581fead293ac0f5218bbc4de5241999}{\+\_\+\+\_\+\+Input\+Memory}
+\item 
+\hyperlink{classpc__emulator_1_1PCMemUnit}{P\+C\+Mem\+Unit} \hyperlink{classpc__emulator_1_1PCResource_aa70b08417c498d378158b048915ff8c0}{\+\_\+\+\_\+\+Output\+Memory}
+\item 
+std\+::unordered\+\_\+map$<$ std\+::string, std\+::unique\+\_\+ptr$<$ \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $>$ $>$ \hyperlink{classpc__emulator_1_1PCResource_aead21e358bfd79dd6344c34980d51d5c}{\+\_\+\+\_\+\+Resource\+Po\+U\+Vars}
+\item 
+std\+::unordered\+\_\+map$<$ std\+::string, std\+::unique\+\_\+ptr$<$ \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $>$ $>$ \hyperlink{classpc__emulator_1_1PCResource_acb5216de1a9e614bea458ad69564aa93}{\+\_\+\+\_\+\+Accessed\+Fields}
+\item 
+string \hyperlink{classpc__emulator_1_1PCResource_a2ef3a8a76df532cdb7d913ee83ff67c8}{\+\_\+\+\_\+\+Resource\+Name}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Abstract class definition of a resource. 
+
+\subsection{Member Function Documentation}
+\index{pc\+\_\+emulator\+::\+P\+C\+Resource@{pc\+\_\+emulator\+::\+P\+C\+Resource}!Get\+Extern\+Variable@{Get\+Extern\+Variable}}
+\index{Get\+Extern\+Variable@{Get\+Extern\+Variable}!pc\+\_\+emulator\+::\+P\+C\+Resource@{pc\+\_\+emulator\+::\+P\+C\+Resource}}
+\subsubsection[{\texorpdfstring{Get\+Extern\+Variable(string Nested\+Field\+Name)=0}{GetExternVariable(string NestedFieldName)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual {\bf P\+C\+Variable}$\ast$ pc\+\_\+emulator\+::\+P\+C\+Resource\+::\+Get\+Extern\+Variable (
+\begin{DoxyParamCaption}
+\item[{string}]{Nested\+Field\+Name}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\hypertarget{classpc__emulator_1_1PCResource_aed5f515dbf5a2e5b680430741f49cfa0}{}\label{classpc__emulator_1_1PCResource_aed5f515dbf5a2e5b680430741f49cfa0}
+
+
+Returns a variable defined as global. 
+
+Searches all global/access paths and returns a \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} pointing to the given nested field name 
+
+Implemented in \hyperlink{classpc__emulator_1_1PCResourceImpl_ae078d93dc866fc2deba248a7c0e1a573}{pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl}.
+
+\index{pc\+\_\+emulator\+::\+P\+C\+Resource@{pc\+\_\+emulator\+::\+P\+C\+Resource}!Get\+Variable\+Pointer\+To\+Mem@{Get\+Variable\+Pointer\+To\+Mem}}
+\index{Get\+Variable\+Pointer\+To\+Mem@{Get\+Variable\+Pointer\+To\+Mem}!pc\+\_\+emulator\+::\+P\+C\+Resource@{pc\+\_\+emulator\+::\+P\+C\+Resource}}
+\subsubsection[{\texorpdfstring{Get\+Variable\+Pointer\+To\+Mem(int Mem\+Type, int Byte\+Offset, int Bit\+Offset, string Variable\+Data\+Type\+Name)=0}{GetVariablePointerToMem(int MemType, int ByteOffset, int BitOffset, string VariableDataTypeName)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual {\bf P\+C\+Variable}$\ast$ pc\+\_\+emulator\+::\+P\+C\+Resource\+::\+Get\+Variable\+Pointer\+To\+Mem (
+\begin{DoxyParamCaption}
+\item[{int}]{Mem\+Type, }
+\item[{int}]{Byte\+Offset, }
+\item[{int}]{Bit\+Offset, }
+\item[{string}]{Variable\+Data\+Type\+Name}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\hypertarget{classpc__emulator_1_1PCResource_a511c581ba122a73010f836c84947f332}{}\label{classpc__emulator_1_1PCResource_a511c581ba122a73010f836c84947f332}
+
+
+Given location details, returns a \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} pointing to that location. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Mem\+Type} & Memory Type (I\+N\+P\+UT or O\+U\+T\+P\+UT or R\+AM given in pc\+\_\+specification\+::\+Mem\+Types) \\
+\hline
+{\em Byte\+Offset} & Byte offset within the specified memory \\
+\hline
+{\em Bit\+Offset} & Bit\+Offset within the specified memory. If Variable\+Data\+Type\+Name is not B\+O\+OL, it is ignored \\
+\hline
+{\em Variable\+Data\+Type\+Name} & Initializes a variable of this datatype on the specified memory location \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The initialized variable is returned. 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classpc__emulator_1_1PCResourceImpl_a0d071f95da611671930d5554c7c72e8b}{pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl}.
+
+\index{pc\+\_\+emulator\+::\+P\+C\+Resource@{pc\+\_\+emulator\+::\+P\+C\+Resource}!Initialize\+All\+Po\+U\+Vars@{Initialize\+All\+Po\+U\+Vars}}
+\index{Initialize\+All\+Po\+U\+Vars@{Initialize\+All\+Po\+U\+Vars}!pc\+\_\+emulator\+::\+P\+C\+Resource@{pc\+\_\+emulator\+::\+P\+C\+Resource}}
+\subsubsection[{\texorpdfstring{Initialize\+All\+Po\+U\+Vars()=0}{InitializeAllPoUVars()=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual void pc\+\_\+emulator\+::\+P\+C\+Resource\+::\+Initialize\+All\+Po\+U\+Vars (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\hypertarget{classpc__emulator_1_1PCResource_a9fafb1da52428dc64831392fde44de7f}{}\label{classpc__emulator_1_1PCResource_a9fafb1da52428dc64831392fde44de7f}
+
+
+Initialize all P\+OU variables. 
+
+Implemntation specific action. Intended to initialize all resource P\+OU\textquotesingle{}s and A\+C\+C\+E\+SS paths 
+
+Implemented in \hyperlink{classpc__emulator_1_1PCResourceImpl_ac3074be3fc6d79651d7921128c86aedb}{pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl}.
+
+
+
+\subsection{Member Data Documentation}
+\index{pc\+\_\+emulator\+::\+P\+C\+Resource@{pc\+\_\+emulator\+::\+P\+C\+Resource}!\+\_\+\+\_\+\+Accessed\+Fields@{\+\_\+\+\_\+\+Accessed\+Fields}}
+\index{\+\_\+\+\_\+\+Accessed\+Fields@{\+\_\+\+\_\+\+Accessed\+Fields}!pc\+\_\+emulator\+::\+P\+C\+Resource@{pc\+\_\+emulator\+::\+P\+C\+Resource}}
+\subsubsection[{\texorpdfstring{\+\_\+\+\_\+\+Accessed\+Fields}{__AccessedFields}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::unordered\+\_\+map$<$std\+::string, std\+::unique\+\_\+ptr$<${\bf P\+C\+Variable}$>$ $>$ pc\+\_\+emulator\+::\+P\+C\+Resource\+::\+\_\+\+\_\+\+Accessed\+Fields}\hypertarget{classpc__emulator_1_1PCResource_acb5216de1a9e614bea458ad69564aa93}{}\label{classpc__emulator_1_1PCResource_acb5216de1a9e614bea458ad69564aa93}
+A hasmap of Field\+Name to Variable \index{pc\+\_\+emulator\+::\+P\+C\+Resource@{pc\+\_\+emulator\+::\+P\+C\+Resource}!\+\_\+\+\_\+\+Input\+Memory@{\+\_\+\+\_\+\+Input\+Memory}}
+\index{\+\_\+\+\_\+\+Input\+Memory@{\+\_\+\+\_\+\+Input\+Memory}!pc\+\_\+emulator\+::\+P\+C\+Resource@{pc\+\_\+emulator\+::\+P\+C\+Resource}}
+\subsubsection[{\texorpdfstring{\+\_\+\+\_\+\+Input\+Memory}{__InputMemory}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+C\+Mem\+Unit} pc\+\_\+emulator\+::\+P\+C\+Resource\+::\+\_\+\+\_\+\+Input\+Memory}\hypertarget{classpc__emulator_1_1PCResource_a8581fead293ac0f5218bbc4de5241999}{}\label{classpc__emulator_1_1PCResource_a8581fead293ac0f5218bbc4de5241999}
+Input\+Memory container object \index{pc\+\_\+emulator\+::\+P\+C\+Resource@{pc\+\_\+emulator\+::\+P\+C\+Resource}!\+\_\+\+\_\+\+Input\+Mem\+Size@{\+\_\+\+\_\+\+Input\+Mem\+Size}}
+\index{\+\_\+\+\_\+\+Input\+Mem\+Size@{\+\_\+\+\_\+\+Input\+Mem\+Size}!pc\+\_\+emulator\+::\+P\+C\+Resource@{pc\+\_\+emulator\+::\+P\+C\+Resource}}
+\subsubsection[{\texorpdfstring{\+\_\+\+\_\+\+Input\+Mem\+Size}{__InputMemSize}}]{\setlength{\rightskip}{0pt plus 5cm}int pc\+\_\+emulator\+::\+P\+C\+Resource\+::\+\_\+\+\_\+\+Input\+Mem\+Size}\hypertarget{classpc__emulator_1_1PCResource_afb2356d0dcf4db0b6a04302861a26f18}{}\label{classpc__emulator_1_1PCResource_afb2356d0dcf4db0b6a04302861a26f18}
+Input memory size of resource in bytes \index{pc\+\_\+emulator\+::\+P\+C\+Resource@{pc\+\_\+emulator\+::\+P\+C\+Resource}!\+\_\+\+\_\+\+Output\+Memory@{\+\_\+\+\_\+\+Output\+Memory}}
+\index{\+\_\+\+\_\+\+Output\+Memory@{\+\_\+\+\_\+\+Output\+Memory}!pc\+\_\+emulator\+::\+P\+C\+Resource@{pc\+\_\+emulator\+::\+P\+C\+Resource}}
+\subsubsection[{\texorpdfstring{\+\_\+\+\_\+\+Output\+Memory}{__OutputMemory}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+C\+Mem\+Unit} pc\+\_\+emulator\+::\+P\+C\+Resource\+::\+\_\+\+\_\+\+Output\+Memory}\hypertarget{classpc__emulator_1_1PCResource_aa70b08417c498d378158b048915ff8c0}{}\label{classpc__emulator_1_1PCResource_aa70b08417c498d378158b048915ff8c0}
+Output\+Memory container object \index{pc\+\_\+emulator\+::\+P\+C\+Resource@{pc\+\_\+emulator\+::\+P\+C\+Resource}!\+\_\+\+\_\+\+Output\+Mem\+Size@{\+\_\+\+\_\+\+Output\+Mem\+Size}}
+\index{\+\_\+\+\_\+\+Output\+Mem\+Size@{\+\_\+\+\_\+\+Output\+Mem\+Size}!pc\+\_\+emulator\+::\+P\+C\+Resource@{pc\+\_\+emulator\+::\+P\+C\+Resource}}
+\subsubsection[{\texorpdfstring{\+\_\+\+\_\+\+Output\+Mem\+Size}{__OutputMemSize}}]{\setlength{\rightskip}{0pt plus 5cm}int pc\+\_\+emulator\+::\+P\+C\+Resource\+::\+\_\+\+\_\+\+Output\+Mem\+Size}\hypertarget{classpc__emulator_1_1PCResource_a9b24906c7b1fcaee0ce72018c75bae9f}{}\label{classpc__emulator_1_1PCResource_a9b24906c7b1fcaee0ce72018c75bae9f}
+Output memory size of resource in bytes \index{pc\+\_\+emulator\+::\+P\+C\+Resource@{pc\+\_\+emulator\+::\+P\+C\+Resource}!\+\_\+\+\_\+\+Resource\+Name@{\+\_\+\+\_\+\+Resource\+Name}}
+\index{\+\_\+\+\_\+\+Resource\+Name@{\+\_\+\+\_\+\+Resource\+Name}!pc\+\_\+emulator\+::\+P\+C\+Resource@{pc\+\_\+emulator\+::\+P\+C\+Resource}}
+\subsubsection[{\texorpdfstring{\+\_\+\+\_\+\+Resource\+Name}{__ResourceName}}]{\setlength{\rightskip}{0pt plus 5cm}string pc\+\_\+emulator\+::\+P\+C\+Resource\+::\+\_\+\+\_\+\+Resource\+Name}\hypertarget{classpc__emulator_1_1PCResource_a2ef3a8a76df532cdb7d913ee83ff67c8}{}\label{classpc__emulator_1_1PCResource_a2ef3a8a76df532cdb7d913ee83ff67c8}
+Name of the resource \index{pc\+\_\+emulator\+::\+P\+C\+Resource@{pc\+\_\+emulator\+::\+P\+C\+Resource}!\+\_\+\+\_\+\+Resource\+Po\+U\+Vars@{\+\_\+\+\_\+\+Resource\+Po\+U\+Vars}}
+\index{\+\_\+\+\_\+\+Resource\+Po\+U\+Vars@{\+\_\+\+\_\+\+Resource\+Po\+U\+Vars}!pc\+\_\+emulator\+::\+P\+C\+Resource@{pc\+\_\+emulator\+::\+P\+C\+Resource}}
+\subsubsection[{\texorpdfstring{\+\_\+\+\_\+\+Resource\+Po\+U\+Vars}{__ResourcePoUVars}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::unordered\+\_\+map$<$std\+::string,std\+::unique\+\_\+ptr$<${\bf P\+C\+Variable}$>$ $>$ pc\+\_\+emulator\+::\+P\+C\+Resource\+::\+\_\+\+\_\+\+Resource\+Po\+U\+Vars}\hypertarget{classpc__emulator_1_1PCResource_aead21e358bfd79dd6344c34980d51d5c}{}\label{classpc__emulator_1_1PCResource_aead21e358bfd79dd6344c34980d51d5c}
+A hasmap of P\+O\+U\+Name to P\+OU Variables 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/pc\+\_\+emulator/include/resource.\+h\end{DoxyCompactItemize}

@@ -589,7 +589,8 @@ PCVariable * PCResourceImpl::GetTmpVariable(string VariableDataTypeName,
                                     VariableDataTypeName))));
         V = __AccessedFields.find(VariableName)->second.get();
         assert(V != nullptr);
-        V->AllocateAndInitialize();    
+        V->AllocateAndInitialize(); 
+        V->__IsTemporary = true;   
     } else {
         V =  got->second.get();
     }

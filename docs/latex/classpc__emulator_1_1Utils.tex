@@ -1,0 +1,435 @@
+\hypertarget{classpc__emulator_1_1Utils}{}\section{pc\+\_\+emulator\+:\+:Utils Class Reference}
+\label{classpc__emulator_1_1Utils}\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+
+
+Class containing Util functions.  
+
+
+
+
+{\ttfamily \#include $<$utils.\+h$>$}
+
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \hyperlink{classpc__emulator_1_1Utils_a373cb0262a1769d303a228baf2b3c780}{Initialize\+Data\+Type} (\hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$\+\_\+\+\_\+configuration, \hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$\+\_\+\+\_\+new\+\_\+data\+\_\+type, const pc\+\_\+specification\+::\+Data\+Type \&Data\+Type\+Spec)
+\begin{DoxyCompactList}\small\item\em Member function to initalize a datatype. \end{DoxyCompactList}\item 
+static void \hyperlink{classpc__emulator_1_1Utils_a33ca522e76e1e97a58b44e75f51206a4}{Initialize\+Access\+Data\+Type} (\hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$\+\_\+\+\_\+configuration, \hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$\+\_\+\+\_\+new\+\_\+data\+\_\+type, const pc\+\_\+specification\+::\+Data\+Type \&Data\+Type\+Spec)
+\begin{DoxyCompactList}\small\item\em Member function to initalize all A\+C\+C\+E\+SS P\+OU fields. \end{DoxyCompactList}\item 
+static bool \hyperlink{classpc__emulator_1_1Utils_af667be4652205fad756b9a6ede0e568f}{Extract\+From\+Storage\+Spec} (string Storage\+Spec, int $\ast$Mem\+Type, int $\ast$Byte\+Offset, int $\ast$Bit\+Offset)
+\begin{DoxyCompactList}\small\item\em Extract Mem\+Type, Byte and Bit Offsets from a string. \end{DoxyCompactList}\item 
+static string \hyperlink{classpc__emulator_1_1Utils_a2df4a10dd90a5aa26ac6dbcfa8384103}{Get\+Elementary\+Data\+Type\+Name} (int Data\+Type\+Category)
+\begin{DoxyCompactList}\small\item\em Returns the datatype name given its category. \end{DoxyCompactList}\item 
+static int \hyperlink{classpc__emulator_1_1Utils_a5273a26af3ce5b020fa6ea07e6b42eb1}{Get\+Var\+Op\+Type} (int varop)
+\begin{DoxyCompactList}\small\item\em Returns the type of operation given an operator. \end{DoxyCompactList}\item 
+static bool \hyperlink{classpc__emulator_1_1Utils_a6fbc2a560927d70207c6abdcf30c1975}{Extract\+From\+Access\+Storage\+Spec} (\hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$\+\_\+\+\_\+configuration, string Storage\+Spec, int $\ast$Mem\+Type, int $\ast$Byte\+Offset, int $\ast$Bit\+Offset, string \&Candidate\+Resource\+Name)
+\begin{DoxyCompactList}\small\item\em Returns storage specification details for an access path. \end{DoxyCompactList}\item 
+static string \hyperlink{classpc__emulator_1_1Utils_aecb9549cd527314bcb8c3f03469da10a}{Get\+Installation\+Directory} ()\hypertarget{classpc__emulator_1_1Utils_aecb9549cd527314bcb8c3f03469da10a}{}\label{classpc__emulator_1_1Utils_aecb9549cd527314bcb8c3f03469da10a}
+
+\begin{DoxyCompactList}\small\item\em Returns the installation directory containing the Open\+S\+C\+A\+DA files. \end{DoxyCompactList}\item 
+static string \hyperlink{classpc__emulator_1_1Utils_a70dfbf76cdece909fde22deb9e63fbeb}{Resolve\+Alias\+Name} (string Alias\+Name, \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$\+\_\+\+\_\+configuration)
+\begin{DoxyCompactList}\small\item\em Returns the actual data-\/type name given one of its aliases. \end{DoxyCompactList}\item 
+static string \hyperlink{classpc__emulator_1_1Utils_a798cac4cec2e2a3c18c33517b8bdeb12}{Get\+Initial\+Value\+For\+Array\+Idx} (int Idx, string Initial\+Value, \hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$Element\+Data\+Type, \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$configuration)
+\begin{DoxyCompactList}\small\item\em Returns the initial value for an element of an array datatype. \end{DoxyCompactList}\item 
+static bool \hyperlink{classpc__emulator_1_1Utils_ae118fc67b4598048bbd2d52f35357d45}{Test\+E\+Q\+Ptrs} (\hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$Var1, \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$Var2)
+\begin{DoxyCompactList}\small\item\em Tests if two variables are equal. \end{DoxyCompactList}\item 
+static bool \hyperlink{classpc__emulator_1_1Utils_a0a9a00edeb05ecfcee3d57e89118d584}{Is\+Field\+Type\+Ptr} (int Field\+Interface\+Type)
+\begin{DoxyCompactList}\small\item\em Given a field interface type, checks if it is a pointer field. \end{DoxyCompactList}\item 
+static void \hyperlink{classpc__emulator_1_1Utils_a78c55b2d1c4bfb235a4cca17c64c961f}{Validate\+P\+O\+U\+Definition} (\hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$P\+O\+U\+Var, \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$configuration)
+\begin{DoxyCompactList}\small\item\em Performs validation check for a P\+OU. \end{DoxyCompactList}\item 
+static bool \hyperlink{classpc__emulator_1_1Utils_a371876272564acb678293057ddfb07fb}{does\+\_\+file\+\_\+exist} (const char $\ast$filename)\hypertarget{classpc__emulator_1_1Utils_a371876272564acb678293057ddfb07fb}{}\label{classpc__emulator_1_1Utils_a371876272564acb678293057ddfb07fb}
+
+\begin{DoxyCompactList}\small\item\em Checks if a file exists on disk. \end{DoxyCompactList}\item 
+static char $\ast$ \hyperlink{classpc__emulator_1_1Utils_a12d34b0757d3945a292bf656af1873ab}{make\+\_\+mmap\+\_\+shared} (int n\+Elements, string File\+Name)
+\begin{DoxyCompactList}\small\item\em Creates a M\+M\+AP\textquotesingle{}ed file. \end{DoxyCompactList}\item 
+static \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1Utils_ab00462ed213e71aca03c52abf4e06503}{Get\+Variable} (string Nested\+Field\+Name, \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$configuration)
+\begin{DoxyCompactList}\small\item\em Returns a variable to the nested field name. \end{DoxyCompactList}\item 
+static bool \hyperlink{classpc__emulator_1_1Utils_aed87633e02fc22491260d495013c56df}{Get\+Field\+Attributes\+For\+Access\+Path} (string Access\+Path, \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$configuration, struct \hyperlink{structpc__emulator_1_1DataTypeFieldAttributesStruct}{Data\+Type\+Field\+Attributes\+Struct} \&Field\+Attributes)
+\begin{DoxyCompactList}\small\item\em Gets Field Attributes for a given access path. \end{DoxyCompactList}\item 
+static bool \hyperlink{classpc__emulator_1_1Utils_a22194d5b8d1dadf8fd795b6a75595fe6}{Read\+Access\+Check} (\hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$configuration, string Calling\+Po\+U\+Type, string Nested\+Field\+Name)
+\begin{DoxyCompactList}\small\item\em Checks if the calling P\+OU can read the Nested\+Field. \end{DoxyCompactList}\item 
+static bool \hyperlink{classpc__emulator_1_1Utils_a7060cb4142919527d5719f2c1c933f4b}{Write\+Access\+Check} (\hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$configuration, string Calling\+Po\+U\+Type, string Nested\+Field\+Name)
+\begin{DoxyCompactList}\small\item\em Checks if the calling P\+OU can access write to the Nested\+Field. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class containing Util functions. 
+
+Util functions are used by other classes to perform initialization and book keeping operations 
+
+\subsection{Member Function Documentation}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!Extract\+From\+Access\+Storage\+Spec@{Extract\+From\+Access\+Storage\+Spec}}
+\index{Extract\+From\+Access\+Storage\+Spec@{Extract\+From\+Access\+Storage\+Spec}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{Extract\+From\+Access\+Storage\+Spec(\+P\+C\+Configuration $\ast$\+\_\+\+\_\+configuration, string Storage\+Spec, int $\ast$\+Mem\+Type, int $\ast$\+Byte\+Offset, int $\ast$\+Bit\+Offset, string \&\+Candidate\+Resource\+Name)}{ExtractFromAccessStorageSpec(PCConfiguration *__configuration, string StorageSpec, int *MemType, int *ByteOffset, int *BitOffset, string &CandidateResourceName)}}]{\setlength{\rightskip}{0pt plus 5cm}static bool pc\+\_\+emulator\+::\+Utils\+::\+Extract\+From\+Access\+Storage\+Spec (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Configuration} $\ast$}]{\+\_\+\+\_\+configuration, }
+\item[{string}]{Storage\+Spec, }
+\item[{int $\ast$}]{Mem\+Type, }
+\item[{int $\ast$}]{Byte\+Offset, }
+\item[{int $\ast$}]{Bit\+Offset, }
+\item[{string \&}]{Candidate\+Resource\+Name}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_a6fbc2a560927d70207c6abdcf30c1975}{}\label{classpc__emulator_1_1Utils_a6fbc2a560927d70207c6abdcf30c1975}
+
+
+Returns storage specification details for an access path. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+configuration} & \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} object \\
+\hline
+{\em Storage\+Spec} & The storage specification string for the access path \\
+\hline
+{\em Mem\+Type} & Returned memory type (R\+AM or I\+N\+P\+UT or O\+U\+T\+P\+UT) \\
+\hline
+{\em Byte\+Offset} & Returned byte offset in the specified memory \\
+\hline
+{\em Bit\+Offset} & Returned bit offset within the specified byte \\
+\hline
+{\em Candidate\+Resource\+Name} & If the specified storage spec is of the form $<$resource\+\_\+name$>$.$<$\+Memory\+\_\+spec$>$ then this contains the extracted resource name. Else it is \char`\"{}\+N\+O\+N\+E\char`\"{}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the storage spec is in the correct format, else false 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!Extract\+From\+Storage\+Spec@{Extract\+From\+Storage\+Spec}}
+\index{Extract\+From\+Storage\+Spec@{Extract\+From\+Storage\+Spec}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{Extract\+From\+Storage\+Spec(string Storage\+Spec, int $\ast$\+Mem\+Type, int $\ast$\+Byte\+Offset, int $\ast$\+Bit\+Offset)}{ExtractFromStorageSpec(string StorageSpec, int *MemType, int *ByteOffset, int *BitOffset)}}]{\setlength{\rightskip}{0pt plus 5cm}static bool pc\+\_\+emulator\+::\+Utils\+::\+Extract\+From\+Storage\+Spec (
+\begin{DoxyParamCaption}
+\item[{string}]{Storage\+Spec, }
+\item[{int $\ast$}]{Mem\+Type, }
+\item[{int $\ast$}]{Byte\+Offset, }
+\item[{int $\ast$}]{Bit\+Offset}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_af667be4652205fad756b9a6ede0e568f}{}\label{classpc__emulator_1_1Utils_af667be4652205fad756b9a6ede0e568f}
+
+
+Extract Mem\+Type, Byte and Bit Offsets from a string. 
+
+Extracts details from a storage spec string like M\+W3.0 
+\begin{DoxyParams}{Parameters}
+{\em Storage\+Spec} & Storage specification string \\
+\hline
+{\em Mem\+Type} & extracted memory type, (R\+A\+M/\+I\+N\+P\+UT or O\+U\+T\+P\+UT) \\
+\hline
+{\em Byte\+Offset} & extracted byte offset specified within the memory \\
+\hline
+{\em Bit\+Offset} & extracted bit offset specified within the byte \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if storage spec is in correct format, else false 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!Get\+Elementary\+Data\+Type\+Name@{Get\+Elementary\+Data\+Type\+Name}}
+\index{Get\+Elementary\+Data\+Type\+Name@{Get\+Elementary\+Data\+Type\+Name}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{Get\+Elementary\+Data\+Type\+Name(int Data\+Type\+Category)}{GetElementaryDataTypeName(int DataTypeCategory)}}]{\setlength{\rightskip}{0pt plus 5cm}static string pc\+\_\+emulator\+::\+Utils\+::\+Get\+Elementary\+Data\+Type\+Name (
+\begin{DoxyParamCaption}
+\item[{int}]{Data\+Type\+Category}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_a2df4a10dd90a5aa26ac6dbcfa8384103}{}\label{classpc__emulator_1_1Utils_a2df4a10dd90a5aa26ac6dbcfa8384103}
+
+
+Returns the datatype name given its category. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Data\+Type\+Category} & Category of the data-\/type from pc\+\_\+specification\+::\+Data\+Type\+Category \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The data-\/type name is returned 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!Get\+Field\+Attributes\+For\+Access\+Path@{Get\+Field\+Attributes\+For\+Access\+Path}}
+\index{Get\+Field\+Attributes\+For\+Access\+Path@{Get\+Field\+Attributes\+For\+Access\+Path}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{Get\+Field\+Attributes\+For\+Access\+Path(string Access\+Path, P\+C\+Configuration $\ast$configuration, struct Data\+Type\+Field\+Attributes\+Struct \&\+Field\+Attributes)}{GetFieldAttributesForAccessPath(string AccessPath, PCConfiguration *configuration, struct DataTypeFieldAttributesStruct &FieldAttributes)}}]{\setlength{\rightskip}{0pt plus 5cm}static bool pc\+\_\+emulator\+::\+Utils\+::\+Get\+Field\+Attributes\+For\+Access\+Path (
+\begin{DoxyParamCaption}
+\item[{string}]{Access\+Path, }
+\item[{{\bf P\+C\+Configuration} $\ast$}]{configuration, }
+\item[{struct {\bf Data\+Type\+Field\+Attributes\+Struct} \&}]{Field\+Attributes}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_aed87633e02fc22491260d495013c56df}{}\label{classpc__emulator_1_1Utils_aed87633e02fc22491260d495013c56df}
+
+
+Gets Field Attributes for a given access path. 
+
+Given access path name, it returns its attributes including information on where the data is stored 
+\begin{DoxyParams}{Parameters}
+{\em Access\+Path} & The access path name \\
+\hline
+{\em configuration} & A \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} object \\
+\hline
+{\em Field\+Attributes} & Attributes which are returned \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True iff Access\+Path exists, else False 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!Get\+Initial\+Value\+For\+Array\+Idx@{Get\+Initial\+Value\+For\+Array\+Idx}}
+\index{Get\+Initial\+Value\+For\+Array\+Idx@{Get\+Initial\+Value\+For\+Array\+Idx}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{Get\+Initial\+Value\+For\+Array\+Idx(int Idx, string Initial\+Value, P\+C\+Data\+Type $\ast$\+Element\+Data\+Type, P\+C\+Configuration $\ast$configuration)}{GetInitialValueForArrayIdx(int Idx, string InitialValue, PCDataType *ElementDataType, PCConfiguration *configuration)}}]{\setlength{\rightskip}{0pt plus 5cm}static string pc\+\_\+emulator\+::\+Utils\+::\+Get\+Initial\+Value\+For\+Array\+Idx (
+\begin{DoxyParamCaption}
+\item[{int}]{Idx, }
+\item[{string}]{Initial\+Value, }
+\item[{{\bf P\+C\+Data\+Type} $\ast$}]{Element\+Data\+Type, }
+\item[{{\bf P\+C\+Configuration} $\ast$}]{configuration}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_a798cac4cec2e2a3c18c33517b8bdeb12}{}\label{classpc__emulator_1_1Utils_a798cac4cec2e2a3c18c33517b8bdeb12}
+
+
+Returns the initial value for an element of an array datatype. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Idx} & The index of the desired array element \\
+\hline
+{\em Initial\+Value} & Initial value specified for the array \\
+\hline
+{\em Element\+Data\+Type} & A \hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} pointer for the element\textquotesingle{}s datatype \\
+\hline
+{\em configuration} & A \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} object \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns the initial value of the specified index 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!Get\+Variable@{Get\+Variable}}
+\index{Get\+Variable@{Get\+Variable}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{Get\+Variable(string Nested\+Field\+Name, P\+C\+Configuration $\ast$configuration)}{GetVariable(string NestedFieldName, PCConfiguration *configuration)}}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf P\+C\+Variable}$\ast$ pc\+\_\+emulator\+::\+Utils\+::\+Get\+Variable (
+\begin{DoxyParamCaption}
+\item[{string}]{Nested\+Field\+Name, }
+\item[{{\bf P\+C\+Configuration} $\ast$}]{configuration}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_ab00462ed213e71aca03c52abf4e06503}{}\label{classpc__emulator_1_1Utils_ab00462ed213e71aca03c52abf4e06503}
+
+
+Returns a variable to the nested field name. 
+
+Searches\+: (1) global variables defined in the configuration, (2) global variables defined in each resource (3) variables defined inside P\+OU\textquotesingle{}s of each resource 
+\begin{DoxyParams}{Parameters}
+{\em Nested\+Field\+Name} & A nested field name \\
+\hline
+{\em configuration} & A \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} object \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} pointer iff found or nullptr 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!Get\+Var\+Op\+Type@{Get\+Var\+Op\+Type}}
+\index{Get\+Var\+Op\+Type@{Get\+Var\+Op\+Type}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{Get\+Var\+Op\+Type(int varop)}{GetVarOpType(int varop)}}]{\setlength{\rightskip}{0pt plus 5cm}static int pc\+\_\+emulator\+::\+Utils\+::\+Get\+Var\+Op\+Type (
+\begin{DoxyParamCaption}
+\item[{int}]{varop}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_a5273a26af3ce5b020fa6ea07e6b42eb1}{}\label{classpc__emulator_1_1Utils_a5273a26af3ce5b020fa6ea07e6b42eb1}
+
+
+Returns the type of operation given an operator. 
+
+The type of operation includes A\+R\+I\+T\+H\+M\+E\+T\+IC, B\+I\+T\+W\+I\+SE or R\+E\+L\+A\+T\+I\+O\+N\+AL 
+\begin{DoxyParams}{Parameters}
+{\em varop} & Category of operation defined in pc\+\_\+emulator\+::\+Variable\+Ops \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Category of the variable operator defined in pc\+\_\+emulator\+::\+Var\+Op\+Type 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!Initialize\+Access\+Data\+Type@{Initialize\+Access\+Data\+Type}}
+\index{Initialize\+Access\+Data\+Type@{Initialize\+Access\+Data\+Type}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{Initialize\+Access\+Data\+Type(\+P\+C\+Configuration $\ast$\+\_\+\+\_\+configuration, P\+C\+Data\+Type $\ast$\+\_\+\+\_\+new\+\_\+data\+\_\+type, const pc\+\_\+specification\+::\+Data\+Type \&\+Data\+Type\+Spec)}{InitializeAccessDataType(PCConfiguration *__configuration, PCDataType *__new_data_type, const pc_specification::DataType &DataTypeSpec)}}]{\setlength{\rightskip}{0pt plus 5cm}static void pc\+\_\+emulator\+::\+Utils\+::\+Initialize\+Access\+Data\+Type (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Configuration} $\ast$}]{\+\_\+\+\_\+configuration, }
+\item[{{\bf P\+C\+Data\+Type} $\ast$}]{\+\_\+\+\_\+new\+\_\+data\+\_\+type, }
+\item[{const pc\+\_\+specification\+::\+Data\+Type \&}]{Data\+Type\+Spec}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_a33ca522e76e1e97a58b44e75f51206a4}{}\label{classpc__emulator_1_1Utils_a33ca522e76e1e97a58b44e75f51206a4}
+
+
+Member function to initalize all A\+C\+C\+E\+SS P\+OU fields. 
+
+Initializes all the A\+C\+C\+E\+SS fields specified in the configuration 
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+configuration} & A configuration object \\
+\hline
+{\em \+\_\+\+\_\+new\+\_\+data\+\_\+type} & The access datatype object to be initialized \\
+\hline
+{\em Data\+Type\+Spec} & detailed pecification of the data-\/type fields \\
+\hline
+\end{DoxyParams}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!Initialize\+Data\+Type@{Initialize\+Data\+Type}}
+\index{Initialize\+Data\+Type@{Initialize\+Data\+Type}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{Initialize\+Data\+Type(\+P\+C\+Configuration $\ast$\+\_\+\+\_\+configuration, P\+C\+Data\+Type $\ast$\+\_\+\+\_\+new\+\_\+data\+\_\+type, const pc\+\_\+specification\+::\+Data\+Type \&\+Data\+Type\+Spec)}{InitializeDataType(PCConfiguration *__configuration, PCDataType *__new_data_type, const pc_specification::DataType &DataTypeSpec)}}]{\setlength{\rightskip}{0pt plus 5cm}static void pc\+\_\+emulator\+::\+Utils\+::\+Initialize\+Data\+Type (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Configuration} $\ast$}]{\+\_\+\+\_\+configuration, }
+\item[{{\bf P\+C\+Data\+Type} $\ast$}]{\+\_\+\+\_\+new\+\_\+data\+\_\+type, }
+\item[{const pc\+\_\+specification\+::\+Data\+Type \&}]{Data\+Type\+Spec}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_a373cb0262a1769d303a228baf2b3c780}{}\label{classpc__emulator_1_1Utils_a373cb0262a1769d303a228baf2b3c780}
+
+
+Member function to initalize a datatype. 
+
+Initializes all the fields of a data-\/type 
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+\_\+configuration} & A configuration object \\
+\hline
+{\em \+\_\+\+\_\+new\+\_\+data\+\_\+type} & The data-\/type object to be initialized \\
+\hline
+{\em Data\+Type\+Spec} & detailed pecification of the data-\/type fields \\
+\hline
+\end{DoxyParams}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!Is\+Field\+Type\+Ptr@{Is\+Field\+Type\+Ptr}}
+\index{Is\+Field\+Type\+Ptr@{Is\+Field\+Type\+Ptr}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{Is\+Field\+Type\+Ptr(int Field\+Interface\+Type)}{IsFieldTypePtr(int FieldInterfaceType)}}]{\setlength{\rightskip}{0pt plus 5cm}static bool pc\+\_\+emulator\+::\+Utils\+::\+Is\+Field\+Type\+Ptr (
+\begin{DoxyParamCaption}
+\item[{int}]{Field\+Interface\+Type}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_a0a9a00edeb05ecfcee3d57e89118d584}{}\label{classpc__emulator_1_1Utils_a0a9a00edeb05ecfcee3d57e89118d584}
+
+
+Given a field interface type, checks if it is a pointer field. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Field\+Interface\+Type} & One of the values defined in pc\+\_\+specification\+::\+Field\+Intf\+Types \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True iff Field\+Interface\+Type is V\+A\+R\+\_\+\+I\+N\+\_\+\+O\+UT, V\+A\+R\+\_\+\+E\+X\+T\+E\+R\+N\+AL V\+A\+R\+\_\+\+A\+C\+C\+E\+SS or V\+A\+R\+\_\+\+E\+X\+P\+L\+I\+C\+I\+T\+\_\+\+S\+T\+O\+R\+A\+GE. 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!make\+\_\+mmap\+\_\+shared@{make\+\_\+mmap\+\_\+shared}}
+\index{make\+\_\+mmap\+\_\+shared@{make\+\_\+mmap\+\_\+shared}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{make\+\_\+mmap\+\_\+shared(int n\+Elements, string File\+Name)}{make_mmap_shared(int nElements, string FileName)}}]{\setlength{\rightskip}{0pt plus 5cm}static char$\ast$ pc\+\_\+emulator\+::\+Utils\+::make\+\_\+mmap\+\_\+shared (
+\begin{DoxyParamCaption}
+\item[{int}]{n\+Elements, }
+\item[{string}]{File\+Name}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_a12d34b0757d3945a292bf656af1873ab}{}\label{classpc__emulator_1_1Utils_a12d34b0757d3945a292bf656af1873ab}
+
+
+Creates a M\+M\+AP\textquotesingle{}ed file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em n\+Elements} & Sets the size of the M\+M\+AP\textquotesingle{}ed file to this value \\
+\hline
+{\em File\+Name} & M\+M\+AP\textquotesingle{}ed file path \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A char $\ast$ pointer to the M\+M\+AP\textquotesingle{}ed memory 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!Read\+Access\+Check@{Read\+Access\+Check}}
+\index{Read\+Access\+Check@{Read\+Access\+Check}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{Read\+Access\+Check(\+P\+C\+Configuration $\ast$configuration, string Calling\+Po\+U\+Type, string Nested\+Field\+Name)}{ReadAccessCheck(PCConfiguration *configuration, string CallingPoUType, string NestedFieldName)}}]{\setlength{\rightskip}{0pt plus 5cm}static bool pc\+\_\+emulator\+::\+Utils\+::\+Read\+Access\+Check (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Configuration} $\ast$}]{configuration, }
+\item[{string}]{Calling\+Po\+U\+Type, }
+\item[{string}]{Nested\+Field\+Name}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_a22194d5b8d1dadf8fd795b6a75595fe6}{}\label{classpc__emulator_1_1Utils_a22194d5b8d1dadf8fd795b6a75595fe6}
+
+
+Checks if the calling P\+OU can read the Nested\+Field. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em configuration} & A \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} object \\
+\hline
+{\em Calling\+Po\+U\+Type} & Name of the Calling\+PoU \\
+\hline
+{\em Nested\+Field\+Name} & The nested field name whose read permissions are to be checked \\
+\hline
+\end{DoxyParams}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!Resolve\+Alias\+Name@{Resolve\+Alias\+Name}}
+\index{Resolve\+Alias\+Name@{Resolve\+Alias\+Name}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{Resolve\+Alias\+Name(string Alias\+Name, P\+C\+Configuration $\ast$\+\_\+\+\_\+configuration)}{ResolveAliasName(string AliasName, PCConfiguration *__configuration)}}]{\setlength{\rightskip}{0pt plus 5cm}static string pc\+\_\+emulator\+::\+Utils\+::\+Resolve\+Alias\+Name (
+\begin{DoxyParamCaption}
+\item[{string}]{Alias\+Name, }
+\item[{{\bf P\+C\+Configuration} $\ast$}]{\+\_\+\+\_\+configuration}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_a70dfbf76cdece909fde22deb9e63fbeb}{}\label{classpc__emulator_1_1Utils_a70dfbf76cdece909fde22deb9e63fbeb}
+
+
+Returns the actual data-\/type name given one of its aliases. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Alias\+Name} & The alias data-\/type name which needs to resolved \\
+\hline
+{\em \+\_\+\+\_\+configuration} & A \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} object \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns the original data-\/type name 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!Test\+E\+Q\+Ptrs@{Test\+E\+Q\+Ptrs}}
+\index{Test\+E\+Q\+Ptrs@{Test\+E\+Q\+Ptrs}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{Test\+E\+Q\+Ptrs(\+P\+C\+Variable $\ast$\+Var1, P\+C\+Variable $\ast$\+Var2)}{TestEQPtrs(PCVariable *Var1, PCVariable *Var2)}}]{\setlength{\rightskip}{0pt plus 5cm}static bool pc\+\_\+emulator\+::\+Utils\+::\+Test\+E\+Q\+Ptrs (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Variable} $\ast$}]{Var1, }
+\item[{{\bf P\+C\+Variable} $\ast$}]{Var2}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_ae118fc67b4598048bbd2d52f35357d45}{}\label{classpc__emulator_1_1Utils_ae118fc67b4598048bbd2d52f35357d45}
+
+
+Tests if two variables are equal. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Var1} & Variable-\/1 \\
+\hline
+{\em Var2} & Variable-\/2 \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True iff both variable\textquotesingle{}s memory locations and byte and bit offsets are the same. Otherwise it returns false 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!Validate\+P\+O\+U\+Definition@{Validate\+P\+O\+U\+Definition}}
+\index{Validate\+P\+O\+U\+Definition@{Validate\+P\+O\+U\+Definition}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{Validate\+P\+O\+U\+Definition(\+P\+C\+Variable $\ast$\+P\+O\+U\+Var, P\+C\+Configuration $\ast$configuration)}{ValidatePOUDefinition(PCVariable *POUVar, PCConfiguration *configuration)}}]{\setlength{\rightskip}{0pt plus 5cm}static void pc\+\_\+emulator\+::\+Utils\+::\+Validate\+P\+O\+U\+Definition (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Variable} $\ast$}]{P\+O\+U\+Var, }
+\item[{{\bf P\+C\+Configuration} $\ast$}]{configuration}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_a78c55b2d1c4bfb235a4cca17c64c961f}{}\label{classpc__emulator_1_1Utils_a78c55b2d1c4bfb235a4cca17c64c961f}
+
+
+Performs validation check for a P\+OU. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em P\+O\+U\+Var} & The P\+OU variable to check \\
+\hline
+{\em configuration} & A \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} object \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Raises an exception if any of the validation checks fail 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!Write\+Access\+Check@{Write\+Access\+Check}}
+\index{Write\+Access\+Check@{Write\+Access\+Check}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{Write\+Access\+Check(\+P\+C\+Configuration $\ast$configuration, string Calling\+Po\+U\+Type, string Nested\+Field\+Name)}{WriteAccessCheck(PCConfiguration *configuration, string CallingPoUType, string NestedFieldName)}}]{\setlength{\rightskip}{0pt plus 5cm}static bool pc\+\_\+emulator\+::\+Utils\+::\+Write\+Access\+Check (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Configuration} $\ast$}]{configuration, }
+\item[{string}]{Calling\+Po\+U\+Type, }
+\item[{string}]{Nested\+Field\+Name}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_a7060cb4142919527d5719f2c1c933f4b}{}\label{classpc__emulator_1_1Utils_a7060cb4142919527d5719f2c1c933f4b}
+
+
+Checks if the calling P\+OU can access write to the Nested\+Field. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em configuration} & A \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} object \\
+\hline
+{\em Calling\+Po\+U\+Type} & Name of the Calling\+PoU \\
+\hline
+{\em Nested\+Field\+Name} & The nested field name whose write permissions are to be checked \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/pc\+\_\+emulator/include/utils.\+h\end{DoxyCompactItemize}

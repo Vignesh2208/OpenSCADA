@@ -15,6 +15,22 @@ cc_proto_library(
     
 )
 
+proto_library(
+    name = "pc_system_pou_proto",
+    srcs = ["src/pc_emulator/proto/system_pous.proto",
+            "src/pc_emulator/proto/configuration.proto"],
+    deps = [],
+    
+)
+
+
+cc_proto_library(
+    name = "pc_system_pou_cc_proto",
+    deps = [":pc_system_pou_proto"],
+    visibility = ["//visibility:public"],
+    
+)
+
 
 
 cc_library(
