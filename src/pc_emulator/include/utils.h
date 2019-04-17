@@ -240,6 +240,9 @@ namespace pc_emulator {
             static bool LWORD_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
+            static bool CHAR_TO_ANY(PCConfiguration * configuration, 
+                PCVariable * Var, PCDataType * new_datatype);
+
             static bool INT_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
@@ -276,7 +279,11 @@ namespace pc_emulator {
             static bool DT_TO_DATE(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
-            
+            static bool IsNumType(PCDataType * data_type);
+
+            static bool IsBitType(PCDataType * data_type);
+
+            static bool IsRealType(PCDataType * data_type);
     };
 }   
 

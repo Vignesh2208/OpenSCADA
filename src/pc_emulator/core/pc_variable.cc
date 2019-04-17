@@ -89,7 +89,10 @@ PCVariable::PCVariable(PCConfiguration * configuration,
         __PrevValue = false;
     }
 
-    __IsTemporary = false;
+    if(__VariableName == "__CurrentResult")
+        __IsTemporary = true;
+    else
+        __IsTemporary = false;
 }
 
 void PCVariable::Cleanup() {
@@ -1850,6 +1853,7 @@ PCVariable& PCVariable::operator=(PCVariable& V) {
                 CopySize, __ByteOffset);
         __TotalSizeInBits = V.__TotalSizeInBits;
         __VariableAttributes = V.__VariableAttributes;
+        __IsTemporary = true;
     }
     
     this->__configuration = V.__configuration;

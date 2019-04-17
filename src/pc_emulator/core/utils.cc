@@ -33,6 +33,27 @@ using FieldQualifiers = pc_specification::FieldQualifiers;
 #define STRING(s) #s
 
 
+bool Utils::IsNumType(PCDataType * data_type) {
+    if (data_type->__DataTypeCategory >= DataTypeCategory::INT
+        && data_type->__DataTypeCategory <= DataTypeCategory::LREAL)
+        return true;
+    return false;
+}
+
+bool Utils::IsBitType(PCDataType * data_type) {
+    if (data_type->__DataTypeCategory >= DataTypeCategory::BYTE
+        && data_type->__DataTypeCategory <= DataTypeCategory::LWORD)
+        return true;
+    return false;
+}
+
+bool Utils::IsRealType(PCDataType * data_type) {
+    if (data_type->__DataTypeCategory == DataTypeCategory::REAL
+        || data_type->__DataTypeCategory == DataTypeCategory::LREAL)
+        return true;
+    return false;
+}
+
 bool Utils::ReallocateTmpVariable(PCConfiguration * configuration,
                 PCVariable * Var, PCDataType * new_data_type) {
 
@@ -129,6 +150,28 @@ bool Utils::BYTE_TO_ANY(PCConfiguration * configuration,
     if(ReallocateTmpVariable(configuration, Var, new_datatype)) {
         string Result;
         assert(DataTypeUtils::ByteToAny(StoredValue,
+            new_datatype->__DataTypeCategory,Result));
+        Var->SetField("", Result);
+        return true;
+    }
+    return false;
+
+};
+
+bool Utils::CHAR_TO_ANY(PCConfiguration * configuration, 
+    PCVariable * Var, PCDataType * new_datatype) {
+
+    
+    if(!Var 
+    || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::CHAR)
+        return false;
+
+    auto StoredValue = Var->GetValueStoredAtField<uint8_t>("",
+            DataTypeCategory::CHAR);
+
+    if(ReallocateTmpVariable(configuration, Var, new_datatype)) {
+        string Result;
+        assert(DataTypeUtils::CharToAny(StoredValue,
             new_datatype->__DataTypeCategory,Result));
         Var->SetField("", Result);
         return true;
