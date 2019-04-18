@@ -1,4 +1,5 @@
 #include "src/pc_emulator/include/insns/div_insn.h"
+#include "src/pc_emulator/include/utils.h"
 
 
 using namespace std;
@@ -35,5 +36,68 @@ void DIV_Insn::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
              
     auto CurrentResult = __AssociatedResource->__CurrentResult;
 
-    *CurrentResult = *CurrentResult / *Operand;
+    
+
+    if (CurrentResult->__VariableDataType->__DataTypeCategory
+        == DataTypeCategory::TIME) {
+
+        if (!Utils::IsNumType(Operand->__VariableDataType)) {
+            Logger->RaiseException("DIV: Only Integer types are allowed "
+                " for division with TIME!");
+        }
+
+        TimeType Timeval = CurrentResult->GetValueStoredAtField<TimeType>("",
+                DataTypeCategory::TIME);
+        switch(Operand->__VariableDataType->__DataTypeCategory) {
+                case DataTypeCategory::INT:
+                        Timeval.SecsElapsed /= 
+                        Operand->GetValueStoredAtField<int16_t>("",
+                                DataTypeCategory::INT);
+                        break;
+                case DataTypeCategory::SINT:
+                        Timeval.SecsElapsed /= 
+                        Operand->GetValueStoredAtField<int8_t>("",
+                                DataTypeCategory::SINT);
+                        break;
+                case DataTypeCategory::DINT:
+                        Timeval.SecsElapsed /= 
+                        Operand->GetValueStoredAtField<int32_t>("",
+                                DataTypeCategory::DINT);
+                        break;
+                case DataTypeCategory::LINT:
+                        Timeval.SecsElapsed /= 
+                        Operand->GetValueStoredAtField<int64_t>("",
+                                DataTypeCategory::LINT);
+                        break;
+
+                case DataTypeCategory::UINT:
+                        Timeval.SecsElapsed /= 
+                        Operand->GetValueStoredAtField<uint16_t>("",
+                                DataTypeCategory::UINT);
+                        break;
+                case DataTypeCategory::USINT:
+                        Timeval.SecsElapsed /= 
+                        Operand->GetValueStoredAtField<uint8_t>("",
+                                DataTypeCategory::USINT);
+                        break;
+                case DataTypeCategory::UDINT:
+                        Timeval.SecsElapsed /= 
+                        Operand->GetValueStoredAtField<uint32_t>("",
+                                DataTypeCategory::UDINT);
+                        break;
+                case DataTypeCategory::ULINT:
+                        Timeval.SecsElapsed /= 
+                        Operand->GetValueStoredAtField<uint64_t>("",
+                                DataTypeCategory::ULINT);
+                        break;
+                default: Logger->RaiseException(
+                        "MUL: Only Integer types are allowed "
+                        " for multiplication with TIME!");
+        }
+
+        CurrentResult->SetField("", &Timeval, sizeof(Timeval));
+        
+    } else {
+            *CurrentResult = *CurrentResult / *Operand;
+    }
 }

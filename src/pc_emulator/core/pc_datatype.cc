@@ -7,6 +7,10 @@
 #include <boost/lexical_cast.hpp>
 #include <regex>
 #include <vector>
+#include <iostream>
+#include <sstream>
+#include <locale>
+#include <iomanip>
 
 #include "src/pc_emulator/include/pc_datatype.h"
 #include "src/pc_emulator/include/pc_configuration.h"
@@ -1657,4 +1661,165 @@ bool DataTypeUtils::LRealToAny(double Value, int DataTypeCategory,
                                         return true;
         default: return false;
     }
+}
+
+
+
+
+
+
+string DataTypeUtils::DTToDTString(DateTODDataType& dt) {
+    string Dtstr, Month, Year, Day, Hr, Min, Sec;
+    Year = std::to_string(dt.Date.Year);
+    Month = std::to_string(dt.Date.Month);
+    if (dt.Date.Month < 10)
+        Month = "0" + Month;
+
+    Day = std::to_string(dt.Date.Day);
+    if (dt.Date.Day < 10)
+        Day = "0" + Day;
+
+    Hr = std::to_string(dt.Tod.Hr);
+    if (dt.Tod.Hr < 10)
+        Hr = "0" + Hr;
+
+    Min = std::to_string(dt.Tod.Min);
+    if (dt.Tod.Min < 10)
+        Min = "0" + Min;
+
+    Sec = std::to_string(dt.Tod.Sec);
+    if (dt.Tod.Sec < 10)
+        Sec = "0" + Sec;
+
+    Dtstr = Year + "-" + Month + "-" + Day + "T" + Hr + ":" + Min + ":" + Sec  
+        + "Z";
+    return Dtstr;
+}
+
+string DataTypeUtils::DateToDTString(DateDataType& date1) {
+    DateTODDataType dt_temp;
+    dt_temp.Tod.Hr = 0;
+    dt_temp.Tod.Min = 0;
+    dt_temp.Tod.Sec = 0;
+    dt_temp.Date = date1;
+
+    return DTToDTString(dt_temp);
+}
+
+void DataTypeUtils::AddToDT(DateTODDataType& Dt, TimeType& Time) {
+    string Dt1;
+    Dt1 = DTToDTString(Dt);
+
+    std::tm t = {};
+    std::tm * ptm;
+    std::istringstream ss(Dt1);
+    ss >> std::get_time(&t, "%Y-%m-%dT%H:%M:%S");
+    time_t SecsSinceEpoch = mktime(&t);
+
+    SecsSinceEpoch += Time.SecsElapsed;
+
+    ptm = gmtime(&SecsSinceEpoch);
+
+    Dt.Date.Year = ptm->tm_year;
+    Dt.Date.Month = ptm->tm_mon;
+    Dt.Date.Day = ptm->tm_mday;
+    Dt.Tod.Hr = ptm->tm_hour;
+    Dt.Tod.Min = ptm->tm_min;
+    Dt.Tod.Sec = ptm->tm_sec;
+}
+
+void DataTypeUtils::AddToTOD(TODDataType& tod, TimeType& Time) {
+    unsigned long SecsElapsed = tod.Hr*3600 + tod.Min*60 + tod.Sec;
+
+    SecsElapsed += Time.SecsElapsed;
+
+    tod.Hr = SecsElapsed / 3600;
+    tod.Min = (SecsElapsed - tod.Hr*3600)/60;
+    tod.Sec = (SecsElapsed - tod.Hr*3600 - tod.Min*60);
+
+    if (tod.Hr >= 24)
+        tod.Hr = tod.Hr - 24;
+}
+
+void DataTypeUtils::SubFromDT(DateTODDataType& Dt, TimeType& Time) {
+    string Dt1;
+    Dt1 = DTToDTString(Dt);
+
+    std::tm t = {};
+    std::tm * ptm;
+    std::istringstream ss(Dt1);
+    ss >> std::get_time(&t, "%Y-%m-%dT%H:%M:%S");
+    time_t SecsSinceEpoch = mktime(&t);
+
+    SecsSinceEpoch -= Time.SecsElapsed;
+
+    ptm = gmtime(&SecsSinceEpoch);
+
+    Dt.Date.Year = ptm->tm_year;
+    Dt.Date.Month = ptm->tm_mon;
+    Dt.Date.Day = ptm->tm_mday;
+    Dt.Tod.Hr = ptm->tm_hour;
+    Dt.Tod.Min = ptm->tm_min;
+    Dt.Tod.Sec = ptm->tm_sec;
+}
+
+void DataTypeUtils::SubFromTOD(TODDataType& tod, TimeType& Time) {
+    unsigned long SecsElapsed = tod.Hr*3600 + tod.Min*60 + tod.Sec;
+
+    if (Time.SecsElapsed <= SecsElapsed)
+        SecsElapsed -= Time.SecsElapsed;
+    else
+        SecsElapsed = (24*3600 - (Time.SecsElapsed - SecsElapsed));
+
+    tod.Hr = SecsElapsed / 3600;
+    tod.Min = (SecsElapsed - tod.Hr*3600)/60;
+    tod.Sec = (SecsElapsed - tod.Hr*3600 - tod.Min*60);
+
+    if (tod.Hr >= 24)
+        tod.Hr = tod.Hr - 24;
+}
+
+TimeType DataTypeUtils::SubDTs(DateTODDataType& Dt1, DateTODDataType& Dt2) {
+    string Dt1str, Dt2str;
+    TimeType ret;
+    Dt1str = DTToDTString(Dt2);
+    Dt2str = DTToDTString(Dt2);
+
+    std::tm t = {};
+    std::tm * ptm;
+    std::istringstream ss(Dt1str);
+    ss >> std::get_time(&t, "%Y-%m-%dT%H:%M:%S");
+    time_t SecsSinceEpoch1 = mktime(&t);
+    std::istringstream ss(Dt2str);
+    ss >> std::get_time(&t, "%Y-%m-%dT%H:%M:%S");
+    time_t SecsSinceEpoch2 = mktime(&t);
+
+    
+    ret.SecsElapsed = SecsSinceEpoch1 - SecsSinceEpoch2;
+    
+    return ret;
+
+}
+
+TimeType DataTypeUtils::SubTODs(TODDataType& tod1, TODDataType& tod2) {
+    unsigned long SecsElapsed1 = tod1.Hr*3600 + tod1.Min*60 + tod1.Sec;
+    unsigned long SecsElapsed2 = tod2.Hr*3600 + tod2.Min*60 + tod2.Sec;
+
+    TimeType ret;
+    
+    ret.SecsElapsed = SecsElapsed1 - SecsElapsed2;
+    return ret;
+}
+
+TimeType DataTypeUtils::SubDATEs(DateDataType& date1, DateDataType& date2) {
+    DateTODDataType dt1_temp, dt2_temp;
+    dt1_temp.Tod.Hr = 0;
+    dt1_temp.Tod.Min = 0;
+    dt1_temp.Tod.Sec = 0;
+    dt1_temp.Date = date1;
+    dt2_temp.Tod.Hr = 0;
+    dt2_temp.Tod.Min = 0;
+    dt2_temp.Tod.Sec = 0;
+    dt2_temp.Date = date2;
+    return SubDTs(dt1_temp, dt2_temp);
 }

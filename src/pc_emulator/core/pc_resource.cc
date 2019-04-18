@@ -18,6 +18,7 @@
 #include "src/pc_emulator/include/utils.h"
 #include "src/pc_emulator/include/task.h"
 #include "src/pc_emulator/include/insn_registry.h"
+#include "src/pc_emulator/include/sfc_registry.h"
 
 using namespace std;
 using namespace pc_emulator;
@@ -47,6 +48,7 @@ PCResourceImpl::PCResourceImpl(PCConfigurationImpl * configuration,
                         (PCResource *) this, "__CurrentResult", "BOOL");
     __CurrentResult->AllocateAndInitialize();
     __InsnRegistry = new InsnRegistry(this);
+    __SFCRegistry = new SFCRegistry(this);
 }
 
 void PCResourceImpl::RegisterPoUVariable(string VariableName,

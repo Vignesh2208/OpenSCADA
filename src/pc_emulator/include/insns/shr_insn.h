@@ -13,10 +13,10 @@ using namespace pc_specification;
 namespace pc_emulator {
 
     //! Generic abstract class for an Shift right instruction
-    class SHR: public Insn {
+    class SHR_Insn: public Insn {
         public:
 
-            SHR(PCResourceImpl* AssociatedResource) {
+            SHR_Insn(PCResourceImpl* AssociatedResource) {
                 __InsnName = "SHR";
                 __AssociatedResource = AssociatedResource;
             }

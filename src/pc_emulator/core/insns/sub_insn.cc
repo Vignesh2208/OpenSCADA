@@ -35,5 +35,69 @@ void SUB_Insn::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
             != DataTypeCategory::ARRAY);    
     auto CurrentResult = __AssociatedResource->__CurrentResult;
 
-    *CurrentResult = *CurrentResult - *Operand;
+    if (CurrentResult->__VariableDataType->__DataTypeCategory 
+        == DataTypeCategory::TIME_OF_DAY
+        && Operand->__VariableDataType->__DataTypeCategory
+        == DataTypeCategory::TIME) {
+        auto CRval = CurrentResult->GetValueStoredAtField<TODDataType>("",
+                DataTypeCategory::TIME_OF_DAY);
+        auto Opval = Operand->GetValueStoredAtField<TimeType>("",
+                DataTypeCategory::TIME);
+
+        DataTypeUtils::SubFromTOD(CRval, Opval);
+        CurrentResult->SetField("", &CRval, sizeof(CRval));
+
+    } else if (CurrentResult->__VariableDataType->__DataTypeCategory 
+        == DataTypeCategory::TIME_OF_DAY
+        && Operand->__VariableDataType->__DataTypeCategory
+        == DataTypeCategory::TIME_OF_DAY) {
+        auto CRval = CurrentResult->GetValueStoredAtField<TODDataType>("",
+                DataTypeCategory::TIME_OF_DAY);
+        auto Opval = Operand->GetValueStoredAtField<TODDataType>("",
+                DataTypeCategory::TIME_OF_DAY);
+
+        auto Res = DataTypeUtils::SubTODs(CRval, Opval);
+        *CurrentResult = *__AssociatedResource->GetTmpVariable("TIME",
+                "t#" + std::to_string(Res.SecsElapsed) + "s");
+
+    } else if (CurrentResult->__VariableDataType->__DataTypeCategory 
+        == DataTypeCategory::DATE_AND_TIME
+        && Operand->__VariableDataType->__DataTypeCategory
+        == DataTypeCategory::TIME) {
+        auto CRval = CurrentResult->GetValueStoredAtField<DateTODDataType>("",
+                DataTypeCategory::DATE_AND_TIME);
+        auto Opval = Operand->GetValueStoredAtField<TimeType>("",
+                DataTypeCategory::TIME);
+
+        DataTypeUtils::SubFromDT(CRval, Opval);
+        CurrentResult->SetField("", &CRval, sizeof(CRval));
+
+    } else if (CurrentResult->__VariableDataType->__DataTypeCategory 
+        == DataTypeCategory::DATE_AND_TIME
+        && Operand->__VariableDataType->__DataTypeCategory
+        == DataTypeCategory::DATE_AND_TIME) {
+        auto CRval = CurrentResult->GetValueStoredAtField<DateTODDataType>("",
+                DataTypeCategory::DATE_AND_TIME);
+        auto Opval = Operand->GetValueStoredAtField<DateTODDataType>("",
+                DataTypeCategory::DATE_AND_TIME);
+
+        auto Res = DataTypeUtils::SubDTs(CRval, Opval);
+        *CurrentResult = *__AssociatedResource->GetTmpVariable("TIME",
+                "t#" + std::to_string(Res.SecsElapsed) + "s");
+
+    } else if (CurrentResult->__VariableDataType->__DataTypeCategory 
+        == DataTypeCategory::DATE
+        && Operand->__VariableDataType->__DataTypeCategory
+        == DataTypeCategory::DATE) {
+        auto CRval = CurrentResult->GetValueStoredAtField<DateType>("",
+                DataTypeCategory::DATE);
+        auto Opval = Operand->GetValueStoredAtField<DateType>("",
+                DataTypeCategory::DATE);
+
+        auto Res = DataTypeUtils::SubDATEs(CRval, Opval);
+        *CurrentResult = *__AssociatedResource->GetTmpVariable("TIME",
+                "t#" + std::to_string(Res.SecsElapsed) + "s");
+    } else {
+        *CurrentResult = *CurrentResult - *Operand;
+    }
 }

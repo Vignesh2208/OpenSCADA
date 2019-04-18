@@ -284,6 +284,12 @@ namespace pc_emulator {
             static bool IsBitType(PCDataType * data_type);
 
             static bool IsRealType(PCDataType * data_type);
+
+            static bool SameClassOfDataTypes(PCDataType * DT1,
+                PCDataType * DT2);
+
+            static PCDataType* GetMostAppropriateTypeCast(PCVariable * CR,
+                    std::vector<PCVariable*>& Operands);
     };
 }   
 

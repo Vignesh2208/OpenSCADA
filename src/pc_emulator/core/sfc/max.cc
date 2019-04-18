@@ -6,11 +6,22 @@ using namespace std;
 using namespace pc_emulator;
 using namespace pc_specification;
 
-void Max::Execute(std::vector<PCVariable*>& Operands) {
+void Max::Execute(std::vector<PCVariable*>& MOperands) {
     auto configuration = __AssociatedResource->__configuration;
     auto CR = __AssociatedResource->__CurrentResult;
 
     int max_idx = 0;
+    std::vector<PCVariable*> Operands;
+    for(int i = 0; i < MOperands.size(); i++) {
+        if (MOperands[i]->__IsVariableContentTypeAPtr) {
+            auto Tmp = MOperands[i]->GetPtrStoredAtField("");
+            assert(Tmp != nullptr);
+            Operands.push_back(Tmp);
+        } else {
+            Operands.push_back(MOperands[i]);
+        }
+    }
+    
     if (Operands.size() == 0) {
         configuration->PCLogger->RaiseException("Max SFC ERROR: "
             "Atleast one operand expected!");

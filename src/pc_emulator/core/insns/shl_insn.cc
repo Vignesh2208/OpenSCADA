@@ -9,7 +9,7 @@ using namespace pc_specification;
 /*
  * Sets the Current result accumulator to the passed operand.
  */
-void SHL::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
+void SHL_Insn::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
     auto configuration = __AssociatedResource->__configuration;
     auto CR = __AssociatedResource->__CurrentResult;
 
@@ -19,6 +19,7 @@ void SHL::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
     uint64_t LWordValue;
     int16_t shift_amt;
 
+    
     if (!Utils::IsBitType(CR->__VariableDataType)) {
         configuration->PCLogger->RaiseException("SHL insn error: "
             "CR is not a Bit type");
@@ -28,10 +29,16 @@ void SHL::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
         configuration->PCLogger->RaiseException("SHL insn error: "
             "Exactly one operand expected!");
     }
+    PCVariable * Operand;
+    Operand = Operands[0];
+    if (Operands[0]->__IsVariableContentTypeAPtr) {
+        Operand = Operand->GetPtrStoredAtField("");
+        assert(Operand != nullptr);
+    }
 
-    if (Operands[0]->__VariableDataType->__DataTypeCategory <
+    if (Operand->__VariableDataType->__DataTypeCategory <
             DataTypeCategory::INT ||
-        Operands[0]->__VariableDataType->__DataTypeCategory > 
+        Operand->__VariableDataType->__DataTypeCategory > 
             DataTypeCategory::ULINT) {
         configuration->PCLogger->RaiseException("SHL insn error: "
             "Operand Type should be INT type");
@@ -39,45 +46,45 @@ void SHL::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
 
   
 
-    switch(Operands[0]->__VariableDataType->__DataTypeCategory) {
+    switch(Operand->__VariableDataType->__DataTypeCategory) {
         case DataTypeCategory::INT:
 
-            shift_amt = Operands[0]->GetValueStoredAtField<int16_t>("",
+            shift_amt = Operand->GetValueStoredAtField<int16_t>("",
                         DataTypeCategory::INT);
             break;
         case DataTypeCategory::SINT:
 
-            shift_amt = Operands[0]->GetValueStoredAtField<int8_t>("",
+            shift_amt = Operand->GetValueStoredAtField<int8_t>("",
                         DataTypeCategory::SINT);
             break;
         case DataTypeCategory::DINT:
 
-            shift_amt = Operands[0]->GetValueStoredAtField<int32_t>("",
+            shift_amt = Operand->GetValueStoredAtField<int32_t>("",
                         DataTypeCategory::DINT);
             break;
         case DataTypeCategory::LINT:
 
-            shift_amt = Operands[0]->GetValueStoredAtField<int64_t>("",
+            shift_amt = Operand->GetValueStoredAtField<int64_t>("",
                         DataTypeCategory::LINT);
             break;
         case DataTypeCategory::UINT:
 
-            shift_amt = Operands[0]->GetValueStoredAtField<uint16_t>("",
+            shift_amt = Operand->GetValueStoredAtField<uint16_t>("",
                         DataTypeCategory::UINT);
             break;
         case DataTypeCategory::USINT:
 
-            shift_amt = Operands[0]->GetValueStoredAtField<uint8_t>("",
+            shift_amt = Operand->GetValueStoredAtField<uint8_t>("",
                         DataTypeCategory::USINT);
             break;
         case DataTypeCategory::UDINT:
 
-            shift_amt = Operands[0]->GetValueStoredAtField<uint32_t>("",
+            shift_amt = Operand->GetValueStoredAtField<uint32_t>("",
                         DataTypeCategory::UDINT);
             break;
         case DataTypeCategory::ULINT:
 
-            shift_amt = Operands[0]->GetValueStoredAtField<uint64_t>("",
+            shift_amt = Operand->GetValueStoredAtField<uint64_t>("",
                         DataTypeCategory::ULINT);
             break;
     }

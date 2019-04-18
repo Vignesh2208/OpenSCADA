@@ -26,6 +26,7 @@ namespace pc_emulator {
     class PCConfigurationImpl;
     class Task;
     class InsnRegistry;
+    class SFCRegistry;
 
     //! Compact description of a task associated with a resource
     class CompactTaskDescription {
@@ -72,7 +73,7 @@ namespace pc_emulator {
     class PCResourceImpl: public PCResource {
         private:
 
-            InsnRegistry *  __InsnRegistry; /*!< Stores all registered instructions */
+            
             std::unordered_map<std::string, std::unique_ptr<PoUCodeContainer>> 
                 __CodeContainers; /*!< Holds the code body for each POU */
             std::unordered_map<std::string, std::unique_ptr<Task>> 
@@ -99,6 +100,8 @@ namespace pc_emulator {
             PCConfigurationImpl * __configuration; /*!< Associated configuration */
             std::unique_ptr<Clock> clock;   /*!< Assocaited clock */
             PCVariable * __CurrentResult;   /*!< CR register for the resource */
+            InsnRegistry *  __InsnRegistry; /*!< Stores all registered instructions */
+            SFCRegistry * __SFCRegistry; /*!< Stores all registered SFCs */
             
             //!Constructor
             /*!

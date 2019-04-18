@@ -10,47 +10,68 @@ namespace pc_emulator {
     class ANY_TO_ANY: public SFC {
         private:
             PCDataType * __TargetDataType;
+            PCDataType * __SrcDataType;
         public:
             ANY_TO_ANY(PCResourceImpl * AssociatedResource,
-                        PCDataType* TargetDataType) {
+                        PCDataType* TargetDataType,
+                        PCDataType* SrcDataType) {
                 __AssociatedResource = AssociatedResource;
                 __TargetDataType = TargetDataType;
+                __SrcDataType = SrcDataType;
+
+                string SrcDataTypeName = SrcDataType->__DataTypeName;
 
                 switch(__TargetDataType->__DataTypeCategory){
-                    case DataTypeCategory::BOOL :   __SfcName = "ANY_TO_BOOL";
+                    case DataTypeCategory::BOOL :   
+                        __SfcName = SrcDataTypeName + "_TO_BOOL";
                                                     break;
-                    case DataTypeCategory::BYTE :  __SfcName = "ANY_TO_BYTE";
+                    case DataTypeCategory::BYTE :  
+                        __SfcName = SrcDataTypeName + "_TO_BYTE";
                                                     break; 
-                    case DataTypeCategory::WORD :  __SfcName = "ANY_TO_WORD";
+                    case DataTypeCategory::WORD :  
+                        __SfcName = SrcDataTypeName + "_TO_WORD";
                                                     break; 
-                    case DataTypeCategory::DWORD :  __SfcName = "ANY_TO_DWORD";
+                    case DataTypeCategory::DWORD :  
+                        __SfcName = SrcDataTypeName + "_TO_DWORD";
                                                     break;
-                    case DataTypeCategory::LWORD :  __SfcName = "ANY_TO_LWORD";
+                    case DataTypeCategory::LWORD :  
+                        __SfcName = SrcDataTypeName + "_TO_LWORD";
                                                     break;
-                    case DataTypeCategory::CHAR :  __SfcName = "ANY_TO_CHAR";
+                    case DataTypeCategory::CHAR :  
+                        __SfcName = SrcDataTypeName + "_TO_CHAR";
                                                     break; 
-                    case DataTypeCategory::INT :   __SfcName = "ANY_TO_INT";
+                    case DataTypeCategory::INT :   
+                        __SfcName = SrcDataTypeName + "_TO_INT";
                                                     break; 
-                    case DataTypeCategory::SINT :  __SfcName = "ANY_TO_SINT";
+                    case DataTypeCategory::SINT :  
+                        __SfcName = SrcDataTypeName + "_TO_SINT";
                                                     break; 
-                    case DataTypeCategory::DINT :  __SfcName = "ANY_TO_DINT";
+                    case DataTypeCategory::DINT :  
+                        __SfcName = SrcDataTypeName + "_TO_DINT";
                                                     break; 
-                    case DataTypeCategory::LINT :  __SfcName = "ANY_TO_LINT";
+                    case DataTypeCategory::LINT :  
+                        __SfcName = SrcDataTypeName + "_TO_LINT";
                                                     break; 
-                    case DataTypeCategory::UINT :  __SfcName = "ANY_TO_UINT";
+                    case DataTypeCategory::UINT :  
+                        __SfcName = SrcDataTypeName + "_TO_UINT";
                                                     break; 
-                    case DataTypeCategory::USINT :  __SfcName = "ANY_TO_USINT";
+                    case DataTypeCategory::USINT :  
+                        __SfcName = SrcDataTypeName + "_TO_USINT";
                                                     break;
-                    case DataTypeCategory::UDINT :  __SfcName = "ANY_TO_UDINT";
+                    case DataTypeCategory::UDINT :  
+                        __SfcName = SrcDataTypeName + "_TO_UDINT";
                                                     break;
-                    case DataTypeCategory::ULINT :  __SfcName = "ANY_TO_ULINT";
+                    case DataTypeCategory::ULINT :  
+                        __SfcName = SrcDataTypeName + "_TO_ULINT";
                                                     break;
-                    case DataTypeCategory::REAL :   __SfcName = "ANY_TO_REAL";
+                    case DataTypeCategory::REAL :   
+                        __SfcName = SrcDataTypeName + "_TO_REAL";
                                                     break;
-                    case DataTypeCategory::LREAL :   __SfcName = "ANY_TO_LREAL";
+                    case DataTypeCategory::LREAL :   
+                        __SfcName = SrcDataTypeName + "_TO_LREAL";
                                                     break;
                     case DataTypeCategory::DATE_AND_TIME: 
-                                                    __SfcName = "ANY_TO_DT";
+                        __SfcName = SrcDataTypeName + "_TO_DT";
                                                     break;
                     default:    __AssociatedResource->__configuration
                                     ->PCLogger->RaiseException(
@@ -64,6 +85,12 @@ namespace pc_emulator {
                 \param Operands     Operands to the sfc
             */
             void Execute(std::vector<PCVariable*>& Operands);
+
+            //! Called to execute the sfc
+            /*!
+                \param Operand     Operand to the sfc
+            */
+            void Execute(PCVariable* Operand);
     };
 }
 

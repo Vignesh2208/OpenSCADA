@@ -22,6 +22,8 @@
 #include "insns/not_insn.h"
 #include "insns/or_insn.h"
 #include "insns/sub_insn.h"
+#include "insns/shl_insn.h"
+#include "insns/shr_insn.h"
 #include "insns/and_insn.h"
 #include "insns/xor_insn.h"
 

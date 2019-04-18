@@ -32,6 +32,31 @@ void DataTypeRegistry::RegisterDataType(string DataTypeName,
     }
 }
 
+void DataTypeRegistry::GetAllRegisteredElementaryDataTypes(
+                    std::vector<PCDataType*>& ElementaryDataTypes) {
+    
+    ElementaryDataTypes.push_back( __Registry.find ("BOOL")->second.get());
+    ElementaryDataTypes.push_back( __Registry.find ("BYTE")->second.get());
+    ElementaryDataTypes.push_back( __Registry.find ("WORD")->second.get());
+    ElementaryDataTypes.push_back( __Registry.find ("DWORD")->second.get());
+    ElementaryDataTypes.push_back( __Registry.find ("LWORD")->second.get());
+    ElementaryDataTypes.push_back( __Registry.find ("INT")->second.get());
+    ElementaryDataTypes.push_back( __Registry.find ("SINT")->second.get());
+    ElementaryDataTypes.push_back( __Registry.find ("DINT")->second.get());
+    ElementaryDataTypes.push_back( __Registry.find ("LINT")->second.get());
+    ElementaryDataTypes.push_back( __Registry.find ("UINT")->second.get());
+    ElementaryDataTypes.push_back( __Registry.find ("USINT")->second.get());
+    ElementaryDataTypes.push_back( __Registry.find ("UDINT")->second.get());
+    ElementaryDataTypes.push_back( __Registry.find ("ULINT")->second.get());
+    ElementaryDataTypes.push_back( __Registry.find ("REAL")->second.get());
+    ElementaryDataTypes.push_back( __Registry.find ("LREAL")->second.get());
+    ElementaryDataTypes.push_back( __Registry.find ("TIME")->second.get());
+    ElementaryDataTypes.push_back( __Registry.find ("DATE")->second.get());
+    ElementaryDataTypes.push_back( __Registry.find ("TOD")->second.get());
+    ElementaryDataTypes.push_back( __Registry.find ("DT")->second.get());
+
+}
+
 PCDataType * DataTypeRegistry::GetDataType(string DataTypeName) {
     assert (__configuration != nullptr);
     auto got = __Registry.find (DataTypeName);

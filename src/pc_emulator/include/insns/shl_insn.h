@@ -13,10 +13,10 @@ using namespace pc_specification;
 namespace pc_emulator {
 
     //! Generic abstract class for an Shift left instruction
-    class SHL: public Insn {
+    class SHL_Insn: public Insn {
         public:
 
-            SHL(PCResourceImpl* AssociatedResource) {
+            SHL_Insn(PCResourceImpl* AssociatedResource) {
                 __InsnName = "SHL";
                 __AssociatedResource = AssociatedResource;
             }

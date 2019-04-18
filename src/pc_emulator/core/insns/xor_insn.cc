@@ -1,4 +1,7 @@
 #include "src/pc_emulator/include/insns/xor_insn.h"
+#include "src/pc_emulator/include/utils.h"
+#include "src/pc_emulator/include/sfc_registry.h"
+#include "src/pc_emulator/include/sfc/any_to_any.h"
 
 
 using namespace std;
@@ -33,6 +36,46 @@ void XOR_Insn::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
     assert(Operand->__VariableDataType->__DataTypeCategory
             != DataTypeCategory::ARRAY);    
     auto CurrentResult = __AssociatedResource->__CurrentResult;
+
+    if (!Utils::IsBitType(CurrentResult->__VariableDataType) ||
+        !Utils::IsBitType(Operand->__VariableDataType)) {
+        Logger->RaiseException("XOR: Only Bit datatypes are supported");
+    }
+
+    if (Operand->__VariableDataType != CurrentResult->__VariableDataType) {
+        std::vector<PCVariable *> modified_operands;
+        modified_operands.push_back(Operand);
+
+        PCDataType * DesiredDataType 
+            = Utils::GetMostAppropriateTypeCast(CurrentResult,
+                modified_operands);
+        assert(DesiredDataType != nullptr);
+
+
+        if (CurrentResult->__VariableDataType != DesiredDataType) {
+            string conv_sfc_name 
+                    = CurrentResult->__VariableDataType->__DataTypeName
+                            + "_TO_" + DesiredDataType->__DataTypeName;
+            ANY_TO_ANY * sfc = (ANY_TO_ANY*)(__AssociatedResource
+                    ->__SFCRegistry->GetSFC(conv_sfc_name));
+
+            assert(sfc != nullptr);
+            sfc->Execute(CurrentResult);   
+        } else if(Operand->__IsTemporary 
+            && Operand->__VariableDataType != DesiredDataType) {
+            string conv_sfc_name 
+                    = Operand->__VariableDataType->__DataTypeName
+                            + "_TO_" + DesiredDataType->__DataTypeName;
+            ANY_TO_ANY * sfc = (ANY_TO_ANY*)(__AssociatedResource
+                    ->__SFCRegistry->GetSFC(conv_sfc_name));
+
+            assert(sfc != nullptr);
+            sfc->Execute(Operand);   
+        }
+
+        assert (Operand->__VariableDataType 
+            == CurrentResult->__VariableDataType);
+    }
 
     if (isNegated) {
         *CurrentResult = *CurrentResult ^ (!(*Operand));

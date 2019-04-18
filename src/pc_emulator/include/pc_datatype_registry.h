@@ -32,6 +32,9 @@ namespace pc_emulator {
             //!Retrieves data type with the specified name
             PCDataType * GetDataType(string DataTypeName);
 
+            void GetAllRegisteredElementaryDataTypes(
+                    std::vector<PCDataType*>& ElementaryDataTypes);
+
             //! Clean's up all registered data types
             void Cleanup();
     };

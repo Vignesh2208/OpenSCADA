@@ -54,6 +54,67 @@ bool Utils::IsRealType(PCDataType * data_type) {
     return false;
 }
 
+
+bool Utils::SameClassOfDataTypes(PCDataType * DT1, PCDataType * DT2) {
+    if (DT1->__DataTypeCategory == DT2->__DataTypeCategory)
+        return true;
+    if (IsBitType(DT1) && IsBitType(DT2))
+        return true;
+    if (IsNumType(DT1) && IsNumType(DT2))
+        return true;
+
+    return false;
+    
+}
+
+PCDataType* Utils::GetMostAppropriateTypeCast(PCVariable * CR,
+        std::vector<PCVariable*>& Operands) {
+
+    assert(!CR);
+    if (Operands.size() == 0)
+        return CR->__VariableDataType;
+
+    PCDataType * DesiredDataType = nullptr;
+    for(int i = 0; i < Operands.size(); i++) {
+        if (!Operands[i]->__IsTemporary && !DesiredDataType) {
+            DesiredDataType = Operands[i]->__VariableDataType;
+        } else if(!Operands[i]->__IsTemporary 
+            && Operands[i]->__VariableDataType != DesiredDataType) {
+                return nullptr;
+        }
+    }
+
+    if(!DesiredDataType) {
+        DesiredDataType = CR->__VariableDataType;
+
+        for(int i = 0; i < Operands.size(); i++) {
+            if (Operands[i]->__IsTemporary && 
+                Operands[i]->__VariableDataType->__SizeInBits > 
+                DesiredDataType->__SizeInBits)
+
+                DesiredDataType = Operands[i]->__VariableDataType;
+            else if (Operands[i]->__IsTemporary
+                    && Operands[i]->__VariableDataType->__SizeInBits == 
+                        DesiredDataType->__SizeInBits
+                    && Operands[i]->__VariableDataType->__DataTypeCategory > 
+                        DesiredDataType->__DataTypeCategory) {
+                DesiredDataType = Operands[i]->__VariableDataType;
+            }
+        }
+
+        if (!SameClassOfDataTypes(DesiredDataType, CR->__VariableDataType))
+            return nullptr;
+        for(int i = 0; i < Operands.size(); i++) {
+            if (!SameClassOfDataTypes(DesiredDataType,
+                Operands[i]->__VariableDataType))
+                return nullptr;
+        }
+
+    }
+
+    return DesiredDataType;
+}
+
 bool Utils::ReallocateTmpVariable(PCConfiguration * configuration,
                 PCVariable * Var, PCDataType * new_data_type) {
 

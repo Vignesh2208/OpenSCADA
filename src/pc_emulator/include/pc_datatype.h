@@ -619,6 +619,25 @@ namespace pc_emulator {
             static bool LRealToAny(double Value, int DataTypeCategory,
                     string& Result);
 
+            static string DTToDTString(DateTODDataType& dt);
+
+            static string DateToDTString(DateDataType& date1);
+
+            static void AddToDT(DateTODDataType& Dt, TimeType& Time);
+
+            static void AddToTOD(TODDataType& tod, TimeType& Time);
+
+            static void SubFromDT(DateTODDataType& Dt, TimeType& Time);
+
+            static void SubFromTOD(TODDataType& tod, TimeType& Time);
+
+            static TimeType SubDTs(DateTODDataType& Dt1,
+                    DateTODDataType& Dt2);
+
+            static TimeType SubTODs(TODDataType& tod1,
+                    TODDataType& tod2);
+        
+            static TimeType SubDATEs(DateDataType& date1, DateDataType& date2);
     };
 }
 #endif

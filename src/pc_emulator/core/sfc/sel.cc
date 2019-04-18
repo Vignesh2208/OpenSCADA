@@ -6,9 +6,20 @@ using namespace std;
 using namespace pc_emulator;
 using namespace pc_specification;
 
-void SEL::Execute(std::vector<PCVariable*>& Operands) {
+void SEL::Execute(std::vector<PCVariable*>& MOperands) {
     auto configuration = __AssociatedResource->__configuration;
     auto CR = __AssociatedResource->__CurrentResult;
+
+    std::vector<PCVariable*> Operands;
+    for(int i = 0; i < MOperands.size(); i++) {
+        if (MOperands[i]->__IsVariableContentTypeAPtr) {
+            auto Tmp = MOperands[i]->GetPtrStoredAtField("");
+            assert(Tmp != nullptr);
+            Operands.push_back(Tmp);
+        } else {
+            Operands.push_back(MOperands[i]);
+        }
+    }
     if (CR->__VariableDataType->__DataTypeCategory
         != DataTypeCategory::BOOL) {
         configuration->PCLogger->RaiseException("SEL SFC error: CR is not "
@@ -19,6 +30,8 @@ void SEL::Execute(std::vector<PCVariable*>& Operands) {
         configuration->PCLogger->RaiseException("SEL SFC error: "
             "Exactly 2 operands needed!");
     }
+
+    
 
     if (Operands[0]->__VariableDataType->__DataTypeCategory 
         != Operands[1]->__VariableDataType->__DataTypeCategory) {

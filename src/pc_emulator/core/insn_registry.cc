@@ -90,6 +90,16 @@ InsnRegistry::InsnRegistry(PCResourceImpl * AssociatedResource) {
     ));
 
     __InsnRegistry.insert(
+        std::make_pair("SHL",
+        std::unique_ptr<Insn>(new SHL_Insn(AssociatedResource))
+    ));
+
+    __InsnRegistry.insert(
+        std::make_pair("SHR",
+        std::unique_ptr<Insn>(new SHR_Insn(AssociatedResource))
+    ));
+
+    __InsnRegistry.insert(
         std::make_pair("XOR",
         std::unique_ptr<Insn>(new XOR_Insn(AssociatedResource))
     ));
