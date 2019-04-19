@@ -29,7 +29,7 @@ SFCRegistry::SFCRegistry(PCResourceImpl * AssociatedResource) {
                 = ElementaryDatatypes[i]->__DataTypeName + "_TO_"
                   + ElementaryDatatypes[j]->__DataTypeName;
                 __SFC.insert(std::make_pair(conv_block_name,
-                    std::make_unique<ANY_TO_ANY>(new ANY_TO_ANY(
+                    std::unique_ptr<ANY_TO_ANY>(new ANY_TO_ANY(
                         AssociatedResource, ElementaryDatatypes[j],
                         ElementaryDatatypes[i]
                     ))));
@@ -40,7 +40,7 @@ SFCRegistry::SFCRegistry(PCResourceImpl * AssociatedResource) {
                 && ElementaryDatatypes[j]->__DataTypeCategory 
                 == DataTypeCategory::DATE) {
                 __SFC.insert(std::make_pair("DATE_AND_TIME_TO_DATE",
-                    std::make_unique<ANY_TO_ANY>(new ANY_TO_ANY(
+                    std::unique_ptr<ANY_TO_ANY>(new ANY_TO_ANY(
                         AssociatedResource, ElementaryDatatypes[j],
                         ElementaryDatatypes[i]
                     ))));
@@ -49,9 +49,9 @@ SFCRegistry::SFCRegistry(PCResourceImpl * AssociatedResource) {
             if (ElementaryDatatypes[i]->__DataTypeCategory 
                 == DataTypeCategory::DATE_AND_TIME
                 && ElementaryDatatypes[j]->__DataTypeCategory 
-                == DataTypeCategory::TIME) {
-                __SFC.insert(std::make_pair("DATE_AND_TIME_TO_TIME",
-                    std::make_unique<ANY_TO_ANY>(new ANY_TO_ANY(
+                == DataTypeCategory::TIME_OF_DAY) {
+                __SFC.insert(std::make_pair("DATE_AND_TIME_TO_TIME_OF_DAY",
+                    std::unique_ptr<ANY_TO_ANY>(new ANY_TO_ANY(
                         AssociatedResource, ElementaryDatatypes[j],
                         ElementaryDatatypes[i]
                     ))));
@@ -63,52 +63,52 @@ SFCRegistry::SFCRegistry(PCResourceImpl * AssociatedResource) {
     }
 
     __SFC.insert(std::make_pair("ABS", 
-        std::make_unique<ABS>(new ABS(AssociatedResource))));
+        std::unique_ptr<ABS>(new ABS(AssociatedResource))));
 
     __SFC.insert(std::make_pair("ACOS", 
-        std::make_unique<ACOS>(new ACOS(AssociatedResource))));
+        std::unique_ptr<ACOS>(new ACOS(AssociatedResource))));
 
     __SFC.insert(std::make_pair("ASIN", 
-        std::make_unique<ASIN>(new ASIN(AssociatedResource))));
+        std::unique_ptr<ASIN>(new ASIN(AssociatedResource))));
 
     __SFC.insert(std::make_pair("ATAN", 
-        std::make_unique<ATAN>(new ATAN(AssociatedResource))));
+        std::unique_ptr<ATAN>(new ATAN(AssociatedResource))));
 
     __SFC.insert(std::make_pair("COS", 
-        std::make_unique<COS>(new COS(AssociatedResource))));
+        std::unique_ptr<COS>(new COS(AssociatedResource))));
 
     __SFC.insert(std::make_pair("EXP", 
-        std::make_unique<EXP>(new EXP(AssociatedResource))));
+        std::unique_ptr<EXP>(new EXP(AssociatedResource))));
 
     __SFC.insert(std::make_pair("LIMIT", 
-        std::make_unique<LIMIT>(new LIMIT(AssociatedResource))));
+        std::unique_ptr<LIMIT>(new LIMIT(AssociatedResource))));
 
     __SFC.insert(std::make_pair("LN", 
-        std::make_unique<LN>(new LN(AssociatedResource))));
+        std::unique_ptr<LN>(new LN(AssociatedResource))));
 
     __SFC.insert(std::make_pair("LOG", 
-        std::make_unique<LOG>(new LOG(AssociatedResource))));
+        std::unique_ptr<LOG>(new LOG(AssociatedResource))));
 
     __SFC.insert(std::make_pair("MAX", 
-        std::make_unique<Max>(new Max(AssociatedResource))));
+        std::unique_ptr<Max>(new Max(AssociatedResource))));
 
     __SFC.insert(std::make_pair("MIN", 
-        std::make_unique<Min>(new Min(AssociatedResource))));
+        std::unique_ptr<Min>(new Min(AssociatedResource))));
 
     __SFC.insert(std::make_pair("MUX", 
-        std::make_unique<MUX>(new MUX(AssociatedResource))));
+        std::unique_ptr<MUX>(new MUX(AssociatedResource))));
 
     __SFC.insert(std::make_pair("SEL", 
-        std::make_unique<SEL>(new SEL(AssociatedResource))));
+        std::unique_ptr<SEL>(new SEL(AssociatedResource))));
 
     __SFC.insert(std::make_pair("SIN", 
-        std::make_unique<SIN>(new SIN(AssociatedResource))));
+        std::unique_ptr<SIN>(new SIN(AssociatedResource))));
 
     __SFC.insert(std::make_pair("SQRT", 
-        std::make_unique<SQRT>(new SQRT(AssociatedResource))));
+        std::unique_ptr<SQRT>(new SQRT(AssociatedResource))));
 
     __SFC.insert(std::make_pair("TAN", 
-        std::make_unique<TAN>(new TAN(AssociatedResource))));
+        std::unique_ptr<TAN>(new TAN(AssociatedResource))));
 }
 
 SFC* SFCRegistry::GetSFC(string SFCName) {

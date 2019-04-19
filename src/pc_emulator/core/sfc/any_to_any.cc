@@ -9,12 +9,19 @@ using namespace pc_specification;
 
 void ANY_TO_ANY::Execute(std::vector<PCVariable*>& Operands) {
     for(int i = 0; i < Operands.size(); i++) {
-        Execute(Operands[i]);
+        auto returnVal = Execute(Operands[i]);
+        if (returnVal == nullptr) {
+            __AssociatedResource->__configuration->PCLogger->RaiseException(
+                "Type conversion error for: " 
+                    + Operands[i]->__VariableDataType->__DataTypeName
+            );
+        }
+        Operands[i] = returnVal;
     }
     
 }
 
-void ANY_TO_ANY::Execute(PCVariable* Operand) {
+PCVariable * ANY_TO_ANY::Execute(PCVariable* Operand) {
     auto configuration = __AssociatedResource->__configuration;
     auto Op = Operand;
     
@@ -28,80 +35,80 @@ void ANY_TO_ANY::Execute(PCVariable* Operand) {
 
     if (Op->__IsTemporary) {
         switch(Op->__VariableDataType->__DataTypeCategory) {
-            case DataTypeCategory::BOOL :  Utils::BOOL_TO_ANY(
+            case DataTypeCategory::BOOL :  return Utils::BOOL_TO_ANY(
                                             configuration,
                                             Op, __TargetDataType);
-                                            break;
-            case DataTypeCategory::BYTE :  Utils::BYTE_TO_ANY(
+                                            
+            case DataTypeCategory::BYTE :  return Utils::BYTE_TO_ANY(
                                             configuration,
                                             Op, __TargetDataType);
-                                            break; 
-            case DataTypeCategory::WORD :  Utils::WORD_TO_ANY(
+                                             
+            case DataTypeCategory::WORD :  return Utils::WORD_TO_ANY(
                                             configuration,
                                             Op, __TargetDataType);
-                                            break; 
-            case DataTypeCategory::DWORD :  Utils::DWORD_TO_ANY(
+                                             
+            case DataTypeCategory::DWORD :  return Utils::DWORD_TO_ANY(
                                             configuration,
                                             Op, __TargetDataType);
-                                            break;
-            case DataTypeCategory::LWORD : Utils::LWORD_TO_ANY(
+                                        
+            case DataTypeCategory::LWORD : return Utils::LWORD_TO_ANY(
                                                 configuration,
                                                 Op, __TargetDataType);
-                                            break;
-            case DataTypeCategory::CHAR :  Utils::CHAR_TO_ANY(
+                                            
+            case DataTypeCategory::CHAR :  return Utils::CHAR_TO_ANY(
                                                 configuration,
                                                 Op, __TargetDataType);
-                                            break; 
-            case DataTypeCategory::INT :  Utils::INT_TO_ANY(
+                                         
+            case DataTypeCategory::INT :   return Utils::INT_TO_ANY(
                                             configuration,
                                             Op, __TargetDataType);
-                                            break; 
-            case DataTypeCategory::SINT :  Utils::SINT_TO_ANY(
+                                             
+            case DataTypeCategory::SINT :  return Utils::SINT_TO_ANY(
                                             configuration,
                                             Op, __TargetDataType);
-                                            break; 
-            case DataTypeCategory::DINT :  Utils::DINT_TO_ANY(
+                                             
+            case DataTypeCategory::DINT :  return Utils::DINT_TO_ANY(
                                             configuration,
                                             Op, __TargetDataType);
-                                            break; 
-            case DataTypeCategory::LINT :  Utils::LINT_TO_ANY(
+                                             
+            case DataTypeCategory::LINT :   return Utils::LINT_TO_ANY(
                                             configuration,
                                             Op, __TargetDataType);
-                                            break; 
-            case DataTypeCategory::UINT :  Utils::UINT_TO_ANY(
+                                             
+            case DataTypeCategory::UINT :  return Utils::UINT_TO_ANY(
                                             configuration,
                                             Op, __TargetDataType);
-                                            break; 
-            case DataTypeCategory::USINT :  Utils::USINT_TO_ANY(
+                                             
+            case DataTypeCategory::USINT :  return Utils::USINT_TO_ANY(
                                             configuration,
                                             Op, __TargetDataType);
-                                            break;
-            case DataTypeCategory::UDINT :  Utils::UDINT_TO_ANY(
+                                            
+            case DataTypeCategory::UDINT :  return Utils::UDINT_TO_ANY(
                                             configuration,
                                             Op, __TargetDataType);
-                                            break;
-            case DataTypeCategory::ULINT :  Utils::ULINT_TO_ANY(
+                                            
+            case DataTypeCategory::ULINT :  return Utils::ULINT_TO_ANY(
                                             configuration,
                                             Op, __TargetDataType);
-                                            break;
-            case DataTypeCategory::REAL :   Utils::REAL_TO_ANY(
+                                            
+            case DataTypeCategory::REAL :   return Utils::REAL_TO_ANY(
                                             configuration,
                                             Op, __TargetDataType);
-                                            break;
-            case DataTypeCategory::LREAL :  Utils::LREAL_TO_ANY(
+                                            
+            case DataTypeCategory::LREAL :  return Utils::LREAL_TO_ANY(
                                             configuration,
                                             Op, __TargetDataType);
-                                            break;
+                                            
 
             case DataTypeCategory::DATE_AND_TIME:
                         if(__TargetDataType->__DataTypeCategory
                             == DataTypeCategory::TIME_OF_DAY) {
-                                Utils::DT_TO_TOD(
+                                return Utils::DT_TO_TOD(
                                 configuration,
                                 Op, __TargetDataType);
                         } else if (__TargetDataType->__DataTypeCategory
                             == DataTypeCategory::DATE){
-                                Utils::DT_TO_DATE(
+                                return Utils::DT_TO_DATE(
                                 configuration,
                                 Op, __TargetDataType);                                       
                         } else {
@@ -118,5 +125,5 @@ void ANY_TO_ANY::Execute(PCVariable* Operand) {
         }
     }
 
-    
+    return nullptr;
 }

@@ -12,7 +12,7 @@ using MemType  = pc_specification::MemType;
 using DataTypeCategory = pc_specification::DataTypeCategory;
 using FieldInterfaceType = pc_specification::FieldInterfaceType;
 
-/*
+
 TEST(VariableTestSuite, ConfigGlobalVariableTest) {
     string TestDir = Utils::GetInstallationDirectory() 
             + "/src/pc_emulator/tests/variable_tests";
@@ -207,7 +207,7 @@ TEST(VariableTestSuite, ConfigComplexDirectlyRepVariableTest) {
             DataTypeCategory::INT), 10);
     configuration.Cleanup();
 }
-*/
+
 
 
 TEST(VariableTestSuite, AccessCheckTest) {

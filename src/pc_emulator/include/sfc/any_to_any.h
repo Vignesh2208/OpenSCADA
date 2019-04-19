@@ -70,9 +70,30 @@ namespace pc_emulator {
                     case DataTypeCategory::LREAL :   
                         __SfcName = SrcDataTypeName + "_TO_LREAL";
                                                     break;
-                    case DataTypeCategory::DATE_AND_TIME: 
-                        __SfcName = SrcDataTypeName + "_TO_DT";
-                                                    break;
+                    case DataTypeCategory::TIME_OF_DAY: 
+                        if (__SrcDataType->__DataTypeCategory
+                            == DataTypeCategory::DATE_AND_TIME) {
+                        __SfcName 
+                            = SrcDataTypeName + "DATE_AND_TIME_TO_TIME_OF_DAY";
+                        } else {
+                            __AssociatedResource->__configuration
+                                    ->PCLogger->RaiseException(
+                                        "Cannot create a type "
+                                        "conversion sfc for complex data types");
+                        }
+                        break;
+                    case DataTypeCategory::DATE: 
+                        if (__SrcDataType->__DataTypeCategory
+                            == DataTypeCategory::DATE_AND_TIME) {
+                        __SfcName 
+                            = SrcDataTypeName + "DATE_AND_TIME_TO_DATE";
+                        } else {
+                            __AssociatedResource->__configuration
+                                    ->PCLogger->RaiseException(
+                                        "Cannot create a type "
+                                        "conversion sfc for complex data types");
+                        }
+                        break;
                     default:    __AssociatedResource->__configuration
                                     ->PCLogger->RaiseException(
                                         "Cannot create a type "
@@ -90,7 +111,7 @@ namespace pc_emulator {
             /*!
                 \param Operand     Operand to the sfc
             */
-            void Execute(PCVariable* Operand);
+            PCVariable* Execute(PCVariable* Operand);
     };
 }
 

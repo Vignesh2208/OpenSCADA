@@ -1223,7 +1223,7 @@ bool PCDataType::GetPCDataTypeField(string NestedFieldName,
 }
 
 bool DataTypeUtils::ValueToBool(string Value, bool& BoolValue) {
-    if(boost::iequals(Value, "True") 
+    if(boost::iequals(Value, "True")
         || boost::iequals(Value, "1")) {
         BoolValue = true;
         return true;
@@ -1444,23 +1444,23 @@ bool DataTypeUtils::DWordToAny(uint32_t Value, int DataTypeCategory,
 }
 
 
-bool DataTypeUtils::LWordToAny(uint64_t Value, int DataTypeCategory,
+bool DataTypeUtils::LWordToAny(uint64_t Value, int Category,
         string& Result) {
 
     std::stringstream stream;
     
-    switch(DataTypeCategory) {
+    switch(Category) {
         case DataTypeCategory::BOOL : Result = (Value > 0 ? "1" : "0");
                                       return true;
-        case DataTypeCategory::BYTE :   Value = Value & 0x00FF;
+        case DataTypeCategory::BYTE :   Value = Value & 0x00000000000000FF;
                                         stream << std::hex << Value;
                                         Result = "16#" + stream.str();
                                         return true;
-        case DataTypeCategory::WORD :   Value = Value & 0xFFFF;
+        case DataTypeCategory::WORD :   Value = Value & 0x000000000000FFFF;
                                         stream << std::hex << Value;
                                         Result = "16#" + stream.str();
                                         return true;
-        case DataTypeCategory::DWORD :  Value = Value & 0xFFFFFFFF;
+        case DataTypeCategory::DWORD :  Value = Value & 0x00000000FFFFFFFF;
                                         stream << std::hex << Value;
                                         Result = "16#" + stream.str();
                                         return true;
@@ -1468,7 +1468,7 @@ bool DataTypeUtils::LWordToAny(uint64_t Value, int DataTypeCategory,
                                         stream << std::hex << Value;
                                         Result = "16#" + stream.str();
                                         return true;
-        case DataTypeCategory::CHAR :   Result = (char )(Value & 0x00FF);
+        case DataTypeCategory::CHAR :   Result = (char )(Value & 0x00000000000000FF);
                                         return true;
         case DataTypeCategory::INT :    Result = std::to_string((int16_t )(Value));
                                         return true;
@@ -1495,18 +1495,20 @@ bool DataTypeUtils::LWordToAny(uint64_t Value, int DataTypeCategory,
 }
 
 
-bool DataTypeUtils::CharToAny(char Value, int DataTypeCategory,
+bool DataTypeUtils::CharToAny(char Value, int Category,
         string& Result) {
 
     std::stringstream stream;
 
-    switch(DataTypeCategory) {
+    int16_t ByteValue = (uint8_t )Value;
+
+    switch(Category) {
         case DataTypeCategory::BOOL :   Result = (Value == '0' ? "0" : "1");
                                         return true;
         case DataTypeCategory::BYTE :
         case DataTypeCategory::WORD :
         case DataTypeCategory::DWORD :
-        case DataTypeCategory::LWORD :  stream << std::hex << (uint8_t)Value;
+        case DataTypeCategory::LWORD :  stream << std::hex << ByteValue;
                                         Result = "16#" + stream.str();
                                         return true;
 
@@ -1519,10 +1521,10 @@ bool DataTypeUtils::CharToAny(char Value, int DataTypeCategory,
         case DataTypeCategory::UINT :
         case DataTypeCategory::USINT :
         case DataTypeCategory::UDINT :
-        case DataTypeCategory::ULINT :  Result = std::to_string((uint8_t)Value);
+        case DataTypeCategory::ULINT :  Result = std::to_string(ByteValue);
                                         return true;
         case DataTypeCategory::REAL :
-        case DataTypeCategory::LREAL :  Result = std::to_string((uint8_t)Value) + ".0";
+        case DataTypeCategory::LREAL :  Result = std::to_string(ByteValue) + ".0";
                                         return true;
         default: return false;
     }
@@ -1547,12 +1549,12 @@ bool DataTypeUtils::DIntToAny(int32_t Value, int DataTypeCategory,
 }
 
 
-bool DataTypeUtils::LIntToAny(int64_t Value, int DataTypeCategory,
+bool DataTypeUtils::LIntToAny(int64_t Value, int Category,
         string& Result) {
 
     std::stringstream stream;
     
-    switch(DataTypeCategory) {
+    switch(Category) {
         case DataTypeCategory::BOOL : Result = (Value > 0 ? "1" : "0");
                                       return true;
         case DataTypeCategory::BYTE :   Value = Value & 0x00FF;
@@ -1627,10 +1629,10 @@ bool DataTypeUtils::RealToAny(float Value, int DataTypeCategory,
 }
 
 
-bool DataTypeUtils::LRealToAny(double Value, int DataTypeCategory,
+bool DataTypeUtils::LRealToAny(double Value, int Category,
         string& Result) {
 
-    switch(DataTypeCategory) {
+    switch(Category) {
         case DataTypeCategory::BOOL :  Result = (Value > 0.0 ? "1" : "0");
                                         return true;
 
@@ -1715,13 +1717,12 @@ void DataTypeUtils::AddToDT(DateTODDataType& Dt, TimeType& Time) {
     std::istringstream ss(Dt1);
     ss >> std::get_time(&t, "%Y-%m-%dT%H:%M:%S");
     time_t SecsSinceEpoch = mktime(&t);
-
     SecsSinceEpoch += Time.SecsElapsed;
 
     ptm = gmtime(&SecsSinceEpoch);
 
-    Dt.Date.Year = ptm->tm_year;
-    Dt.Date.Month = ptm->tm_mon;
+    Dt.Date.Year = ptm->tm_year + 1900;
+    Dt.Date.Month = ptm->tm_mon + 1;
     Dt.Date.Day = ptm->tm_mday;
     Dt.Tod.Hr = ptm->tm_hour;
     Dt.Tod.Min = ptm->tm_min;
@@ -1755,8 +1756,8 @@ void DataTypeUtils::SubFromDT(DateTODDataType& Dt, TimeType& Time) {
 
     ptm = gmtime(&SecsSinceEpoch);
 
-    Dt.Date.Year = ptm->tm_year;
-    Dt.Date.Month = ptm->tm_mon;
+    Dt.Date.Year = ptm->tm_year + 1900;
+    Dt.Date.Month = ptm->tm_mon + 1;
     Dt.Date.Day = ptm->tm_mday;
     Dt.Tod.Hr = ptm->tm_hour;
     Dt.Tod.Min = ptm->tm_min;
@@ -1782,17 +1783,18 @@ void DataTypeUtils::SubFromTOD(TODDataType& tod, TimeType& Time) {
 TimeType DataTypeUtils::SubDTs(DateTODDataType& Dt1, DateTODDataType& Dt2) {
     string Dt1str, Dt2str;
     TimeType ret;
-    Dt1str = DTToDTString(Dt2);
+    Dt1str = DTToDTString(Dt1);
     Dt2str = DTToDTString(Dt2);
 
-    std::tm t = {};
+    std::tm t1 = {};
+    std::tm t2 = {};
     std::tm * ptm;
-    std::istringstream ss(Dt1str);
-    ss >> std::get_time(&t, "%Y-%m-%dT%H:%M:%S");
-    time_t SecsSinceEpoch1 = mktime(&t);
-    std::istringstream ss(Dt2str);
-    ss >> std::get_time(&t, "%Y-%m-%dT%H:%M:%S");
-    time_t SecsSinceEpoch2 = mktime(&t);
+    std::istringstream ss1(Dt1str);
+    ss1 >> std::get_time(&t1, "%Y-%m-%dT%H:%M:%S");
+    time_t SecsSinceEpoch1 = mktime(&t1);
+    std::istringstream ss2(Dt2str);
+    ss2 >> std::get_time(&t2, "%Y-%m-%dT%H:%M:%S");
+    time_t SecsSinceEpoch2 = mktime(&t2);
 
     
     ret.SecsElapsed = SecsSinceEpoch1 - SecsSinceEpoch2;

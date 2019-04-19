@@ -45,6 +45,8 @@ void ADD_Insn::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
             }
             assert(Utils::IsNumType(DesiredDataType));
 
+            std::cout << "Desired DataType: " << DesiredDataType->__DataTypeName << std::endl;
+
             for (int i = 0; i < modified_operands.size(); i++) {
                 if (modified_operands[i]->__IsTemporary
                         && modified_operands[i]->__VariableDataType
@@ -57,11 +59,21 @@ void ADD_Insn::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
                                 ->__SFCRegistry->GetSFC(conv_sfc_name));
 
                         assert(sfc != nullptr);
-                        sfc->Execute(modified_operands[i]);
+                        modified_operands[i] 
+                                = sfc->Execute(modified_operands[i]);
+                        string ActualDataType 
+                        = modified_operands[i]->__VariableDataType->__DataTypeName;
+                        if (!modified_operands[i]) {
+                                Logger->RaiseException(
+                                "Type casting error: Actual DataType: "
+                                        + ActualDataType + " Desired DataType: "
+                                        + DesiredDataType->__DataTypeName);
+                        } 
                 }
             }
 
-            for (int i = 0; i < modified_operands.size(); i++) {
+            for (int i = 1; i < modified_operands.size(); i++) {
+                    
                     *CurrentResult = *CurrentResult + *modified_operands[i];
             }
 

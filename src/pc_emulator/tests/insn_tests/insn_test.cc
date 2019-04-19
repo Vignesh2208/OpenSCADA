@@ -377,7 +377,7 @@ TEST(InsnTestSuite, LD_ST_ComplexDataTypeTest) {
         = configuration.GetVariablePointerToMem( 2500, 0,
                                         "COMPLEX_STRUCT_1");
 
-    Ops.push_back(configuration.GetVariable("complex_global"));
+    Ops.push_back(configuration.GetExternVariable("complex_global"));
     Ops2.push_back(Storage_complex_struct);
 
     resource->ExecuteInsn("LD", Ops, false);
@@ -447,58 +447,6 @@ TEST(InsnTestSuite,ADD_SUB_InsnTest) {
 
 
     Ops.clear();
-    Ops.push_back(resource->GetTmpVariable("BYTE", "16#FE")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("ADD", Ops, false);
-
-    // Overflow occurs: 0xFE + 0xFE = 0x1FC but only last 8 bits are retained
-    // and thus equal to 0xFC
-    ASSERT_TRUE(*resource->__CurrentResult 
-                        == *resource->GetTmpVariable("BYTE", "16#FC"));
-
-    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<int8_t>("",
-                DataTypeCategory::BYTE), (int8_t)(0x1FC & 0xFF));
-
-    resource->ExecuteInsn("SUB", Ops, false);
-    ASSERT_TRUE(*resource->__CurrentResult 
-                        == *resource->GetTmpVariable("BYTE", "16#FE"));
-    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<int8_t>("",
-                DataTypeCategory::BYTE), (int8_t)0xFE);
-
-
-    Ops.clear();
-    Ops.push_back(resource->GetTmpVariable("WORD", "16#FE")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("ADD", Ops, false);
-    ASSERT_TRUE(*resource->__CurrentResult 
-                        == *resource->GetTmpVariable("WORD", "16#1FC"));
-    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<int16_t>("",
-                DataTypeCategory::WORD), (int16_t)0x1FC);
-
-    resource->ExecuteInsn("SUB", Ops, false);
-    ASSERT_TRUE(*resource->__CurrentResult 
-                        == *resource->GetTmpVariable("WORD", "16#FE"));
-    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<int16_t>("",
-                DataTypeCategory::WORD), (int16_t)0xFE);
-
-    Ops.clear();
-    Ops.push_back(resource->GetTmpVariable("DWORD", "16#FFE")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("ADD", Ops, false);
-
-
-    ASSERT_TRUE(*resource->__CurrentResult 
-                        == *resource->GetTmpVariable("DWORD", "16#1FFC"));
-    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<int32_t>("",
-                DataTypeCategory::DWORD), (int32_t)0x1FFC);
-    resource->ExecuteInsn("SUB", Ops, false);
-    ASSERT_TRUE(*resource->__CurrentResult 
-                        == *resource->GetTmpVariable("DWORD", "16#FFE"));
-    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<int32_t>("",
-                DataTypeCategory::DWORD), (int32_t)0xFFE);
-
-
-    Ops.clear();
     Ops.push_back(resource->GetTmpVariable("REAL", "1.1")); 
     resource->ExecuteInsn("LD", Ops, false);
     resource->ExecuteInsn("ADD", Ops, false);
@@ -529,17 +477,6 @@ TEST(InsnTestSuite,ADD_SUB_InsnTest) {
                         == *resource->GetTmpVariable("LREAL", "10.11"));
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<double>("",
                 DataTypeCategory::LREAL), 10.11);
-
-    Ops.clear();
-    Ops.push_back(resource->GetTmpVariable("TOD", "tod#10:01:10")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("ADD", Ops, false);
-    ASSERT_TRUE(*resource->__CurrentResult 
-                        == *resource->GetTmpVariable("TOD", "tod#20:02:20"));
-
-    resource->ExecuteInsn("SUB", Ops, false);
-    ASSERT_TRUE(*resource->__CurrentResult 
-                        == *resource->GetTmpVariable("TOD", "tod#10:01:10"));
 
     Ops.clear();
     Ops.push_back(resource->GetTmpVariable("TIME", "t#100s")); 
@@ -586,58 +523,6 @@ TEST(InsnTestSuite, MUL_DIV_InsnTest) {
                 DataTypeCategory::INT), 15);
 
 
-    Ops.clear();
-    Ops.push_back(resource->GetTmpVariable("BYTE", "16#3E")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("MUL", Ops, false);
-
-    // Overflow occurs: 0x3E*0x3E = 0xF04 but only last 8 bits are retained
-    // and thus equal to 0x04
-    ASSERT_TRUE(*resource->__CurrentResult 
-                        == *resource->GetTmpVariable("BYTE", "16#04"));
-
-    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<int8_t>("",
-                DataTypeCategory::BYTE), (int8_t)(0x04));
-
-    resource->ExecuteInsn("DIV", Ops, false);
-    ASSERT_TRUE(*resource->__CurrentResult 
-                        == *resource->GetTmpVariable("BYTE", "16#0"));
-    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<int8_t>("",
-                DataTypeCategory::BYTE), (int8_t)0x0);
-
-
-    //Behaviour is undefined if overflow occurs due to a multiplication operation
-    Ops.clear();
-    Ops.push_back(resource->GetTmpVariable("WORD", "16#3E")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("MUL", Ops, false);
-    ASSERT_TRUE(*resource->__CurrentResult 
-                        == *resource->GetTmpVariable("WORD", "16#F04"));
-    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<int16_t>("",
-                DataTypeCategory::WORD), (int16_t)0xF04);
-
-    resource->ExecuteInsn("DIV", Ops, false);
-    ASSERT_TRUE(*resource->__CurrentResult 
-                        == *resource->GetTmpVariable("WORD", "16#3E"));
-    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<int16_t>("",
-                DataTypeCategory::WORD), (int16_t)0x3E);
-
-    Ops.clear();
-    Ops.push_back(resource->GetTmpVariable("DWORD", "16#FFE")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("MUL", Ops, false);
-
-
-    ASSERT_TRUE(*resource->__CurrentResult 
-                        == *resource->GetTmpVariable("DWORD", "16#FFC004"));
-    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<int32_t>("",
-                DataTypeCategory::DWORD), (int32_t)0xFFC004);
-    resource->ExecuteInsn("DIV", Ops, false);
-    ASSERT_TRUE(*resource->__CurrentResult 
-                        == *resource->GetTmpVariable("DWORD", "16#FFE"));
-    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<int32_t>("",
-                DataTypeCategory::DWORD), (int32_t)0xFFE);
-
 
     Ops.clear();
     Ops.push_back(resource->GetTmpVariable("REAL", "1.1")); 
@@ -660,11 +545,7 @@ TEST(InsnTestSuite, MUL_DIV_InsnTest) {
     resource->ExecuteInsn("LD", Ops, false);
     resource->ExecuteInsn("MUL", Ops, false);
 
-
-    //ASSERT_TRUE(*resource->__CurrentResult 
-    //                    == *resource->GetTmpVariable("LREAL", "102.212"));
-    //EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<double>("",
-    //            DataTypeCategory::LREAL), (double)102.212);
+    
     resource->ExecuteInsn("DIV", Ops, false);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("LREAL", "10.11"));
@@ -1236,6 +1117,7 @@ TEST(InsnTestSuite, BitwiseOps_InsnTest) {
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
+    /*
     Ops.clear();
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("INT", "15")); 
@@ -1257,7 +1139,7 @@ TEST(InsnTestSuite, BitwiseOps_InsnTest) {
     Ops.push_back(resource->GetTmpVariable("INT", "16")); 
     resource->ExecuteInsn("XOR", Ops, false);
     ASSERT_TRUE(*resource->__CurrentResult 
-                        == *resource->GetTmpVariable("INT", "14"));
+                        == *resource->GetTmpVariable("INT", "14"));*/
 
     Ops.clear();
     Ops2.clear();

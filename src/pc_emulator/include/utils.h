@@ -222,61 +222,62 @@ namespace pc_emulator {
                 string CallingPoUType, string NestedFieldName);
 
 
-            static bool ReallocateTmpVariable(PCConfiguration * configuration,
-                PCVariable * Var, PCDataType * new_data_type);
+            static PCVariable* ReallocateTmpVariable(PCConfiguration * configuration,
+                PCVariable * Var, PCDataType * new_data_type,
+                string InitialValue);
 
-            static bool BOOL_TO_ANY(PCConfiguration * configuration, 
+            static PCVariable* BOOL_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
-            static bool BYTE_TO_ANY(PCConfiguration * configuration, 
+            static PCVariable* BYTE_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
-            static bool WORD_TO_ANY(PCConfiguration * configuration, 
+            static PCVariable* WORD_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
-            static bool DWORD_TO_ANY(PCConfiguration * configuration, 
+            static PCVariable* DWORD_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
-            static bool LWORD_TO_ANY(PCConfiguration * configuration, 
+            static PCVariable* LWORD_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
-            static bool CHAR_TO_ANY(PCConfiguration * configuration, 
+            static PCVariable* CHAR_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
-            static bool INT_TO_ANY(PCConfiguration * configuration, 
+            static PCVariable* INT_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
-            static bool SINT_TO_ANY(PCConfiguration * configuration, 
+            static PCVariable* SINT_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
-            static bool DINT_TO_ANY(PCConfiguration * configuration, 
+            static PCVariable* DINT_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
-            static bool LINT_TO_ANY(PCConfiguration * configuration, 
+            static PCVariable* LINT_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
-            static bool UINT_TO_ANY(PCConfiguration * configuration, 
+            static PCVariable* UINT_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
-            static bool USINT_TO_ANY(PCConfiguration * configuration, 
+            static PCVariable* USINT_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
-            static bool UDINT_TO_ANY(PCConfiguration * configuration, 
+            static PCVariable* UDINT_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
-            static bool ULINT_TO_ANY(PCConfiguration * configuration, 
+            static PCVariable* ULINT_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
-            static bool REAL_TO_ANY(PCConfiguration * configuration, 
+            static PCVariable* REAL_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
-            static bool LREAL_TO_ANY(PCConfiguration * configuration, 
+            static PCVariable* LREAL_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
-            static bool DT_TO_TOD(PCConfiguration * configuration, 
+            static PCVariable* DT_TO_TOD(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
-            static bool DT_TO_DATE(PCConfiguration * configuration, 
+            static PCVariable* DT_TO_DATE(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
             static bool IsNumType(PCDataType * data_type);

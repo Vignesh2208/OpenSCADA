@@ -91,3 +91,12 @@ cc_test(
            "@gtest//:main"],
     linkstatic = 1,
 )
+
+cc_test(
+    name = "sfc_test",
+    srcs = ["src/pc_emulator/tests/sfc_tests/sfc_test.cc"],
+    copts = ["-Iexternal/gtest/include -fpermissive -Wno-reorder"],
+    deps = [":pc_emulator_lib",
+           "@gtest//:main"],
+    linkstatic = 1,
+)

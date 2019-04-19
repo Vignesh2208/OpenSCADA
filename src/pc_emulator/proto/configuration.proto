@@ -9,20 +9,24 @@ enum DataTypeCategory {
     DWORD = 3;
     LWORD = 4;
     CHAR = 5;
-    INT = 6;
+ 
+    USINT = 6;
     SINT = 7;
-    DINT = 8;
-    LINT = 9;
-    UINT = 10;
-    USINT = 11;
-    UDINT = 12;
-    ULINT = 13;
+    UINT = 8;
+    INT = 9;
+    UDINT = 10;
+    DINT = 11;
+    ULINT = 12;
+    LINT = 13;
+
     REAL = 14;
     LREAL = 15;
+
     TIME = 16;
     DATE = 17;
     TIME_OF_DAY = 18;
     DATE_AND_TIME = 19;
+
     DERIVED = 20;
     POU = 21;
     ARRAY = 22; //used for internal purposes only

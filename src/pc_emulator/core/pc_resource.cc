@@ -356,6 +356,7 @@ void PCResourceImpl::Cleanup() {
     __CurrentResult->Cleanup();
     delete __CurrentResult;
     delete __InsnRegistry;
+    delete __SFCRegistry;
 }
 
 PoUCodeContainer * PCResourceImpl::CreateNewCodeContainer(
@@ -568,6 +569,12 @@ void PCResourceImpl::ExecuteInsn(string InsnName, std::vector<PCVariable*>& Ops,
 
     if (InsnObj != nullptr) {
         InsnObj->Execute(Ops, isNegated);
+    }
+
+    auto SFCObj = __SFCRegistry->GetSFC(InsnName);
+
+    if (SFCObj != nullptr) {
+        SFCObj->Execute(Ops);
     }
 }
 

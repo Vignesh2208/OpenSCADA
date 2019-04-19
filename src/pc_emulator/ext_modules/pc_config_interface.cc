@@ -438,10 +438,10 @@ PCVariable * PCConfigurationInterface::GetVariablePointerToMem(int ByteOffset,
 }
 
 PCVariable * PCConfigurationInterface::GetVariablePointerToResourceMem(
-                        string ResourceName, int MemType, int ByteOffset,
+                        string ResourceName, int memType, int ByteOffset,
                         int BitOffset, string VariableDataTypeName){
 
-    if (MemType == MemType::RAM_MEM)
+    if (memType == MemType::RAM_MEM)
         return GetVariablePointerToMem(ByteOffset, BitOffset,
                         VariableDataTypeName);
 
@@ -454,7 +454,7 @@ PCVariable * PCConfigurationInterface::GetVariablePointerToResourceMem(
     if (!desired_resource)
         return nullptr;
     
-    return desired_resource->GetVariablePointerToMem(MemType, ByteOffset,
+    return desired_resource->GetVariablePointerToMem(memType, ByteOffset,
                                     BitOffset, VariableDataTypeName);
 
 }

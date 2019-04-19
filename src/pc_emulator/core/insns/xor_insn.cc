@@ -60,7 +60,7 @@ void XOR_Insn::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
                     ->__SFCRegistry->GetSFC(conv_sfc_name));
 
             assert(sfc != nullptr);
-            sfc->Execute(CurrentResult);   
+            assert(sfc->Execute(CurrentResult) == CurrentResult);   
         } else if(Operand->__IsTemporary 
             && Operand->__VariableDataType != DesiredDataType) {
             string conv_sfc_name 
@@ -70,7 +70,11 @@ void XOR_Insn::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
                     ->__SFCRegistry->GetSFC(conv_sfc_name));
 
             assert(sfc != nullptr);
-            sfc->Execute(Operand);   
+            Operand = sfc->Execute(Operand); 
+
+            if (!Operand) {
+                Logger->RaiseException("Type casting error: " + conv_sfc_name);
+            }    
         }
 
         assert (Operand->__VariableDataType 
