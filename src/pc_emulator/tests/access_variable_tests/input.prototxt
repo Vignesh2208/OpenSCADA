@@ -1,10 +1,13 @@
-config_name: "DataType_Test_Configuration"
+configuration_name: "Access_Test_Configuration"
 log_level: LOG_INFO
 enable_kronos: false
 run_time_secs: 1
+hardware_spec {
+    num_resources: 1
+    ram_mem_size_bytes: 10000
+}
 
 # DataType Declarations ...
-
 datatype_declaration {
     name: "BOOL_TYPE_DEF"
     datatype_category: BOOL
@@ -121,8 +124,7 @@ datatype_declaration {
 # END OF DataType declarations ...
 
 # Configuration GLOBAL variables ...
-
-config_global_pou_var {
+var_global {
     name: "__CONFIG_GLOBAL__"
     datatype_field {
         field_name: "global_bool_var"
@@ -194,8 +196,7 @@ config_global_pou_var {
 }
 
 # Configuration ACCESS variables ...
-
-config_access_pou_var {
+var_access {
     name: "__CONFIG_ACCESS__"
     datatype_field {
         field_name: "GLOBAL_BOOL_VAR"
@@ -306,129 +307,4 @@ config_access_pou_var {
 }
 
 
-machine_spec {
-    num_cpus: 1
-    ram_mem_size_bytes: 10000
-    resource_spec {
-        resource_name: "CPU_001"
-        input_mem_size_bytes: 10000
-        output_mem_size_bytes: 10000
-        pou_var {
-            name: "PROGRAM_1"
-            pou_type: PROGRAM
-            datatype_field {
-                field_name: "input_1"
-                field_datatype_name: "INT"
-                intf_type: VAR_INPUT
-            }
-            datatype_field {
-                field_name: "input_2"
-                field_datatype_name: "INT"
-                intf_type: VAR_INPUT
-            }
-            datatype_field {
-                field_name: "output_1"
-                field_datatype_name: "REAL"
-                intf_type: VAR_OUTPUT
-            }
-            datatype_field {
-                field_name: "output_2"
-                field_datatype_name: "REAL"
-                intf_type: VAR_OUTPUT
-            }
-            datatype_field {
-                field_name: "inout_1"
-                field_datatype_name: "INT"
-                intf_type: VAR_IN_OUT
-            }
-            datatype_field {
-                field_name: "inout_2"
-                field_datatype_name: "INT"
-                intf_type: VAR_IN_OUT
-            }
-            datatype_field {
-                field_name: "var_1"
-                field_datatype_name: "INT"
-                intf_type: VAR
-            }
-            datatype_field {
-                field_name: "drv_1"
-                field_datatype_name: "INT_TYPE_DEF"
-                intf_type: VAR_EXPLICIT_STORAGE
-                field_storage_spec {
-                    full_storage_spec: "%MW10"
-                }
-            }
-            datatype_field {
-                field_name: "sensor_input_1"
-                field_datatype_name: "INT_TYPE_DEF"
-                intf_type: VAR_EXPLICIT_STORAGE
-                field_storage_spec {
-                    full_storage_spec: "%IW10.0"
-                }
-            }
-            datatype_field {
-                field_name: "sensor_input_2"
-                field_datatype_name: "BOOL_TYPE_DEF"
-                intf_type: VAR_EXPLICIT_STORAGE
-                field_storage_spec {
-                    full_storage_spec: "%I12.2"
-                }
-            }
-            datatype_field {
-                field_name: "sensor_input_3"
-                field_datatype_name: "COMPLEX_STRUCT_3"
-                intf_type: VAR_EXPLICIT_STORAGE
-                field_storage_spec {
-                    full_storage_spec: "%IW20"
-                }
-            }
-            datatype_field {
-                field_name: "motor_output_1"
-                field_datatype_name: "INT_TYPE_DEF"
-                intf_type: VAR_EXPLICIT_STORAGE
-                field_storage_spec {
-                    full_storage_spec: "%QW10.0"
-                }
-            }
-            datatype_field {
-                field_name: "motor_output_2"
-                field_datatype_name: "BOOL_TYPE_DEF"
-                intf_type: VAR_EXPLICIT_STORAGE
-                field_storage_spec {
-                    full_storage_spec: "%Q12.2"
-                }
-            }
-            datatype_field {
-                field_name: "motor_output_3"
-                field_datatype_name: "COMPLEX_STRUCT_3"
-                intf_type: VAR_EXPLICIT_STORAGE
-                field_storage_spec {
-                    full_storage_spec: "%QW20"
-                }
-            }
-            datatype_field {
-                field_name: "global_int_arr"
-                field_datatype_name: "INT"
-                dimension_1: 2
-                dimension_2: 2
-                intf_type: VAR_EXTERNAL
-            }
-            datatype_field {
-                field_name: "start"
-                field_datatype_name: "BOOL_TYPE_DEF"
-                intf_type: VAR_EXTERNAL
-            }
-            datatype_field {
-                field_name: "start_int"
-                field_datatype_name: "INT_TYPE_DEF"
-                intf_type: VAR_EXTERNAL
-            }
-            datatype_field {
-                field_name: "start_time"
-                field_datatype_name: "TIME_TYPE_DEF"
-                intf_type: VAR_EXTERNAL
-            }
-        }
-    }
-}
+resource_file_path: "/home/moses/OpenSCADA/src/pc_emulator/tests/access_variable_tests/CPU_001.prototxt"

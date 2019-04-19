@@ -30,8 +30,109 @@ using FieldIntfType = pc_specification::FieldInterfaceType;
 using PoUType = pc_specification::PoUType;
 using FieldQualifiers = pc_specification::FieldQualifiers;
 
+using SystemConfiguration = pc_system_specification::SystemConfiguration;
+using ResourceSpecification = pc_specification::ResourceSpecification;
+using MachineSpec = pc_specification::MachineSpecification;
 #define STRING(s) #s
 
+bool Utils::GenerateFullSpecification(string SystemSpecificationPath,
+    Specification& full_specification) {
+
+    SystemConfiguration configuration;
+    MachineSpec * machine_spec = new MachineSpec;
+    int num_resources;
+    int fileDescriptor = open(SystemSpecificationPath.c_str(),
+                            O_RDONLY);
+
+    if( fileDescriptor < 0 ) {
+        std::cerr << " Error opening the specification file " 
+                    << std::endl;
+        exit(-1);
+    }
+
+    google::protobuf::io::FileInputStream 
+                                    fileInput(fileDescriptor);
+    fileInput.SetCloseOnDelete( true );
+
+    if (!google::protobuf::TextFormat::Parse(&fileInput,
+                                    &configuration)) {
+        std::cerr << std::endl << "Failed to parse system spec file!" 
+        << std::endl;
+        exit(-1);
+    }
+
+    if (configuration.has_configuration_name())
+        full_specification.set_config_name(configuration.configuration_name());
+    
+    if (configuration.has_log_level())
+        full_specification.set_log_level(configuration.log_level());
+
+    if (configuration.has_log_file_path())
+        full_specification.set_log_file_path(configuration.log_file_path());
+
+    if (configuration.has_enable_kronos())
+        full_specification.set_enable_kronos(configuration.enable_kronos());
+    
+    full_specification.set_run_time_secs(configuration.run_time_secs());
+
+    num_resources = configuration.hardware_spec().num_resources();
+    if (num_resources < 0 )
+        return false;
+
+    machine_spec->set_num_cpus(num_resources);
+    machine_spec->set_ram_mem_size_bytes(
+        configuration.hardware_spec().ram_mem_size_bytes());
+
+    for (auto& ins_spec: configuration.hardware_spec().ins_spec()) {
+        auto new_ins = machine_spec->add_ins_spec();
+        new_ins->CopyFrom(ins_spec);
+    }
+
+
+    for (auto& sfc_spec: configuration.hardware_spec().sfc_spec()) {
+        auto new_sfc = machine_spec->add_sfc_spec();
+        new_sfc->CopyFrom(sfc_spec);
+    }
+
+    for (auto& sfb_spec: configuration.hardware_spec().sfb_spec()) {
+        auto new_sfb = machine_spec->add_sfb_spec();
+        new_sfb->CopyFrom(sfb_spec);
+    }
+
+    for(auto& datatype_spec: configuration.datatype_declaration()) {
+        auto new_data_type = full_specification.add_datatype_declaration();
+        new_data_type->CopyFrom(datatype_spec);
+    }
+
+    for (auto& resource_file_path: configuration.resource_file_path()) {
+        int fd = open(resource_file_path.c_str(), O_RDONLY);
+        auto resource_spec = machine_spec->add_resource_spec();
+        if( fd < 0 ) {
+            std::cerr << " Error opening resource specification file " 
+                      << resource_file_path << std::endl;
+            exit(-1);
+        }
+
+        google::protobuf::io::FileInputStream 
+                                        fileInput(fd);
+        fileInput.SetCloseOnDelete(true);
+
+        if (!google::protobuf::TextFormat::Parse(&fileInput,
+                                        resource_spec)) {
+            std::cerr << std::endl << "Failed to parse resource spec file!" 
+             << resource_file_path << std::endl;
+            exit(-1);
+        }
+    }
+
+    auto globals = configuration.release_var_global();
+    auto access = configuration.release_var_access();
+    full_specification.set_allocated_config_access_pou_var(access);
+    full_specification.set_allocated_config_global_pou_var(globals);
+
+    full_specification.set_allocated_machine_spec(machine_spec);
+    return true;
+}
 
 bool Utils::IsNumType(PCDataType * data_type) {
     if (data_type->__DataTypeCategory >= DataTypeCategory::USINT

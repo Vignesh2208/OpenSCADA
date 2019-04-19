@@ -29,8 +29,12 @@ using std::to_string;
 
 
 PCConfigurationImpl::PCConfigurationImpl(string ConfigurationPath) {
+
+        /*
         int fileDescriptor = open(ConfigurationPath.c_str(),
                                 O_RDONLY);
+
+
 
         if( fileDescriptor < 0 ) {
             std::cerr << " Error opening the specification file " 
@@ -48,9 +52,10 @@ PCConfigurationImpl::PCConfigurationImpl(string ConfigurationPath) {
                 << std::endl;
             exit(-1);
         }
+        */
 
+       Utils::GenerateFullSpecification(ConfigurationPath, __specification);
 
-        
         __ConfigurationName = "Default_Configuration";
         __ConfigurationPath = ConfigurationPath;
         
@@ -83,7 +88,7 @@ PCConfigurationImpl::PCConfigurationImpl(string ConfigurationPath) {
         //__RAMMemory.AllocateStaticMemory(__RAMmemSize);
         std::cout << "Allocated Shared Memory " << std::endl;
         __NumResources = __specification.machine_spec().num_cpus();
-        assert(__NumResources > 0);
+        assert(__NumResources >= 0);
 
         PCLogger->LogMessage(LogLevels::LOG_INFO, "Read Configuration !");
         RegisterAllElementaryDataTypes();

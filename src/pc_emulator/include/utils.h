@@ -9,6 +9,7 @@
 #include <assert.h>
 #include <unordered_map>
 #include "src/pc_emulator/proto/configuration.pb.h"
+#include "src/pc_emulator/proto/system_specification.pb.h"
 #include <fcntl.h>
 #include <sys/mman.h>
 
@@ -291,6 +292,10 @@ namespace pc_emulator {
 
             static PCDataType* GetMostAppropriateTypeCast(PCVariable * CR,
                     std::vector<PCVariable*>& Operands);
+
+            static bool GenerateFullSpecification(
+                string SystemSpecificationPath,
+                Specification& full_specification);
     };
 }   
 

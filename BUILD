@@ -16,8 +16,8 @@ cc_proto_library(
 )
 
 proto_library(
-    name = "pc_system_pou_proto",
-    srcs = ["src/pc_emulator/proto/system_pous.proto",
+    name = "pc_system_specification_proto",
+    srcs = ["src/pc_emulator/proto/system_specification.proto",
             "src/pc_emulator/proto/configuration.proto"],
     deps = [],
     
@@ -25,8 +25,8 @@ proto_library(
 
 
 cc_proto_library(
-    name = "pc_system_pou_cc_proto",
-    deps = [":pc_system_pou_proto"],
+    name = "pc_system_specification_cc_proto",
+    deps = [":pc_system_specification_proto"],
     visibility = ["//visibility:public"],
     
 )
@@ -49,7 +49,7 @@ cc_library(
             "@boost//:lexical_cast",
             "@boost//:program_options",
             "@boost//:exception",
-            ":pc_configuration_cc_proto"],
+            ":pc_system_specification_cc_proto"],
     
     copts = ["-fpermissive -Wno-reorder -DDIR=\"$$PWD/\""],
     visibility = ["//visibility:public"],

@@ -470,6 +470,7 @@ PCVariable* PCVariable::GetPtrToField(string NestedFieldName) {
     }
 
     VariablePtrToField->__VariableAttributes = Attributes;
+    VariablePtrToField->__IsTemporary = __IsTemporary;
 
     return VariablePtrToField;
 }

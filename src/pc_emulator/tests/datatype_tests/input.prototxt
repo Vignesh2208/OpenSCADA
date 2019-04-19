@@ -1,7 +1,13 @@
-config_name: "DataType_Test_Configuration"
+configuration_name: "DataType_Test_Configuration"
 log_level: LOG_INFO
 enable_kronos: false
 run_time_secs: 1
+
+hardware_spec {
+    num_resources: 0
+    ram_mem_size_bytes: 10000
+}
+
 datatype_declaration {
     name: "INT_TYPE_DEF"
     datatype_category: INT
@@ -101,7 +107,7 @@ datatype_declaration {
         dimension_1: 10
     }
 }
-config_global_pou_var {
+var_global {
     name: "__CONFIG_GLOBAL__"
     datatype_field {
         field_name: "global_bool_var"
@@ -139,10 +145,5 @@ config_global_pou_var {
         field_storage_spec {
             full_storage_spec: "%MW20"
         }
-    }
-    
-}
-machine_spec {
-    num_cpus: 1
-    ram_mem_size_bytes: 10000
+    } 
 }

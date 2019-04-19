@@ -1,0 +1,30 @@
+syntax = "proto2";
+
+package pc_system_specification;
+
+import "src/pc_emulator/proto/configuration.proto";
+
+message SystemPOUs {
+    repeated pc_specification.DataType system_pou = 1;
+}
+
+message SystemConfiguration {
+    optional string configuration_name = 1;
+    optional pc_specification.LogLevels log_level = 2;
+    optional string log_file_path = 3;
+    optional bool enable_kronos = 4;
+    required int32 run_time_secs = 5;
+    required HardwareSpecification hardware_spec = 6;
+    repeated pc_specification.DataType datatype_declaration = 7;
+    optional pc_specification.DataType var_global = 8;
+    optional pc_specification.DataType var_access =9;
+    repeated string resource_file_path = 10;
+}
+
+message HardwareSpecification {
+    required int32 num_resources = 1;
+    required int64 ram_mem_size_bytes = 2;
+    repeated pc_specification.InstructionSpecification ins_spec = 3;
+    repeated pc_specification.SFCSpecification sfc_spec = 4;
+    repeated pc_specification.SFBSpecification sfb_spec = 5;
+}

@@ -29,64 +29,46 @@ using std::to_string;
 
 
 PCConfigurationInterface::PCConfigurationInterface(string ConfigurationPath) {
-        int fileDescriptor = open(ConfigurationPath.c_str(),
-                                O_RDONLY);
 
-        if( fileDescriptor < 0 ) {
-            std::cerr << " Error opening the specification file " 
-                        << std::endl;
-            exit(-1);
-        }
+    Utils::GenerateFullSpecification(ConfigurationPath, __specification);
+    __ConfigurationName = "Default_Configuration";
+    __ConfigurationPath = ConfigurationPath;
+    
+    int logLevel = LogLevels::LOG_INFO;
+    string logFilePath = "";
+    if (__specification.has_config_name())
+        __ConfigurationName = __specification.config_name();
+    
+    
+    if (__specification.has_log_level())
+        logLevel = __specification.log_level();
 
-        google::protobuf::io::FileInputStream 
-                                        fileInput(fileDescriptor);
-        fileInput.SetCloseOnDelete( true );
+    if (__specification.has_log_file_path())
+        logFilePath = __specification.log_file_path();
 
-        if (!google::protobuf::TextFormat::Parse(&fileInput,
-                                        &__specification)) {
-            std::cerr << std::endl << "Failed to parse spec file!" 
-                << std::endl;
-            exit(-1);
-        }
-        
-        __ConfigurationName = "Default_Configuration";
-        __ConfigurationPath = ConfigurationPath;
-        
-        int logLevel = LogLevels::LOG_INFO;
-        string logFilePath = "";
-        if (__specification.has_config_name())
-            __ConfigurationName = __specification.config_name();
-        
-        
-        if (__specification.has_log_level())
-            logLevel = __specification.log_level();
+    PCLogger = std::unique_ptr<Logger>(new Logger(
+        this, logFilePath, logLevel));
+    RegisteredDataTypes = std::unique_ptr<DataTypeRegistry>(new 
+        DataTypeRegistry((PCConfiguration *)this));
+    RegisteredResources = new ResourceRegistry((PCConfiguration *)this);
+    __RAMmemSize = __specification.machine_spec().ram_mem_size_bytes();
+    assert(__RAMmemSize > 0);
+    
+    std::cout << "Allocating Shared Memory " << std::endl;
 
-        if (__specification.has_log_file_path())
-            logFilePath = __specification.log_file_path();
+    __RAMMemory.AllocateSharedMemory(__RAMmemSize,
+            "/tmp/" + __ConfigurationName + "_RAM",
+            __ConfigurationName + "_RamLock");
 
-        PCLogger = std::unique_ptr<Logger>(new Logger(
-            this, logFilePath, logLevel));
-        RegisteredDataTypes = std::unique_ptr<DataTypeRegistry>(new 
-            DataTypeRegistry((PCConfiguration *)this));
-        RegisteredResources = new ResourceRegistry((PCConfiguration *)this);
-        __RAMmemSize = __specification.machine_spec().ram_mem_size_bytes();
-        assert(__RAMmemSize > 0);
-        
-        std::cout << "Allocating Shared Memory " << std::endl;
+    //__RAMMemory.AllocateStaticMemory(__RAMmemSize);
+    std::cout << "Allocated Shared Memory " << std::endl;
+    __NumResources = __specification.machine_spec().num_cpus();
+    assert(__NumResources >= 0);
 
-        __RAMMemory.AllocateSharedMemory(__RAMmemSize,
-                "/tmp/" + __ConfigurationName + "_RAM",
-                __ConfigurationName + "_RamLock");
-
-        //__RAMMemory.AllocateStaticMemory(__RAMmemSize);
-        std::cout << "Allocated Shared Memory " << std::endl;
-        __NumResources = __specification.machine_spec().num_cpus();
-        assert(__NumResources > 0);
-
-        PCLogger->LogMessage(LogLevels::LOG_INFO, "Read Configuration !");
-        RegisterAllElementaryDataTypes();
-        RegisterAllComplexDataTypes();
-        RegisterAllResources();
+    PCLogger->LogMessage(LogLevels::LOG_INFO, "Read Configuration !");
+    RegisterAllElementaryDataTypes();
+    RegisterAllComplexDataTypes();
+    RegisterAllResources();
 
 };
 

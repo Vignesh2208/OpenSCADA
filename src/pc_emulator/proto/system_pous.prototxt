@@ -256,6 +256,42 @@ system_pou {
         field_datatype_name: "INT"
         intf_type: VAR_OUTPUT
     }
+    code_body {
+        insn: "LD R"
+        insn: "JMPCN end"
+        insn: "LD 0"
+        insn: "ST CV"
+        insn: "JMP end"
+        insn: "LD LD"
+        insn: "JMPCN end"
+        insn: "LD PV"
+        insn: "ST CV"
+        insn: "JMP end"
+        insn: "LD CD"
+        insn: "AND CU"
+        insn: "NOT"
+        insn: "JMPCN end"
+        insn: "LD PV"
+        insn: "GT CV"
+        insn: "AND CU"
+        insn: "JMPCN else"
+        insn: "LD CV"
+        insn: "ADD 1"
+        insn: "ST CV"
+        insn: "else: LD CV"
+        insn: "GT 0"
+        insn: "AND CD"
+        insn: "JMCN end"
+        insn: "LD CV"
+        insn: "SUB 1"
+        insn: "ST CV"
+        insn: "end: LD CV"
+        insn: "GE PV"
+        insn: "ST QU"
+        insn: "LD CV"
+        insn: "LE 0"
+        insn: "ST QD"
+    }
 }
 
 system_pou {
