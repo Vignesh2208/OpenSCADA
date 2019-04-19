@@ -489,6 +489,140 @@ TEST(InsnTestSuite,ADD_SUB_InsnTest) {
     resource->ExecuteInsn("SUB", Ops, false);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("TIME", "t#100s"));
+    
+
+    //Multiple ADDITIONS
+
+    Ops.clear();
+    auto tmp = resource->GetTmpVariable("LREAL", "10.11");
+    Ops.push_back(tmp);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    for (int i = 0; i < 10; i++)
+        Ops.push_back(tmp); 
+    resource->ExecuteInsn("ADD", Ops, false);
+    std::cout << "Value: " << resource->__CurrentResult->GetValueStoredAtField<double>("",
+            DataTypeCategory::LREAL) << std::endl;
+    ASSERT_TRUE(*resource->__CurrentResult == *resource->GetTmpVariable("LREAL",
+            "111.21"));
+
+    Ops.clear();
+    tmp = resource->GetTmpVariable("LREAL", "10.11");
+    Ops.push_back(tmp);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    PCVariable * Storage_INT = configuration.GetVariablePointerToMem(
+        1, 0, "INT");
+
+    Storage_INT->SetField("", "10");
+    for (int i = 0; i < 10; i++)
+        Ops.push_back(Storage_INT); 
+    resource->ExecuteInsn("ADD", Ops, false);
+
+    ASSERT_TRUE(*resource->__CurrentResult == *resource->GetTmpVariable("INT",
+            "110"));
+    EXPECT_EQ(resource->__CurrentResult->__VariableDataType->__DataTypeCategory,
+        DataTypeCategory::INT);
+
+
+    Ops.clear();
+    tmp = resource->GetTmpVariable("DT", "dt#2020-01-31 00:00:01");
+    Ops.push_back(tmp);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    Ops.push_back(resource->GetTmpVariable("TIME", "t#59s")); 
+    resource->ExecuteInsn("ADD", Ops, false);
+    DateTODDataType to_check;
+    to_check.Date.Year = 2020;
+    to_check.Date.Month = 1;
+    to_check.Date.Day = 31;
+    to_check.Tod.Hr = 0;
+    to_check.Tod.Min = 1;
+    to_check.Tod.Sec = 0;
+    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<DateTODDataType>(
+        "", DataTypeCategory::DATE_AND_TIME), to_check);
+
+    Ops.clear();
+    tmp = resource->GetTmpVariable("TOD", "tod#00:00:01");
+    Ops.push_back(tmp);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    Ops.push_back(resource->GetTmpVariable("TIME", "t#59s")); 
+    resource->ExecuteInsn("ADD", Ops, false);
+    TODDataType tod_check;
+    
+    tod_check.Hr = 0;
+    tod_check.Min = 1;
+    tod_check.Sec = 0;
+    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<TODDataType>(
+        "", DataTypeCategory::TIME_OF_DAY), tod_check);
+
+    // Subtracting
+
+    Ops.clear();
+    tmp = resource->GetTmpVariable("TOD", "tod#00:00:01");
+    Ops.push_back(tmp);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    Ops.push_back(resource->GetTmpVariable("TIME", "t#59s")); 
+    resource->ExecuteInsn("SUB", Ops, false);
+    tod_check.Hr = 23;
+    tod_check.Min = 59;
+    tod_check.Sec = 2;
+    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<TODDataType>(
+        "", DataTypeCategory::TIME_OF_DAY), tod_check);
+
+    Ops.clear();
+    tmp = resource->GetTmpVariable("TOD", "tod#23:59:01");
+    Ops.push_back(tmp);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    Ops.push_back(resource->GetTmpVariable("TOD", "tod#23:50:01")); 
+    resource->ExecuteInsn("SUB", Ops, false);
+    TimeType time_check;
+    time_check.SecsElapsed = 540;
+    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<TimeType>(
+        "", DataTypeCategory::TIME), time_check);
+
+    Ops.clear();
+    tmp = resource->GetTmpVariable("DT", "dt#2020-01-31 00:00:01");
+    Ops.push_back(tmp);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    Ops.push_back(resource->GetTmpVariable("TIME", "t#59s")); 
+    resource->ExecuteInsn("SUB", Ops, false);
+    to_check.Date.Year = 2020;
+    to_check.Date.Month = 1;
+    to_check.Date.Day = 30;
+    to_check.Tod.Hr = 23;
+    to_check.Tod.Min = 59;
+    to_check.Tod.Sec = 2;
+    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<DateTODDataType>(
+        "", DataTypeCategory::DATE_AND_TIME), to_check);
+
+    Ops.clear();
+    tmp = resource->GetTmpVariable("DT", "dt#2020-01-31 00:00:01");
+    Ops.push_back(tmp);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    Ops.push_back(resource->GetTmpVariable("DT", "dt#2020-01-30 01:00:01")); 
+    resource->ExecuteInsn("SUB", Ops, false);
+    time_check.SecsElapsed = 23*3600;
+    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<TimeType>(
+        "", DataTypeCategory::TIME), time_check);
+
+    Ops.clear();
+    tmp = resource->GetTmpVariable("DATE", "d#2020-01-31");
+    Ops.push_back(tmp);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    Ops.push_back(resource->GetTmpVariable("DATE", "d#2020-01-30")); 
+    resource->ExecuteInsn("SUB", Ops, false);
+    time_check.SecsElapsed = 24*3600;
+    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<TimeType>(
+        "", DataTypeCategory::TIME), time_check);
+
+
     configuration.Cleanup();
 }
 
@@ -551,6 +685,60 @@ TEST(InsnTestSuite, MUL_DIV_InsnTest) {
                         == *resource->GetTmpVariable("LREAL", "10.11"));
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<double>("",
                 DataTypeCategory::LREAL), 10.11);
+
+    // Nested Multiplication
+    Ops.clear();
+    auto tmp = resource->GetTmpVariable("LREAL", "10.11");
+    Ops.push_back(tmp);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    for (int i = 0; i < 2; i++)
+        Ops.push_back(tmp); 
+    resource->ExecuteInsn("MUL", Ops, false);
+    ASSERT_TRUE(*resource->__CurrentResult >= *resource->GetTmpVariable("LREAL",
+            "1033.36"));
+    ASSERT_TRUE(*resource->__CurrentResult <= *resource->GetTmpVariable("LREAL",
+            "1033.364331"));
+
+    Ops.clear();
+    tmp = resource->GetTmpVariable("LREAL", "10.11");
+    Ops.push_back(tmp);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    PCVariable * Storage_INT = configuration.GetVariablePointerToMem(
+        1, 0, "INT");
+
+    Storage_INT->SetField("", "10");
+    for (int i = 0; i < 2; i++)
+        Ops.push_back(Storage_INT); 
+    resource->ExecuteInsn("MUL", Ops, false);
+    ASSERT_TRUE(*resource->__CurrentResult == *resource->GetTmpVariable("INT",
+            "1000"));
+
+    //Multiplication of Time
+    Ops.clear();
+    tmp = resource->GetTmpVariable("TIME", "t#100s");
+    Ops.push_back(tmp);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    
+    Ops.push_back(resource->GetTmpVariable("INT", "10")); 
+    resource->ExecuteInsn("MUL", Ops, false);
+    ASSERT_TRUE(*resource->__CurrentResult == *resource->GetTmpVariable("TIME",
+            "t#1000s"));
+
+    // Dividing Time
+    Ops.clear();
+    tmp = resource->GetTmpVariable("TIME", "t#100s");
+    Ops.push_back(tmp);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    
+    Ops.push_back(resource->GetTmpVariable("INT", "10")); 
+    resource->ExecuteInsn("DIV", Ops, false);
+    ASSERT_TRUE(*resource->__CurrentResult == *resource->GetTmpVariable("TIME",
+            "t#10s"));
+
 
 }
 
@@ -1117,29 +1305,6 @@ TEST(InsnTestSuite, BitwiseOps_InsnTest) {
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
-    /*
-    Ops.clear();
-    Ops2.clear();
-    Ops.push_back(resource->GetTmpVariable("INT", "15")); 
-    Ops2.push_back(resource->GetTmpVariable("INT", "14")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("AND", Ops, false);
-
-    // 15 & 14 == 14 (Bitwise AND)
-    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<int16_t>("",
-                DataTypeCategory::INT), 14);
-    Ops.clear();
-    Ops.push_back(resource->GetTmpVariable("INT", "16")); 
-    resource->ExecuteInsn("OR", Ops, false);
-    ASSERT_TRUE(*resource->__CurrentResult 
-                        == *resource->GetTmpVariable("INT", "30"));
-
-    // Bitwise XOR of 30 and 16 = 14
-    Ops.clear();
-    Ops.push_back(resource->GetTmpVariable("INT", "16")); 
-    resource->ExecuteInsn("XOR", Ops, false);
-    ASSERT_TRUE(*resource->__CurrentResult 
-                        == *resource->GetTmpVariable("INT", "14"));*/
 
     Ops.clear();
     Ops2.clear();
@@ -1170,6 +1335,24 @@ TEST(InsnTestSuite, BitwiseOps_InsnTest) {
     resource->ExecuteInsn("XOR", Ops, false);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("WORD", "16#0"));
+
+    Ops.clear();
+    Ops2.clear();
+    Ops.push_back(resource->GetTmpVariable("BYTE", "16#FE")); 
+    Ops2.push_back(resource->GetTmpVariable("INT", "1")); 
+    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("SHL", Ops2, false);
+    auto tmp = (int16_t)resource->__CurrentResult->GetValueStoredAtField<uint8_t>("", DataTypeCategory::BYTE);
+    std::cout << "SHL Value: " << tmp << std::endl;
+    ASSERT_TRUE(*resource->__CurrentResult 
+                        == *resource->GetTmpVariable("BYTE", "16#FC"));
+    resource->ExecuteInsn("SHR", Ops2, false);
+    tmp = (int16_t)resource->__CurrentResult->GetValueStoredAtField<uint8_t>("", DataTypeCategory::BYTE);
+    std::cout << "SHR Value: " << tmp << std::endl;
+
+    ASSERT_TRUE(*resource->__CurrentResult 
+                        == *resource->GetTmpVariable("BYTE", "16#7E"));
+
 
     configuration.Cleanup();
 }

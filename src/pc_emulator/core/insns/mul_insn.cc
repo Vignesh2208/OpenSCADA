@@ -70,8 +70,13 @@ void MUL_Insn::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
         }
         }
 
-        for (int i = 1; i < modified_operands.size(); i++) {
-                *CurrentResult = (*CurrentResult)*(*modified_operands[i]);
+        for (int i = 0; i < modified_operands.size(); i++) {
+
+                if (i == 0)
+                        *CurrentResult = *modified_operands[0];
+                else
+                        *CurrentResult 
+                                = (*CurrentResult)*(*modified_operands[i]);
         }
 
         return;

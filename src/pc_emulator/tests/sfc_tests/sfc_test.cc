@@ -366,3 +366,57 @@ TEST(SFCTestSuite, ConversionSFCTest2) {
     EXPECT_EQ(time1.SecsElapsed, -24*3600);
 
 }
+
+TEST(SFCTestSuite, NumericSFCTest) {
+    string TestDir = Utils::GetInstallationDirectory() 
+            + "/src/pc_emulator/tests/insn_tests";
+
+    std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+
+    PCResourceImpl * resource 
+        = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
+                    "CPU_001");
+    PCVariable * Temp_INT = resource->GetTmpVariable("INT", "15");
+    PCVariable * Temp_Neg_INT = resource->GetTmpVariable("INT", "-15");
+    PCVariable * Temp_REAL = resource->GetTmpVariable("REAL", "15.0");
+    PCVariable * Temp_Neg_REAL = resource->GetTmpVariable("REAL", "-15.0");
+    PCVariable * Temp_REAL_2 = resource->GetTmpVariable("REAL", "10.0");
+    PCVariable * Temp_REAL_3 = resource->GetTmpVariable("REAL", "25.0");
+    std::vector<PCVariable*> Ops;
+
+    Ops.clear();
+    Ops.push_back(Temp_Neg_INT);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    resource->ExecuteInsn("ABS", Ops, false);
+    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<int16_t>("",
+        DataTypeCategory::INT), 15);
+
+    Ops.clear();
+    Ops.push_back(Temp_Neg_REAL);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    resource->ExecuteInsn("ABS", Ops, false);
+    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
+        DataTypeCategory::REAL), 15.0);
+
+    Ops.clear();
+    Ops.push_back(Temp_REAL_2);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    resource->ExecuteInsn("LOG", Ops, false);
+    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
+        DataTypeCategory::REAL), 1.0);
+
+    Ops.clear();
+    Ops.push_back(Temp_REAL_3);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    resource->ExecuteInsn("SQRT", Ops, false);
+    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
+        DataTypeCategory::REAL), 5.0);
+
+    configuration.Cleanup();
+
+}
