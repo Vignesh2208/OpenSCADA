@@ -10,7 +10,9 @@ void MUX::Execute(std::vector<PCVariable*>& MOperands) {
     auto configuration = __AssociatedResource->__configuration;
     auto CR = __AssociatedResource->__CurrentResult;
     if (CR->__VariableDataType->__DataTypeCategory
-        != DataTypeCategory::INT) {
+        < DataTypeCategory::USINT
+        || CR->__VariableDataType->__DataTypeCategory
+        > DataTypeCategory::ULINT) {
         configuration->PCLogger->RaiseException("MUX SFC error: CR is not "
             " a integer");
     }
@@ -26,26 +28,51 @@ void MUX::Execute(std::vector<PCVariable*>& MOperands) {
         }
     }
 
-    int16_t SelValue = CR->GetValueStoredAtField<int16_t>("",
+    uint64_t SelValue;
+
+    switch(CR->__VariableDataType->__DataTypeCategory) {
+        case DataTypeCategory::USINT:
+            SelValue = (uint64_t) CR->GetValueStoredAtField<uint8_t>("",
+                DataTypeCategory::USINT);
+                break;
+        case DataTypeCategory::SINT:
+            SelValue = (uint64_t) CR->GetValueStoredAtField<uint8_t>("",
+                DataTypeCategory::SINT);
+                break;
+        case DataTypeCategory::UINT:
+            SelValue = (uint64_t) CR->GetValueStoredAtField<uint8_t>("",
+                DataTypeCategory::UINT);
+                break;
+        case DataTypeCategory::INT:
+            SelValue = (uint64_t) CR->GetValueStoredAtField<uint8_t>("",
                 DataTypeCategory::INT);
+                break;
+        case DataTypeCategory::UDINT:
+            SelValue = (uint64_t) CR->GetValueStoredAtField<uint8_t>("",
+                DataTypeCategory::UDINT);
+                break;
+        case DataTypeCategory::DINT:
+            SelValue = (uint64_t) CR->GetValueStoredAtField<uint8_t>("",
+                DataTypeCategory::DINT);
+                break;
+        case DataTypeCategory::ULINT:
+            SelValue = (uint64_t) CR->GetValueStoredAtField<uint8_t>("",
+                DataTypeCategory::ULINT);
+                break;
+        case DataTypeCategory::LINT:
+            SelValue = (uint64_t) CR->GetValueStoredAtField<uint8_t>("",
+                DataTypeCategory::LINT);
+                break;
+    }
     if (Operands.size() == 0) {
         configuration->PCLogger->RaiseException("MUX SFC error: "
             "Atleast 1 operand needed!");
     }
 
-    if (SelValue < 0 || SelValue > Operands.size() - 1) {
+    if (SelValue > Operands.size() - 1) {
         configuration->PCLogger->RaiseException("MUX SFC error: "
             "Selection value out of bounds");
     }
-
-    for (int i = 1; i < Operands.size(); i++) {
-        if (Operands[0]->__VariableDataType->__DataTypeCategory 
-            != Operands[i]->__VariableDataType->__DataTypeCategory) {
-            configuration->PCLogger->RaiseException("MUX SFC error: "
-                "All operands must be of same type!");
-        }
-    }
-
     
     
     *CR = *Operands[SelValue];

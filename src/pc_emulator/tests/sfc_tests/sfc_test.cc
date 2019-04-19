@@ -383,6 +383,8 @@ TEST(SFCTestSuite, NumericSFCTest) {
     PCVariable * Temp_Neg_REAL = resource->GetTmpVariable("REAL", "-15.0");
     PCVariable * Temp_REAL_2 = resource->GetTmpVariable("REAL", "10.0");
     PCVariable * Temp_REAL_3 = resource->GetTmpVariable("REAL", "25.0");
+    PCVariable * Temp_Degree = resource->GetTmpVariable("REAL", "0.0");
+    PCVariable * Temp_Degree_2 = resource->GetTmpVariable("REAL", "1.0");
     std::vector<PCVariable*> Ops;
 
     Ops.clear();
@@ -417,6 +419,145 @@ TEST(SFCTestSuite, NumericSFCTest) {
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
         DataTypeCategory::REAL), 5.0);
 
+    Ops.clear();
+    Ops.push_back(Temp_Degree);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    resource->ExecuteInsn("COS", Ops, false);
+    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
+        DataTypeCategory::REAL), 1.0);
+
+    
+    Ops.clear();
+    Ops.push_back(Temp_Degree);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    resource->ExecuteInsn("SIN", Ops, false);
+    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
+        DataTypeCategory::REAL), 0.0);
+
+    Ops.clear();
+    Ops.push_back(Temp_Degree);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    resource->ExecuteInsn("TAN", Ops, false);
+    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
+        DataTypeCategory::REAL), 0.0);
+
+    Ops.clear();
+    Ops.push_back(Temp_Degree);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    resource->ExecuteInsn("EXP", Ops, false);
+    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
+        DataTypeCategory::REAL), 1.0);
+
+    
+    Ops.clear();
+    Ops.push_back(Temp_Degree_2);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    resource->ExecuteInsn("LN", Ops, false);
+    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
+        DataTypeCategory::REAL), 0.0);
+
     configuration.Cleanup();
 
+}
+
+TEST(SFCTestSuite, SelectionSFCTest) {
+    string TestDir = Utils::GetInstallationDirectory() 
+            + "/src/pc_emulator/tests/insn_tests";
+
+    std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+
+    PCResourceImpl * resource 
+        = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
+                    "CPU_001");
+    PCVariable * Temp_INT_1 = resource->GetTmpVariable("INT", "1");
+    PCVariable * Temp_INT_2 = resource->GetTmpVariable("INT", "2");
+    PCVariable * Temp_INT_3 = resource->GetTmpVariable("INT", "3");
+    PCVariable * Temp_REAL_1 = resource->GetTmpVariable("REAL", "15.0");
+    PCVariable * Temp_REAL_2 = resource->GetTmpVariable("REAL", "-15.0");
+    PCVariable * Temp_REAL_3 = resource->GetTmpVariable("REAL", "25.0");
+    PCVariable * Temp_Sel_0 = resource->GetTmpVariable("BOOL", "0");
+    PCVariable * Temp_Sel_1 = resource->GetTmpVariable("BOOL", "1");
+    std::vector<PCVariable*> Ops;
+
+    Ops.clear();
+    Ops.push_back(Temp_INT_1);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    Ops.push_back(Temp_INT_2);
+    Ops.push_back(Temp_INT_3);
+    Ops.push_back(Temp_REAL_1);
+    Ops.push_back(Temp_REAL_2);
+    Ops.push_back(Temp_REAL_3);
+    resource->ExecuteInsn("MAX", Ops, false);
+    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
+        DataTypeCategory::REAL), 25.0);
+
+    
+    Ops.clear();
+    Ops.push_back(Temp_INT_1);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    Ops.push_back(Temp_INT_2);
+    Ops.push_back(Temp_INT_3);
+    Ops.push_back(Temp_REAL_1);
+    Ops.push_back(Temp_REAL_2);
+    Ops.push_back(Temp_REAL_3);
+    resource->ExecuteInsn("MIN", Ops, false);
+    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
+        DataTypeCategory::REAL), -15.0);
+
+    
+    Ops.clear();
+    Ops.push_back(Temp_Sel_0);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    Ops.push_back(Temp_INT_2);
+    Ops.push_back(Temp_REAL_3);
+    resource->ExecuteInsn("SEL", Ops, false);
+
+    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<int16_t>("",
+        DataTypeCategory::INT), 2);
+
+    
+    Ops.clear();
+    Ops.push_back(Temp_Sel_1);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    Ops.push_back(Temp_INT_2);
+    Ops.push_back(Temp_REAL_3);
+    resource->ExecuteInsn("SEL", Ops, false);
+    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
+        DataTypeCategory::REAL), 25.0);
+
+    
+    Ops.clear();
+    Ops.push_back(Temp_INT_3);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    Ops.push_back(Temp_INT_2);
+    Ops.push_back(Temp_INT_3);
+    Ops.push_back(Temp_REAL_1);
+    Ops.push_back(Temp_REAL_2);
+    Ops.push_back(Temp_REAL_3);
+    resource->ExecuteInsn("MUX", Ops, false);
+    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
+        DataTypeCategory::REAL), -15.0);
+
+    Ops.clear();
+    Ops.push_back(Temp_REAL_1);
+    resource->ExecuteInsn("LD", Ops, false);
+    Ops.clear();
+    Ops.push_back(Temp_INT_2);
+    Ops.push_back(Temp_REAL_3);
+    resource->ExecuteInsn("LIMIT", Ops, false);
+    EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
+        DataTypeCategory::REAL), 15.0);
+    
+    configuration.Cleanup();
 }

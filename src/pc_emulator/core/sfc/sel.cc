@@ -32,15 +32,11 @@ void SEL::Execute(std::vector<PCVariable*>& MOperands) {
     }
 
     
-
-    if (Operands[0]->__VariableDataType->__DataTypeCategory 
-        != Operands[1]->__VariableDataType->__DataTypeCategory) {
-        configuration->PCLogger->RaiseException("SEL SFC error: "
-            "Both operands must be of same type!");
-    }
     bool SelValue = CR->GetValueStoredAtField<bool>("", DataTypeCategory::BOOL);
 
-    if(SelValue) {
+    std::cout << "Selection Value: " << SelValue << std::endl;
+
+    if(SelValue == false) {
         *CR = *Operands[0];
     } else {
         *CR = *Operands[1];      
