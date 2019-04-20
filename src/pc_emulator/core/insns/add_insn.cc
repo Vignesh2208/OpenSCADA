@@ -10,7 +10,7 @@ using namespace pc_specification;
 /*
  * Sets the Current result accumulator to the passed operand.
  */
-void ADD_Insn::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
+void ADD_Insn::Execute(std::vector<PCVariable*>& Operands) {
     auto Logger = __AssociatedResource->__configuration->PCLogger.get();
 
     auto CurrentResult = __AssociatedResource->__CurrentResult;

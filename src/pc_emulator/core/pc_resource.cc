@@ -19,6 +19,7 @@
 #include "src/pc_emulator/include/task.h"
 #include "src/pc_emulator/include/insn_registry.h"
 #include "src/pc_emulator/include/sfc_registry.h"
+#include "src/pc_emulator/include/sfb_registry.h"
 
 using namespace std;
 using namespace pc_emulator;
@@ -26,6 +27,7 @@ using namespace pc_specification;
 using MemType  = pc_specification::MemType;
 using DataTypeCategory = pc_specification::DataTypeCategory;
 using FieldIntfType = pc_specification::FieldInterfaceType;
+using SystemPOUs = pc_system_specification::SystemPOUs;
 
 
 PCResourceImpl::PCResourceImpl(PCConfigurationImpl * configuration, 
@@ -49,6 +51,7 @@ PCResourceImpl::PCResourceImpl(PCConfigurationImpl * configuration,
     __CurrentResult->AllocateAndInitialize();
     __InsnRegistry = new InsnRegistry(this);
     __SFCRegistry = new SFCRegistry(this);
+    __SFBRegistry = new SFBRegistry(this);
 }
 
 void PCResourceImpl::RegisterPoUVariable(string VariableName,
@@ -160,6 +163,91 @@ PCVariable * PCResourceImpl::GetPOUGlobalVariable(string NestedFieldName) {
     return nullptr;
 }
 
+void PCResourceImpl::InitializeAllSFBVars() {
+    string sfb_spec_file = Utils::GetInstallationDirectory() 
+        + "/src/pc_emulator/proto/system_pous.prototxt";
+    SystemPOUs system_pous;
+    int fileDescriptor = open(sfb_spec_file.c_str(),
+                            O_RDONLY);
+
+    if( fileDescriptor < 0 ) {
+        std::cerr << " Error opening the specification file " 
+                    << std::endl;
+        exit(-1);
+    }
+
+    google::protobuf::io::FileInputStream 
+                                    fileInput(fileDescriptor);
+    fileInput.SetCloseOnDelete( true );
+
+    if (!google::protobuf::TextFormat::Parse(&fileInput,
+                                    &system_pous)) {
+        std::cerr << std::endl << "Failed to parse system spec file!" 
+        << std::endl;
+        exit(-1);
+    }
+    for (auto& pou_var : system_pous.system_pou()) {
+
+        assert(pou_var.datatype_category() == DataTypeCategory::POU);
+        assert(pou_var.has_pou_type()
+            && (pou_var.pou_type() == PoUType::FC || 
+                pou_var.pou_type() == PoUType::FB ||
+                pou_var.pou_type() == PoUType::PROGRAM));
+                    
+        auto new_var_type = std::unique_ptr<PCDataType>(
+            new PCDataType((PCConfiguration *)__configuration, 
+                pou_var.name(), pou_var.name(), DataTypeCategory::POU));
+
+        Utils::InitializeDataType(__configuration, new_var_type.get(),
+                                pou_var);
+
+        __configuration->RegisteredDataTypes->RegisterDataType(
+                                    pou_var.name(),
+                                    std::move(new_var_type));
+
+        
+        auto new_pou_var = std::unique_ptr<PCVariable>(new PCVariable(
+            (PCConfiguration *)__configuration,
+            (PCResource *) this, pou_var.name(), pou_var.name()));
+        
+
+        if (pou_var.pou_type() == PoUType::FC)
+            new_pou_var->__VariableDataType->__PoUType = PoUType::FC;
+        else if (pou_var.pou_type() == PoUType::FB)
+            new_pou_var->__VariableDataType->__PoUType = PoUType::FB;
+        else
+            new_pou_var->__VariableDataType->__PoUType 
+                                                    = PoUType::PROGRAM;
+
+        RegisterPoUVariable(pou_var.name(), std::move(new_pou_var));
+        auto code_container = CreateNewCodeContainer(new_var_type.get());
+        assert(code_container != nullptr);
+
+        for (auto& insn : pou_var.code_body().insn()) {
+            code_container->AddInstruction(insn);
+        }
+    }
+
+    for(auto it = __ResourcePoUVars.begin();
+            it != __ResourcePoUVars.end(); it ++) {
+        PCVariable * pou_var = it->second.get();
+        pou_var->AllocateAndInitialize("/tmp/" + __ResourceName
+            + "_" + pou_var->__VariableName);
+    
+        Utils::ValidatePOUDefinition(pou_var, __configuration);
+        if (pou_var->__VariableDataType->__PoUType 
+            == pc_specification::PoUType::PROGRAM) {
+                if (pou_var->__VariableDataType
+                    ->__FieldsByInterfaceType[
+                        FieldIntfType::VAR_ACCESS].size())
+                __configuration->PCLogger->RaiseException(
+                    "A PROGRAM: " + pou_var->__VariableName
+                    + " cannot define ACCESS variables!");
+        }
+    }
+
+}
+
 void PCResourceImpl::InitializeAllPoUVars() {
 
     
@@ -230,6 +318,13 @@ void PCResourceImpl::InitializeAllPoUVars() {
                                                             = PoUType::PROGRAM;
 
                 RegisterPoUVariable(pou_var.name(), std::move(new_pou_var));
+
+                auto code_container = CreateNewCodeContainer(new_var_type.get());
+                assert(code_container != nullptr);
+
+                for (auto& insn : pou_var.code_body().insn()) {
+                    code_container->AddInstruction(insn);
+                }
             }
 
             for(auto it = __ResourcePoUVars.begin();
@@ -256,6 +351,8 @@ void PCResourceImpl::InitializeAllPoUVars() {
             break;
         }
     }
+
+    InitializeAllSFBVars();
 
 }
 
@@ -357,16 +454,15 @@ void PCResourceImpl::Cleanup() {
     delete __CurrentResult;
     delete __InsnRegistry;
     delete __SFCRegistry;
+    delete __SFBRegistry;
 }
 
 PoUCodeContainer * PCResourceImpl::CreateNewCodeContainer(
-                                            string PoUDataTypeName) {
-    PCDataType * PoUDataType 
-        = __configuration->RegisteredDataTypes->GetDataType(PoUDataTypeName);
-    if (!PoUDataType)
-        return nullptr;
-    
-    if (__CodeContainers.find(PoUDataTypeName) != __CodeContainers.end()) {
+                                        PCDataType* PoUDataType) {
+
+    assert(PoUDataType != nullptr);
+    if (__CodeContainers.find(PoUDataType->__DataTypeName) 
+                != __CodeContainers.end()) {
         __configuration->PCLogger->RaiseException("Cannot define two code "
                                         "bodies for same POU");
     }
@@ -377,7 +473,7 @@ PoUCodeContainer * PCResourceImpl::CreateNewCodeContainer(
 
     PoUCodeContainer * return_val = new_container.get();
 
-    __CodeContainers.insert(std::make_pair(PoUDataTypeName,
+    __CodeContainers.insert(std::make_pair(PoUDataType->__DataTypeName,
                         std::move(new_container)));
 
     return return_val;
@@ -416,20 +512,9 @@ void PCResourceImpl::QueueTask (Task * Tsk) {
     if (Tsk == nullptr)
         __configuration->PCLogger->RaiseException("Cannot queue null task!");
 
-    auto got = __IntervalTasksByPriority.find(Tsk->__priority);
-    if (got == __IntervalTasksByPriority.end() 
-                    && Tsk->type == TaskType::INTERVAL) {
-        
-        CompactTaskDescription tskDescription(Tsk->__TaskName,
-                                            Tsk->__nxt_schedule_time_ms);
-        __IntervalTasksByPriority.insert(std::make_pair(Tsk->__priority,
-                    priority_queue<CompactTaskDescription>()));
-        __IntervalTasksByPriority.find(Tsk->__priority)->second.push(
-                            tskDescription);
-    } else if (Tsk->type == TaskType::INTERVAL) {
-        CompactTaskDescription tskDescription(Tsk->__TaskName,
-                                            Tsk->__nxt_schedule_time_ms);
-        got->second.push(tskDescription);
+    
+    if (Tsk->type == TaskType::INTERVAL) {
+        __IntervalTask = Tsk;
     } else {
         auto got = __InterruptTasks.find(Tsk->__trigger_variable_name);
         if (got == __InterruptTasks.end()) {
@@ -491,29 +576,10 @@ Task * PCResourceImpl::GetInterruptTaskToExecute() {
 
 Task * PCResourceImpl::GetIntervalTaskToExecuteAt(double schedule_time) {
 
-    
+    if (__IntervalTask && __IntervalTask->__nxt_schedule_time_ms 
+        <= schedule_time)
+        return __IntervalTask;
 
-    // Else we need to get highest priority expired interval task
-    
-    Task * EligibleTask = nullptr;
-    int highest_priority = 10000;
-
-    for(auto it = __IntervalTasksByPriority.begin(); 
-            it != __IntervalTasksByPriority.end(); it++ ) {
-        
-        auto compact_tsk_description = it->second.top();
-
-        if (it->first < highest_priority 
-            && compact_tsk_description.__nxt_schedule_time_ms <= schedule_time) {
-            highest_priority = it->first;
-            EligibleTask = GetTask(compact_tsk_description.__TaskName);
-        }
-    }
-
-    if (EligibleTask != nullptr) {
-        __IntervalTasksByPriority.find(highest_priority)->second.pop();
-        return EligibleTask;
-    }
 
     return nullptr;
 
@@ -523,7 +589,17 @@ void PCResourceImpl::InitializeAllTasks() {
     for (auto resource_spec : 
            __configuration->__specification.machine_spec().resource_spec()) {
         if(__ResourceName == resource_spec.resource_name()) {
-            for (auto task_spec : resource_spec.tasks()) {
+
+            auto interval_task = std::unique_ptr<Task>(
+                                new Task(__configuration, this,
+                                    resource_spec.interval_task()));
+            auto interval_task_ptr = interval_task.get();       
+            interval_task->SetNextScheduleTime(clock->GetCurrentTime()
+                                    + (float)interval_task->__interval_ms);
+            AddTask(std::move(interval_task));
+            QueueTask(interval_task_ptr);
+
+            for (auto task_spec : resource_spec.interrupt_tasks()) {
                     auto new_task = 
                         std::unique_ptr<Task>(
                             new Task(__configuration, this, task_spec));
@@ -542,10 +618,8 @@ void PCResourceImpl::InitializeAllTasks() {
                 Task * associated_task 
                             = GetTask(program_spec.task_name());
                 if (associated_task != nullptr) {
-                    associated_task->AddProgramToTask(program_spec);
-                    
+                    associated_task->AddProgramToTask(program_spec);   
                 }
-                
             }
             break;
         }
@@ -562,13 +636,13 @@ void PCResourceImpl::InitializeAllTasks() {
 
 }
 
-void PCResourceImpl::ExecuteInsn(string InsnName, std::vector<PCVariable*>& Ops,
-                            bool isNegated) {
+void PCResourceImpl::ExecuteInsn(string InsnName,
+        std::vector<PCVariable*>& Ops){
 
     auto InsnObj = __InsnRegistry->GetInsn(InsnName);
 
     if (InsnObj != nullptr) {
-        InsnObj->Execute(Ops, isNegated);
+        InsnObj->Execute(Ops);
     }
 
     auto SFCObj = __SFCRegistry->GetSFC(InsnName);
@@ -627,17 +701,47 @@ PCVariable * PCResourceImpl::GetTmpVariable(string VariableDataTypeName,
  * Convert an immediate operand value string of form: <DataTypeName>Value into
  * a PCVariable object
  */
-PCVariable * PCResourceImpl::GetVariableForImmediateOperand(
-                                                        string OperandValue) {
-    std::vector<string> results;
-    boost::split(results, OperandValue,
-                boost::is_any_of("<>"), boost::token_compress_on);
-    if(results.size() != 2) {
-        __configuration->PCLogger->RaiseException("Operand Value format is "
-            "incorrect !");
+PCVariable * PCResourceImpl::GetVariableForImmediateOperand(string OperandValue) {
+    string VariableTypeName, InitValue;
+    InitValue = OperandValue;
+    if (OperandValue == "TRUE" || OperandValue == "true"
+        || OperandValue == "True") {
+        VariableTypeName = "BOOL", InitValue = "1";
+    } else if (OperandValue == "FALSE" || OperandValue == "false"
+        || OperandValue == "False") {
+        VariableTypeName = "BOOL", InitValue = "0";
+    } else if(boost::starts_with(OperandValue, "16#")) {
+        
+        if (OperandValue.length() <= 5) {
+            VariableTypeName = "BYTE";
+        } else if (OperandValue.length() <= 7) {
+            VariableTypeName = "WORD";
+        } else if (OperandValue.length() <= 9) {
+            VariableTypeName = "DWORD";
+        } else {
+            VariableTypeName = "LWORD";
+        }
+
+    } else if (boost::starts_with(OperandValue, "t#")) {
+        VariableTypeName = "TIME";
+    } else if (boost::starts_with(OperandValue, "tod#")) {
+        VariableTypeName = "TOD";
+    } else if (boost::starts_with(OperandValue, "d#")) {
+        VariableTypeName = "DATE";
+    } else if (boost::starts_with(OperandValue, "dt#")) {
+        VariableTypeName = "DT";
+    } else if (OperandValue[0] == '"' && OperandValue.length() == 3) {
+        VariableTypeName = "CHAR", InitValue = OperandValue[1];
+    } else if (OperandValue[0] == '"') {
+        VariableTypeName = "STRING";
+        InitValue = OperandValue.substr(1, OperandValue.length() - 2);
+    } else if (OperandValue.find(".") != string::npos) {
+        VariableTypeName = "REAL";
+    } else {
+        VariableTypeName = "DINT";
     }
 
-    return GetTmpVariable(results[0], results[1]);
+    return GetTmpVariable(VariableTypeName, InitValue);
 }
 
 void PCResourceImpl::OnStartup() {

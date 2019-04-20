@@ -14,9 +14,12 @@
 #include "task.h"
 #include "configuration.h"
 #include "src/pc_emulator/proto/configuration.pb.h"
+#include "src/pc_emulator/proto/system_specification.pb.h"
 
 using namespace std;
 using namespace pc_specification;
+using namespace pc_system_specification;
+
 
 namespace pc_emulator {
     class PCVariable;

@@ -389,75 +389,75 @@ TEST(SFCTestSuite, NumericSFCTest) {
 
     Ops.clear();
     Ops.push_back(Temp_Neg_INT);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
-    resource->ExecuteInsn("ABS", Ops, false);
+    resource->ExecuteInsn("ABS", Ops);
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<int16_t>("",
         DataTypeCategory::INT), 15);
 
     Ops.clear();
     Ops.push_back(Temp_Neg_REAL);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
-    resource->ExecuteInsn("ABS", Ops, false);
+    resource->ExecuteInsn("ABS", Ops);
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
         DataTypeCategory::REAL), 15.0);
 
     Ops.clear();
     Ops.push_back(Temp_REAL_2);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
-    resource->ExecuteInsn("LOG", Ops, false);
+    resource->ExecuteInsn("LOG", Ops);
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
         DataTypeCategory::REAL), 1.0);
 
     Ops.clear();
     Ops.push_back(Temp_REAL_3);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
-    resource->ExecuteInsn("SQRT", Ops, false);
+    resource->ExecuteInsn("SQRT", Ops);
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
         DataTypeCategory::REAL), 5.0);
 
     Ops.clear();
     Ops.push_back(Temp_Degree);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
-    resource->ExecuteInsn("COS", Ops, false);
+    resource->ExecuteInsn("COS", Ops);
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
         DataTypeCategory::REAL), 1.0);
 
     
     Ops.clear();
     Ops.push_back(Temp_Degree);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
-    resource->ExecuteInsn("SIN", Ops, false);
+    resource->ExecuteInsn("SIN", Ops);
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
         DataTypeCategory::REAL), 0.0);
 
     Ops.clear();
     Ops.push_back(Temp_Degree);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
-    resource->ExecuteInsn("TAN", Ops, false);
+    resource->ExecuteInsn("TAN", Ops);
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
         DataTypeCategory::REAL), 0.0);
 
     Ops.clear();
     Ops.push_back(Temp_Degree);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
-    resource->ExecuteInsn("EXP", Ops, false);
+    resource->ExecuteInsn("EXP", Ops);
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
         DataTypeCategory::REAL), 1.0);
 
     
     Ops.clear();
     Ops.push_back(Temp_Degree_2);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
-    resource->ExecuteInsn("LN", Ops, false);
+    resource->ExecuteInsn("LN", Ops);
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
         DataTypeCategory::REAL), 0.0);
 
@@ -487,39 +487,39 @@ TEST(SFCTestSuite, SelectionSFCTest) {
 
     Ops.clear();
     Ops.push_back(Temp_INT_1);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
     Ops.push_back(Temp_INT_2);
     Ops.push_back(Temp_INT_3);
     Ops.push_back(Temp_REAL_1);
     Ops.push_back(Temp_REAL_2);
     Ops.push_back(Temp_REAL_3);
-    resource->ExecuteInsn("MAX", Ops, false);
+    resource->ExecuteInsn("MAX", Ops);
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
         DataTypeCategory::REAL), 25.0);
 
     
     Ops.clear();
     Ops.push_back(Temp_INT_1);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
     Ops.push_back(Temp_INT_2);
     Ops.push_back(Temp_INT_3);
     Ops.push_back(Temp_REAL_1);
     Ops.push_back(Temp_REAL_2);
     Ops.push_back(Temp_REAL_3);
-    resource->ExecuteInsn("MIN", Ops, false);
+    resource->ExecuteInsn("MIN", Ops);
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
         DataTypeCategory::REAL), -15.0);
 
     
     Ops.clear();
     Ops.push_back(Temp_Sel_0);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
     Ops.push_back(Temp_INT_2);
     Ops.push_back(Temp_REAL_3);
-    resource->ExecuteInsn("SEL", Ops, false);
+    resource->ExecuteInsn("SEL", Ops);
 
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<int16_t>("",
         DataTypeCategory::INT), 2);
@@ -527,35 +527,35 @@ TEST(SFCTestSuite, SelectionSFCTest) {
     
     Ops.clear();
     Ops.push_back(Temp_Sel_1);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
     Ops.push_back(Temp_INT_2);
     Ops.push_back(Temp_REAL_3);
-    resource->ExecuteInsn("SEL", Ops, false);
+    resource->ExecuteInsn("SEL", Ops);
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
         DataTypeCategory::REAL), 25.0);
 
     
     Ops.clear();
     Ops.push_back(Temp_INT_3);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
     Ops.push_back(Temp_INT_2);
     Ops.push_back(Temp_INT_3);
     Ops.push_back(Temp_REAL_1);
     Ops.push_back(Temp_REAL_2);
     Ops.push_back(Temp_REAL_3);
-    resource->ExecuteInsn("MUX", Ops, false);
+    resource->ExecuteInsn("MUX", Ops);
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
         DataTypeCategory::REAL), -15.0);
 
     Ops.clear();
     Ops.push_back(Temp_REAL_1);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
     Ops.push_back(Temp_INT_2);
     Ops.push_back(Temp_REAL_3);
-    resource->ExecuteInsn("LIMIT", Ops, false);
+    resource->ExecuteInsn("LIMIT", Ops);
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
         DataTypeCategory::REAL), 15.0);
     

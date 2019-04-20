@@ -16,17 +16,16 @@ namespace pc_emulator {
     class SHL_Insn: public Insn {
         public:
 
-            SHL_Insn(PCResourceImpl* AssociatedResource) {
+            SHL_Insn(PCResourceImpl* AssociatedResource, bool isNegated) {
                 __InsnName = "SHL";
                 __AssociatedResource = AssociatedResource;
+                IsNegated = isNegated;
             }
             //! Called to execute the instruction
             /*!
                 \param Operands     Operands to the instruction
-                \param isNegated    Should operands be negated before instruction operation
             */
-            void Execute(std::vector<PCVariable*>& Operands,
-                    bool isNegated);
+            void Execute(std::vector<PCVariable*>& Operands);
     };
 
 }

@@ -1289,7 +1289,6 @@ bool DataTypeUtils::ValueToChar(string Value, char & CharValue){
     }
 
     CharValue = Value[0];
-    std::cout << "CharValue = " << CharValue << std::endl;
     return true;
 }
 bool DataTypeUtils::ValueToInt(string Value, int16_t& IntValue){

@@ -9,18 +9,17 @@ namespace pc_emulator {
     //! Multiply instruction
     class MUL_Insn: public Insn {
         public:
-            MUL_Insn(PCResourceImpl * AssociatedResource) {
+            MUL_Insn(PCResourceImpl * AssociatedResource, bool isNegated) {
                 __AssociatedResource = AssociatedResource;
+                IsNegated = isNegated;
                 __InsnName = "MUL";
             };
 
            //! Called to execute the instruction
             /*!
                 \param Operands     Operands to the instruction
-                \param isNegated    Should operands be negated before instruction operation
             */
-            void Execute(std::vector<PCVariable*>& Operands,
-                    bool isNegated);
+            void Execute(std::vector<PCVariable*>& Operands);
     };
 }
 

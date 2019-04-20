@@ -9,18 +9,17 @@ namespace pc_emulator {
     //! Store instruction
     class ST_Insn: public Insn {
         public:
-            ST_Insn(PCResourceImpl * AssociatedResource) {
+            ST_Insn(PCResourceImpl * AssociatedResource, bool isNegated) {
                 __AssociatedResource = AssociatedResource;
                 __InsnName = "ST";
+                IsNegated = isNegated;
             };
 
            //! Called to execute the instruction
             /*!
                 \param Operands     Operands to the instruction
-                \param isNegated    Should operands be negated before instruction operation
             */
-            void Execute(std::vector<PCVariable*>& Operands,
-                    bool isNegated);
+            void Execute(std::vector<PCVariable*>& Operands);
     };
 }
 

@@ -195,12 +195,16 @@ message InterruptTaskParams {
     required string trigger_variable_field = 1;
 }
 
-message TaskSpecification {
+message IntervalTaskSpecification {
     required string task_name = 1;
     required int32 priority = 2;
-    required TaskType type = 3;
-    optional IntervalTaskParams interval_task_params = 4;
-    optional InterruptTaskParams interrupt_task_params = 5;
+    required IntervalTaskParams interval_task_params = 3;
+}
+
+message InterruptTaskSpecification {
+    required string task_name = 1;
+    required int32 priority = 2;
+    required InterruptTaskParams interrupt_task_params = 3;
 }
 
 message ProgramVariableInitialization {
@@ -221,8 +225,9 @@ message ResourceSpecification {
     optional int64 output_mem_size_bytes = 3;
     optional DataType resource_global_var = 4;
     repeated DataType pou_var = 5;
-    repeated TaskSpecification tasks = 6;
-    repeated ProgramSpecification programs = 7;
+    optional IntervalTaskSpecification interval_task = 7;
+    repeated InterruptTaskSpecification interrupt_tasks = 8;
+    repeated ProgramSpecification programs = 9;
     
 }
 

@@ -8,7 +8,7 @@ using namespace pc_specification;
 /*
  * Sets the Current result accumulator to the passed operand.
  */
-void LD_Insn::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
+void LD_Insn::Execute(std::vector<PCVariable*>& Operands) {
     auto Logger = __AssociatedResource->__configuration->PCLogger.get();
 
     if (Operands.size() != 1) {
@@ -26,7 +26,7 @@ void LD_Insn::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
     }
  
 
-    if (isNegated) {
+    if (IsNegated) {
         assert(Operand->__VariableDataType->__DataTypeCategory
             != DataTypeCategory::POU);
 

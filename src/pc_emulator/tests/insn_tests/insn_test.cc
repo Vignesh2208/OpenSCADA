@@ -71,8 +71,8 @@ TEST(InsnTestSuite, LD_ST_InsnTest) {
     Ops2.push_back(Storage_INT);
 
     std::cout << "Testing INT " << std::endl;
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("ST", Ops2, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("ST", Ops2);
 
     ASSERT_TRUE(*resource->__CurrentResult == *Op);
 
@@ -94,11 +94,11 @@ TEST(InsnTestSuite, LD_ST_InsnTest) {
 
     Ops.clear();
     Ops.push_back(resource->GetTmpVariable("BOOL", "1")); 
-    resource->ExecuteInsn("LD", Ops, true);
+    resource->ExecuteInsn("LDN", Ops);
 
     Ops2.clear();
     Ops2.push_back(Storage_BOOL);
-    resource->ExecuteInsn("ST", Ops2, false);
+    resource->ExecuteInsn("ST", Ops2);
 
 
     ASSERT_TRUE(*resource->__CurrentResult 
@@ -118,11 +118,11 @@ TEST(InsnTestSuite, LD_ST_InsnTest) {
 
     Ops.clear();
     Ops.push_back(resource->GetTmpVariable("CHAR", "a"));
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
 
     Ops2.clear();
     Ops2.push_back(Storage_CHAR);
-    resource->ExecuteInsn("ST", Ops2, false);
+    resource->ExecuteInsn("ST", Ops2);
 
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *Ops[0]);
@@ -141,11 +141,11 @@ TEST(InsnTestSuite, LD_ST_InsnTest) {
 
     Ops.clear();
     Ops.push_back(resource->GetTmpVariable("REAL", "1.1"));
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     std::cout << "Executed LD\n";
     Ops2.clear();
     Ops2.push_back(Storage_REAL);
-    resource->ExecuteInsn("ST", Ops2, false);
+    resource->ExecuteInsn("ST", Ops2);
     std::cout << "Executed ST\n";
 
     ASSERT_TRUE(*resource->__CurrentResult == *Ops[0]);
@@ -165,11 +165,11 @@ TEST(InsnTestSuite, LD_ST_InsnTest) {
 
     Ops.clear();
     Ops.push_back(resource->GetTmpVariable("TIME", "t#13s"));
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
 
     Ops2.clear();
     Ops2.push_back(Storage_TIME);
-    resource->ExecuteInsn("ST", Ops2, false);
+    resource->ExecuteInsn("ST", Ops2);
 
     ASSERT_TRUE(*resource->__CurrentResult == *Ops[0]);
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<TimeType>("",
@@ -188,11 +188,11 @@ TEST(InsnTestSuite, LD_ST_InsnTest) {
 
     Ops.clear();
     Ops.push_back(resource->GetTmpVariable("DATE", "d#2020-01-11"));
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
 
     Ops2.clear();
     Ops2.push_back(Storage_DATE);
-    resource->ExecuteInsn("ST", Ops2, false);
+    resource->ExecuteInsn("ST", Ops2);
 
     ASSERT_TRUE(*resource->__CurrentResult == *Ops[0]);
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<DateType>("",
@@ -223,11 +223,11 @@ TEST(InsnTestSuite, LD_ST_InsnTest) {
 
     Ops.clear();
     Ops.push_back(resource->GetTmpVariable("DT", "dt#2020-01-11 10:01:05"));
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
 
     Ops2.clear();
     Ops2.push_back(Storage_DT);
-    resource->ExecuteInsn("ST", Ops2, false);
+    resource->ExecuteInsn("ST", Ops2);
 
     ASSERT_TRUE(*resource->__CurrentResult == *Ops[0]);
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<DateTODType>("",
@@ -276,11 +276,11 @@ TEST(InsnTestSuite, LD_ST_InsnTest) {
 
     Ops.clear();
     Ops.push_back(resource->GetTmpVariable("BYTE", "16#1"));
-    resource->ExecuteInsn("LD", Ops, true);
+    resource->ExecuteInsn("LDN", Ops);
 
     Ops2.clear();
     Ops2.push_back(Storage_BYTE);
-    resource->ExecuteInsn("ST", Ops2, true);
+    resource->ExecuteInsn("STN", Ops2);
 
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BYTE", "16#FE"));
@@ -324,8 +324,8 @@ TEST(InsnTestSuite, LD_ST_ComplexDataTypeTest) {
     Ops2.push_back(Storage_STR);
 
     std::cout << "Testing STRING " << std::endl;
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("ST", Ops2, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("ST", Ops2);
 
     ASSERT_TRUE(*resource->__CurrentResult == *Op);
 
@@ -363,8 +363,8 @@ TEST(InsnTestSuite, LD_ST_ComplexDataTypeTest) {
     Ops.push_back(resource->GetTmpVariable("COMPLEX_STRUCT_1", ""));
     Ops2.push_back(Storage_complex_struct);
 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("ST", Ops2, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("ST", Ops2);
 
     ASSERT_TRUE(*resource->__CurrentResult == *Ops[0]);
     ASSERT_TRUE(*resource->__CurrentResult == *Storage_complex_struct);
@@ -380,8 +380,8 @@ TEST(InsnTestSuite, LD_ST_ComplexDataTypeTest) {
     Ops.push_back(configuration.GetExternVariable("complex_global"));
     Ops2.push_back(Storage_complex_struct);
 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("ST", Ops2, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("ST", Ops2);
 
     ASSERT_TRUE(*resource->__CurrentResult == *Ops[0]);
     ASSERT_TRUE(*resource->__CurrentResult == *Storage_complex_struct);
@@ -399,8 +399,8 @@ TEST(InsnTestSuite, LD_ST_ComplexDataTypeTest) {
     Ops.push_back(resource->GetTmpVariable("COMPLEX_STRUCT_3", ""));
     Ops2.push_back(Storage_complex_struct);
 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("ST", Ops2, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("ST", Ops2);
 
     ASSERT_TRUE(*resource->__CurrentResult == *Ops[0]);
     ASSERT_TRUE(*resource->__CurrentResult == *Storage_complex_struct);
@@ -429,8 +429,8 @@ TEST(InsnTestSuite,ADD_SUB_InsnTest) {
     std::vector<PCVariable*> Ops;
     Ops.clear();
     Ops.push_back(resource->GetTmpVariable("INT", "15")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("ADD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("ADD", Ops);
 
 
     ASSERT_TRUE(*resource->__CurrentResult 
@@ -439,7 +439,7 @@ TEST(InsnTestSuite,ADD_SUB_InsnTest) {
                 DataTypeCategory::INT), 30);
 
 
-    resource->ExecuteInsn("SUB", Ops, false);
+    resource->ExecuteInsn("SUB", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("INT", "15"));
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<int16_t>("",
@@ -448,15 +448,15 @@ TEST(InsnTestSuite,ADD_SUB_InsnTest) {
 
     Ops.clear();
     Ops.push_back(resource->GetTmpVariable("REAL", "1.1")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("ADD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("ADD", Ops);
 
 
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("REAL", "2.2"));
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
                 DataTypeCategory::REAL), (float)2.2);
-    resource->ExecuteInsn("SUB", Ops, false);
+    resource->ExecuteInsn("SUB", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("REAL", "1.1"));
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
@@ -464,15 +464,15 @@ TEST(InsnTestSuite,ADD_SUB_InsnTest) {
 
     Ops.clear();
     Ops.push_back(resource->GetTmpVariable("LREAL", "10.11")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("ADD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("ADD", Ops);
 
 
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("LREAL", "20.22"));
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<double>("",
                 DataTypeCategory::LREAL), 20.22);
-    resource->ExecuteInsn("SUB", Ops, false);
+    resource->ExecuteInsn("SUB", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("LREAL", "10.11"));
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<double>("",
@@ -480,13 +480,13 @@ TEST(InsnTestSuite,ADD_SUB_InsnTest) {
 
     Ops.clear();
     Ops.push_back(resource->GetTmpVariable("TIME", "t#100s")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("ADD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("ADD", Ops);
 
 
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("TIME", "t#200s"));
-    resource->ExecuteInsn("SUB", Ops, false);
+    resource->ExecuteInsn("SUB", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("TIME", "t#100s"));
     
@@ -496,11 +496,11 @@ TEST(InsnTestSuite,ADD_SUB_InsnTest) {
     Ops.clear();
     auto tmp = resource->GetTmpVariable("LREAL", "10.11");
     Ops.push_back(tmp);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
     for (int i = 0; i < 10; i++)
         Ops.push_back(tmp); 
-    resource->ExecuteInsn("ADD", Ops, false);
+    resource->ExecuteInsn("ADD", Ops);
     std::cout << "Value: " << resource->__CurrentResult->GetValueStoredAtField<double>("",
             DataTypeCategory::LREAL) << std::endl;
     ASSERT_TRUE(*resource->__CurrentResult == *resource->GetTmpVariable("LREAL",
@@ -509,7 +509,7 @@ TEST(InsnTestSuite,ADD_SUB_InsnTest) {
     Ops.clear();
     tmp = resource->GetTmpVariable("LREAL", "10.11");
     Ops.push_back(tmp);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
     PCVariable * Storage_INT = configuration.GetVariablePointerToMem(
         1, 0, "INT");
@@ -517,7 +517,7 @@ TEST(InsnTestSuite,ADD_SUB_InsnTest) {
     Storage_INT->SetField("", "10");
     for (int i = 0; i < 10; i++)
         Ops.push_back(Storage_INT); 
-    resource->ExecuteInsn("ADD", Ops, false);
+    resource->ExecuteInsn("ADD", Ops);
 
     ASSERT_TRUE(*resource->__CurrentResult == *resource->GetTmpVariable("INT",
             "110"));
@@ -528,10 +528,10 @@ TEST(InsnTestSuite,ADD_SUB_InsnTest) {
     Ops.clear();
     tmp = resource->GetTmpVariable("DT", "dt#2020-01-31 00:00:01");
     Ops.push_back(tmp);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
     Ops.push_back(resource->GetTmpVariable("TIME", "t#59s")); 
-    resource->ExecuteInsn("ADD", Ops, false);
+    resource->ExecuteInsn("ADD", Ops);
     DateTODDataType to_check;
     to_check.Date.Year = 2020;
     to_check.Date.Month = 1;
@@ -545,10 +545,10 @@ TEST(InsnTestSuite,ADD_SUB_InsnTest) {
     Ops.clear();
     tmp = resource->GetTmpVariable("TOD", "tod#00:00:01");
     Ops.push_back(tmp);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
     Ops.push_back(resource->GetTmpVariable("TIME", "t#59s")); 
-    resource->ExecuteInsn("ADD", Ops, false);
+    resource->ExecuteInsn("ADD", Ops);
     TODDataType tod_check;
     
     tod_check.Hr = 0;
@@ -562,10 +562,10 @@ TEST(InsnTestSuite,ADD_SUB_InsnTest) {
     Ops.clear();
     tmp = resource->GetTmpVariable("TOD", "tod#00:00:01");
     Ops.push_back(tmp);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
     Ops.push_back(resource->GetTmpVariable("TIME", "t#59s")); 
-    resource->ExecuteInsn("SUB", Ops, false);
+    resource->ExecuteInsn("SUB", Ops);
     tod_check.Hr = 23;
     tod_check.Min = 59;
     tod_check.Sec = 2;
@@ -575,10 +575,10 @@ TEST(InsnTestSuite,ADD_SUB_InsnTest) {
     Ops.clear();
     tmp = resource->GetTmpVariable("TOD", "tod#23:59:01");
     Ops.push_back(tmp);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
     Ops.push_back(resource->GetTmpVariable("TOD", "tod#23:50:01")); 
-    resource->ExecuteInsn("SUB", Ops, false);
+    resource->ExecuteInsn("SUB", Ops);
     TimeType time_check;
     time_check.SecsElapsed = 540;
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<TimeType>(
@@ -587,10 +587,10 @@ TEST(InsnTestSuite,ADD_SUB_InsnTest) {
     Ops.clear();
     tmp = resource->GetTmpVariable("DT", "dt#2020-01-31 00:00:01");
     Ops.push_back(tmp);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
     Ops.push_back(resource->GetTmpVariable("TIME", "t#59s")); 
-    resource->ExecuteInsn("SUB", Ops, false);
+    resource->ExecuteInsn("SUB", Ops);
     to_check.Date.Year = 2020;
     to_check.Date.Month = 1;
     to_check.Date.Day = 30;
@@ -603,10 +603,10 @@ TEST(InsnTestSuite,ADD_SUB_InsnTest) {
     Ops.clear();
     tmp = resource->GetTmpVariable("DT", "dt#2020-01-31 00:00:01");
     Ops.push_back(tmp);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
     Ops.push_back(resource->GetTmpVariable("DT", "dt#2020-01-30 01:00:01")); 
-    resource->ExecuteInsn("SUB", Ops, false);
+    resource->ExecuteInsn("SUB", Ops);
     time_check.SecsElapsed = 23*3600;
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<TimeType>(
         "", DataTypeCategory::TIME), time_check);
@@ -614,10 +614,10 @@ TEST(InsnTestSuite,ADD_SUB_InsnTest) {
     Ops.clear();
     tmp = resource->GetTmpVariable("DATE", "d#2020-01-31");
     Ops.push_back(tmp);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
     Ops.push_back(resource->GetTmpVariable("DATE", "d#2020-01-30")); 
-    resource->ExecuteInsn("SUB", Ops, false);
+    resource->ExecuteInsn("SUB", Ops);
     time_check.SecsElapsed = 24*3600;
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<TimeType>(
         "", DataTypeCategory::TIME), time_check);
@@ -640,8 +640,8 @@ TEST(InsnTestSuite, MUL_DIV_InsnTest) {
     std::vector<PCVariable*> Ops;
     Ops.clear();
     Ops.push_back(resource->GetTmpVariable("INT", "15")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("MUL", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("MUL", Ops);
 
 
     ASSERT_TRUE(*resource->__CurrentResult 
@@ -650,7 +650,7 @@ TEST(InsnTestSuite, MUL_DIV_InsnTest) {
                 DataTypeCategory::INT), 225);
 
 
-    resource->ExecuteInsn("DIV", Ops, false);
+    resource->ExecuteInsn("DIV", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("INT", "15"));
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<int16_t>("",
@@ -660,15 +660,15 @@ TEST(InsnTestSuite, MUL_DIV_InsnTest) {
 
     Ops.clear();
     Ops.push_back(resource->GetTmpVariable("REAL", "1.1")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("MUL", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("MUL", Ops);
 
 
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("REAL", "1.21"));
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
                 DataTypeCategory::REAL), (float)1.21);
-    resource->ExecuteInsn("DIV", Ops, false);
+    resource->ExecuteInsn("DIV", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("REAL", "1.1"));
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<float>("",
@@ -676,11 +676,11 @@ TEST(InsnTestSuite, MUL_DIV_InsnTest) {
 
     Ops.clear();
     Ops.push_back(resource->GetTmpVariable("LREAL", "10.11")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("MUL", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("MUL", Ops);
 
     
-    resource->ExecuteInsn("DIV", Ops, false);
+    resource->ExecuteInsn("DIV", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("LREAL", "10.11"));
     EXPECT_EQ(resource->__CurrentResult->GetValueStoredAtField<double>("",
@@ -690,11 +690,11 @@ TEST(InsnTestSuite, MUL_DIV_InsnTest) {
     Ops.clear();
     auto tmp = resource->GetTmpVariable("LREAL", "10.11");
     Ops.push_back(tmp);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
     for (int i = 0; i < 2; i++)
         Ops.push_back(tmp); 
-    resource->ExecuteInsn("MUL", Ops, false);
+    resource->ExecuteInsn("MUL", Ops);
     ASSERT_TRUE(*resource->__CurrentResult >= *resource->GetTmpVariable("LREAL",
             "1033.36"));
     ASSERT_TRUE(*resource->__CurrentResult <= *resource->GetTmpVariable("LREAL",
@@ -703,7 +703,7 @@ TEST(InsnTestSuite, MUL_DIV_InsnTest) {
     Ops.clear();
     tmp = resource->GetTmpVariable("LREAL", "10.11");
     Ops.push_back(tmp);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
     PCVariable * Storage_INT = configuration.GetVariablePointerToMem(
         1, 0, "INT");
@@ -711,7 +711,7 @@ TEST(InsnTestSuite, MUL_DIV_InsnTest) {
     Storage_INT->SetField("", "10");
     for (int i = 0; i < 2; i++)
         Ops.push_back(Storage_INT); 
-    resource->ExecuteInsn("MUL", Ops, false);
+    resource->ExecuteInsn("MUL", Ops);
     ASSERT_TRUE(*resource->__CurrentResult == *resource->GetTmpVariable("INT",
             "1000"));
 
@@ -719,11 +719,11 @@ TEST(InsnTestSuite, MUL_DIV_InsnTest) {
     Ops.clear();
     tmp = resource->GetTmpVariable("TIME", "t#100s");
     Ops.push_back(tmp);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
     
     Ops.push_back(resource->GetTmpVariable("INT", "10")); 
-    resource->ExecuteInsn("MUL", Ops, false);
+    resource->ExecuteInsn("MUL", Ops);
     ASSERT_TRUE(*resource->__CurrentResult == *resource->GetTmpVariable("TIME",
             "t#1000s"));
 
@@ -731,11 +731,11 @@ TEST(InsnTestSuite, MUL_DIV_InsnTest) {
     Ops.clear();
     tmp = resource->GetTmpVariable("TIME", "t#100s");
     Ops.push_back(tmp);
-    resource->ExecuteInsn("LD", Ops, false);
+    resource->ExecuteInsn("LD", Ops);
     Ops.clear();
     
     Ops.push_back(resource->GetTmpVariable("INT", "10")); 
-    resource->ExecuteInsn("DIV", Ops, false);
+    resource->ExecuteInsn("DIV", Ops);
     ASSERT_TRUE(*resource->__CurrentResult == *resource->GetTmpVariable("TIME",
             "t#10s"));
 
@@ -761,8 +761,8 @@ TEST(InsnTestSuite,LE_LT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("INT", "15")); 
     Ops2.push_back(resource->GetTmpVariable("INT", "16")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("LT", Ops2, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("LT", Ops2);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -770,8 +770,8 @@ TEST(InsnTestSuite,LE_LT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("INT", "15")); 
     Ops2.push_back(resource->GetTmpVariable("INT", "15")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("LE", Ops2, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("LE", Ops2);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -779,8 +779,8 @@ TEST(InsnTestSuite,LE_LT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("BYTE", "16#FE")); //0xFE is -2
     Ops2.push_back(resource->GetTmpVariable("BYTE", "16#FC")); //0xFC is -3
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("LT", Ops2, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("LT", Ops2);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "0"));
 
@@ -788,8 +788,8 @@ TEST(InsnTestSuite,LE_LT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("BYTE", "16#FE")); 
     Ops2.push_back(resource->GetTmpVariable("BYTE", "16#FE")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("LE", Ops2, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("LE", Ops2);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -797,8 +797,8 @@ TEST(InsnTestSuite,LE_LT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("WORD", "16#1FE")); 
     Ops2.push_back(resource->GetTmpVariable("WORD", "16#1FC")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("LT", Ops2, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("LT", Ops2);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "0"));
 
@@ -806,8 +806,8 @@ TEST(InsnTestSuite,LE_LT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("WORD", "16#1FE")); 
     Ops2.push_back(resource->GetTmpVariable("WORD", "16#1FE")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("LE", Ops2, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("LE", Ops2);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -815,8 +815,8 @@ TEST(InsnTestSuite,LE_LT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("DWORD", "16#FFE")); 
     Ops2.push_back(resource->GetTmpVariable("DWORD", "16#FFC")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("LT", Ops2, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("LT", Ops2);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "0"));
 
@@ -824,8 +824,8 @@ TEST(InsnTestSuite,LE_LT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("DWORD", "16#FFE")); 
     Ops2.push_back(resource->GetTmpVariable("DWORD", "16#FFC")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("LE", Ops2, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("LE", Ops2);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "0"));
 
@@ -834,8 +834,8 @@ TEST(InsnTestSuite,LE_LT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("REAL", "1.1")); 
     Ops2.push_back(resource->GetTmpVariable("REAL", "1.2")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("LT", Ops2, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("LT", Ops2);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -843,8 +843,8 @@ TEST(InsnTestSuite,LE_LT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("REAL", "1.11")); 
     Ops2.push_back(resource->GetTmpVariable("REAL", "1.11")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("LE", Ops2, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("LE", Ops2);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -852,8 +852,8 @@ TEST(InsnTestSuite,LE_LT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("LREAL", "1.1")); 
     Ops2.push_back(resource->GetTmpVariable("LREAL", "1.2")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("LT", Ops2, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("LT", Ops2);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -861,8 +861,8 @@ TEST(InsnTestSuite,LE_LT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("LREAL", "1.11")); 
     Ops2.push_back(resource->GetTmpVariable("LREAL", "1.11")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("LE", Ops2, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("LE", Ops2);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -870,8 +870,8 @@ TEST(InsnTestSuite,LE_LT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("TOD", "tod#01:02:03")); 
     Ops2.push_back(resource->GetTmpVariable("TOD", "tod#01:03:03")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("LT", Ops2, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("LT", Ops2);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -879,8 +879,8 @@ TEST(InsnTestSuite,LE_LT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("TOD", "tod#10:01:05")); 
     Ops2.push_back(resource->GetTmpVariable("TOD", "tod#10:01:05")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("LE", Ops2, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("LE", Ops2);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -888,8 +888,8 @@ TEST(InsnTestSuite,LE_LT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("TIME", "t#10s")); 
     Ops2.push_back(resource->GetTmpVariable("TIME", "t#10s")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("LT", Ops2, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("LT", Ops2);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "0"));
 
@@ -897,8 +897,8 @@ TEST(InsnTestSuite,LE_LT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("TIME", "t#10s")); 
     Ops2.push_back(resource->GetTmpVariable("TIME", "t#10s")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("LE", Ops2, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("LE", Ops2);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
     configuration.Cleanup();
@@ -924,8 +924,8 @@ TEST(InsnTestSuite,GE_GT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("INT", "15")); 
     Ops2.push_back(resource->GetTmpVariable("INT", "16")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("GT", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("GT", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -933,8 +933,8 @@ TEST(InsnTestSuite,GE_GT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("INT", "15")); 
     Ops2.push_back(resource->GetTmpVariable("INT", "15")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("GE", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("GE", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -942,8 +942,8 @@ TEST(InsnTestSuite,GE_GT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("BYTE", "16#FE")); //0xFE is -2
     Ops2.push_back(resource->GetTmpVariable("BYTE", "16#FC")); //0xFC is -3
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("GT", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("GT", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "0"));
 
@@ -951,8 +951,8 @@ TEST(InsnTestSuite,GE_GT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("BYTE", "16#FE")); 
     Ops2.push_back(resource->GetTmpVariable("BYTE", "16#FE")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("GE", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("GE", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -960,8 +960,8 @@ TEST(InsnTestSuite,GE_GT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("WORD", "16#1FE")); 
     Ops2.push_back(resource->GetTmpVariable("WORD", "16#1FC")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("GT", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("GT", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "0"));
 
@@ -969,8 +969,8 @@ TEST(InsnTestSuite,GE_GT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("WORD", "16#1FE")); 
     Ops2.push_back(resource->GetTmpVariable("WORD", "16#1FE")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("GE", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("GE", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -978,8 +978,8 @@ TEST(InsnTestSuite,GE_GT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("DWORD", "16#FFE")); 
     Ops2.push_back(resource->GetTmpVariable("DWORD", "16#FFC")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("GT", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("GT", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "0"));
 
@@ -987,8 +987,8 @@ TEST(InsnTestSuite,GE_GT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("DWORD", "16#FFE")); 
     Ops2.push_back(resource->GetTmpVariable("DWORD", "16#FFC")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("GE", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("GE", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "0"));
 
@@ -997,8 +997,8 @@ TEST(InsnTestSuite,GE_GT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("REAL", "1.1")); 
     Ops2.push_back(resource->GetTmpVariable("REAL", "1.2")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("GT", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("GT", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -1006,8 +1006,8 @@ TEST(InsnTestSuite,GE_GT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("REAL", "1.11")); 
     Ops2.push_back(resource->GetTmpVariable("REAL", "1.11")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("GE", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("GE", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -1015,8 +1015,8 @@ TEST(InsnTestSuite,GE_GT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("LREAL", "1.1")); 
     Ops2.push_back(resource->GetTmpVariable("LREAL", "1.2")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("GT", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("GT", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -1024,8 +1024,8 @@ TEST(InsnTestSuite,GE_GT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("LREAL", "1.11")); 
     Ops2.push_back(resource->GetTmpVariable("LREAL", "1.11")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("GE", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("GE", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -1033,8 +1033,8 @@ TEST(InsnTestSuite,GE_GT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("TOD", "tod#01:02:03")); 
     Ops2.push_back(resource->GetTmpVariable("TOD", "tod#01:03:03")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("GT", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("GT", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -1042,8 +1042,8 @@ TEST(InsnTestSuite,GE_GT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("TOD", "tod#10:01:05")); 
     Ops2.push_back(resource->GetTmpVariable("TOD", "tod#10:01:05")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("GE", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("GE", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -1051,8 +1051,8 @@ TEST(InsnTestSuite,GE_GT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("TIME", "t#10s")); 
     Ops2.push_back(resource->GetTmpVariable("TIME", "t#10s")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("GT", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("GT", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "0"));
 
@@ -1060,8 +1060,8 @@ TEST(InsnTestSuite,GE_GT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("TIME", "t#10s")); 
     Ops2.push_back(resource->GetTmpVariable("TIME", "t#10s")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("GE", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("GE", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -1069,8 +1069,8 @@ TEST(InsnTestSuite,GE_GT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("DT", "dt#2010-01-02 10:01:02")); 
     Ops2.push_back(resource->GetTmpVariable("DT", "dt#2011-01-02 10:01:02")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("GT", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("GT", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -1079,8 +1079,8 @@ TEST(InsnTestSuite,GE_GT_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("DT", "dt#2010-01-02 10:01:02")); 
     Ops2.push_back(resource->GetTmpVariable("DT", "dt#2010-01-02 10:02:02")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("GE", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("GE", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -1107,8 +1107,8 @@ TEST(InsnTestSuite,EQ_NE_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("INT", "15")); 
     Ops2.push_back(resource->GetTmpVariable("INT", "16")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("NE", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("NE", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -1116,8 +1116,8 @@ TEST(InsnTestSuite,EQ_NE_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("INT", "15")); 
     Ops2.push_back(resource->GetTmpVariable("INT", "15")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("EQ", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("EQ", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -1125,8 +1125,8 @@ TEST(InsnTestSuite,EQ_NE_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("BYTE", "16#FE")); //0xFE is -2
     Ops2.push_back(resource->GetTmpVariable("BYTE", "16#FC")); //0xFC is -3
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("NE", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("NE", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -1134,8 +1134,8 @@ TEST(InsnTestSuite,EQ_NE_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("BYTE", "16#FE")); 
     Ops2.push_back(resource->GetTmpVariable("BYTE", "16#FE")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("EQ", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("EQ", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -1143,8 +1143,8 @@ TEST(InsnTestSuite,EQ_NE_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("WORD", "16#1FE")); 
     Ops2.push_back(resource->GetTmpVariable("WORD", "16#1FC")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("EQ", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("EQ", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "0"));
 
@@ -1152,8 +1152,8 @@ TEST(InsnTestSuite,EQ_NE_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("WORD", "16#1FE")); 
     Ops2.push_back(resource->GetTmpVariable("WORD", "16#1FE")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("NE", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("NE", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "0"));
 
@@ -1161,8 +1161,8 @@ TEST(InsnTestSuite,EQ_NE_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("DWORD", "16#FFE")); 
     Ops2.push_back(resource->GetTmpVariable("DWORD", "16#FFC")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("EQ", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("EQ", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "0"));
 
@@ -1170,8 +1170,8 @@ TEST(InsnTestSuite,EQ_NE_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("DWORD", "16#FFE")); 
     Ops2.push_back(resource->GetTmpVariable("DWORD", "16#FFC")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("NE", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("NE", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -1180,8 +1180,8 @@ TEST(InsnTestSuite,EQ_NE_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("REAL", "1.1")); 
     Ops2.push_back(resource->GetTmpVariable("REAL", "1.2")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("EQ", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("EQ", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "0"));
 
@@ -1189,8 +1189,8 @@ TEST(InsnTestSuite,EQ_NE_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("REAL", "1.11")); 
     Ops2.push_back(resource->GetTmpVariable("REAL", "1.11")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("NE", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("NE", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "0"));
 
@@ -1198,8 +1198,8 @@ TEST(InsnTestSuite,EQ_NE_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("LREAL", "1.1")); 
     Ops2.push_back(resource->GetTmpVariable("LREAL", "1.2")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("NE", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("NE", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -1207,8 +1207,8 @@ TEST(InsnTestSuite,EQ_NE_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("LREAL", "1.11")); 
     Ops2.push_back(resource->GetTmpVariable("LREAL", "1.11")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("EQ", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("EQ", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -1216,8 +1216,8 @@ TEST(InsnTestSuite,EQ_NE_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("TOD", "tod#01:02:03")); 
     Ops2.push_back(resource->GetTmpVariable("TOD", "tod#01:03:03")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("NE", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("NE", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -1225,8 +1225,8 @@ TEST(InsnTestSuite,EQ_NE_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("TOD", "tod#10:01:05")); 
     Ops2.push_back(resource->GetTmpVariable("TOD", "tod#10:01:05")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("EQ", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("EQ", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -1234,8 +1234,8 @@ TEST(InsnTestSuite,EQ_NE_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("TIME", "t#10s")); 
     Ops2.push_back(resource->GetTmpVariable("TIME", "t#10s")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("EQ", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("EQ", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -1243,8 +1243,8 @@ TEST(InsnTestSuite,EQ_NE_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("TIME", "t#10s")); 
     Ops2.push_back(resource->GetTmpVariable("TIME", "t#10s")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("NE", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("NE", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "0"));
 
@@ -1253,8 +1253,8 @@ TEST(InsnTestSuite,EQ_NE_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("DT", "dt#2010-01-02 10:01:02")); 
     Ops2.push_back(resource->GetTmpVariable("DT", "dt#2010-01-02 10:01:02")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("EQ", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("EQ", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -1263,8 +1263,8 @@ TEST(InsnTestSuite,EQ_NE_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("DT", "dt#2010-01-02 10:01:02")); 
     Ops2.push_back(resource->GetTmpVariable("DT", "dt#2010-01-02 10:02:02")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("NE", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("NE", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -1291,17 +1291,17 @@ TEST(InsnTestSuite, BitwiseOps_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("BOOL", "1")); 
     Ops2.push_back(resource->GetTmpVariable("BOOL", "0")); 
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("AND", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("AND", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "0"));
-    resource->ExecuteInsn("OR", Ops, false);
+    resource->ExecuteInsn("OR", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1")); 
-    resource->ExecuteInsn("XOR", Ops, false);
+    resource->ExecuteInsn("XOR", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "0"));
-    resource->ExecuteInsn("XOR", Ops, false);
+    resource->ExecuteInsn("XOR", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BOOL", "1"));
 
@@ -1310,14 +1310,14 @@ TEST(InsnTestSuite, BitwiseOps_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("BYTE", "16#FE")); //0xFE is -2
     Ops2.push_back(resource->GetTmpVariable("BYTE", "16#FC")); //0xFC is -3
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("AND", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("AND", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BYTE", "16#FC"));
-    resource->ExecuteInsn("OR", Ops, false);
+    resource->ExecuteInsn("OR", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BYTE", "16#FE"));
-    resource->ExecuteInsn("XOR", Ops, false);
+    resource->ExecuteInsn("XOR", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BYTE", "16#0"));
 
@@ -1325,14 +1325,14 @@ TEST(InsnTestSuite, BitwiseOps_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("WORD", "16#1FE")); //0xFE is -2
     Ops2.push_back(resource->GetTmpVariable("WORD", "16#FC")); //0xFC is -3
-    resource->ExecuteInsn("LD", Ops2, false);
-    resource->ExecuteInsn("AND", Ops, false);
+    resource->ExecuteInsn("LD", Ops2);
+    resource->ExecuteInsn("AND", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("WORD", "16#FC"));
-    resource->ExecuteInsn("OR", Ops, false);
+    resource->ExecuteInsn("OR", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("WORD", "16#1FE"));
-    resource->ExecuteInsn("XOR", Ops, false);
+    resource->ExecuteInsn("XOR", Ops);
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("WORD", "16#0"));
 
@@ -1340,13 +1340,13 @@ TEST(InsnTestSuite, BitwiseOps_InsnTest) {
     Ops2.clear();
     Ops.push_back(resource->GetTmpVariable("BYTE", "16#FE")); 
     Ops2.push_back(resource->GetTmpVariable("INT", "1")); 
-    resource->ExecuteInsn("LD", Ops, false);
-    resource->ExecuteInsn("SHL", Ops2, false);
+    resource->ExecuteInsn("LD", Ops);
+    resource->ExecuteInsn("SHL", Ops2);
     auto tmp = (int16_t)resource->__CurrentResult->GetValueStoredAtField<uint8_t>("", DataTypeCategory::BYTE);
     std::cout << "SHL Value: " << tmp << std::endl;
     ASSERT_TRUE(*resource->__CurrentResult 
                         == *resource->GetTmpVariable("BYTE", "16#FC"));
-    resource->ExecuteInsn("SHR", Ops2, false);
+    resource->ExecuteInsn("SHR", Ops2);
     tmp = (int16_t)resource->__CurrentResult->GetValueStoredAtField<uint8_t>("", DataTypeCategory::BYTE);
     std::cout << "SHR Value: " << tmp << std::endl;
 

@@ -35,6 +35,65 @@ using ResourceSpecification = pc_specification::ResourceSpecification;
 using MachineSpec = pc_specification::MachineSpecification;
 #define STRING(s) #s
 
+bool Utils::IsOperandImmediate(string Operand) {
+    if (Operand.empty())
+        return false;
+    if (Operand[0] >= '0' && Operand[0] <= '9') 
+        return true;
+
+    if (Operand.find("#") != string::npos)
+        return true;
+
+    if(Operand[0] == '"')
+        return true;
+
+    if (Operand == "TRUE" || Operand == "true" || Operand == "True" ||
+        Operand == "FALSE" || Operand == "false" || Operand == "False")
+        return true;
+    return false;
+
+}
+
+void Utils::ExtractCallInterfaceMapping(
+    std::unordered_map<string, string>& VarsToSet,
+    std::unordered_map<string, string>& VarsToGet,
+    string FullInterfaceString) {
+    std::vector<string> Values;
+    string Init;
+
+    boost::trim_if(FullInterfaceString, boost::is_any_of("\t ,()"));
+    boost::split(Values, FullInterfaceString,
+    boost::is_any_of(",\n\t"), boost::token_compress_on); 
+
+    for (int i = 0; i < Values.size(); i++) {
+        boost::trim_if(Values[i], boost::is_any_of("\t "));
+        auto pos = Values[i].find(":=");
+        if (pos != string::npos) {
+            string VarToSet, ValueToSet;
+
+            VarToSet = Values[i].substr(0, pos);
+            ValueToSet = Values[i].substr(pos + 2);
+            boost::trim_if(VarToSet, boost::is_any_of("\t "));
+            boost::trim_if(ValueToSet, boost::is_any_of("\t "));
+
+            VarsToSet.insert(std::make_pair(VarToSet, ValueToSet));
+        } else {
+
+            pos = Values[i].find("=>");
+            if (pos != string::npos) {
+                string VarToGet, VarToSet;
+
+                VarToGet = Values[i].substr(0, pos);
+                VarToSet = Values[i].substr(pos + 2);
+                boost::trim_if(VarToGet, boost::is_any_of("\t "));
+                boost::trim_if(VarToSet, boost::is_any_of("\t "));
+
+                VarsToGet.insert(std::make_pair(VarToGet, VarToSet));
+            }
+        }
+    }    
+}
+
 bool Utils::GenerateFullSpecification(string SystemSpecificationPath,
     Specification& full_specification) {
 

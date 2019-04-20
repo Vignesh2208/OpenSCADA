@@ -147,6 +147,8 @@ void Task::Cleanup() {
             __AssociatedPrograms[i]->Cleanup();
     }
     __AssociatedPrograms.clear();
+    delete __CR;
+    delete FCRegistry;
 }
 
 

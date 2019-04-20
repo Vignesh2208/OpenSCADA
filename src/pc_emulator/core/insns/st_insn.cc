@@ -8,7 +8,7 @@ using namespace pc_specification;
 /*
  * Sets the Current result accumulator to the passed operand.
  */
-void ST_Insn::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
+void ST_Insn::Execute(std::vector<PCVariable*>& Operands) {
     auto Logger = __AssociatedResource->__configuration->PCLogger.get();
 
     if (Operands.size() != 1) {
@@ -35,7 +35,7 @@ void ST_Insn::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
             " do not match !");
     }
 
-    if (isNegated) {
+    if (IsNegated) {
         assert(Operand->__VariableDataType->__DataTypeCategory
             != DataTypeCategory::POU);
         std:: cout << "ST Insn Getting Copy\n";

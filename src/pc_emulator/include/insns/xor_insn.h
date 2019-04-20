@@ -9,18 +9,17 @@ namespace pc_emulator {
     //! Bitwise XOR instruction
     class XOR_Insn: public Insn {
         public:
-            XOR_Insn(PCResourceImpl * AssociatedResource) {
+            XOR_Insn(PCResourceImpl * AssociatedResource, bool isNegated) {
                 __AssociatedResource = AssociatedResource;
                 __InsnName = "XOR";
+                IsNegated = isNegated;
             };
 
            //! Called to execute the instruction
             /*!
                 \param Operands     Operands to the instruction
-                \param isNegated    Should operands be negated before instruction operation
             */
-            void Execute(std::vector<PCVariable*>& Operands,
-                    bool isNegated);
+            void Execute(std::vector<PCVariable*>& Operands);
     };
 }
 

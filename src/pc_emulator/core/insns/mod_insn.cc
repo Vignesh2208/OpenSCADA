@@ -8,7 +8,7 @@ using namespace pc_specification;
 /*
  * Sets the Current result accumulator to the passed operand.
  */
-void MOD_Insn::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
+void MOD_Insn::Execute(std::vector<PCVariable*>& Operands) {
     auto Logger = __AssociatedResource->__configuration->PCLogger.get();
 
     if (Operands.size() != 1) {

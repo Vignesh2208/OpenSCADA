@@ -27,6 +27,7 @@ namespace pc_emulator {
     class Task;
     class InsnRegistry;
     class SFCRegistry;
+    class SFBRegistry;
 
     //! Compact description of a task associated with a resource
     class CompactTaskDescription {
@@ -78,8 +79,7 @@ namespace pc_emulator {
                 __CodeContainers; /*!< Holds the code body for each POU */
             std::unordered_map<std::string, std::unique_ptr<Task>> 
                 __Tasks; /*!< Holds each task associated with this resource keyed by name */
-            std::unordered_map<int, priority_queue<CompactTaskDescription>> 
-                __IntervalTasksByPriority;
+            Task * __IntervalTask;
             std::unordered_map<string, std::vector<Task*>> 
                 __InterruptTasks; /*!< Holds all interrupt tasks associated with this resource*/
                    
@@ -102,6 +102,7 @@ namespace pc_emulator {
             PCVariable * __CurrentResult;   /*!< CR register for the resource */
             InsnRegistry *  __InsnRegistry; /*!< Stores all registered instructions */
             SFCRegistry * __SFCRegistry; /*!< Stores all registered SFCs */
+            SFBRegistry * __SFBRegistry;
             
             //!Constructor
             /*!
@@ -118,6 +119,8 @@ namespace pc_emulator {
 
             //! Register and initialize all POU variables defined within the resource
             void InitializeAllPoUVars();
+
+            void InitializeAllSFBVars();
 
             //! Resolve external fields of all POU variables
             void ResolveAllExternalFields();
@@ -145,11 +148,8 @@ namespace pc_emulator {
                 \param InsnName Name of the instruction
                 \param  Ops  List of operands to the instruction. The __CurrentResult
                             is always a default operand.
-                \param isNegated    Specifies if the operands are to be negated
-                            first before being operated on.
             */
-            void ExecuteInsn(string InsnName, std::vector<PCVariable*>& Ops,
-                            bool isNegated);
+            void ExecuteInsn(string InsnName, std::vector<PCVariable*>& Ops);
 
             //! Queues a task
             void QueueTask(Task* Tsk);   
@@ -191,7 +191,7 @@ namespace pc_emulator {
             PCVariable * GetVariableForImmediateOperand(string OperandValue);
 
             //! Creates a new code container for a POU and registers it
-            PoUCodeContainer * CreateNewCodeContainer(string PoUDataTypeName);
+            PoUCodeContainer * CreateNewCodeContainer(PCDataType* PoUDataType);
 
             //! Returns a code container for a specific POU or nullptr if not found
             PoUCodeContainer * GetCodeContainer(string PoUDataTypeName);

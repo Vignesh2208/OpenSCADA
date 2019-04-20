@@ -9,18 +9,17 @@ namespace pc_emulator {
     //! Greater than instruction
     class GT_Insn: public Insn {
         public:
-            GT_Insn(PCResourceImpl * AssociatedResource) {
+            GT_Insn(PCResourceImpl * AssociatedResource, bool isNegated) {
                 __AssociatedResource = AssociatedResource;
+                IsNegated = isNegated;
                 __InsnName = "GT";
             };
 
            //! Called to execute the instruction
             /*!
                 \param Operands     Operands to the instruction
-                \param isNegated    Should operands be negated before instruction operation
             */
-            void Execute(std::vector<PCVariable*>& Operands,
-                    bool isNegated);
+            void Execute(std::vector<PCVariable*>& Operands);
     };
 }
 

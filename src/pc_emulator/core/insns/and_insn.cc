@@ -11,7 +11,7 @@ using namespace pc_specification;
 /*
  * Sets the Current result accumulator to the passed operand.
  */
-void AND_Insn::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
+void AND_Insn::Execute(std::vector<PCVariable*>& Operands) {
     auto Logger = __AssociatedResource->__configuration->PCLogger.get();
 
     if (Operands.size() != 1) {
@@ -82,7 +82,7 @@ void AND_Insn::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
     }
 
     
-    if (isNegated) {
+    if (IsNegated) {
         *CurrentResult = *CurrentResult & !(*Operand);
     } else {
         *CurrentResult = *CurrentResult & *Operand;

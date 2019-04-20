@@ -9,18 +9,17 @@ namespace pc_emulator {
     //! Subtraction instruction
     class SUB_Insn: public Insn {
         public:
-            SUB_Insn(PCResourceImpl * AssociatedResource) {
+            SUB_Insn(PCResourceImpl * AssociatedResource, bool isNegated) {
                 __AssociatedResource = AssociatedResource;
                 __InsnName = "SUB";
+                IsNegated = isNegated;
             };
 
            //! Called to execute the instruction
             /*!
                 \param Operands     Operands to the instruction
-                \param isNegated    Should operands be negated before instruction operation
             */
-            void Execute(std::vector<PCVariable*>& Operands,
-                    bool isNegated);
+            void Execute(std::vector<PCVariable*>& Operands);
     };
 }
 

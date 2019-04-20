@@ -26,8 +26,6 @@ namespace pc_emulator {
             bool __Initialized; /*!< Set to true after a PoU is assigned to this
                 executor */
             Task* __AssociatedTask; /*!< Task associated with this executor */
-            PCVariable * __CR; /*! local copy of the current result register of
-                               the associated resource */
 
             //!Constructor
             Executor(PCConfigurationImpl* configuration,
@@ -39,10 +37,6 @@ namespace pc_emulator {
                 __CodeContainer(nullptr),
                 __Initialized(false),
                 __AssociatedTask(AssociatedTask) {
-                    __CR = new PCVariable((PCConfiguration *)configuration,
-                                (PCResource *) AssociatedResource,
-                                "__CR", "BOOL");
-                    __CR->AllocateAndInitialize();
                 };
 
             //! Sets a PoU to this executor
@@ -64,6 +58,8 @@ namespace pc_emulator {
             */
             int RunInsn(InsnContainer& insn_container);
 
+            bool IsCRSet();
+            
             //! Saves the current result register of the resource
             void SaveCPURegisters();
 

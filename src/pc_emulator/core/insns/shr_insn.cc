@@ -6,7 +6,7 @@ using namespace std;
 using namespace pc_emulator;
 using namespace pc_specification;
 
-void SHR_Insn::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
+void SHR_Insn::Execute(std::vector<PCVariable*>& Operands) {
     auto configuration = __AssociatedResource->__configuration;
     auto CR = __AssociatedResource->__CurrentResult;
 

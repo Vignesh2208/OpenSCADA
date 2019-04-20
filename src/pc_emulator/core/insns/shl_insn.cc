@@ -9,7 +9,7 @@ using namespace pc_specification;
 /*
  * Sets the Current result accumulator to the passed operand.
  */
-void SHL_Insn::Execute(std::vector<PCVariable*>& Operands, bool isNegated) {
+void SHL_Insn::Execute(std::vector<PCVariable*>& Operands) {
     auto configuration = __AssociatedResource->__configuration;
     auto CR = __AssociatedResource->__CurrentResult;
 

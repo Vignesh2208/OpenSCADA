@@ -27,7 +27,7 @@ PoUCodeContainer& PoUCodeContainer::AddInstruction(string InsnString) {
     }
 
     if (boost::ends_with(results[0],":")) { //first element is label
-        InsnLabel = results[0];
+        InsnLabel = results[0].substr(0, results[0].length() - 1);
         InsnName = results[1];
     } else {
         InsnLabel = "";
@@ -50,8 +50,28 @@ PoUCodeContainer& PoUCodeContainer::AddInstruction(string InsnString) {
         StartIdx ++;
     }
 
-    for(;StartIdx < results.size(); StartIdx ++) {
-        container->AddOperand(results[StartIdx]);
+    if (InsnName != "CAL" && InsnName != "CALC" && InsnName != "CALCN") {
+        for(;StartIdx < results.size(); StartIdx ++) {
+            string Op = results[StartIdx];
+            if (boost::ends_with(results[StartIdx], ",")) 
+                Op = results[StartIdx].substr(0, results[StartIdx].length()-1);
+            container->AddOperand(Op);
+        }
+    } else {
+        string Op;
+        if (!InsnLabel.empty())
+            Op = InsnString.substr(results[0].length() 
+                    + results[1].length() + 2);
+        else
+            Op = InsnString.substr(results[0].length() + 1);
+        
+        auto pos = Op.find("(");
+        assert(pos != string::npos); // no arguments
+        string PoUName = Op.substr(0, pos);
+        boost::trim_if(PoUName, boost::is_any_of("\t ,()"));
+        container->AddOperand(PoUName);
+        container->AddOperand(Op.substr(pos, string::npos));
+        
     }
 
     __Insns.push_back(std::move(container));

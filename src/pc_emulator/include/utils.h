@@ -296,6 +296,13 @@ namespace pc_emulator {
             static bool GenerateFullSpecification(
                 string SystemSpecificationPath,
                 Specification& full_specification);
+
+            static bool IsOperandImmediate(string Operand);
+
+            static void ExtractCallInterfaceMapping(
+                std::unordered_map<string, string>& VarsToSet,
+                std::unordered_map<string, string>& VarsToGet,
+                string FullInterfaceString);
     };
 }   
 

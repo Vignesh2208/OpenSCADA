@@ -12,6 +12,7 @@
 #include "pc_mem_unit.h"
 #include "pc_variable.h"
 #include "executor.h"
+#include "functions_registry.h"
 #include "src/pc_emulator/proto/configuration.pb.h"
 
 using namespace std;
@@ -28,7 +29,6 @@ namespace pc_emulator {
     class PCVariable;
     class PCResourceImpl;
     class Task;
-    
 
 
     class ProgramContainer {
@@ -55,36 +55,60 @@ namespace pc_emulator {
             int __interval_ms;
             PCConfigurationImpl * __configuration;
             PCResourceImpl * __AssociatedResource;
+            PCVariable * __CR;
             string __trigger_variable_name;
             bool __trigger_variable_previous_value;
             bool __IsReady;
+            bool __Executing;
             double __nxt_schedule_time_ms;
             std::vector<std::unique_ptr<ProgramContainer>> __AssociatedPrograms;
+            FunctionsRegistry * FCRegistry;
             
 
             Task(PCConfigurationImpl * configuration,
                 PCResourceImpl * AssociatedResource,
-                const TaskSpecification& task_spec):
+                const IntervalTaskSpecification& task_spec):
                          __configuration(configuration),
                          __AssociatedResource(AssociatedResource) {
                 __TaskName = task_spec.task_name();
                 __priority = task_spec.priority();
-                type = task_spec.type();
-
-                if (task_spec.has_interval_task_params()) {
-                    assert(type == TaskType::INTERVAL);
-                    __interval_ms 
-                            = task_spec.interval_task_params().interval_ms();
-                    __IsReady = true;
-                } else if (task_spec.has_interrupt_task_params()) {
-                    assert(type == TaskType::INTERRUPT);
-                    __trigger_variable_name 
-                        = task_spec.interrupt_task_params()
-                                    .trigger_variable_field();
-                    __IsReady = false;
-                }
-
+                type = TaskType::INTERVAL;
+                __interval_ms 
+                        = task_spec.interval_task_params().interval_ms();
+                __IsReady = true;
+                __trigger_variable_name = "";
                 __nxt_schedule_time_ms = 0.0;
+
+                 __CR = new PCVariable((PCConfiguration *)configuration,
+                                    (PCResource *) AssociatedResource,
+                                    "__CurrentResult", "BOOL");
+                __CR->AllocateAndInitialize();
+                __Executing = false;
+
+                FCRegistry = new FunctionsRegistry(AssociatedResource);
+            };
+
+            Task(PCConfigurationImpl * configuration,
+                PCResourceImpl * AssociatedResource,
+                const InterruptTaskSpecification& task_spec):
+                         __configuration(configuration),
+                         __AssociatedResource(AssociatedResource) {
+                __TaskName = task_spec.task_name();
+                __priority = task_spec.priority();
+                type = TaskType::INTERRUPT;
+                __interval_ms = 0;
+                __trigger_variable_name 
+                    = task_spec.interrupt_task_params()
+                                .trigger_variable_field();
+                __IsReady = false;
+                __nxt_schedule_time_ms = 0.0;
+
+                 __CR = new PCVariable((PCConfiguration *)configuration,
+                                    (PCResource *) AssociatedResource,
+                                    "__CurrentResult", "BOOL");
+                __CR->AllocateAndInitialize();
+                __Executing = false;
+                FCRegistry = new FunctionsRegistry(AssociatedResource);
             };
 
             void SetNextScheduleTime(double nxt_schedule_time_ms) {
