@@ -201,6 +201,9 @@ void PCResourceImpl::InitializeAllSFBVars() {
         Utils::InitializeDataType(__configuration, new_var_type.get(),
                                 pou_var);
 
+        auto code_container = CreateNewCodeContainer(new_var_type.get());
+        assert(code_container != nullptr);
+
         __configuration->RegisteredDataTypes->RegisterDataType(
                                     pou_var.name(),
                                     std::move(new_var_type));
@@ -220,9 +223,7 @@ void PCResourceImpl::InitializeAllSFBVars() {
                                                     = PoUType::PROGRAM;
 
         RegisterPoUVariable(pou_var.name(), std::move(new_pou_var));
-        auto code_container = CreateNewCodeContainer(new_var_type.get());
-        assert(code_container != nullptr);
-
+        
         for (auto& insn : pou_var.code_body().insn()) {
             code_container->AddInstruction(insn);
         }
@@ -298,7 +299,9 @@ void PCResourceImpl::InitializeAllPoUVars() {
                 Utils::InitializeDataType(__configuration, new_var_type.get(),
                                         pou_var);
 
-                
+                auto code_container = CreateNewCodeContainer(new_var_type.get());
+                assert(code_container != nullptr);
+       
                 __configuration->RegisteredDataTypes->RegisterDataType(
                                             pou_var.name(),
                                             std::move(new_var_type));
@@ -319,9 +322,7 @@ void PCResourceImpl::InitializeAllPoUVars() {
 
                 RegisterPoUVariable(pou_var.name(), std::move(new_pou_var));
 
-                auto code_container = CreateNewCodeContainer(new_var_type.get());
-                assert(code_container != nullptr);
-
+                
                 for (auto& insn : pou_var.code_body().insn()) {
                     code_container->AddInstruction(insn);
                 }
@@ -687,7 +688,6 @@ PCVariable * PCResourceImpl::GetTmpVariable(string VariableDataTypeName,
                 Init += ",";
             }
             Init += "}";
-            std:: cout << "Init = " << Init << std::endl;
             V->SetField("",Init);
         } else {
             V->SetField("", InitialValue);
@@ -716,7 +716,7 @@ PCVariable * PCResourceImpl::GetVariableForImmediateOperand(string OperandValue)
             VariableTypeName = "BYTE";
         } else if (OperandValue.length() <= 7) {
             VariableTypeName = "WORD";
-        } else if (OperandValue.length() <= 9) {
+        } else if (OperandValue.length() <= 11) {
             VariableTypeName = "DWORD";
         } else {
             VariableTypeName = "LWORD";
@@ -738,7 +738,7 @@ PCVariable * PCResourceImpl::GetVariableForImmediateOperand(string OperandValue)
     } else if (OperandValue.find(".") != string::npos) {
         VariableTypeName = "REAL";
     } else {
-        VariableTypeName = "DINT";
+        VariableTypeName = "INT";
     }
 
     return GetTmpVariable(VariableTypeName, InitValue);

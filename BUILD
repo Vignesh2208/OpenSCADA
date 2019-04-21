@@ -75,6 +75,15 @@ cc_test(
 )
 
 cc_test(
+    name = "execution_test",
+    srcs = ["src/pc_emulator/tests/execution_tests/execution_test.cc"],
+    copts = ["-Iexternal/gtest/include -fpermissive -Wno-reorder"],
+    deps = [":pc_emulator_lib",
+           "@gtest//:main"],
+    linkstatic = 1,
+)
+
+cc_test(
     name = "insn_test",
     srcs = ["src/pc_emulator/tests/insn_tests/insn_test.cc"],
     copts = ["-Iexternal/gtest/include -fpermissive -Wno-reorder"],

@@ -11,6 +11,7 @@
 #include "src/pc_emulator/include/pc_resource.h"
 #include "src/pc_emulator/include/executor.h"
 #include "src/pc_emulator/include/task.h"
+#include "src/pc_emulator/include/functions_registry.h"
 
 
 using namespace std;
@@ -42,6 +43,52 @@ ProgramContainer::ProgramContainer(PCResourceImpl * AssociatedResource,
 }
 
 void ProgramContainer::Cleanup() {
+}
+
+Task::Task(PCConfigurationImpl * configuration, 
+    PCResourceImpl * AssociatedResource,
+    const IntervalTaskSpecification& task_spec):
+                __configuration(configuration),
+                __AssociatedResource(AssociatedResource) {
+    __TaskName = task_spec.task_name();
+    __priority = task_spec.priority();
+    type = TaskType::INTERVAL;
+    __interval_ms 
+            = task_spec.interval_task_params().interval_ms();
+    __IsReady = true;
+    __trigger_variable_name = "";
+    __nxt_schedule_time_ms = 0.0;
+
+        __CR = new PCVariable((PCConfiguration *)configuration,
+                        (PCResource *) AssociatedResource,
+                        "__CurrentResult", "BOOL");
+    __CR->AllocateAndInitialize();
+    __Executing = false;
+
+    FCRegistry = new FunctionsRegistry(AssociatedResource);
+}
+
+Task::Task(PCConfigurationImpl * configuration,
+    PCResourceImpl * AssociatedResource,
+    const InterruptTaskSpecification& task_spec):
+                __configuration(configuration),
+                __AssociatedResource(AssociatedResource) {
+    __TaskName = task_spec.task_name();
+    __priority = task_spec.priority();
+    type = TaskType::INTERRUPT;
+    __interval_ms = 0;
+    __trigger_variable_name 
+        = task_spec.interrupt_task_params()
+                    .trigger_variable_field();
+    __IsReady = false;
+    __nxt_schedule_time_ms = 0.0;
+
+        __CR = new PCVariable((PCConfiguration *)configuration,
+                        (PCResource *) AssociatedResource,
+                        "__CurrentResult", "BOOL");
+    __CR->AllocateAndInitialize();
+    __Executing = false;
+    FCRegistry = new FunctionsRegistry(AssociatedResource);
 }
 
 void Task::AddProgramToTask(const ProgramSpecification& program_spec) {

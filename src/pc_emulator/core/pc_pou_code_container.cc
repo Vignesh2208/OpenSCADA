@@ -21,10 +21,10 @@ PoUCodeContainer& PoUCodeContainer::AddInstruction(string InsnString) {
     string InsnName;
     size_t StartIdx = 1;
 
-    if (results.size() < 2) {
+    /*if (results.size() < 2) {
         __configuration->PCLogger->RaiseException("Incorrectly formatted "
             "instruction: " + InsnString);
-    }
+    }*/
 
     if (boost::ends_with(results[0],":")) { //first element is label
         InsnLabel = results[0].substr(0, results[0].length() - 1);
@@ -53,6 +53,9 @@ PoUCodeContainer& PoUCodeContainer::AddInstruction(string InsnString) {
     if (InsnName != "CAL" && InsnName != "CALC" && InsnName != "CALCN") {
         for(;StartIdx < results.size(); StartIdx ++) {
             string Op = results[StartIdx];
+
+            if (Op.empty())
+                continue;
             if (boost::ends_with(results[StartIdx], ",")) 
                 Op = results[StartIdx].substr(0, results[StartIdx].length()-1);
             container->AddOperand(Op);

@@ -11,6 +11,7 @@
 #include "src/pc_emulator/include/task.h"
 #include "src/pc_emulator/include/utils.h"
 #include "src/pc_emulator/include/sfb_registry.h"
+#include "src/pc_emulator/include/functions_registry.h"
 
 using namespace std;
 using namespace pc_emulator;
