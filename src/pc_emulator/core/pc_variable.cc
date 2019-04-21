@@ -93,6 +93,9 @@ PCVariable::PCVariable(PCConfiguration * configuration,
         __IsTemporary = true;
     else
         __IsTemporary = false;
+
+    __FirstRead = true;
+    __FirstReturn = false;
 }
 
 void PCVariable::Cleanup() {
@@ -176,6 +179,25 @@ void PCVariable::OnExecutorStartup() {
             = GetPtrToField(DefinedField.__FieldName);
         InitializeVariable(FieldVariable, DefinedField.__InitialValue);
     }
+
+    for(auto& DefinedField: 
+        __VariableDataType->__FieldsByInterfaceType[
+            FieldIntfType::VAR_INPUT]) {
+        
+        PCVariable* FieldVariable 
+            = GetPtrToField(DefinedField.__FieldName);
+        FieldVariable->__FirstRead = true;
+    }
+
+    for(auto& DefinedField: 
+        __VariableDataType->__FieldsByInterfaceType[
+            FieldIntfType::VAR_EXPLICIT_STORAGE]) {
+        
+        PCVariable* FieldVariable 
+            = GetPtrToField(DefinedField.__FieldName);
+        FieldVariable->__FirstRead = true;
+    }
+
 }
 
 void PCVariable::ParseRemFieldAttributes(std::vector<string>& NestedFields,
@@ -469,6 +491,10 @@ PCVariable* PCVariable::GetPtrToField(string NestedFieldName) {
         VariablePtrToField->__TotalSizeInBits = sizeof(PCVariable *) * 8;   
     }
 
+    if (Attributes.FieldDetails.__FieldName == "CU") {
+        std::cout << "CU Qualifier: " 
+        << Attributes.FieldDetails.__FieldQualifier << std::endl;
+    }
     VariablePtrToField->__VariableAttributes = Attributes;
     VariablePtrToField->__IsTemporary = __IsTemporary;
 
@@ -1438,50 +1464,110 @@ void PCVariable::GetAndStoreValue(string NestedFieldName,
     assert (Value != nullptr);
     assert(__VariableDataType->IsFieldPresent(NestedFieldName) == true);
     
+    PCVariable * PointedVariable;
+    PCVariable* PointerAtFieldLocation = nullptr;
+    bool RelevantValueRead;
     if (!NestedFieldName.empty()) {
-        PCVariable* PointerAtFieldLocation = GetPtrStoredAtField(NestedFieldName);
+        PointedVariable =  GetPtrToField(NestedFieldName);
+        PointerAtFieldLocation = GetPtrStoredAtField(NestedFieldName);
+        
+        
         if (PointerAtFieldLocation != nullptr) {
             
-            return PointerAtFieldLocation->GetAndStoreValue("", Value, CopySize,
+            if (CategoryOfDataType != DataTypeCategory::BOOL) {
+                    
+                return PointerAtFieldLocation->GetAndStoreValue("", Value, CopySize,
                                                             CategoryOfDataType);
+            } else if (CategoryOfDataType == DataTypeCategory::BOOL
+                &&      PointedVariable->__VariableAttributes
+                            .FieldDetails.__FieldQualifier 
+                        == pc_specification::FieldQualifiers::NONE) {
+                return PointerAtFieldLocation->GetAndStoreValue("", Value, CopySize,
+                                                            CategoryOfDataType);
+            } else if (CategoryOfDataType == DataTypeCategory::BOOL
+                && PointedVariable->__FirstRead) {
+                PointerAtFieldLocation->GetAndStoreValue("", Value, CopySize,
+                                                            CategoryOfDataType);
+                RelevantValueRead = *(bool *)Value;
 
-        } 
+            } else {
+                *(bool *) Value = PointedVariable->__FirstReturn;
+                return;
+            }
+        } else {
+            if (CategoryOfDataType == DataTypeCategory::BOOL) {
+                RelevantValueRead 
+                = SafeBitRead(&PointedVariable->__MemoryLocation,
+                    PointedVariable->__ByteOffset, PointedVariable->__BitOffset);
+            }
+        }
     }
-    PCVariable * PointedVariable;
+   
 
-    if (!NestedFieldName.empty())
-        PointedVariable =  GetPtrToField(NestedFieldName);
-    else
+    if (NestedFieldName.empty())  {
         PointedVariable = this;
-    
+        if (CategoryOfDataType == DataTypeCategory::BOOL) {
+            RelevantValueRead 
+            = SafeBitRead(&PointedVariable->__MemoryLocation,
+                PointedVariable->__ByteOffset, PointedVariable->__BitOffset);
+        }
+    }
+
     assert(PointedVariable->__VariableDataType->__DataTypeCategory
         == CategoryOfDataType);
 
     if (CategoryOfDataType == DataTypeCategory::BOOL) {
-        if (SafeBitRead(&PointedVariable->__MemoryLocation,
-                PointedVariable->__ByteOffset, PointedVariable->__BitOffset)) {
+
+
+        if (!PointedVariable->__FirstRead
+            && (PointedVariable->__VariableAttributes
+                    .FieldDetails.__FieldQualifier 
+                == pc_specification::FieldQualifiers::F_EDGE
+                || PointedVariable->__VariableAttributes
+                    .FieldDetails.__FieldQualifier 
+                == pc_specification::FieldQualifiers::R_EDGE)) {
+                    
+            *(bool *)Value = PointedVariable->__FirstReturn;
+            return;
+        }
+
+
+        if (RelevantValueRead) {
 
             if (PointedVariable->__VariableAttributes
                 .FieldDetails.__FieldQualifier 
                 == pc_specification::FieldQualifiers::R_EDGE) {
 
+                std::cout << "Reading TRUE R_EDGE" << std::endl;
+                
                 if (!PointedVariable->__PrevValue) {
                     *(bool *) Value = true;
-                    PointedVariable->__PrevValue = true;
+
+                    if (PointedVariable->__FirstRead) 
+                        PointedVariable->__PrevValue = true;
+
                 } else {
                      *(bool *) Value = false;
-                    PointedVariable->__PrevValue = true;
-                }
 
+                    if (PointedVariable->__FirstRead) 
+                        PointedVariable->__PrevValue = true;
+                }
+                std::cout << "Value returned: " << *(bool *)Value << std::endl;
             } else if (PointedVariable->__VariableAttributes
                 .FieldDetails.__FieldQualifier 
                 == pc_specification::FieldQualifiers::F_EDGE) {
                 if (!PointedVariable->__PrevValue) {
                     *(bool *) Value = false;
-                    PointedVariable->__PrevValue = true;
+
+                    if (PointedVariable->__FirstRead) 
+                        PointedVariable->__PrevValue = true;
+
                 } else {
                      *(bool *) Value = false;
-                    PointedVariable->__PrevValue = true;
+
+                    if (PointedVariable->__FirstRead) 
+                        PointedVariable->__PrevValue = true;
+
                 }
 
 
@@ -1493,23 +1579,35 @@ void PCVariable::GetAndStoreValue(string NestedFieldName,
                 .FieldDetails.__FieldQualifier 
                 == pc_specification::FieldQualifiers::R_EDGE) {
 
+                std::cout << "Reading FALSE R_EDGE" << std::endl;
                 if (!PointedVariable->__PrevValue) {
                     *(bool *) Value = false;
-                    PointedVariable->__PrevValue = false;
+
+                    if (PointedVariable->__FirstRead) 
+                        PointedVariable->__PrevValue = false;
+
                 } else {
                      *(bool *) Value = false;
-                    PointedVariable->__PrevValue = false;
-                }
+                    
+                    if (PointedVariable->__FirstRead) 
+                        PointedVariable->__PrevValue = false;
 
+                }
+                std::cout << "Value returned: " << *(bool *)Value << std::endl;
             } else if (PointedVariable->__VariableAttributes
                 .FieldDetails.__FieldQualifier 
                 == pc_specification::FieldQualifiers::F_EDGE) {
                 if (!PointedVariable->__PrevValue) {
                     *(bool *) Value = false;
-                    PointedVariable->__PrevValue = false;
+
+                    if (PointedVariable->__FirstRead) 
+                        PointedVariable->__PrevValue = false;
+
                 } else {
                      *(bool *) Value = true;
-                    PointedVariable->__PrevValue = false;
+
+                    if (PointedVariable->__FirstRead) 
+                        PointedVariable->__PrevValue = false;
                 }
 
 
@@ -1517,6 +1615,11 @@ void PCVariable::GetAndStoreValue(string NestedFieldName,
                 *(bool *) Value = false;
             }
         }
+
+        if (PointedVariable->__FirstRead) {
+            PointedVariable->__FirstReturn = *(bool *)Value;
+            PointedVariable->__FirstRead = false;
+        } 
         return;
     }
     SafeMemRead(Value, &PointedVariable->__MemoryLocation, CopySize,
@@ -1826,8 +1929,9 @@ PCVariable& PCVariable::operator=(PCVariable& V) {
         assert(__TotalSizeInBits == V.__TotalSizeInBits);
         if (this->__VariableDataType->__DataTypeCategory 
                 == DataTypeCategory::BOOL) {
-            if (SafeBitRead(&V.__MemoryLocation,
-                    V.__ByteOffset, V.__BitOffset)) {
+            bool ValueRead = V.GetValueStoredAtField<bool>("",
+                DataTypeCategory::BOOL);
+            if (ValueRead) {
                 SafeBitWrite(&__MemoryLocation, __ByteOffset,
                             __BitOffset, true);
             } else {
@@ -1850,10 +1954,26 @@ PCVariable& PCVariable::operator=(PCVariable& V) {
         __ByteOffset = 0;
         __BitOffset = 0;
         __VariableDataType = V.__VariableDataType;
-        __MemoryLocation.CopyFromMemUnit(&V.__MemoryLocation, V.__ByteOffset,
+
+        if (V.__VariableDataType->__DataTypeCategory 
+                == DataTypeCategory::BOOL) {
+            bool ValueRead = V.GetValueStoredAtField<bool>("",
+                DataTypeCategory::BOOL);
+            if (ValueRead) {
+                SafeBitWrite(&__MemoryLocation, __ByteOffset,
+                            __BitOffset, true);
+            } else {
+                SafeBitWrite(&__MemoryLocation, __ByteOffset, __BitOffset,
+                    false);
+            }
+        } else {
+            __MemoryLocation.CopyFromMemUnit(&V.__MemoryLocation, V.__ByteOffset,
                 CopySize, __ByteOffset);
+        }
+        
         __TotalSizeInBits = V.__TotalSizeInBits;
         __VariableAttributes = V.__VariableAttributes;
+        __VariableAttributes.FieldDetails.__FieldQualifier = FieldQualifiers::NONE;
         __IsTemporary = true;
     }
     

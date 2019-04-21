@@ -1245,12 +1245,14 @@ void Utils::InitializeDataType(PCConfiguration * __configuration,
         // field qualifiers R_EDGE and F_EDGE can only be specified for
         // VAR_INPUT or VAR_EXPLICIT_STORAGE bool variables 
         if (field_type_ptr->__DataTypeCategory != DataTypeCategory::BOOL
-            || field.intf_type() != FieldIntfType::VAR_INPUT
-            || field.intf_type() != FieldIntfType::VAR_EXPLICIT_STORAGE) {
+            && (field.intf_type() != FieldIntfType::VAR_INPUT
+              || field.intf_type() != FieldIntfType::VAR_EXPLICIT_STORAGE)) {
             field_qualifier = FieldQualifiers::NONE; 
         }
         
-
+        if (field.field_name() == "CU") {
+            std::cout << "CU Set qualifier: " << field_qualifier << std::endl;
+        }
         
         if (field.has_initial_value())
             assert(field.intf_type() != VAR_EXPLICIT_STORAGE

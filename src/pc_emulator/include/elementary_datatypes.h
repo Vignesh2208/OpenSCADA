@@ -318,7 +318,7 @@ namespace pc_emulator {
 
     // Time data type. Contains seconds elapsed
     struct TIMEDataType {
-        s64 SecsElapsed;
+        double SecsElapsed;
 
 
         //! Add operator for two time data types

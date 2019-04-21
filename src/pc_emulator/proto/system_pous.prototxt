@@ -206,7 +206,7 @@ system_pou {
         insn: "SUB 1"
         insn: "ST CV"
         insn: "end: LD CV"
-        insn: "GE 0"
+        insn: "LE 0"
         insn: "ST Q"
     }
 }
@@ -242,6 +242,16 @@ system_pou {
         intf_type: VAR_INPUT
     }
     datatype_field {
+        field_name: "CU_Flag"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_TEMP
+    }
+    datatype_field {
+        field_name: "CD_Flag"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_TEMP
+    }
+    datatype_field {
         field_name: "QU"
         field_datatype_name: "BOOL"
         intf_type: VAR_OUTPUT
@@ -257,17 +267,21 @@ system_pou {
         intf_type: VAR_OUTPUT
     }
     code_body {
+        insn: "LD CU"
+        insn: "ST CU_Flag"
+        insn: "LD CD"
+        insn: "ST CD_Flag"
         insn: "LD R"
-        insn: "JMPCN end"
+        insn: "JMPCN else1"
         insn: "LD 0"
         insn: "ST CV"
         insn: "JMP end"
-        insn: "LD LD"
-        insn: "JMPCN end"
+        insn: "else1: LD LD"
+        insn: "JMPCN else2"
         insn: "LD PV"
         insn: "ST CV"
         insn: "JMP end"
-        insn: "LD CD"
+        insn: "else2: LD CD"
         insn: "AND CU"
         insn: "NOT"
         insn: "JMPCN end"
@@ -278,10 +292,11 @@ system_pou {
         insn: "LD CV"
         insn: "ADD 1"
         insn: "ST CV"
+        insn: "JMP end"
         insn: "else: LD CV"
         insn: "GT 0"
         insn: "AND CD"
-        insn: "JMCN end"
+        insn: "JMPCN end"
         insn: "LD CV"
         insn: "SUB 1"
         insn: "ST CV"

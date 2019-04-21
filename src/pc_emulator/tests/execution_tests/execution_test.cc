@@ -198,7 +198,7 @@ TEST(ExecutionTestSuite, InsnCodeBodyProcessingTest) {
     EXPECT_EQ(CTD->GetInsn(13)->InsnName, "LD");
     EXPECT_EQ(CTD->GetInsn(13)->OperandList[0], "CV");
     EXPECT_EQ(CTD->GetInsn(13)->InsnLabel, "end");
-    EXPECT_EQ(CTD->GetInsn(14)->InsnName, "GE");
+    EXPECT_EQ(CTD->GetInsn(14)->InsnName, "LE");
     EXPECT_EQ(CTD->GetInsn(14)->OperandList[0], "0");
     EXPECT_EQ(CTD->GetInsn(15)->InsnName, "ST");
     EXPECT_EQ(CTD->GetInsn(15)->OperandList[0], "Q");
@@ -480,6 +480,525 @@ TEST(ExecutionTestSuite, RS_FlipFlop_Execution_Test) {
     new_executor.Run();
     EXPECT_EQ(RS_FB->GetValueStoredAtField<bool>("Q1",
                 DataTypeCategory::BOOL), true);
+
+    new_executor.CleanUp();
+    configuration.Cleanup();
+
+}
+
+
+TEST(ExecutionTestSuite, CTU_Counter_Execution_Test) {
+    string TestDir = Utils::GetInstallationDirectory() 
+            + "/src/pc_emulator/tests/execution_tests";
+
+    std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+
+    PCResourceImpl * resource 
+        = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
+                    "CPU_001");
+    
+    PCVariable * CTU_FB = resource->GetPOU("CTU");
+    IntervalTaskSpecification task_spec;
+    IntervalTaskParams*  task_params = new IntervalTaskParams;
+    task_spec.set_task_name("Task1");
+    task_spec.set_priority(1);
+    task_params->set_interval_ms(10);
+    task_spec.set_allocated_interval_task_params(task_params);
+    Task new_task((PCConfigurationImpl*)&configuration, resource, task_spec);
+    Executor new_executor(&configuration, resource, &new_task);
+
+    new_executor.SetExecPoUVariable(CTU_FB);
+    CTU_FB->SetField("R", "FALSE");
+    CTU_FB->SetField("PV", "5");
+    CTU_FB->SetField("CU", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(CTU_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 0);
+    EXPECT_EQ(CTU_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+    std::cout << "################################\n";
+    
+    CTU_FB->SetField("CU", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(CTU_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 1);
+    EXPECT_EQ(CTU_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+
+    std::cout << "################################\n";
+
+    
+    CTU_FB->SetField("CU", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(CTU_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 1);
+    EXPECT_EQ(CTU_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+
+    std::cout << "################################\n";
+
+    CTU_FB->SetField("CU", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(CTU_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 2);
+    EXPECT_EQ(CTU_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+    std::cout << "################################\n";
+
+
+    CTU_FB->SetField("CU", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(CTU_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 2);
+    EXPECT_EQ(CTU_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+
+    std::cout << "################################\n";
+
+    CTU_FB->SetField("CU", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(CTU_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 3);
+    EXPECT_EQ(CTU_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+    std::cout << "################################\n";
+
+    CTU_FB->SetField("CU", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(CTU_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 3);
+    EXPECT_EQ(CTU_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+
+    std::cout << "################################\n";
+
+    CTU_FB->SetField("CU", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(CTU_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 4);
+    EXPECT_EQ(CTU_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+    std::cout << "################################\n";
+
+    CTU_FB->SetField("CU", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(CTU_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 4);
+    EXPECT_EQ(CTU_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+
+    std::cout << "################################\n";
+
+    CTU_FB->SetField("CU", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(CTU_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 5);
+    EXPECT_EQ(CTU_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), true);
+    std::cout << "################################\n";
+
+
+    CTU_FB->SetField("CU", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(CTU_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 5);
+    EXPECT_EQ(CTU_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), true);
+
+    std::cout << "################################\n";
+
+    CTU_FB->SetField("CU", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(CTU_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 5);
+    EXPECT_EQ(CTU_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), true);
+    std::cout << "################################\n";
+    
+
+    new_executor.CleanUp();
+    configuration.Cleanup();
+
+}
+
+
+TEST(ExecutionTestSuite, CTD_Counter_Execution_Test) {
+    string TestDir = Utils::GetInstallationDirectory() 
+            + "/src/pc_emulator/tests/execution_tests";
+
+    std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+
+    PCResourceImpl * resource 
+        = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
+                    "CPU_001");
+    
+    PCVariable * CTD_FB = resource->GetPOU("CTD");
+    IntervalTaskSpecification task_spec;
+    IntervalTaskParams*  task_params = new IntervalTaskParams;
+    task_spec.set_task_name("Task1");
+    task_spec.set_priority(1);
+    task_params->set_interval_ms(10);
+    task_spec.set_allocated_interval_task_params(task_params);
+    Task new_task((PCConfigurationImpl*)&configuration, resource, task_spec);
+    Executor new_executor(&configuration, resource, &new_task);
+
+    new_executor.SetExecPoUVariable(CTD_FB);
+    CTD_FB->SetField("LD", "TRUE");
+    CTD_FB->SetField("PV", "5");
+    CTD_FB->SetField("CD", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(CTD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 5);
+    EXPECT_EQ(CTD_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+    std::cout << "################################\n";
+    
+    CTD_FB->SetField("LD", "FALSE");
+    CTD_FB->SetField("CD", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(CTD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 4);
+    EXPECT_EQ(CTD_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+
+    std::cout << "################################\n";
+
+    
+    CTD_FB->SetField("CD", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(CTD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 4);
+    EXPECT_EQ(CTD_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+
+    std::cout << "################################\n";
+
+    CTD_FB->SetField("CD", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(CTD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 3);
+    EXPECT_EQ(CTD_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+    std::cout << "################################\n";
+
+
+    CTD_FB->SetField("CD", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(CTD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 3);
+    EXPECT_EQ(CTD_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+
+    std::cout << "################################\n";
+
+    CTD_FB->SetField("CD", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(CTD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 2);
+    EXPECT_EQ(CTD_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+    std::cout << "################################\n";
+
+    CTD_FB->SetField("CD", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(CTD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 2);
+    EXPECT_EQ(CTD_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+
+    std::cout << "################################\n";
+
+    CTD_FB->SetField("CD", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(CTD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 1);
+    EXPECT_EQ(CTD_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+    std::cout << "################################\n";
+
+    CTD_FB->SetField("CD", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(CTD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 1);
+    EXPECT_EQ(CTD_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+
+    std::cout << "################################\n";
+
+    CTD_FB->SetField("CD", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(CTD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 0);
+    EXPECT_EQ(CTD_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), true);
+    std::cout << "################################\n";
+
+
+    CTD_FB->SetField("CD", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(CTD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 0);
+    EXPECT_EQ(CTD_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), true);
+
+    std::cout << "################################\n";
+
+    CTD_FB->SetField("CD", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(CTD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 0);
+    EXPECT_EQ(CTD_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), true);
+    std::cout << "################################\n";
+    
+
+    new_executor.CleanUp();
+    configuration.Cleanup();
+
+}
+
+
+
+TEST(ExecutionTestSuite, CTUD_Counter_Execution_Test) {
+    string TestDir = Utils::GetInstallationDirectory() 
+            + "/src/pc_emulator/tests/execution_tests";
+
+    std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+
+    PCResourceImpl * resource 
+        = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
+                    "CPU_001");
+    
+    PCVariable * CTUD_FB = resource->GetPOU("CTUD");
+    IntervalTaskSpecification task_spec;
+    IntervalTaskParams*  task_params = new IntervalTaskParams;
+    task_spec.set_task_name("Task1");
+    task_spec.set_priority(1);
+    task_params->set_interval_ms(10);
+    task_spec.set_allocated_interval_task_params(task_params);
+    Task new_task((PCConfigurationImpl*)&configuration, resource, task_spec);
+    Executor new_executor(&configuration, resource, &new_task);
+
+    new_executor.SetExecPoUVariable(CTUD_FB);
+
+    CTUD_FB->SetField("R", "FALSE");
+    CTUD_FB->SetField("LD", "FALSE");
+    CTUD_FB->SetField("CD", "FALSE");
+    CTUD_FB->SetField("PV", "5");
+    CTUD_FB->SetField("CU", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 0);
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<bool>("QU",
+        DataTypeCategory::BOOL), false);
+    std::cout << "################################\n";
+    
+    
+    CTUD_FB->SetField("CU", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 1);
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<bool>("QU",
+        DataTypeCategory::BOOL), false);
+
+    std::cout << "################################\n";
+
+    
+    CTUD_FB->SetField("CU", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 1);
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<bool>("QU",
+        DataTypeCategory::BOOL), false);
+
+    std::cout << "################################\n";
+
+    CTUD_FB->SetField("CU", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 2);
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<bool>("QU",
+        DataTypeCategory::BOOL), false);
+    std::cout << "################################\n";
+
+
+    CTUD_FB->SetField("CU", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 2);
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<bool>("QU",
+        DataTypeCategory::BOOL), false);
+
+    std::cout << "################################\n";
+
+    CTUD_FB->SetField("CU", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 3);
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<bool>("QU",
+        DataTypeCategory::BOOL), false);
+    std::cout << "################################\n";
+
+    CTUD_FB->SetField("CU", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 3);
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<bool>("QU",
+        DataTypeCategory::BOOL), false);
+
+    std::cout << "################################\n";
+
+    CTUD_FB->SetField("CU", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 4);
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<bool>("QU",
+        DataTypeCategory::BOOL), false);
+    std::cout << "################################\n";
+
+    CTUD_FB->SetField("CU", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 4);
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<bool>("QU",
+        DataTypeCategory::BOOL), false);
+
+    std::cout << "################################\n";
+
+    CTUD_FB->SetField("CU", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 5);
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<bool>("QU",
+        DataTypeCategory::BOOL), true);
+    std::cout << "################################\n";
+
+
+    CTUD_FB->SetField("CU", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 5);
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<bool>("QU",
+        DataTypeCategory::BOOL), true);
+
+    std::cout << "################################\n";
+
+    CTUD_FB->SetField("CU", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 5);
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<bool>("QU",
+        DataTypeCategory::BOOL), true);
+    std::cout << "################################\n";
+    
+    // Now count down
+    CTUD_FB->SetField("CD", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 5);
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<bool>("QD",
+        DataTypeCategory::BOOL), false);
+    std::cout << "################################\n";
+    
+    CTUD_FB->SetField("CD", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 4);
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<bool>("QD",
+        DataTypeCategory::BOOL), false);
+
+    std::cout << "################################\n";
+
+    
+    CTUD_FB->SetField("CD", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 4);
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<bool>("QD",
+        DataTypeCategory::BOOL), false);
+
+    std::cout << "################################\n";
+
+    CTUD_FB->SetField("CD", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 3);
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<bool>("QD",
+        DataTypeCategory::BOOL), false);
+    std::cout << "################################\n";
+
+
+    CTUD_FB->SetField("CD", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 3);
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<bool>("QD",
+        DataTypeCategory::BOOL), false);
+
+    std::cout << "################################\n";
+
+    CTUD_FB->SetField("CD", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 2);
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<bool>("QD",
+        DataTypeCategory::BOOL), false);
+    std::cout << "################################\n";
+
+    CTUD_FB->SetField("CD", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 2);
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<bool>("QD",
+        DataTypeCategory::BOOL), false);
+
+    std::cout << "################################\n";
+
+    CTUD_FB->SetField("CD", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 1);
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<bool>("QD",
+        DataTypeCategory::BOOL), false);
+    std::cout << "################################\n";
+
+    CTUD_FB->SetField("CD", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 1);
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<bool>("QD",
+        DataTypeCategory::BOOL), false);
+
+    std::cout << "################################\n";
+
+    CTUD_FB->SetField("CD", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 0);
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<bool>("QD",
+        DataTypeCategory::BOOL), true);
+    std::cout << "################################\n";
+
+
+    CTUD_FB->SetField("CD", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 0);
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<bool>("QD",
+        DataTypeCategory::BOOL), true);
+
+    std::cout << "################################\n";
+
+    CTUD_FB->SetField("CD", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<int16_t>("CV",
+        DataTypeCategory::INT), 0);
+    EXPECT_EQ(CTUD_FB->GetValueStoredAtField<bool>("QD",
+        DataTypeCategory::BOOL), true);
+    std::cout << "################################\n";
 
     new_executor.CleanUp();
     configuration.Cleanup();

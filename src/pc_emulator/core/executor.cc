@@ -68,10 +68,6 @@ void Executor::Run() {
             idx = -1;
         } else {
             idx = RunInsn(*insn_container);
-            std::cout << "Nxt insn: " << idx  << ", Max: " << 
-                 __CodeContainer->__InsnCount <<
-                 " CR: " << __AssociatedTask->__CR->GetValueStoredAtField<bool>("",
-                    DataTypeCategory::BOOL) << std::endl;
         }
 
         /*
@@ -235,6 +231,8 @@ int Executor::RunInsn(InsnContainer& insn_container) {
             __AssociatedResource->__configuration->PCLogger->RaiseException(
             "Jmp Label: " + JmpLabel + " jumping to same line!"); 
         }
+        std::cout << "Executing: " << insn_container.InsnName << " "
+                << JmpLabel << std::endl;
         return nxt_insn_container->InsnPosition;
 
     } else if (insn_container.InsnName == "RET" 
@@ -267,7 +265,14 @@ int Executor::RunInsn(InsnContainer& insn_container) {
 
         if (Fn == nullptr) {
             // Need to perform access checks here too for LD and ST instructions
-            std::cout << "Executing Insn: " << insn_container.InsnName << std::endl;
+
+            if (insn_container.OperandList.size() > 0) {
+                std::cout << "Executing Insn: " << insn_container.InsnName 
+                << " " << insn_container.OperandList[0] << std::endl;
+            } else {
+                std::cout << "Executing Insn: " << insn_container.InsnName 
+                 << std::endl;
+            }
             auto InsnObj = __AssociatedResource->__InsnRegistry->GetInsn(
                 insn_container.InsnName);
 
@@ -280,8 +285,15 @@ int Executor::RunInsn(InsnContainer& insn_container) {
 
                 if (SFCObj != nullptr) {
                     SFCObj->Execute(__AssociatedTask->__CR, Ops);
+                } else {
+                    __AssociatedResource
+                    ->__configuration->PCLogger->RaiseException("Opcode: "
+                        + insn_container.InsnName + " not recognized "
+                        " as a valid IL Instruction or SFC!");
                 }
             }
+            
+            std::cout << "Finished Insn" << std::endl;
             return insn_container.InsnPosition + 1;
         } else {
             auto FnDataType = Fn->__VariableDataType;
@@ -314,15 +326,14 @@ int Executor::RunInsn(InsnContainer& insn_container) {
 }
 
 bool Executor::IsCRSet() {
-    if (__AssociatedResource
-        ->__CurrentResult->__VariableDataType->__DataTypeCategory 
+    if (__AssociatedTask
+        ->__CR->__VariableDataType->__DataTypeCategory 
         != DataTypeCategory::BOOL) {
         __AssociatedResource->__configuration->PCLogger->RaiseException(
             "CR type error before executing a conditional control flow instruction!");
     }
 
-    bool Value = __AssociatedResource
-                    ->__CurrentResult->GetValueStoredAtField<bool>("",
+    bool Value = __AssociatedTask->__CR->GetValueStoredAtField<bool>("",
                         DataTypeCategory::BOOL);
 
     return Value;

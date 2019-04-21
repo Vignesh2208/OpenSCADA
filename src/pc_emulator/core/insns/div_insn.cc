@@ -51,43 +51,43 @@ void DIV_Insn::Execute(PCVariable * __CurrentResult,
                 DataTypeCategory::TIME);
         switch(Operand->__VariableDataType->__DataTypeCategory) {
                 case DataTypeCategory::INT:
-                        Timeval.SecsElapsed /= 
+                        Timeval.SecsElapsed /= (double)
                         Operand->GetValueStoredAtField<int16_t>("",
                                 DataTypeCategory::INT);
                         break;
                 case DataTypeCategory::SINT:
-                        Timeval.SecsElapsed /= 
+                        Timeval.SecsElapsed /= (double)
                         Operand->GetValueStoredAtField<int8_t>("",
                                 DataTypeCategory::SINT);
                         break;
                 case DataTypeCategory::DINT:
-                        Timeval.SecsElapsed /= 
+                        Timeval.SecsElapsed /= (double)
                         Operand->GetValueStoredAtField<int32_t>("",
                                 DataTypeCategory::DINT);
                         break;
                 case DataTypeCategory::LINT:
-                        Timeval.SecsElapsed /= 
+                        Timeval.SecsElapsed /= (double)
                         Operand->GetValueStoredAtField<int64_t>("",
                                 DataTypeCategory::LINT);
                         break;
 
                 case DataTypeCategory::UINT:
-                        Timeval.SecsElapsed /= 
+                        Timeval.SecsElapsed /= (double)
                         Operand->GetValueStoredAtField<uint16_t>("",
                                 DataTypeCategory::UINT);
                         break;
                 case DataTypeCategory::USINT:
-                        Timeval.SecsElapsed /= 
+                        Timeval.SecsElapsed /= (double)
                         Operand->GetValueStoredAtField<uint8_t>("",
                                 DataTypeCategory::USINT);
                         break;
                 case DataTypeCategory::UDINT:
-                        Timeval.SecsElapsed /= 
+                        Timeval.SecsElapsed /= (double)
                         Operand->GetValueStoredAtField<uint32_t>("",
                                 DataTypeCategory::UDINT);
                         break;
                 case DataTypeCategory::ULINT:
-                        Timeval.SecsElapsed /= 
+                        Timeval.SecsElapsed /= (double)
                         Operand->GetValueStoredAtField<uint64_t>("",
                                 DataTypeCategory::ULINT);
                         break;

@@ -1345,7 +1345,7 @@ bool DataTypeUtils::ValueToLReal(string Value, double & LRealValue){
 
 bool DataTypeUtils::ValueToTime(string Value, TimeType & Time){
     if(boost::starts_with(Value, "t#")) {
-        Time.SecsElapsed = boost::lexical_cast<int>(
+        Time.SecsElapsed = boost::lexical_cast<double>(
                     Value.substr(2,Value.length() - 3));
         return true;
     }
@@ -1720,7 +1720,7 @@ void DataTypeUtils::AddToDT(DateTODDataType& Dt, TimeType& Time) {
     std::istringstream ss(Dt1);
     ss >> std::get_time(&t, "%Y-%m-%dT%H:%M:%S");
     time_t SecsSinceEpoch = mktime(&t);
-    SecsSinceEpoch += Time.SecsElapsed;
+    SecsSinceEpoch += (time_t)Time.SecsElapsed;
 
     ptm = gmtime(&SecsSinceEpoch);
 
@@ -1735,7 +1735,7 @@ void DataTypeUtils::AddToDT(DateTODDataType& Dt, TimeType& Time) {
 void DataTypeUtils::AddToTOD(TODDataType& tod, TimeType& Time) {
     unsigned long SecsElapsed = tod.Hr*3600 + tod.Min*60 + tod.Sec;
 
-    SecsElapsed += Time.SecsElapsed;
+    SecsElapsed += (unsigned long)Time.SecsElapsed;
 
     tod.Hr = SecsElapsed / 3600;
     tod.Min = (SecsElapsed - tod.Hr*3600)/60;
@@ -1755,7 +1755,7 @@ void DataTypeUtils::SubFromDT(DateTODDataType& Dt, TimeType& Time) {
     ss >> std::get_time(&t, "%Y-%m-%dT%H:%M:%S");
     time_t SecsSinceEpoch = mktime(&t);
 
-    SecsSinceEpoch -= Time.SecsElapsed;
+    SecsSinceEpoch -= (time_t)Time.SecsElapsed;
 
     ptm = gmtime(&SecsSinceEpoch);
 
@@ -1771,9 +1771,9 @@ void DataTypeUtils::SubFromTOD(TODDataType& tod, TimeType& Time) {
     unsigned long SecsElapsed = tod.Hr*3600 + tod.Min*60 + tod.Sec;
 
     if (Time.SecsElapsed <= SecsElapsed)
-        SecsElapsed -= Time.SecsElapsed;
+        SecsElapsed -= (unsigned long)Time.SecsElapsed;
     else
-        SecsElapsed = (24*3600 - (Time.SecsElapsed - SecsElapsed));
+        SecsElapsed = (24*3600 - ((unsigned long)Time.SecsElapsed - SecsElapsed));
 
     tod.Hr = SecsElapsed / 3600;
     tod.Min = (SecsElapsed - tod.Hr*3600)/60;
@@ -1800,7 +1800,7 @@ TimeType DataTypeUtils::SubDTs(DateTODDataType& Dt1, DateTODDataType& Dt2) {
     time_t SecsSinceEpoch2 = mktime(&t2);
 
     
-    ret.SecsElapsed = SecsSinceEpoch1 - SecsSinceEpoch2;
+    ret.SecsElapsed = (double)SecsSinceEpoch1 - (double)SecsSinceEpoch2;
     
     return ret;
 
@@ -1812,7 +1812,7 @@ TimeType DataTypeUtils::SubTODs(TODDataType& tod1, TODDataType& tod2) {
 
     TimeType ret;
     
-    ret.SecsElapsed = SecsElapsed1 - SecsElapsed2;
+    ret.SecsElapsed = (double)SecsElapsed1 - (double)SecsElapsed2;
     return ret;
 }
 
