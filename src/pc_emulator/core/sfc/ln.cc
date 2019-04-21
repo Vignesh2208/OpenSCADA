@@ -6,9 +6,10 @@ using namespace std;
 using namespace pc_emulator;
 using namespace pc_specification;
 
-void LN::Execute(std::vector<PCVariable*>& Operands) {
+void LN::Execute(PCVariable * __CurrentResult,
+    std::vector<PCVariable*>& Operands) {
     auto configuration = __AssociatedResource->__configuration;
-    auto CR = __AssociatedResource->__CurrentResult;
+    auto CR = __CurrentResult;
     if (!Utils::IsRealType(CR->__VariableDataType)) {
         configuration->PCLogger->RaiseException("LN SFC error: CR is not "
             " a real number");

@@ -252,6 +252,8 @@ void PCResourceImpl::InitializeAllSFBVars() {
 void PCResourceImpl::InitializeAllPoUVars() {
 
     
+    InitializeAllSFBVars();
+    
     for (auto & resource_spec : 
             __configuration->__specification.machine_spec().resource_spec()) {
         if (resource_spec.resource_name() == __ResourceName) {
@@ -353,7 +355,6 @@ void PCResourceImpl::InitializeAllPoUVars() {
         }
     }
 
-    InitializeAllSFBVars();
 
 }
 
@@ -643,13 +644,13 @@ void PCResourceImpl::ExecuteInsn(string InsnName,
     auto InsnObj = __InsnRegistry->GetInsn(InsnName);
 
     if (InsnObj != nullptr) {
-        InsnObj->Execute(Ops);
+        InsnObj->Execute(__CurrentResult, Ops);
     }
 
     auto SFCObj = __SFCRegistry->GetSFC(InsnName);
 
     if (SFCObj != nullptr) {
-        SFCObj->Execute(Ops);
+        SFCObj->Execute(__CurrentResult, Ops);
     }
 }
 

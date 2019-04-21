@@ -6,9 +6,10 @@ using namespace std;
 using namespace pc_emulator;
 using namespace pc_specification;
 
-void ABS::Execute(std::vector<PCVariable*>& Operands) {
+void ABS::Execute(PCVariable *CurrentResult,
+    std::vector<PCVariable*>& Operands) {
     auto configuration = __AssociatedResource->__configuration;
-    auto CR = __AssociatedResource->__CurrentResult;
+    auto CR = CurrentResult;
     if (Utils::IsNumType(CR->__VariableDataType)) {
         int8_t SintValue;
         int16_t IntValue;

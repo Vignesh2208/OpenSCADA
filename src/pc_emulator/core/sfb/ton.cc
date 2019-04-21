@@ -6,7 +6,7 @@ using namespace std;
 using namespace pc_emulator;
 using namespace pc_specification;
 
-void TON::Execute(PCVariable * SFB) {
+void TON::Execute(PCVariable * __CurrentResult, PCVariable * SFB) {
     assert(SFB != nullptr && SFB->__VariableDataType->__DataTypeName
         == __SFBName);
 }

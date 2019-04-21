@@ -1224,13 +1224,17 @@ bool PCDataType::GetPCDataTypeField(string NestedFieldName,
 
 bool DataTypeUtils::ValueToBool(string Value, bool& BoolValue) {
     if(boost::iequals(Value, "True")
-        || boost::iequals(Value, "1")) {
+        || boost::iequals(Value, "1")
+        || boost::iequals(Value, "TRUE")
+        || boost::iequals(Value, "true")) {
         BoolValue = true;
         return true;
     }
 
     if(boost::iequals(Value, "False") 
-        || boost::iequals(Value, "0")) {
+        || boost::iequals(Value, "0")
+        || boost::iequals(Value, "FALSE")
+        || boost::iequals(Value, "false")) {
         BoolValue = false;
         return true;
     }

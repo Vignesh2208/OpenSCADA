@@ -8,7 +8,8 @@ using namespace pc_specification;
 /*
  * Sets the Current result accumulator to the passed operand.
  */
-void LD_Insn::Execute(std::vector<PCVariable*>& Operands) {
+void LD_Insn::Execute(PCVariable * __CurrentResult,
+    std::vector<PCVariable*>& Operands) {
     auto Logger = __AssociatedResource->__configuration->PCLogger.get();
 
     if (Operands.size() != 1) {
@@ -31,9 +32,9 @@ void LD_Insn::Execute(std::vector<PCVariable*>& Operands) {
             != DataTypeCategory::POU);
 
         auto tmp = Operand->GetCopy();
-        *__AssociatedResource->__CurrentResult = !(*tmp.get());
+        *__CurrentResult = !(*tmp.get());
     } else {
-        auto CurrentResult = __AssociatedResource->__CurrentResult;
+        auto CurrentResult = __CurrentResult;
         *CurrentResult = *Operand;
     }
 }

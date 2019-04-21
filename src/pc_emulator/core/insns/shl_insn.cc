@@ -9,9 +9,10 @@ using namespace pc_specification;
 /*
  * Sets the Current result accumulator to the passed operand.
  */
-void SHL_Insn::Execute(std::vector<PCVariable*>& Operands) {
+void SHL_Insn::Execute(PCVariable * __CurrentResult,
+        std::vector<PCVariable*>& Operands) {
     auto configuration = __AssociatedResource->__configuration;
-    auto CR = __AssociatedResource->__CurrentResult;
+    auto CR = __CurrentResult;
 
     uint8_t ByteValue;
     uint16_t WordValue;

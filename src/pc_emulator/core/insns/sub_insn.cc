@@ -8,7 +8,8 @@ using namespace pc_specification;
 /*
  * Sets the Current result accumulator to the passed operand.
  */
-void SUB_Insn::Execute(std::vector<PCVariable*>& Operands) {
+void SUB_Insn::Execute(PCVariable * __CurrentResult,
+                std::vector<PCVariable*>& Operands) {
     auto Logger = __AssociatedResource->__configuration->PCLogger.get();
 
     if (Operands.size() != 1) {
@@ -33,7 +34,7 @@ void SUB_Insn::Execute(std::vector<PCVariable*>& Operands) {
 
     assert(Operand->__VariableDataType->__DataTypeCategory
             != DataTypeCategory::ARRAY);    
-    auto CurrentResult = __AssociatedResource->__CurrentResult;
+    auto CurrentResult = __CurrentResult;
 
     if (CurrentResult->__VariableDataType->__DataTypeCategory 
         == DataTypeCategory::TIME_OF_DAY

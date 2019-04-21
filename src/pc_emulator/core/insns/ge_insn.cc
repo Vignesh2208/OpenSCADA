@@ -11,7 +11,8 @@ using namespace pc_specification;
 /*
  * Sets the Current result accumulator to the passed operand.
  */
-void GE_Insn::Execute(std::vector<PCVariable*>& Operands) {
+void GE_Insn::Execute(PCVariable * __CurrentResult,
+    std::vector<PCVariable*>& Operands) {
     auto Logger = __AssociatedResource->__configuration->PCLogger.get();
 
     if (Operands.size() != 1) {
@@ -35,7 +36,7 @@ void GE_Insn::Execute(std::vector<PCVariable*>& Operands) {
 
     assert(Operand->__VariableDataType->__DataTypeCategory
             != DataTypeCategory::ARRAY);    
-    auto CurrentResult = __AssociatedResource->__CurrentResult;
+    auto CurrentResult = __CurrentResult;
 
        if (Operand->__VariableDataType != CurrentResult->__VariableDataType) {
         std::vector<PCVariable *> modified_operands;
@@ -57,7 +58,7 @@ void GE_Insn::Execute(std::vector<PCVariable*>& Operands) {
                     ->__SFCRegistry->GetSFC(conv_sfc_name));
 
             assert(sfc != nullptr);
-            assert(sfc->Execute(CurrentResult) == CurrentResult);   
+            assert(sfc->Execute(nullptr, CurrentResult) == CurrentResult);   
         } else if(Operand->__IsTemporary 
             && Operand->__VariableDataType != DesiredDataType) {
             string conv_sfc_name 
@@ -67,7 +68,7 @@ void GE_Insn::Execute(std::vector<PCVariable*>& Operands) {
                     ->__SFCRegistry->GetSFC(conv_sfc_name));
 
             assert(sfc != nullptr);
-            Operand = sfc->Execute(Operand); 
+            Operand = sfc->Execute(CurrentResult, Operand); 
 
             if (!Operand) {
                 Logger->RaiseException("Type casting error: " + conv_sfc_name);

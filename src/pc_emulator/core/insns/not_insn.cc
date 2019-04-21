@@ -8,7 +8,8 @@ using namespace pc_specification;
 /*
  * Sets the Current result accumulator to the passed operand.
  */
-void NOT_Insn::Execute(std::vector<PCVariable*>& Operands) {
+void NOT_Insn::Execute(PCVariable * __CurrentResult,
+    std::vector<PCVariable*>& Operands) {
     auto Logger = __AssociatedResource->__configuration->PCLogger.get();
 
     if (Operands.size() > 1) {
@@ -34,14 +35,16 @@ void NOT_Insn::Execute(std::vector<PCVariable*>& Operands) {
 
         assert(Operand->__VariableDataType->__DataTypeCategory
                 != DataTypeCategory::ARRAY);    
-        auto CurrentResult = __AssociatedResource->__CurrentResult;
+        auto CurrentResult = __CurrentResult;
         if (Operand->__IsVariableContentTypeAPtr) {
             Operand = Operand->GetPtrStoredAtField("");
             assert(Operand != nullptr);
         }
-        *CurrentResult = !(*Operand);
+
+        auto tmp = Operand->GetCopy();
+        *CurrentResult = !(*tmp);
     } else {
-        auto CurrentResult = __AssociatedResource->__CurrentResult;
+        auto CurrentResult = __CurrentResult;
         assert(CurrentResult->__VariableDataType->__DataTypeCategory
             == DataTypeCategory::BOOL);
         *CurrentResult = !(*CurrentResult);

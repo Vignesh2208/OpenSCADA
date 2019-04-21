@@ -6,9 +6,10 @@ using namespace std;
 using namespace pc_emulator;
 using namespace pc_specification;
 
-void SEL::Execute(std::vector<PCVariable*>& MOperands) {
+void SEL::Execute(PCVariable * __CurrentResult,
+    std::vector<PCVariable*>& MOperands) {
     auto configuration = __AssociatedResource->__configuration;
-    auto CR = __AssociatedResource->__CurrentResult;
+    auto CR = __CurrentResult;
 
     std::vector<PCVariable*> Operands;
     for(int i = 0; i < MOperands.size(); i++) {

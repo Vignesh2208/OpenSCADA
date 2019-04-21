@@ -8,7 +8,8 @@ using namespace pc_specification;
 /*
  * Sets the Current result accumulator to the passed operand.
  */
-void ST_Insn::Execute(std::vector<PCVariable*>& Operands) {
+void ST_Insn::Execute(PCVariable * __CurrentResult,
+        std::vector<PCVariable*>& Operands) {
     auto Logger = __AssociatedResource->__configuration->PCLogger.get();
 
     if (Operands.size() != 1) {
@@ -28,7 +29,7 @@ void ST_Insn::Execute(std::vector<PCVariable*>& Operands) {
 
     
 
-    if (__AssociatedResource->__CurrentResult
+    if (__CurrentResult
         ->__VariableDataType->__DataTypeName !=
         Operand->__VariableDataType->__DataTypeName) {
         Logger->RaiseException("Variable DataTypes of Curr Result and Operand "
@@ -39,11 +40,11 @@ void ST_Insn::Execute(std::vector<PCVariable*>& Operands) {
         assert(Operand->__VariableDataType->__DataTypeCategory
             != DataTypeCategory::POU);
         std:: cout << "ST Insn Getting Copy\n";
-        auto tmp = __AssociatedResource->__CurrentResult->GetCopy();
+        auto tmp = __CurrentResult->GetCopy();
         *tmp = !(*tmp);
         Operand->SetField("", tmp.get());
     } else {
-        auto CurrentResult = __AssociatedResource->__CurrentResult;
+        auto CurrentResult = __CurrentResult;
         Operand->SetField("", CurrentResult);
     }
 }

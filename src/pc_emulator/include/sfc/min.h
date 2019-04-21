@@ -27,7 +27,8 @@ namespace pc_emulator {
             /*!
                 \param Operands     Operands to the sfc
             */
-            void Execute(std::vector<PCVariable*>& Operands);
+            void Execute(PCVariable *CurrentResult,
+                std::vector<PCVariable*>& Operands);
     };
 
 }

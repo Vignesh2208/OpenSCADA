@@ -19,7 +19,8 @@ namespace pc_emulator {
             /*!
                 \param Operands     Operands to the instruction
             */
-            void Execute(std::vector<PCVariable*>& Operands);
+            void Execute(PCVariable *CurrentResult,
+                std::vector<PCVariable*>& Operands);
     };
 }
 

@@ -11,9 +11,10 @@ using namespace pc_specification;
 /*
  * Sets the Current result accumulator to the passed operand.
  */
-void MUL_Insn::Execute(std::vector<PCVariable*>& Operands) {
+void MUL_Insn::Execute(PCVariable * __CurrentResult,
+        std::vector<PCVariable*>& Operands) {
     auto Logger = __AssociatedResource->__configuration->PCLogger.get();
-    auto CurrentResult = __AssociatedResource->__CurrentResult;
+    auto CurrentResult = __CurrentResult;
     std::vector<PCVariable *> modified_operands;
     modified_operands.push_back(CurrentResult);
     
@@ -60,7 +61,8 @@ void MUL_Insn::Execute(std::vector<PCVariable*>& Operands) {
                 string ActualDataType 
                 = modified_operands[i]->__VariableDataType->__DataTypeName;
                 modified_operands[i] 
-                                = sfc->Execute(modified_operands[i]);
+                                = sfc->Execute(CurrentResult,
+                                        modified_operands[i]);
                 
                 if (!modified_operands[i]) {
                         Logger->RaiseException(

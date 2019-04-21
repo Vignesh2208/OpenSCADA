@@ -105,13 +105,15 @@ namespace pc_emulator {
             /*!
                 \param Operands     Operands to the sfc
             */
-            void Execute(std::vector<PCVariable*>& Operands);
+            void Execute(PCVariable *CurrentResult,
+                std::vector<PCVariable*>& Operands);
 
             //! Called to execute the sfc
             /*!
                 \param Operand     Operand to the sfc
             */
-            PCVariable* Execute(PCVariable* Operand);
+            PCVariable* Execute(PCVariable * CurrentResult,
+                PCVariable* Operand);
     };
 }
 

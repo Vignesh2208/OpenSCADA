@@ -26,7 +26,8 @@ namespace pc_emulator {
             /*!
                 \param SFB     The SFB variable
             */
-            virtual void Execute(PCVariable * SFB) = 0;
+            virtual void Execute(PCVariable *CurrentResult,
+                        PCVariable * SFB) = 0;
     };
 
 }

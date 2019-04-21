@@ -8,9 +8,10 @@ using namespace std;
 using namespace pc_emulator;
 using namespace pc_specification;
 
-void Min::Execute(std::vector<PCVariable*>& MOperands) {
+void Min::Execute(PCVariable * __CurrentResult,
+    std::vector<PCVariable*>& MOperands) {
     auto configuration = __AssociatedResource->__configuration;
-    auto CR = __AssociatedResource->__CurrentResult;
+    auto CR = __CurrentResult;
 
     int min_idx = 0;
     std::vector<PCVariable*> Operands;
@@ -49,7 +50,7 @@ void Min::Execute(std::vector<PCVariable*>& MOperands) {
             assert(sfc != nullptr);
             string ActualDataType 
             = Operands[i]->__VariableDataType->__DataTypeName;
-            Operands[i] = sfc->Execute(Operands[i]);
+            Operands[i] = sfc->Execute(CR, Operands[i]);
             
             if (!Operands[i]) {
                     configuration->PCLogger->RaiseException(
@@ -67,7 +68,7 @@ void Min::Execute(std::vector<PCVariable*>& MOperands) {
         ANY_TO_ANY * sfc = (ANY_TO_ANY*)(__AssociatedResource
                             ->__SFCRegistry->GetSFC(conv_sfc_name));
         assert(sfc != nullptr);
-        sfc->Execute(CR);
+        sfc->Execute(nullptr, CR);
     }
 
     for (int i = 0; i < Operands.size(); i++) {

@@ -18,7 +18,7 @@ system_pou {
     }
 
     code_body {
-        insn: "LD R"
+        insn: "NOT R"
         insn: "AND Q1"
         insn: "OR S1"
         insn: "ST Q1"
@@ -48,6 +48,7 @@ system_pou {
         insn: "LD S"
         insn: "OR Q1"
         insn: "ANDN R1"
+        insn: "ST Q1"
     }
 }
 

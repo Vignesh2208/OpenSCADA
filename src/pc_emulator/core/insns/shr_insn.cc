@@ -6,9 +6,10 @@ using namespace std;
 using namespace pc_emulator;
 using namespace pc_specification;
 
-void SHR_Insn::Execute(std::vector<PCVariable*>& Operands) {
+void SHR_Insn::Execute(PCVariable * __CurrentResult,
+    std::vector<PCVariable*>& Operands) {
     auto configuration = __AssociatedResource->__configuration;
-    auto CR = __AssociatedResource->__CurrentResult;
+    auto CR = __CurrentResult;
 
     uint8_t ByteValue;
     uint16_t WordValue;

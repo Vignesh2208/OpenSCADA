@@ -78,7 +78,7 @@ TEST(ExecutionTestSuite, InsnCodeBodyProcessingTest) {
 
 
     auto SR = resource->GetCodeContainer("SR");
-    EXPECT_EQ(SR->GetInsn(0)->InsnName, "LD");
+    EXPECT_EQ(SR->GetInsn(0)->InsnName, "NOT");
     EXPECT_EQ(SR->GetInsn(0)->OperandList[0], "R");
     EXPECT_EQ(SR->GetInsn(1)->InsnName, "AND");
     EXPECT_EQ(SR->GetInsn(1)->OperandList[0], "Q1");
@@ -97,7 +97,9 @@ TEST(ExecutionTestSuite, InsnCodeBodyProcessingTest) {
     EXPECT_EQ(RS->GetInsn(1)->OperandList[0], "Q1");
     EXPECT_EQ(RS->GetInsn(2)->InsnName, "ANDN");
     EXPECT_EQ(RS->GetInsn(2)->OperandList[0], "R1");
-    EXPECT_EQ(RS->__InsnCount, 3);
+    EXPECT_EQ(SR->GetInsn(3)->InsnName, "ST");
+    EXPECT_EQ(SR->GetInsn(3)->OperandList[0], "Q1");
+    EXPECT_EQ(RS->__InsnCount, 4);
 
 
     auto R_TRIG = resource->GetCodeContainer("R_TRIG");
@@ -239,3 +241,247 @@ TEST(ExecutionTestSuite, InsnCodeBodyProcessingTest) {
     std::cout << "Finished Test !" << std::endl;
 }
 
+
+TEST(ExecutionTestSuite, R_TRIG_Execution_Test) {
+    string TestDir = Utils::GetInstallationDirectory() 
+            + "/src/pc_emulator/tests/execution_tests";
+
+    std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+
+    PCResourceImpl * resource 
+        = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
+                    "CPU_001");
+
+    PCVariable * R_TRIG_FB = resource->GetPOU("R_TRIG");
+    IntervalTaskSpecification task_spec;
+    IntervalTaskParams*  task_params = new IntervalTaskParams;
+    task_spec.set_task_name("Task1");
+    task_spec.set_priority(1);
+    task_params->set_interval_ms(10);
+    task_spec.set_allocated_interval_task_params(task_params);
+    Task new_task((PCConfigurationImpl*)&configuration, resource, task_spec);
+    Executor new_executor(&configuration, resource, &new_task);
+    new_executor.SetExecPoUVariable(R_TRIG_FB);
+    R_TRIG_FB->SetField("CLK", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(R_TRIG_FB->GetValueStoredAtField<bool>("Q",
+                DataTypeCategory::BOOL), false);
+    R_TRIG_FB->SetField("CLK", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(R_TRIG_FB->GetValueStoredAtField<bool>("Q",
+                DataTypeCategory::BOOL), true);
+    R_TRIG_FB->SetField("CLK", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(R_TRIG_FB->GetValueStoredAtField<bool>("Q",
+                DataTypeCategory::BOOL), false);
+    R_TRIG_FB->SetField("CLK", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(R_TRIG_FB->GetValueStoredAtField<bool>("Q",
+                DataTypeCategory::BOOL), false);
+
+    R_TRIG_FB->SetField("CLK", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(R_TRIG_FB->GetValueStoredAtField<bool>("Q",
+                DataTypeCategory::BOOL), true);
+    new_executor.CleanUp();
+    configuration.Cleanup();
+}
+
+TEST(ExecutionTestSuite, F_TRIG_Execution_Test) {
+    string TestDir = Utils::GetInstallationDirectory() 
+            + "/src/pc_emulator/tests/execution_tests";
+
+    std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+
+    PCResourceImpl * resource 
+        = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
+                    "CPU_001");
+
+    PCVariable * F_TRIG_FB = resource->GetPOU("F_TRIG");
+    IntervalTaskSpecification task_spec;
+    IntervalTaskParams*  task_params = new IntervalTaskParams;
+    task_spec.set_task_name("Task1");
+    task_spec.set_priority(1);
+    task_params->set_interval_ms(10);
+    task_spec.set_allocated_interval_task_params(task_params);
+    Task new_task((PCConfigurationImpl*)&configuration, resource, task_spec);
+    Executor new_executor(&configuration, resource, &new_task);
+    new_executor.SetExecPoUVariable(F_TRIG_FB);
+    
+    F_TRIG_FB->SetField("CLK", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(F_TRIG_FB->GetValueStoredAtField<bool>("Q",
+                DataTypeCategory::BOOL), false);
+
+    F_TRIG_FB->SetField("CLK", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(F_TRIG_FB->GetValueStoredAtField<bool>("Q",
+                DataTypeCategory::BOOL), false);
+
+    F_TRIG_FB->SetField("CLK", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(F_TRIG_FB->GetValueStoredAtField<bool>("Q",
+                DataTypeCategory::BOOL), false);
+
+    F_TRIG_FB->SetField("CLK", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(F_TRIG_FB->GetValueStoredAtField<bool>("Q",
+                DataTypeCategory::BOOL), true);
+
+    F_TRIG_FB->SetField("CLK", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(F_TRIG_FB->GetValueStoredAtField<bool>("Q",
+                DataTypeCategory::BOOL), false);
+    new_executor.CleanUp();
+
+    F_TRIG_FB->SetField("CLK", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(F_TRIG_FB->GetValueStoredAtField<bool>("Q",
+                DataTypeCategory::BOOL), false);
+
+
+    F_TRIG_FB->SetField("CLK", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(F_TRIG_FB->GetValueStoredAtField<bool>("Q",
+                DataTypeCategory::BOOL), true);
+
+    new_executor.CleanUp();
+    configuration.Cleanup();
+}
+
+
+TEST(ExecutionTestSuite, SR_FlipFlop_Execution_Test) {
+    string TestDir = Utils::GetInstallationDirectory() 
+            + "/src/pc_emulator/tests/execution_tests";
+
+    std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+
+    PCResourceImpl * resource 
+        = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
+                    "CPU_001");
+
+    PCVariable * SR_FB = resource->GetPOU("SR");
+    IntervalTaskSpecification task_spec;
+    IntervalTaskParams*  task_params = new IntervalTaskParams;
+    task_spec.set_task_name("Task1");
+    task_spec.set_priority(1);
+    task_params->set_interval_ms(10);
+    task_spec.set_allocated_interval_task_params(task_params);
+    Task new_task((PCConfigurationImpl*)&configuration, resource, task_spec);
+    Executor new_executor(&configuration, resource, &new_task);
+
+    new_executor.SetExecPoUVariable(SR_FB);
+    SR_FB->SetField("S1", "FALSE");
+    SR_FB->SetField("R", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(SR_FB->GetValueStoredAtField<bool>("Q1",
+                DataTypeCategory::BOOL), false);
+
+    SR_FB->SetField("S1", "TRUE");
+    SR_FB->SetField("R", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(SR_FB->GetValueStoredAtField<bool>("Q1",
+                DataTypeCategory::BOOL), true);
+
+    SR_FB->SetField("S1", "FALSE");
+    SR_FB->SetField("R", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(SR_FB->GetValueStoredAtField<bool>("Q1",
+                DataTypeCategory::BOOL), false);
+
+    SR_FB->SetField("S1", "TRUE");
+    SR_FB->SetField("R", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(SR_FB->GetValueStoredAtField<bool>("Q1",
+                DataTypeCategory::BOOL), true);
+
+    SR_FB->SetField("S1", "FALSE");
+    SR_FB->SetField("R", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(SR_FB->GetValueStoredAtField<bool>("Q1",
+                DataTypeCategory::BOOL), true);
+
+    SR_FB->SetField("S1", "FALSE");
+    SR_FB->SetField("R", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(SR_FB->GetValueStoredAtField<bool>("Q1",
+                DataTypeCategory::BOOL), true);
+
+    new_executor.CleanUp();
+    configuration.Cleanup();
+
+}
+
+
+TEST(ExecutionTestSuite, RS_FlipFlop_Execution_Test) {
+    string TestDir = Utils::GetInstallationDirectory() 
+            + "/src/pc_emulator/tests/execution_tests";
+
+    std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+
+    PCResourceImpl * resource 
+        = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
+                    "CPU_001");
+
+    PCVariable * RS_FB = resource->GetPOU("RS");
+    IntervalTaskSpecification task_spec;
+    IntervalTaskParams*  task_params = new IntervalTaskParams;
+    task_spec.set_task_name("Task1");
+    task_spec.set_priority(1);
+    task_params->set_interval_ms(10);
+    task_spec.set_allocated_interval_task_params(task_params);
+    Task new_task((PCConfigurationImpl*)&configuration, resource, task_spec);
+    Executor new_executor(&configuration, resource, &new_task);
+
+    new_executor.SetExecPoUVariable(RS_FB);
+    RS_FB->SetField("S", "FALSE");
+    RS_FB->SetField("R1", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(RS_FB->GetValueStoredAtField<bool>("Q1",
+                DataTypeCategory::BOOL), false);
+
+    RS_FB->SetField("S", "TRUE");
+    RS_FB->SetField("R1", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(RS_FB->GetValueStoredAtField<bool>("Q1",
+                DataTypeCategory::BOOL), true);
+
+    RS_FB->SetField("S", "FALSE");
+    RS_FB->SetField("R1", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(RS_FB->GetValueStoredAtField<bool>("Q1",
+                DataTypeCategory::BOOL), false);
+
+    RS_FB->SetField("S", "TRUE");
+    RS_FB->SetField("R1", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(RS_FB->GetValueStoredAtField<bool>("Q1",
+                DataTypeCategory::BOOL), false);
+
+    
+    RS_FB->SetField("S", "FALSE");
+    RS_FB->SetField("R1", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(RS_FB->GetValueStoredAtField<bool>("Q1",
+                DataTypeCategory::BOOL), false);
+
+    RS_FB->SetField("S", "TRUE");
+    RS_FB->SetField("R1", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(RS_FB->GetValueStoredAtField<bool>("Q1",
+                DataTypeCategory::BOOL), true);
+
+    RS_FB->SetField("S", "FALSE");
+    RS_FB->SetField("R1", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(RS_FB->GetValueStoredAtField<bool>("Q1",
+                DataTypeCategory::BOOL), true);
+
+    new_executor.CleanUp();
+    configuration.Cleanup();
+
+}

@@ -6,9 +6,10 @@ using namespace std;
 using namespace pc_emulator;
 using namespace pc_specification;
 
-void ATAN::Execute(std::vector<PCVariable*>& Operands) {
+void ATAN::Execute(PCVariable * __CurrentResult,
+    std::vector<PCVariable*>& Operands) {
     auto configuration = __AssociatedResource->__configuration;
-    auto CR = __AssociatedResource->__CurrentResult;
+    auto CR = __CurrentResult;
     if (!Utils::IsRealType(CR->__VariableDataType)) {
         configuration->PCLogger->RaiseException("ATAN SFC error: CR is not "
             " a real number");

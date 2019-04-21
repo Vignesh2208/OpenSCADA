@@ -6,9 +6,10 @@ using namespace std;
 using namespace pc_emulator;
 using namespace pc_specification;
 
-void MUX::Execute(std::vector<PCVariable*>& MOperands) {
+void MUX::Execute(PCVariable * __CurrentResult,
+    std::vector<PCVariable*>& MOperands) {
     auto configuration = __AssociatedResource->__configuration;
-    auto CR = __AssociatedResource->__CurrentResult;
+    auto CR = __CurrentResult;
     if (CR->__VariableDataType->__DataTypeCategory
         < DataTypeCategory::USINT
         || CR->__VariableDataType->__DataTypeCategory

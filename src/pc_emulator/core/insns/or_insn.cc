@@ -11,7 +11,8 @@ using namespace pc_specification;
 /*
  * Sets the Current result accumulator to the passed operand.
  */
-void OR_Insn::Execute(std::vector<PCVariable*>& Operands) {
+void OR_Insn::Execute(PCVariable * __CurrentResult,
+    std::vector<PCVariable*>& Operands) {
     auto Logger = __AssociatedResource->__configuration->PCLogger.get();
 
     if (Operands.size() != 1) {
@@ -35,7 +36,7 @@ void OR_Insn::Execute(std::vector<PCVariable*>& Operands) {
 
     assert(Operand->__VariableDataType->__DataTypeCategory
             != DataTypeCategory::ARRAY);    
-    auto CurrentResult = __AssociatedResource->__CurrentResult;
+    auto CurrentResult = __CurrentResult;
 
     if (!Utils::IsBitType(CurrentResult->__VariableDataType) ||
         !Utils::IsBitType(Operand->__VariableDataType)) {
@@ -60,7 +61,7 @@ void OR_Insn::Execute(std::vector<PCVariable*>& Operands) {
                     ->__SFCRegistry->GetSFC(conv_sfc_name));
 
             assert(sfc != nullptr);
-            assert(sfc->Execute(CurrentResult) == CurrentResult);   
+            assert(sfc->Execute(nullptr, CurrentResult) == CurrentResult);   
         } else if(Operand->__IsTemporary 
             && Operand->__VariableDataType != DesiredDataType) {
             string conv_sfc_name 
@@ -70,7 +71,7 @@ void OR_Insn::Execute(std::vector<PCVariable*>& Operands) {
                     ->__SFCRegistry->GetSFC(conv_sfc_name));
 
             assert(sfc != nullptr);
-            Operand = sfc->Execute(Operand); 
+            Operand = sfc->Execute(CurrentResult, Operand); 
 
             if (!Operand) {
                 Logger->RaiseException("Type casting error: " + conv_sfc_name);
@@ -82,7 +83,8 @@ void OR_Insn::Execute(std::vector<PCVariable*>& Operands) {
     }
 
     if (IsNegated) {
-        *CurrentResult = *CurrentResult | !(*Operand);
+        auto tmp = Operand->GetCopy();
+        *CurrentResult = *CurrentResult | !(*tmp);
     } else {
         *CurrentResult = *CurrentResult | *Operand;
     }

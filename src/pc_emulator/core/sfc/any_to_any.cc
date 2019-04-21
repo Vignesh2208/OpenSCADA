@@ -7,9 +7,10 @@ using namespace pc_emulator;
 using namespace pc_specification;
 
 
-void ANY_TO_ANY::Execute(std::vector<PCVariable*>& Operands) {
+void ANY_TO_ANY::Execute(PCVariable * __CurrentResult,
+    std::vector<PCVariable*>& Operands) {
     for(int i = 0; i < Operands.size(); i++) {
-        auto returnVal = Execute(Operands[i]);
+        auto returnVal = Execute(__CurrentResult, Operands[i]);
         if (returnVal == nullptr) {
             __AssociatedResource->__configuration->PCLogger->RaiseException(
                 "Type conversion error for: " 
@@ -21,7 +22,8 @@ void ANY_TO_ANY::Execute(std::vector<PCVariable*>& Operands) {
     
 }
 
-PCVariable * ANY_TO_ANY::Execute(PCVariable* Operand) {
+PCVariable * ANY_TO_ANY::Execute(PCVariable * __CurrentResult,
+    PCVariable* Operand) {
     auto configuration = __AssociatedResource->__configuration;
     auto Op = Operand;
     

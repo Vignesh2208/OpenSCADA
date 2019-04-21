@@ -11,6 +11,8 @@
 #include "src/pc_emulator/include/task.h"
 #include "src/pc_emulator/include/utils.h"
 #include "src/pc_emulator/include/sfb_registry.h"
+#include "src/pc_emulator/include/insn_registry.h"
+#include "src/pc_emulator/include/sfc_registry.h"
 #include "src/pc_emulator/include/functions_registry.h"
 
 using namespace std;
@@ -49,6 +51,7 @@ void Executor::Run() {
         auto insn_container = __CodeContainer->GetInsn(idx);
         if (!insn_container || insn_container->InsnName 
             == __ExecPoUVariable->__VariableDataType->__DataTypeName) {
+            
             // This is a SFB without a code body
             assert(__ExecPoUVariable->__VariableDataType->__PoUType
                 == PoUType::FB);
@@ -61,12 +64,17 @@ void Executor::Run() {
                     "SFB: " + insn_container->InsnName + " not found!");
             }
 
-            SFB->Execute(__ExecPoUVariable);
+            SFB->Execute(__AssociatedTask->__CR, __ExecPoUVariable);
             idx = -1;
         } else {
             idx = RunInsn(*insn_container);
+            std::cout << "Nxt insn: " << idx  << ", Max: " << 
+                 __CodeContainer->__InsnCount <<
+                 " CR: " << __AssociatedTask->__CR->GetValueStoredAtField<bool>("",
+                    DataTypeCategory::BOOL) << std::endl;
         }
 
+        /*
         Task * EligibleTask = nullptr;
         do {
             EligibleTask = __AssociatedResource->GetInterruptTaskToExecute();
@@ -96,8 +104,8 @@ void Executor::Run() {
                 RestoreCPURegisters();    
             }
         }
-
-        if (idx < 0 || idx >= __CodeContainer->__InsnCount);
+        */
+        if (idx < 0 || idx >= __CodeContainer->__InsnCount)
             break;
     }
     __AssociatedTask->__Executing = false;
@@ -259,7 +267,22 @@ int Executor::RunInsn(InsnContainer& insn_container) {
 
         if (Fn == nullptr) {
             // Need to perform access checks here too for LD and ST instructions
-            __AssociatedResource->ExecuteInsn(insn_container.InsnName, Ops);
+            std::cout << "Executing Insn: " << insn_container.InsnName << std::endl;
+            auto InsnObj = __AssociatedResource->__InsnRegistry->GetInsn(
+                insn_container.InsnName);
+
+            if (InsnObj != nullptr) {
+                InsnObj->Execute(__AssociatedTask->__CR, Ops);
+            } else {
+
+                auto SFCObj = __AssociatedResource->__SFCRegistry->GetSFC(
+                    insn_container.InsnName);
+
+                if (SFCObj != nullptr) {
+                    SFCObj->Execute(__AssociatedTask->__CR, Ops);
+                }
+            }
+            return insn_container.InsnPosition + 1;
         } else {
             auto FnDataType = Fn->__VariableDataType;
             int i = 0;
@@ -275,14 +298,15 @@ int Executor::RunInsn(InsnContainer& insn_container) {
                             + FnDataType->__DataTypeName); 
                 }
                 Fn->SetField(DefinedField.__FieldName, Ops[i]);
-                Executor new_executor(__AssociatedResource->__configuration,
-                    __AssociatedResource, __AssociatedTask);
-
-                new_executor.SetExecPoUVariable(Fn);
-                new_executor.Run();
-                new_executor.CleanUp();
-
+            
             }
+            Executor new_executor(__AssociatedResource->__configuration,
+                __AssociatedResource, __AssociatedTask);
+
+            new_executor.SetExecPoUVariable(Fn);
+            new_executor.Run();
+            new_executor.CleanUp();
+            return insn_container.InsnPosition + 1;
         }
     }
 
@@ -305,15 +329,16 @@ bool Executor::IsCRSet() {
 }
 
 void Executor::SaveCPURegisters() {
-    *__AssociatedTask->__CR = *__AssociatedResource->__CurrentResult;
+    //*__AssociatedTask->__CR = *__AssociatedResource->__CurrentResult;
 }
 
 void Executor::RestoreCPURegisters() {
-    *__AssociatedResource->__CurrentResult = *__AssociatedTask->__CR;
+    //*__AssociatedResource->__CurrentResult = *__AssociatedTask->__CR;
 }
 
 void Executor::ResetCPURegisters() {
+    /*
     *__AssociatedResource->__CurrentResult 
         = *__AssociatedResource->GetTmpVariable("BOOL", "0");
-    *__AssociatedTask->__CR = *__AssociatedResource->__CurrentResult;
+    *__AssociatedTask->__CR = *__AssociatedResource->__CurrentResult;*/
 }
