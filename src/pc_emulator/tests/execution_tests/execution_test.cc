@@ -5,8 +5,14 @@
 #include "src/pc_emulator/include/utils.h"
 #include "src/pc_emulator/include/insns/insn.h"
 #include "src/pc_emulator/include/insns/ld_insn.h"
+#include "src/pc_emulator/include/pc_clock.h"
 
 #include "gtest/gtest.h"
+
+#include <ctime>
+#include <ratio>
+#include <chrono>
+#include <thread>
 
 using namespace std;
 using namespace pc_emulator;
@@ -1000,6 +1006,257 @@ TEST(ExecutionTestSuite, CTUD_Counter_Execution_Test) {
         DataTypeCategory::BOOL), true);
     std::cout << "################################\n";
 
+    new_executor.CleanUp();
+    configuration.Cleanup();
+
+}
+
+
+
+TEST(ExecutionTestSuite, TON_Timer_Execution_Test) {
+    string TestDir = Utils::GetInstallationDirectory() 
+            + "/src/pc_emulator/tests/execution_tests";
+
+    std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+
+    PCResourceImpl * resource 
+        = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
+                    "CPU_001");
+    
+    
+    PCVariable * TON_FB = resource->GetPOU("TON");
+    IntervalTaskSpecification task_spec;
+    IntervalTaskParams*  task_params = new IntervalTaskParams;
+    task_spec.set_task_name("Task1");
+    task_spec.set_priority(1);
+    task_params->set_interval_ms(10);
+    task_spec.set_allocated_interval_task_params(task_params);
+    Task new_task((PCConfigurationImpl*)&configuration, resource, task_spec);
+    Executor new_executor(&configuration, resource, &new_task);
+
+    
+    new_executor.SetExecPoUVariable(TON_FB);
+    TON_FB->SetField("IN", "FALSE");
+    TON_FB->SetField("PT", "t#1s");
+    
+    new_executor.Run();
+    
+    EXPECT_EQ(TON_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+    EXPECT_EQ(TON_FB->GetValueStoredAtField<TimeType>("ET",
+        DataTypeCategory::TIME).SecsElapsed, 0);
+
+    TON_FB->SetField("IN", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(TON_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+    EXPECT_EQ(TON_FB->GetValueStoredAtField<TimeType>("ET",
+        DataTypeCategory::TIME).SecsElapsed, 0);
+
+    std::this_thread::sleep_for(
+        std::chrono::microseconds(100000));
+
+    TON_FB->SetField("IN", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(TON_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+
+    std::this_thread::sleep_for(
+        std::chrono::microseconds(1000000));
+    
+    TON_FB->SetField("IN", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(TON_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), true);
+    EXPECT_EQ(TON_FB->GetValueStoredAtField<TimeType>("ET",
+        DataTypeCategory::TIME).SecsElapsed, 1.0);
+
+    TON_FB->SetField("IN", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(TON_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+    EXPECT_EQ(TON_FB->GetValueStoredAtField<TimeType>("ET",
+        DataTypeCategory::TIME).SecsElapsed, 0);
+
+    
+    new_executor.CleanUp();
+    configuration.Cleanup();
+
+}
+
+
+TEST(ExecutionTestSuite, TOF_Timer_Execution_Test) {
+    string TestDir = Utils::GetInstallationDirectory() 
+            + "/src/pc_emulator/tests/execution_tests";
+
+    std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+
+    PCResourceImpl * resource 
+        = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
+                    "CPU_001");
+    
+    
+    PCVariable * TOF_FB = resource->GetPOU("TOF");
+    IntervalTaskSpecification task_spec;
+    IntervalTaskParams*  task_params = new IntervalTaskParams;
+    task_spec.set_task_name("Task1");
+    task_spec.set_priority(1);
+    task_params->set_interval_ms(10);
+    task_spec.set_allocated_interval_task_params(task_params);
+    Task new_task((PCConfigurationImpl*)&configuration, resource, task_spec);
+    Executor new_executor(&configuration, resource, &new_task);
+
+    
+    new_executor.SetExecPoUVariable(TOF_FB);
+    TOF_FB->SetField("IN", "TRUE");
+    TOF_FB->SetField("PT", "t#1s");
+    
+    new_executor.Run();
+    
+    EXPECT_EQ(TOF_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+    EXPECT_EQ(TOF_FB->GetValueStoredAtField<TimeType>("ET",
+        DataTypeCategory::TIME).SecsElapsed, 0);
+
+    TOF_FB->SetField("IN", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(TOF_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), true);
+    EXPECT_EQ(TOF_FB->GetValueStoredAtField<TimeType>("ET",
+        DataTypeCategory::TIME).SecsElapsed, 0);
+
+    std::this_thread::sleep_for(
+        std::chrono::microseconds(100000));
+
+    TOF_FB->SetField("IN", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(TOF_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), true);
+
+    std::this_thread::sleep_for(
+        std::chrono::microseconds(1000000));
+    
+    TOF_FB->SetField("IN", "FALSE");
+    new_executor.Run();
+    EXPECT_EQ(TOF_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+    EXPECT_EQ(TOF_FB->GetValueStoredAtField<TimeType>("ET",
+        DataTypeCategory::TIME).SecsElapsed, 1.0);
+
+    TOF_FB->SetField("IN", "TRUE");
+    new_executor.Run();
+    EXPECT_EQ(TOF_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+    EXPECT_EQ(TOF_FB->GetValueStoredAtField<TimeType>("ET",
+        DataTypeCategory::TIME).SecsElapsed, 0);
+
+    
+    new_executor.CleanUp();
+    configuration.Cleanup();
+
+}
+
+
+TEST(ExecutionTestSuite, TP_Timer_Execution_Test) {
+    string TestDir = Utils::GetInstallationDirectory() 
+            + "/src/pc_emulator/tests/execution_tests";
+
+    std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+
+    PCResourceImpl * resource 
+        = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
+                    "CPU_001");
+    
+    
+    PCVariable * TP_FB = resource->GetPOU("TP");
+    IntervalTaskSpecification task_spec;
+    IntervalTaskParams*  task_params = new IntervalTaskParams;
+    task_spec.set_task_name("Task1");
+    task_spec.set_priority(1);
+    task_params->set_interval_ms(10);
+    task_spec.set_allocated_interval_task_params(task_params);
+    Task new_task((PCConfigurationImpl*)&configuration, resource, task_spec);
+    Executor new_executor(&configuration, resource, &new_task);
+
+    
+    new_executor.SetExecPoUVariable(TP_FB);
+
+    TP_FB->SetField("PT", "t#1s");
+    TP_FB->SetField("IN", "FALSE"); 
+    new_executor.Run();
+    
+    EXPECT_EQ(TP_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+    EXPECT_EQ(TP_FB->GetValueStoredAtField<TimeType>("ET",
+        DataTypeCategory::TIME).SecsElapsed, 0);
+
+
+    TP_FB->SetField("IN", "TRUE"); 
+    new_executor.Run();
+    
+    EXPECT_EQ(TP_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), true);
+    EXPECT_EQ(TP_FB->GetValueStoredAtField<TimeType>("ET",
+        DataTypeCategory::TIME).SecsElapsed, 0);
+
+    std::this_thread::sleep_for(
+        std::chrono::microseconds(100000));
+
+    TP_FB->SetField("IN", "FALSE"); 
+    new_executor.Run();
+    
+    EXPECT_EQ(TP_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), true);
+
+    std::this_thread::sleep_for(
+        std::chrono::microseconds(100000));
+
+    TP_FB->SetField("IN", "FALSE"); 
+    new_executor.Run();
+    
+    EXPECT_EQ(TP_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), true);
+    
+    std::this_thread::sleep_for(
+        std::chrono::microseconds(800000));
+
+    TP_FB->SetField("IN", "FALSE"); 
+    new_executor.Run();
+    
+    EXPECT_EQ(TP_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+    EXPECT_EQ(TP_FB->GetValueStoredAtField<TimeType>("ET",
+        DataTypeCategory::TIME).SecsElapsed, 0);
+
+    TP_FB->SetField("IN", "TRUE"); 
+    new_executor.Run();
+    EXPECT_EQ(TP_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), true);
+    EXPECT_EQ(TP_FB->GetValueStoredAtField<TimeType>("ET",
+        DataTypeCategory::TIME).SecsElapsed, 0);
+
+    std::this_thread::sleep_for(
+        std::chrono::microseconds(1000000));
+
+    TP_FB->SetField("IN", "TRUE"); 
+    new_executor.Run();
+    
+    EXPECT_EQ(TP_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+    EXPECT_EQ(TP_FB->GetValueStoredAtField<TimeType>("ET",
+        DataTypeCategory::TIME).SecsElapsed, 1.0);
+
+    TP_FB->SetField("IN", "FALSE"); 
+    new_executor.Run();
+    
+    EXPECT_EQ(TP_FB->GetValueStoredAtField<bool>("Q",
+        DataTypeCategory::BOOL), false);
+    EXPECT_EQ(TP_FB->GetValueStoredAtField<TimeType>("ET",
+        DataTypeCategory::TIME).SecsElapsed, 0);
+    
     new_executor.CleanUp();
     configuration.Cleanup();
 

@@ -52,6 +52,7 @@ PCResourceImpl::PCResourceImpl(PCConfigurationImpl * configuration,
     __InsnRegistry = new InsnRegistry(this);
     __SFCRegistry = new SFCRegistry(this);
     __SFBRegistry = new SFBRegistry(this);
+    InitializeClock();
 }
 
 void PCResourceImpl::RegisterPoUVariable(string VariableName,
@@ -746,7 +747,7 @@ PCVariable * PCResourceImpl::GetVariableForImmediateOperand(string OperandValue)
 }
 
 void PCResourceImpl::OnStartup() {
-    InitializeClock();
+
     InitializeAllTasks();
 }
 

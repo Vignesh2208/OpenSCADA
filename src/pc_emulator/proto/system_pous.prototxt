@@ -333,12 +333,22 @@ system_pou {
         intf_type: VAR_OUTPUT
     }
     datatype_field {
-        field_name: "IN_RISE"
+        field_name: "TIMER_STARTED"
         field_datatype_name: "BOOL"
         intf_type: VAR
     }
     datatype_field {
-        field_name: "IN_FALL"
+        field_name: "TO_STOP"
+        field_datatype_name: "BOOL"
+        intf_type: VAR
+    }
+    datatype_field {
+        field_name: "START_TIME"
+        field_datatype_name: "TIME"
+        intf_type: VAR
+    }
+    datatype_field {
+        field_name: "IN_PREV"
         field_datatype_name: "BOOL"
         intf_type: VAR
     }
@@ -368,12 +378,17 @@ system_pou {
         intf_type: VAR_OUTPUT
     }
     datatype_field {
-        field_name: "IN_RISE"
+        field_name: "START_TIME"
+        field_datatype_name: "TIME"
+        intf_type: VAR
+    }
+    datatype_field {
+        field_name: "TIMER_STARTED"
         field_datatype_name: "BOOL"
         intf_type: VAR
     }
     datatype_field {
-        field_name: "IN_FALL"
+        field_name: "IN_PREV"
         field_datatype_name: "BOOL"
         intf_type: VAR
     }
@@ -403,12 +418,17 @@ system_pou {
         intf_type: VAR_OUTPUT
     }
     datatype_field {
-        field_name: "IN_RISE"
+        field_name: "START_TIME"
+        field_datatype_name: "TIME"
+        intf_type: VAR
+    }
+    datatype_field {
+        field_name: "TIMER_STARTED"
         field_datatype_name: "BOOL"
         intf_type: VAR
     }
     datatype_field {
-        field_name: "IN_FALL"
+        field_name: "IN_PREV"
         field_datatype_name: "BOOL"
         intf_type: VAR
     }

@@ -49,22 +49,23 @@ void Executor::Run() {
     int idx = 0;
     while (true) {
         auto insn_container = __CodeContainer->GetInsn(idx);
-        if (!insn_container || insn_container->InsnName 
-            == __ExecPoUVariable->__VariableDataType->__DataTypeName) {
-            
+        if (!insn_container) {
+            string SFBName 
+            = __ExecPoUVariable->__VariableDataType->__DataTypeName;
+            std::cout << "Executing SFB: " << SFBName << std::endl;
             // This is a SFB without a code body
             assert(__ExecPoUVariable->__VariableDataType->__PoUType
                 == PoUType::FB);
 
-            auto SFB = __AssociatedResource->__SFBRegistry->GetSFB(
-                insn_container->InsnName);
+            auto SFBExecutor = __AssociatedResource->__SFBRegistry->GetSFB(
+                SFBName);
 
-            if (SFB == nullptr) {
+            if (SFBExecutor == nullptr) {
                 __AssociatedResource->__configuration->PCLogger->RaiseException(
-                    "SFB: " + insn_container->InsnName + " not found!");
+                    "Defnition of SFB: " + SFBName + " not found!");
             }
 
-            SFB->Execute(__AssociatedTask->__CR, __ExecPoUVariable);
+            SFBExecutor->Execute(__AssociatedTask->__CR, __ExecPoUVariable);
             idx = -1;
         } else {
             idx = RunInsn(*insn_container);
