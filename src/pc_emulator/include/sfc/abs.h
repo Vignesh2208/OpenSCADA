@@ -25,6 +25,8 @@ namespace pc_emulator {
             }
             //! Called to execute the sfc
             /*!
+                \param CurrentResult    The CurrentResult register
+                    of the task executing this SFC
                 \param Operands     Operands to the sfc
             */
             void Execute(PCVariable *CurrentResult,

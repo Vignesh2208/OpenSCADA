@@ -79,7 +79,8 @@ namespace pc_emulator {
                 __CodeContainers; /*!< Holds the code body for each POU */
             std::unordered_map<std::string, std::unique_ptr<Task>> 
                 __Tasks; /*!< Holds each task associated with this resource keyed by name */
-            Task * __IntervalTask;
+            Task * __IntervalTask; /*!< The single interval task associated
+                with this resource */
             std::unordered_map<string, std::vector<Task*>> 
                 __InterruptTasks; /*!< Holds all interrupt tasks associated with this resource*/
                    
@@ -102,7 +103,8 @@ namespace pc_emulator {
             PCVariable * __CurrentResult;   /*!< CR register for the resource */
             InsnRegistry *  __InsnRegistry; /*!< Stores all registered instructions */
             SFCRegistry * __SFCRegistry; /*!< Stores all registered SFCs */
-            SFBRegistry * __SFBRegistry;
+            SFBRegistry * __SFBRegistry; /*!< Stores executors for all SFBs without
+                Code body */
             
             //!Constructor
             /*!

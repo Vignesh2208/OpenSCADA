@@ -17,6 +17,8 @@ namespace pc_emulator {
 
            //! Called to execute the instruction
             /*!
+                \param CurrentResult    The CurrentResult register
+                    of the task executing this Insn
                 \param Operands     Operands to the instruction
             */
             void Execute(PCVariable *CurrentResult,

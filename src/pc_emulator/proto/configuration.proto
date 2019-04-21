@@ -172,35 +172,43 @@ message DataType {
     optional PoUCode code_body = 6;
 }
 
+
+// Describes a SFB and time to execute the SFB
 message SFBSpecification {
     required string sfb_name = 1;
     required int64 exec_time_ns = 2;
 }
 
+// Describes a SFC and time to execute the SFC
 message SFCSpecification {
     required string sfc_name = 1;
     required int64 exec_time_ns = 2;
 }
 
+// Describes an IL instruction and time to execute the instruction
 message InstructionSpecification {
     required string ins_name = 1;
     required int64 exec_time_ns = 2;
 }
 
+// The time period of the interval task
 message IntervalTaskParams {
     required int64 interval_ms = 1;
 }
 
+// The name of the variable which triggers an interrupt task
 message InterruptTaskParams {
     required string trigger_variable_field = 1;
 }
 
+// Specifies an interval task, its priority and cycle time
 message IntervalTaskSpecification {
     required string task_name = 1;
     required int32 priority = 2;
     required IntervalTaskParams interval_task_params = 3;
 }
 
+// Specifies an interrupt task, its priority and trigger variable
 message InterruptTaskSpecification {
     required string task_name = 1;
     required int32 priority = 2;
@@ -213,24 +221,54 @@ message ProgramVariableInitialization {
 }
 
 message ProgramSpecification {
+    // Name of the program/FB
     required string program_name = 1;
+
+    // This is also usually the same as the name of the program/FB
     required string pou_variable_type = 2;
+
+    // Name of the task associated with this program/FB. 
+    // A program/FB can be associated with atmost one task.
     required string task_name = 3;
+
+    // Specifies how the VAR_INPUTs, VAR_INOUTs of the program/FB are
+    // initialized before running the program. Also specifies where the OUTPUTs
+    // of the program are stored.
     repeated ProgramVariableInitialization initialization_maps = 4;
 }
 
+// Describes each CPU of the PLC
 message ResourceSpecification {
+
+    // Name associated with the CPU
     required string resource_name = 1;
+
+    // Input memory associated with this CPU
     optional int64 input_mem_size_bytes = 2;
+
+    // Output memory associated with this CPU
     optional int64 output_mem_size_bytes = 3;
+
+    // Global variables specific to all POUs within this CPU
     optional DataType resource_global_var = 4;
+
+    // Definition of all Functions, Function Blocks and Programs associated with
+    // this CPU
     repeated DataType pou_var = 5;
+
+    // Specification of a single interval task. Only one interval task is 
+    // supported in this emulator as of now.
     optional IntervalTaskSpecification interval_task = 7;
+
+    // Specification of interrupt tasks
     repeated InterruptTaskSpecification interrupt_tasks = 8;
+
+    // Mapping POUs with tasks.
     repeated ProgramSpecification programs = 9;
     
 }
 
+// These are created by the emulator and used internally
 message MachineSpecification {
     required int32 num_cpus = 1;
     optional int64 ram_mem_size_bytes = 2;
@@ -240,6 +278,7 @@ message MachineSpecification {
     repeated ResourceSpecification resource_spec = 6;
 }
 
+// These are created by the emulator and used internally
 message Specification {
     optional string config_name = 1;
     optional LogLevels log_level = 2;

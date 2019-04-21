@@ -16,17 +16,21 @@ namespace pc_emulator {
             CommModule(string ConfigurationPath) 
                 : ExtModule(ConfigurationPath) {};
 
-            //! NOT IMPLEMENTED, Communication modules can only query access paths. 
+            //! Communication modules can create variables pointing to addresses 
+            // in the PLC's RAM. 
             /*!
-                Raises an exception.
+                \param RamByteOffset starting byte offset within the RAM
+                \param RamBitOffset starting bit offset within the chosen byte
+                \param VariableDataTypeName The specified address is initialized
+                    with a pointer of this type
+                \return PCVariableContainer which is defined over the specified
+                    RAM location and initialized to the specified data type
             */
             std::unique_ptr<PCVariableContainer> GetVariableContainer(
                 int RamByteOffset, int RamBitOffset,
-                string VariableDataTypeName) {
-                std::domain_error("NOT IMPLEMENTED !");
-            };
+                string VariableDataTypeName);
 
-            //! NOT IMPLEMENTED, Communication modules can only query access paths. 
+            //! NOT IMPLEMENTED, Communication modules can only query access paths/RAM. 
             /*!
                 Raises an exception.
             */

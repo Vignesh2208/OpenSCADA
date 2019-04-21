@@ -16,21 +16,21 @@ using namespace std;
 
 namespace pc_emulator{
 
-    //! Class which registers and tracks all valid SFBs without code body
+    //! Class which registers and tracks all valid SFB executors without code body
     class SFBRegistry {
         private:
             
             std::unordered_map<std::string, std::unique_ptr<SFB>> 
-                __SFB; /*!< Hash map of SFC name, SFC obj */
+                __SFB; /*!< Hash map of SFB name, SFBExec obj */
         public:
 
             //! Constructor
             SFBRegistry(PCResourceImpl * AssociatedResource);
 
-            //! Retrieve SFC object with the specified SFC name
+            //! Retrieve SFB object with the specified SFB name
             /*!
-                \param SFCName Name of the instruction
-                \return SFC object
+                \param SFBName Name of the instruction
+                \return SFB object
             */
             SFB* GetSFB(string SFBName);
     };

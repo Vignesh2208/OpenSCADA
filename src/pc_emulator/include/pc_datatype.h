@@ -556,87 +556,97 @@ namespace pc_emulator {
             static bool ValueToDate(string Value, DateType& Date);
 
 
+            //! Convert passed bool Value to a equivalent string description of specified data type category
             static bool BoolToAny(bool Value, int DataTypeCategory,
                     string& Result);
 
-            
+            //! Convert passed byte Value to a equivalent string description of specified data type category
             static bool ByteToAny(uint8_t Value, int DataTypeCategory,
                     string& Result);
 
-            
+            //! Convert passed word Value to a equivalent string description of specified data type category
             static bool WordToAny(uint16_t Value, int DataTypeCategory,
                     string& Result);
 
-            
+            //! Convert passed dword Value to a equivalent string description of specified data type category
             static bool DWordToAny(uint32_t Value, int DataTypeCategory,
                     string& Result);
 
-            
+            //! Convert passed lword Value to a equivalent string description of specified data type category
             static bool LWordToAny(uint64_t Value, int DataTypeCategory,
                     string& Result);
 
-            
+            //! Convert passed char Value to a equivalent string description of specified data type category
             static bool CharToAny(char Value, int DataTypeCategory,
                     string& Result);
 
-            
+            //! Convert passed int Value to a equivalent string description of specified data type category
             static bool IntToAny(int16_t Value, int DataTypeCategory,
                     string& Result);
 
-            
+            //! Convert passed sint Value to a equivalent string description of specified data type category
             static bool SIntToAny(int8_t Value, int DataTypeCategory,
                     string& Result);
 
-            
+            //! Convert passed dint Value to a equivalent string description of specified data type category
             static bool DIntToAny(int32_t Value, int DataTypeCategory,
                     string& Result);
 
-            
+            //! Convert passed lint Value to a equivalent string description of specified data type category
             static bool LIntToAny(int64_t Value, int DataTypeCategory,
                     string& Result);
 
-            
+           //! Convert passed uint Value to a equivalent string description of specified data type category
             static bool UIntToAny(uint16_t Value, int DataTypeCategory,
                     string& Result);
 
-
+            //! Convert passed usint Value to a equivalent string description of specified data type category
             static bool USintToAny(uint8_t Value, int DataTypeCategory,
                     string& Result);
 
-
+            //! Convert passed udint Value to a equivalent string description of specified data type category
             static bool UDintToAny(uint32_t Value, int DataTypeCategory,
                     string& Result);
 
-            
+            //! Convert passed ulint Value to a equivalent string description of specified data type category
             static bool UlintToAny(uint64_t Value, int DataTypeCategory,
                     string& Result);
 
-            
+            //! Convert passed real Value to a equivalent string description of specified data type category
             static bool RealToAny(float Value, int DataTypeCategory,
                     string& Result);
 
-            
+            //! Convert passed lreal Value to a equivalent string description of specified data type category
             static bool LRealToAny(double Value, int DataTypeCategory,
                     string& Result);
 
+            //! Converts a DateTime object into a DT string
             static string DTToDTString(DateTODDataType& dt);
 
+            //! Converts a Date object into a DT string
             static string DateToDTString(DateDataType& date1);
 
+            //! Adds time with a date time object
             static void AddToDT(DateTODDataType& Dt, TimeType& Time);
 
+            //! Adds time with a time of day object
             static void AddToTOD(TODDataType& tod, TimeType& Time);
 
+            //! Subtracts time from a date time object
             static void SubFromDT(DateTODDataType& Dt, TimeType& Time);
 
+            //! Subtracts time from a time of day object
             static void SubFromTOD(TODDataType& tod, TimeType& Time);
 
+            //! Subtracts two date time objects and returns a time object
             static TimeType SubDTs(DateTODDataType& Dt1,
                     DateTODDataType& Dt2);
 
+            //! Subtracts two time of day objects and returns a time object
             static TimeType SubTODs(TODDataType& tod1,
                     TODDataType& tod2);
         
+            //! Subtracts two date objects and returns a time object
             static TimeType SubDATEs(DateDataType& date1, DateDataType& date2);
     };
 }

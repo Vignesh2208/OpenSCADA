@@ -13,13 +13,14 @@ using namespace std;
 
 namespace pc_emulator{
 
-    //! Class which registers and tracks all valid Functions with Code Body
+    //! Class which registers and tracks all valid Functions with a Code Body
     class FunctionsRegistry {
         private:
             
             std::unordered_map<std::string, std::unique_ptr<PCVariable>> 
                 __FunctionsRegistry; /*!< Hash map of function name, variable obj */
-            PCResourceImpl * __AssociatedResource;
+            PCResourceImpl * __AssociatedResource; /*!< Resource associated with
+                this registry */
         public:
 
             //! Constructor

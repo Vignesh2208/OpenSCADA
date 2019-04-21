@@ -58,6 +58,7 @@ namespace pc_emulator {
             */
             int RunInsn(InsnContainer& insn_container);
 
+            //! Returns true if the CurrentResult register of the associated task is TRUE
             bool IsCRSet();
             
             //! Saves the current result register of the resource

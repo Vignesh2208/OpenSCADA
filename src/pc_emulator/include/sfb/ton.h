@@ -25,6 +25,8 @@ namespace pc_emulator {
             }
             //! Called to execute the sfb
             /*!
+                \param CurrentResult    The CurrentResult register
+                    of the task executing this SFB
                 \param SFB     
             */
             void Execute(PCVariable *CurrentResult,

@@ -15,7 +15,7 @@ using namespace pc_specification;
 
 namespace pc_emulator {
 
-    //! Generic abstract class for an IL instruction
+    //! Generic abstract class for an IL SFC
     class SFC {
         public:
 
@@ -24,6 +24,8 @@ namespace pc_emulator {
 
             //! Called to execute the sfc
             /*!
+                \param CurrentResult    The CurrentResult register
+                    of the task executing this SFC
                 \param Operands     Operands to the sfc
             */
             virtual void Execute(PCVariable *CurrentResult,

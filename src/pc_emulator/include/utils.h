@@ -223,82 +223,258 @@ namespace pc_emulator {
                 string CallingPoUType, string NestedFieldName);
 
 
-            static PCVariable* ReallocateTmpVariable(PCConfiguration * configuration,
+            //! Clears already assigned memory and reallocates new memory for a variable
+            /*!
+                \param configuration    A PCConfiguration object
+                \param Var  The variable to be reallocated
+                \param  new_data_type   The variable's data type is to be changed
+                        to this one
+                \param InitialValue After reallocation, the variable is initialized
+                    with this value
+                \return PCVariable* The newly initialized variable or the same one
+                    or nullptr if the reallocation was not successful
+            */
+            static PCVariable* ReallocateTmpVariable(
+                PCConfiguration * configuration,
                 PCVariable * Var, PCDataType * new_data_type,
                 string InitialValue);
 
+            //! Type Casts a BOOL variable to a variable of new data type
+            /*!
+                Only Bit or Num Types are allowed for new_datatype
+                \param configuration A PCConfiguration object
+                \param Var  Variable to change
+                \param new_datatype The new data type to type cast to
+                \return PCVariable* The newly type casted variable
+            */
             static PCVariable* BOOL_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
+            //! Type Casts a BYTE variable to a variable of new data type
+            /*!
+                Only Bit or Num Types are allowed for new_datatype
+                \param configuration A PCConfiguration object
+                \param Var  Variable to change
+                \param new_datatype The new data type to type cast to
+                \return PCVariable* The newly type casted variable
+            */
             static PCVariable* BYTE_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
+            //! Type Casts a WORD variable to a variable of new data type
+            /*!
+                Only Bit or Num Types are allowed for new_datatype
+                \param configuration A PCConfiguration object
+                \param Var  Variable to change
+                \param new_datatype The new data type to type cast to
+                \return PCVariable* The newly type casted variable
+            */
             static PCVariable* WORD_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
+            //! Type Casts a DWORD variable to a variable of new data type
+            /*!
+                Only Bit or Num Types are allowed for new_datatype
+                \param configuration A PCConfiguration object
+                \param Var  Variable to change
+                \param new_datatype The new data type to type cast to
+                \return PCVariable* The newly type casted variable
+            */
             static PCVariable* DWORD_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
+            //! Type Casts a LWORD variable to a variable of new data type
+            /*!
+                Only Bit or Num Types are allowed for new_datatype
+                \param configuration A PCConfiguration object
+                \param Var  Variable to change
+                \param new_datatype The new data type to type cast to
+                \return PCVariable* The newly type casted variable
+            */
             static PCVariable* LWORD_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
+            //! Type Casts a CHAR variable to a variable of new data type
+            /*!
+                Only Bit or Num Types are allowed for new_datatype
+                \param configuration A PCConfiguration object
+                \param Var  Variable to change
+                \param new_datatype The new data type to type cast to
+                \return PCVariable* The newly type casted variable
+            */
             static PCVariable* CHAR_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
+            //! Type Casts a INT variable to a variable of new data type
+            /*!
+                Only Bit or Num Types are allowed for new_datatype
+                \param configuration A PCConfiguration object
+                \param Var  Variable to change
+                \param new_datatype The new data type to type cast to
+                \return PCVariable* The newly type casted variable
+            */
             static PCVariable* INT_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
+            //! Type Casts a SINT variable to a variable of new data type
+            /*!
+                Only Bit or Num Types are allowed for new_datatype
+                \param configuration A PCConfiguration object
+                \param Var  Variable to change
+                \param new_datatype The new data type to type cast to
+                \return PCVariable* The newly type casted variable
+            */
             static PCVariable* SINT_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
+            //! Type Casts a DINT variable to a variable of new data type
+            /*!
+                Only Bit or Num Types are allowed for new_datatype
+                \param configuration A PCConfiguration object
+                \param Var  Variable to change
+                \param new_datatype The new data type to type cast to
+                \return PCVariable* The newly type casted variable
+            */
             static PCVariable* DINT_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
+            //! Type Casts a LINT variable to a variable of new data type
+            /*!
+                Only Bit or Num Types are allowed for new_datatype
+                \param configuration A PCConfiguration object
+                \param Var  Variable to change
+                \param new_datatype The new data type to type cast to
+                \return PCVariable* The newly type casted variable
+            */
             static PCVariable* LINT_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
+            //! Type Casts a UINT variable to a variable of new data type
+            /*!
+                Only Bit or Num Types are allowed for new_datatype
+                \param configuration A PCConfiguration object
+                \param Var  Variable to change
+                \param new_datatype The new data type to type cast to
+                \return PCVariable* The newly type casted variable
+            */
             static PCVariable* UINT_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
+            //! Type Casts a USINT variable to a variable of new data type
+            /*!
+                Only Bit or Num Types are allowed for new_datatype
+                \param configuration A PCConfiguration object
+                \param Var  Variable to change
+                \param new_datatype The new data type to type cast to
+                \return PCVariable* The newly type casted variable
+            */
             static PCVariable* USINT_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
+            //! Type Casts a UDINT variable to a variable of new data type
+            /*!
+                Only Bit or Num Types are allowed for new_datatype
+                \param configuration A PCConfiguration object
+                \param Var  Variable to change
+                \param new_datatype The new data type to type cast to
+                \return PCVariable* The newly type casted variable
+            */
             static PCVariable* UDINT_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
+            //! Type Casts a ULINT variable to a variable of new data type
+            /*!
+                Only Bit or Num Types are allowed for new_datatype
+                \param configuration A PCConfiguration object
+                \param Var  Variable to change
+                \param new_datatype The new data type to type cast to
+                \return PCVariable* The newly type casted variable
+            */
             static PCVariable* ULINT_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
+            //! Type Casts a REAL variable to a variable of new data type
+            /*!
+                Only Bit or Num Types are allowed for new_datatype
+                \param configuration A PCConfiguration object
+                \param Var  Variable to change
+                \param new_datatype The new data type to type cast to
+                \return PCVariable* The newly type casted variable
+            */
             static PCVariable* REAL_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
+            //! Type Casts a LREAL variable to a variable of new data type
+            /*!
+                Only Bit or Num Types are allowed for new_datatype
+                \param configuration A PCConfiguration object
+                \param Var  Variable to change
+                \param new_datatype The new data type to type cast to
+                \return PCVariable* The newly type casted variable
+            */
             static PCVariable* LREAL_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
+            //! Type Casts a DT variable to a TOD variable
+            /*!
+                \param configuration A PCConfiguration object
+                \param Var  Variable to change
+                \param new_datatype Pointer to TOD data type
+                \return PCVariable* The newly type casted variable
+            */
             static PCVariable* DT_TO_TOD(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
+            //! Type Casts a DT variable to a DATE variable
+            /*!
+                \param configuration A PCConfiguration object
+                \param Var  Variable to change
+                \param new_datatype Pointer to DATE data type
+                \return PCVariable* The newly type casted variable
+            */
             static PCVariable* DT_TO_DATE(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
+            //! Checks if the data_type is Numeric
             static bool IsNumType(PCDataType * data_type);
 
+            //! Checks if the data_type is Bit/Byte/Word/DWord/LWord
             static bool IsBitType(PCDataType * data_type);
 
             static bool IsRealType(PCDataType * data_type);
 
+            //! Checks if the data_type is REAL/LREAL
             static bool SameClassOfDataTypes(PCDataType * DT1,
                 PCDataType * DT2);
 
+            //! Converts all passed operands to a common data type
+            /*!
+                The most appropriate data type is chosen from non-temporary
+                variables among the operands. If all variables are temporary
+                then the one with the largest size is chosen.
+                \param CR   CurrentResult (should always be temporary)
+                \param Operands List of operand variables
+                \return PCDataType* Most appropriate data type for type casting
+            */
             static PCDataType* GetMostAppropriateTypeCast(PCVariable * CR,
                     std::vector<PCVariable*>& Operands);
 
+            //! Parses a pc_system_specification.SystemConfiguration proto
+            /*!
+                \param SystemSpecificationPath  Full path containing the system
+                    specification prototxt file
+                \param full_specification   Parsed proto is converted to
+                    pc_specification.Specification and returned
+                \return bool    True on success
+            */
             static bool GenerateFullSpecification(
                 string SystemSpecificationPath,
                 Specification& full_specification);
 
+            //! Checks if the passed string is a nested field name or an immediate operand
             static bool IsOperandImmediate(string Operand);
 
+            //! Used internally to parse a CAL instruction formal parameters
             static void ExtractCallInterfaceMapping(
                 std::unordered_map<string, string>& VarsToSet,
                 std::unordered_map<string, string>& VarsToGet,

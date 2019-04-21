@@ -103,6 +103,7 @@ namespace pc_emulator {
 
             //! Called to execute the sfc
             /*!
+                \param CurrentResult    Dummy parameter. Not used
                 \param Operands     Operands to the sfc
             */
             void Execute(PCVariable *CurrentResult,
@@ -110,6 +111,7 @@ namespace pc_emulator {
 
             //! Called to execute the sfc
             /*!
+                \param CurrentResult    Dummy parameter. Not used
                 \param Operand     Operand to the sfc
             */
             PCVariable* Execute(PCVariable * CurrentResult,

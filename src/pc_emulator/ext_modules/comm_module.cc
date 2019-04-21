@@ -40,3 +40,14 @@ std::unique_ptr<PCVariableContainer>
     V = V->GetPtrToField(RemField);
     return std::unique_ptr<PCVariableContainer>(new PCVariableContainer(V));
 };
+
+std::unique_ptr<PCVariableContainer> CommModule::GetVariableContainer(
+                int RamByteOffset, int RamBitOffset,
+                string VariableDataTypeName) {
+
+    auto V = __ConfigInterface.GetVariablePointerToMem(
+                RamByteOffset, RamBitOffset,VariableDataTypeName);
+    if (V == nullptr)
+        return nullptr;
+    return std::unique_ptr<PCVariableContainer>(new PCVariableContainer(V));
+}

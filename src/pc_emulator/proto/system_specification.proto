@@ -4,27 +4,66 @@ package pc_system_specification;
 
 import "src/pc_emulator/proto/configuration.proto";
 
+// Used to define SFBs. All SFBs are declared in system_pous.prototxt
+// This is used internally
 message SystemPOUs {
     repeated pc_specification.DataType system_pou = 1;
 }
 
+
+// Configuration specifed by the user
 message SystemConfiguration {
+
+    // Name of the configuration
     optional string configuration_name = 1;
+
+    // Debugging level
     optional pc_specification.LogLevels log_level = 2;
+
+    // Log files are stored here
     optional string log_file_path = 3;
+
+    // Whether Kronos is enabled/disabled ?
     optional bool enable_kronos = 4;
+
+    // Running time of the emulator
     required int32 run_time_secs = 5;
+
+    // Description of the PLC's hardware
     required HardwareSpecification hardware_spec = 6;
+
+    // Declaration of all data types
     repeated pc_specification.DataType datatype_declaration = 7;
+
+    // Declaration of all global variables visible over the entire configuration
+    // and to all resources. 
     optional pc_specification.DataType var_global = 8;
+
+    // Declaration of access paths visible to other configruations and communication
+    // modules
     optional pc_specification.DataType var_access =9;
+
+    // Each resource, its POUs and tasks associated with each POU are defined here
+    // according to pc_specification.ResourceSpecification proto
     repeated string resource_file_path = 10;
 }
 
+
+// Describes the PLC's hardware specification
 message HardwareSpecification {
+
+    // number of CPUs in the PLC
     required int32 num_resources = 1;
+
+    // size of the PLCs RAM
     required int64 ram_mem_size_bytes = 2;
+
+    // timing specification for each IL instruction
     repeated pc_specification.InstructionSpecification ins_spec = 3;
+
+    // timing specification for each SFC
     repeated pc_specification.SFCSpecification sfc_spec = 4;
+
+    // timing specification for each SFB
     repeated pc_specification.SFBSpecification sfb_spec = 5;
 }
