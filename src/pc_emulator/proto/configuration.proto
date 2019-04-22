@@ -3,30 +3,32 @@ syntax = "proto2";
 package pc_specification;
 
 enum DataTypeCategory {
-    BOOL = 0;
-    BYTE = 1;
-    WORD = 2;
-    DWORD = 3;
-    LWORD = 4;
-    CHAR = 5;
+    //List of Elementary data types
+    BOOL = 0;   // Datatype name- BOOL
+    BYTE = 1;   // Datatype name- BYTE
+    WORD = 2;   // Datatype name- WORD
+    DWORD = 3;  // Datatype name- DWORD
+    LWORD = 4;  // Datatype name- LWORD
+    CHAR = 5;   // Datatype name- CHAR
  
-    USINT = 6;
-    SINT = 7;
-    UINT = 8;
-    INT = 9;
-    UDINT = 10;
-    DINT = 11;
-    ULINT = 12;
-    LINT = 13;
+    USINT = 6;  // Datatype name- USINT
+    SINT = 7;   // Datatype name- SINT
+    UINT = 8;   // Datatype name- UINT
+    INT = 9;    // Datatype name- INT
+    UDINT = 10; // Datatype name- UDINT
+    DINT = 11;  // Datatype name- DINT
+    ULINT = 12; // Datatype name- ULINT
+    LINT = 13;  // Datatype name- LINT
 
-    REAL = 14;
-    LREAL = 15;
+    REAL = 14;  // Datatype name- REAL
+    LREAL = 15; // Datatype name- LREAL
 
-    TIME = 16;
-    DATE = 17;
-    TIME_OF_DAY = 18;
-    DATE_AND_TIME = 19;
+    TIME = 16;  // Datatype name- TIME
+    DATE = 17;  // Datatype name- DATE
+    TIME_OF_DAY = 18;   // Datatype name- TOD
+    DATE_AND_TIME = 19; // Datatype name- DT
 
+    // Non elementary datatypes
     DERIVED = 20;
     POU = 21;
     ARRAY = 22; //used for internal purposes only

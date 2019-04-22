@@ -56,6 +56,28 @@ cc_library(
     alwayslink = True,
 )
 
+cc_binary(
+    name="example_idle_plc",
+    srcs = [
+        "examples/idle_plc/plc.cc"
+    ],
+    deps = [":pc_emulator_lib"], 
+    copts = ["-Iexternal/gtest/include -fpermissive -Wno-reorder"],
+    linkstatic = 1,
+
+)
+
+cc_binary(
+    name="example_comm_module",
+    srcs = [
+        "examples/idle_plc/comm_module.cc"
+    ],
+    deps = [":pc_emulator_lib"], 
+    copts = ["-Iexternal/gtest/include -fpermissive -Wno-reorder"],
+    linkstatic = 1,
+
+)
+
 cc_test(
     name = "datatype_test",
     srcs = ["src/pc_emulator/tests/datatype_tests/datatype_test.cc"],
