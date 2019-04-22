@@ -5,68 +5,63 @@ pou_var {
     name: "PROGRAM_1"
     pou_type: PROGRAM
     datatype_field {
-        field_name: "input_1"
+        field_name: "Dividend"
         field_datatype_name: "INT"
         intf_type: VAR_INPUT
     }
     datatype_field {
-        field_name: "input_2"
+        field_name: "Divisor"
         field_datatype_name: "INT"
         intf_type: VAR_INPUT
     }
     datatype_field {
-        field_name: "output_1"
-        field_datatype_name: "REAL"
+        field_name: "Quotient"
+        field_datatype_name: "INT"
         intf_type: VAR_OUTPUT
     }
     datatype_field {
-        field_name: "output_2"
-        field_datatype_name: "REAL"
+        field_name: "DivRem"
+        field_datatype_name: "INT"
         intf_type: VAR_OUTPUT
     }
     datatype_field {
-        field_name: "inout_1"
-        field_datatype_name: "INT"
-        intf_type: VAR_IN_OUT
+        field_name: "DivError"
+        field_datatype_name: "BOOL"
+        intf_type: VAR_OUTPUT
     }
     datatype_field {
-        field_name: "inout_2"
+        field_name: "FnCallCount"
         field_datatype_name: "INT"
-        intf_type: VAR_IN_OUT
+        intf_type: VAR_OUTPUT
     }
     datatype_field {
-        field_name: "var_1"
-        field_datatype_name: "INT"
+        field_name: "Counter"
+        field_datatype_name: "CTU"
         intf_type: VAR
     }
-    datatype_field {
-        field_name: "drv_1"
-        field_datatype_name: "INT_TYPE_DEF"
-        intf_type: VAR_EXPLICIT_STORAGE
-        field_storage_spec {
-            full_storage_spec: "%MW10"
-        }
-    }
-    datatype_field {
-        field_name: "global_int_arr"
-        field_datatype_name: "INT"
-        dimension_1: 2
-        dimension_2: 2
-        intf_type: VAR_EXTERNAL
-    }
-    datatype_field {
-        field_name: "start"
-        field_datatype_name: "BOOL_TYPE_DEF"
-        intf_type: VAR_EXTERNAL
-    }
-    datatype_field {
-        field_name: "start_int"
-        field_datatype_name: "INT_TYPE_DEF"
-        intf_type: VAR_EXTERNAL
-    }
-    datatype_field {
-        field_name: "start_time"
-        field_datatype_name: "TIME_TYPE_DEF"
-        intf_type: VAR_EXTERNAL
+
+    code_body {
+        insn: "LD 0" 
+        insn: "EQ Divisor" 
+        insn: "JMPC Error" 
+        insn: "LD Dividend" 
+        insn: "DIV Divisor" 
+        insn: "ST Quotient"
+        insn: "MUL Divisor"
+        insn: "ST DivRem" 
+        insn: "LD Dividend"
+        insn: "SUB DivRem"
+        insn: "ST DivRem"
+        insn: "LD FALSE"
+        insn: "ST DivError"
+        insn: "JMP End"
+        insn: "Error: LD 0"
+        insn: "ST Quotient"
+        insn: "ST DivRem"
+        insn: "LD TRUE"
+        insn: "ST DivError"
+        insn: "End: CAL Counter(CU := FALSE, PV := 100, R := FALSE, CV => FnCallCount)"
+        insn: "CAL Counter(CU := TRUE, PV := 100, R := FALSE, CV => FnCallCount)"
+        insn: "RET"
     }
 }

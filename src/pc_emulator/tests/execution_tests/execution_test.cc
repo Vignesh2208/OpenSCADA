@@ -22,7 +22,7 @@ using MemType  = pc_specification::MemType;
 using DataTypeCategory = pc_specification::DataTypeCategory;
 using FieldInterfaceType = pc_specification::FieldInterfaceType;
 
-
+/*
 TEST(ExecutionTestSuite, InsnCodeBodyProcessingTest) {
     string TestDir = Utils::GetInstallationDirectory() 
             + "/src/pc_emulator/tests/execution_tests";
@@ -1256,6 +1256,71 @@ TEST(ExecutionTestSuite, TP_Timer_Execution_Test) {
         DataTypeCategory::BOOL), false);
     EXPECT_EQ(TP_FB->GetValueStoredAtField<TimeType>("ET",
         DataTypeCategory::TIME).SecsElapsed, 0);
+    
+    new_executor.CleanUp();
+    configuration.Cleanup();
+
+}*/
+
+
+TEST(ExecutionTestSuite, Program_Execution_Test) {
+    string TestDir = Utils::GetInstallationDirectory() 
+            + "/src/pc_emulator/tests/execution_tests";
+
+    std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+
+    PCResourceImpl * resource 
+        = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
+                    "CPU_001");
+    
+    
+    PCVariable * Program = resource->GetPOU("PROGRAM_1");
+    IntervalTaskSpecification task_spec;
+    IntervalTaskParams*  task_params = new IntervalTaskParams;
+    task_spec.set_task_name("Task1");
+    task_spec.set_priority(1);
+    task_params->set_interval_ms(10);
+    task_spec.set_allocated_interval_task_params(task_params);
+    Task new_task((PCConfigurationImpl*)&configuration, resource, task_spec);
+    Executor new_executor(&configuration, resource, &new_task);
+
+    
+    new_executor.SetExecPoUVariable(Program);
+
+    Program->SetField("Dividend", "100");
+    Program->SetField("Divisor", "10"); 
+    new_executor.Run();
+    
+    EXPECT_EQ(Program->GetValueStoredAtField<int16_t>("Quotient",
+        DataTypeCategory::INT), 10);
+    EXPECT_EQ(Program->GetValueStoredAtField<int16_t>("DivRem",
+        DataTypeCategory::INT), 0);
+    EXPECT_EQ(Program->GetValueStoredAtField<int16_t>("FnCallCount",
+        DataTypeCategory::INT), 1);
+    EXPECT_EQ(Program->GetValueStoredAtField<bool>("DivError",
+        DataTypeCategory::BOOL), false);
+
+    Program->SetField("Dividend", "100");
+    Program->SetField("Divisor", "11"); 
+    new_executor.Run();
+    
+    EXPECT_EQ(Program->GetValueStoredAtField<int16_t>("Quotient",
+        DataTypeCategory::INT), 9);
+    EXPECT_EQ(Program->GetValueStoredAtField<int16_t>("DivRem",
+        DataTypeCategory::INT), 1);
+    EXPECT_EQ(Program->GetValueStoredAtField<int16_t>("FnCallCount",
+        DataTypeCategory::INT), 2);
+    EXPECT_EQ(Program->GetValueStoredAtField<bool>("DivError",
+        DataTypeCategory::BOOL), false);
+
+    Program->SetField("Dividend", "100");
+    Program->SetField("Divisor", "0"); 
+    new_executor.Run();
+    EXPECT_EQ(Program->GetValueStoredAtField<int16_t>("FnCallCount",
+        DataTypeCategory::INT), 3);
+    EXPECT_EQ(Program->GetValueStoredAtField<bool>("DivError",
+        DataTypeCategory::BOOL), true);
     
     new_executor.CleanUp();
     configuration.Cleanup();

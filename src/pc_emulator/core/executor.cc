@@ -138,6 +138,9 @@ int Executor::RunInsn(InsnContainer& insn_container) {
             insn_container.OperandList[1]);
 
         string PoUName = insn_container.OperandList[0];
+
+        std:: cout << "PoUName: " << PoUName 
+            << " Operands: " << insn_container.OperandList[1] << std::endl;
         auto PoU = __ExecPoUVariable->GetPtrToField(PoUName);
 
         assert(PoU != nullptr);
@@ -146,6 +149,7 @@ int Executor::RunInsn(InsnContainer& insn_container) {
 
         for (auto it = VarsToSet.begin(); it != VarsToSet.end(); it++) {
             PCVariable * VarToSet;
+            std::cout << "Var To Set: " << it->second << " to: " << it->first << std::endl;
             if (Utils::IsOperandImmediate(it->second)) {
                 VarToSet 
                 = __AssociatedResource->GetVariableForImmediateOperand(
@@ -176,6 +180,7 @@ int Executor::RunInsn(InsnContainer& insn_container) {
         Executor new_executor(__AssociatedResource->__configuration,
                     __AssociatedResource, __AssociatedTask);
 
+        std::cout << "Executing PoU: " << PoU->__VariableDataType->__DataTypeName << std::endl;
         new_executor.SetExecPoUVariable(PoU);
         new_executor.Run();
         new_executor.CleanUp();
@@ -206,6 +211,7 @@ int Executor::RunInsn(InsnContainer& insn_container) {
             __ExecPoUVariable->SetField(it->second, VarToGet);
         }
 
+        return insn_container.InsnPosition + 1;
         // Operand should be of the form "(Var1:=Value1, Var2:=Value2, ...)"
     } else if (insn_container.InsnName == "JMP" 
         || insn_container.InsnName == "JMPC"
@@ -251,6 +257,13 @@ int Executor::RunInsn(InsnContainer& insn_container) {
         auto Fn = __AssociatedTask->FCRegistry->GetFunction(
                 insn_container.InsnName);
 
+        if (insn_container.OperandList.size() > 0) {
+                std::cout << "Executing Insn: " << insn_container.InsnName 
+                << " " << insn_container.OperandList[0] << std::endl;
+            } else {
+                std::cout << "Executing Insn: " << insn_container.InsnName 
+                 << std::endl;
+            }
         std::vector <PCVariable *> Ops;
         for (int i = 0; i < insn_container.OperandList.size(); i++) {
             if(Utils::IsOperandImmediate(insn_container.OperandList[i])) {
@@ -267,13 +280,7 @@ int Executor::RunInsn(InsnContainer& insn_container) {
         if (Fn == nullptr) {
             // Need to perform access checks here too for LD and ST instructions
 
-            if (insn_container.OperandList.size() > 0) {
-                std::cout << "Executing Insn: " << insn_container.InsnName 
-                << " " << insn_container.OperandList[0] << std::endl;
-            } else {
-                std::cout << "Executing Insn: " << insn_container.InsnName 
-                 << std::endl;
-            }
+            
             auto InsnObj = __AssociatedResource->__InsnRegistry->GetInsn(
                 insn_container.InsnName);
 
