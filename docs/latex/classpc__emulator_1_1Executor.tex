@@ -2,8 +2,7 @@
 \label{classpc__emulator_1_1Executor}\index{pc\+\_\+emulator\+::\+Executor@{pc\+\_\+emulator\+::\+Executor}}
 
 
-Collaboration diagram for pc\+\_\+emulator\+:\+:Executor\+:
-\nopagebreak
+Collaboration diagram for pc\+\_\+emulator\+:\+:Executor\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -13,7 +12,8 @@ Collaboration diagram for pc\+\_\+emulator\+:\+:Executor\+:
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\hyperlink{classpc__emulator_1_1Executor_a55e78f5999c4ba3648a66927426a51d0}{Executor} (\hyperlink{classpc__emulator_1_1PCConfigurationImpl}{P\+C\+Configuration\+Impl} $\ast$configuration, \hyperlink{classpc__emulator_1_1PCResourceImpl}{P\+C\+Resource\+Impl} $\ast$Associated\+Resource, \hyperlink{classpc__emulator_1_1Task}{Task} $\ast$Associated\+Task)
+\hyperlink{classpc__emulator_1_1Executor_a55e78f5999c4ba3648a66927426a51d0}{Executor} (\hyperlink{classpc__emulator_1_1PCConfigurationImpl}{P\+C\+Configuration\+Impl} $\ast$configuration, \hyperlink{classpc__emulator_1_1PCResourceImpl}{P\+C\+Resource\+Impl} $\ast$Associated\+Resource, \hyperlink{classpc__emulator_1_1Task}{Task} $\ast$Associated\+Task)\hypertarget{classpc__emulator_1_1Executor_a55e78f5999c4ba3648a66927426a51d0}{}\label{classpc__emulator_1_1Executor_a55e78f5999c4ba3648a66927426a51d0}
+
 \begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
 void \hyperlink{classpc__emulator_1_1Executor_a2dbf56b19f3fbaf775f7b33b50ec8de9}{Set\+Exec\+Po\+U\+Variable} (\hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$Exec\+Po\+U\+Variable)
 \begin{DoxyCompactList}\small\item\em Sets a PoU to this executor. \end{DoxyCompactList}\item 
@@ -25,6 +25,9 @@ void \hyperlink{classpc__emulator_1_1Executor_a8bbf346063821d7a9c5e9b734f29a70f}
 \begin{DoxyCompactList}\small\item\em Cleanup and do other book keeping. \end{DoxyCompactList}\item 
 int \hyperlink{classpc__emulator_1_1Executor_abf2af6604c54863a1a67a36a2526e357}{Run\+Insn} (\hyperlink{classpc__emulator_1_1InsnContainer}{Insn\+Container} \&insn\+\_\+container)
 \begin{DoxyCompactList}\small\item\em Runs the current instruction and returns idx of next instruction to execute. \end{DoxyCompactList}\item 
+bool \hyperlink{classpc__emulator_1_1Executor_a5c6ca0fb0177b7010f16bdebac11c713}{Is\+C\+R\+Set} ()\hypertarget{classpc__emulator_1_1Executor_a5c6ca0fb0177b7010f16bdebac11c713}{}\label{classpc__emulator_1_1Executor_a5c6ca0fb0177b7010f16bdebac11c713}
+
+\begin{DoxyCompactList}\small\item\em Returns true if the Current\+Result register of the associated task is T\+R\+UE. \end{DoxyCompactList}\item 
 void \hyperlink{classpc__emulator_1_1Executor_ad1bfe0eefa104d73193b062270e83008}{Save\+C\+P\+U\+Registers} ()\hypertarget{classpc__emulator_1_1Executor_ad1bfe0eefa104d73193b062270e83008}{}\label{classpc__emulator_1_1Executor_ad1bfe0eefa104d73193b062270e83008}
 
 \begin{DoxyCompactList}\small\item\em Saves the current result register of the resource. \end{DoxyCompactList}\item 
@@ -48,27 +51,8 @@ void \hyperlink{classpc__emulator_1_1Executor_ae735d64520122eff70a5f539375027e6}
 bool \hyperlink{classpc__emulator_1_1Executor_a8c58feead8d23b32927237f2f6fc5c7a}{\+\_\+\+\_\+\+Initialized}
 \item 
 \hyperlink{classpc__emulator_1_1Task}{Task} $\ast$ \hyperlink{classpc__emulator_1_1Executor_ac1f6ee2ee941691f69f0d51827fd2a06}{\+\_\+\+\_\+\+Associated\+Task}
-\item 
-\hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ {\bfseries \+\_\+\+\_\+\+CR}\hypertarget{classpc__emulator_1_1Executor_a9946f739f53375d187386eebc60a174c}{}\label{classpc__emulator_1_1Executor_a9946f739f53375d187386eebc60a174c}
-
 \end{DoxyCompactItemize}
 
-
-\subsection{Constructor \& Destructor Documentation}
-\index{pc\+\_\+emulator\+::\+Executor@{pc\+\_\+emulator\+::\+Executor}!Executor@{Executor}}
-\index{Executor@{Executor}!pc\+\_\+emulator\+::\+Executor@{pc\+\_\+emulator\+::\+Executor}}
-\subsubsection[{\texorpdfstring{Executor(\+P\+C\+Configuration\+Impl $\ast$configuration, P\+C\+Resource\+Impl $\ast$\+Associated\+Resource, Task $\ast$\+Associated\+Task)}{Executor(PCConfigurationImpl *configuration, PCResourceImpl *AssociatedResource, Task *AssociatedTask)}}]{\setlength{\rightskip}{0pt plus 5cm}pc\+\_\+emulator\+::\+Executor\+::\+Executor (
-\begin{DoxyParamCaption}
-\item[{{\bf P\+C\+Configuration\+Impl} $\ast$}]{configuration, }
-\item[{{\bf P\+C\+Resource\+Impl} $\ast$}]{Associated\+Resource, }
-\item[{{\bf Task} $\ast$}]{Associated\+Task}
-\end{DoxyParamCaption}
-)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classpc__emulator_1_1Executor_a55e78f5999c4ba3648a66927426a51d0}{}\label{classpc__emulator_1_1Executor_a55e78f5999c4ba3648a66927426a51d0}
-
-
-Constructor. 
-
-local copy of the current result register of the associated resource 
 
 \subsection{Member Function Documentation}
 \index{pc\+\_\+emulator\+::\+Executor@{pc\+\_\+emulator\+::\+Executor}!Run\+Insn@{Run\+Insn}}

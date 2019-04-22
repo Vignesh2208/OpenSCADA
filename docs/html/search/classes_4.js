@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['logger',['Logger',['../classpc__emulator_1_1Logger.html',1,'pc_emulator']]]
+  ['functionsregistry',['FunctionsRegistry',['../classpc__emulator_1_1FunctionsRegistry.html',1,'pc_emulator']]]
 ];

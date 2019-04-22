@@ -11,8 +11,7 @@ Specific implementation of the \hyperlink{classpc__emulator_1_1PCResource}{P\+C\
 
 
 
-Inheritance diagram for pc\+\_\+emulator\+:\+:P\+C\+Resource\+Impl\+:
-\nopagebreak
+Inheritance diagram for pc\+\_\+emulator\+:\+:P\+C\+Resource\+Impl\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -21,8 +20,7 @@ Inheritance diagram for pc\+\_\+emulator\+:\+:P\+C\+Resource\+Impl\+:
 \end{figure}
 
 
-Collaboration diagram for pc\+\_\+emulator\+:\+:P\+C\+Resource\+Impl\+:
-\nopagebreak
+Collaboration diagram for pc\+\_\+emulator\+:\+:P\+C\+Resource\+Impl\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -40,6 +38,9 @@ void \hyperlink{classpc__emulator_1_1PCResourceImpl_a7e2b6e746c7b3cef8c086b1c3dd
 void \hyperlink{classpc__emulator_1_1PCResourceImpl_ac3074be3fc6d79651d7921128c86aedb}{Initialize\+All\+Po\+U\+Vars} ()\hypertarget{classpc__emulator_1_1PCResourceImpl_ac3074be3fc6d79651d7921128c86aedb}{}\label{classpc__emulator_1_1PCResourceImpl_ac3074be3fc6d79651d7921128c86aedb}
 
 \begin{DoxyCompactList}\small\item\em Register and initialize all P\+OU variables defined within the resource. \end{DoxyCompactList}\item 
+void {\bfseries Initialize\+All\+S\+F\+B\+Vars} ()\hypertarget{classpc__emulator_1_1PCResourceImpl_a019ed31f83f95c462135c8e9a1d0cfae}{}\label{classpc__emulator_1_1PCResourceImpl_a019ed31f83f95c462135c8e9a1d0cfae}
+
+\item 
 void \hyperlink{classpc__emulator_1_1PCResourceImpl_a1da54f6b883793da02f8b8d4ff980c45}{Resolve\+All\+External\+Fields} ()\hypertarget{classpc__emulator_1_1PCResourceImpl_a1da54f6b883793da02f8b8d4ff980c45}{}\label{classpc__emulator_1_1PCResourceImpl_a1da54f6b883793da02f8b8d4ff980c45}
 
 \begin{DoxyCompactList}\small\item\em Resolve external fields of all P\+OU variables. \end{DoxyCompactList}\item 
@@ -61,7 +62,7 @@ void \hyperlink{classpc__emulator_1_1PCResourceImpl_a3743fcd2d5c0b2f751d39ca0054
 \hyperlink{classpc__emulator_1_1Task}{Task} $\ast$ \hyperlink{classpc__emulator_1_1PCResourceImpl_a72898a5dd446e142f7e5cea6ce469486}{Get\+Interval\+Task\+To\+Execute\+At} (double schedule\+\_\+time)\hypertarget{classpc__emulator_1_1PCResourceImpl_a72898a5dd446e142f7e5cea6ce469486}{}\label{classpc__emulator_1_1PCResourceImpl_a72898a5dd446e142f7e5cea6ce469486}
 
 \begin{DoxyCompactList}\small\item\em Returns the interval task to execute at the specified time. \end{DoxyCompactList}\item 
-void \hyperlink{classpc__emulator_1_1PCResourceImpl_a99fe969205384c1dfbebc9418370d800}{Execute\+Insn} (string Insn\+Name, std\+::vector$<$ \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ $>$ \&Ops, bool is\+Negated)
+void \hyperlink{classpc__emulator_1_1PCResourceImpl_aa9579c9b7c93966abbfd167e5b00d412}{Execute\+Insn} (string Insn\+Name, std\+::vector$<$ \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ $>$ \&Ops)
 \begin{DoxyCompactList}\small\item\em Executes an instruction with the specified instruction name. \end{DoxyCompactList}\item 
 void \hyperlink{classpc__emulator_1_1PCResourceImpl_ab64a9dd6676b818413edc2b690dee265}{Queue\+Task} (\hyperlink{classpc__emulator_1_1Task}{Task} $\ast$Tsk)\hypertarget{classpc__emulator_1_1PCResourceImpl_ab64a9dd6676b818413edc2b690dee265}{}\label{classpc__emulator_1_1PCResourceImpl_ab64a9dd6676b818413edc2b690dee265}
 
@@ -77,7 +78,7 @@ void \hyperlink{classpc__emulator_1_1PCResourceImpl_ab64a9dd6676b818413edc2b690d
 \begin{DoxyCompactList}\small\item\em Creates a temporary variable of the specified data type and initializes it. \end{DoxyCompactList}\item 
 \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1PCResourceImpl_a698386af76ea94866178eda4e8bbefb9}{Get\+Variable\+For\+Immediate\+Operand} (string Operand\+Value)
 \begin{DoxyCompactList}\small\item\em Creates a temporary variable of the data type encoded in the operand value. \end{DoxyCompactList}\item 
-\hyperlink{classpc__emulator_1_1PoUCodeContainer}{Po\+U\+Code\+Container} $\ast$ \hyperlink{classpc__emulator_1_1PCResourceImpl_a9c043a5ecadb28a64148eafdc30c11b7}{Create\+New\+Code\+Container} (string Po\+U\+Data\+Type\+Name)\hypertarget{classpc__emulator_1_1PCResourceImpl_a9c043a5ecadb28a64148eafdc30c11b7}{}\label{classpc__emulator_1_1PCResourceImpl_a9c043a5ecadb28a64148eafdc30c11b7}
+\hyperlink{classpc__emulator_1_1PoUCodeContainer}{Po\+U\+Code\+Container} $\ast$ \hyperlink{classpc__emulator_1_1PCResourceImpl_a0f9f8987a73c02f24f8b038c2b3f1cdd}{Create\+New\+Code\+Container} (\hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$Po\+U\+Data\+Type)\hypertarget{classpc__emulator_1_1PCResourceImpl_a0f9f8987a73c02f24f8b038c2b3f1cdd}{}\label{classpc__emulator_1_1PCResourceImpl_a0f9f8987a73c02f24f8b038c2b3f1cdd}
 
 \begin{DoxyCompactList}\small\item\em Creates a new code container for a P\+OU and registers it. \end{DoxyCompactList}\item 
 \hyperlink{classpc__emulator_1_1PoUCodeContainer}{Po\+U\+Code\+Container} $\ast$ \hyperlink{classpc__emulator_1_1PCResourceImpl_a93b852f67ddca8d086b19a0c7daf7c42}{Get\+Code\+Container} (string Po\+U\+Data\+Type\+Name)\hypertarget{classpc__emulator_1_1PCResourceImpl_a93b852f67ddca8d086b19a0c7daf7c42}{}\label{classpc__emulator_1_1PCResourceImpl_a93b852f67ddca8d086b19a0c7daf7c42}
@@ -94,6 +95,12 @@ void \hyperlink{classpc__emulator_1_1PCResourceImpl_a3d9ad2276414e07af0a9b435e17
 std\+::unique\+\_\+ptr$<$ \hyperlink{classpc__emulator_1_1Clock}{Clock} $>$ \hyperlink{classpc__emulator_1_1PCResourceImpl_ad49b0d4eb79f506f03f37518e1e70d1e}{clock}
 \item 
 \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1PCResourceImpl_a3648237ffd6fc0c0d569b18f7142154f}{\+\_\+\+\_\+\+Current\+Result}
+\item 
+\hyperlink{classpc__emulator_1_1InsnRegistry}{Insn\+Registry} $\ast$ \hyperlink{classpc__emulator_1_1PCResourceImpl_ac571faf5e66992a7e32996a613278e91}{\+\_\+\+\_\+\+Insn\+Registry}
+\item 
+\hyperlink{classpc__emulator_1_1SFCRegistry}{S\+F\+C\+Registry} $\ast$ \hyperlink{classpc__emulator_1_1PCResourceImpl_ab0fadc7735b85b999570f02b8543bdab}{\+\_\+\+\_\+\+S\+F\+C\+Registry}
+\item 
+\hyperlink{classpc__emulator_1_1SFBRegistry}{S\+F\+B\+Registry} $\ast$ \hyperlink{classpc__emulator_1_1PCResourceImpl_affbb704a7c2800fb84b72409b79c7b54}{\+\_\+\+\_\+\+S\+F\+B\+Registry}
 \end{DoxyCompactItemize}
 
 
@@ -131,13 +138,12 @@ Constructor.
 \subsection{Member Function Documentation}
 \index{pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl@{pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl}!Execute\+Insn@{Execute\+Insn}}
 \index{Execute\+Insn@{Execute\+Insn}!pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl@{pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl}}
-\subsubsection[{\texorpdfstring{Execute\+Insn(string Insn\+Name, std\+::vector$<$ P\+C\+Variable $\ast$ $>$ \&\+Ops, bool is\+Negated)}{ExecuteInsn(string InsnName, std::vector< PCVariable * > &Ops, bool isNegated)}}]{\setlength{\rightskip}{0pt plus 5cm}void pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl\+::\+Execute\+Insn (
+\subsubsection[{\texorpdfstring{Execute\+Insn(string Insn\+Name, std\+::vector$<$ P\+C\+Variable $\ast$ $>$ \&\+Ops)}{ExecuteInsn(string InsnName, std::vector< PCVariable * > &Ops)}}]{\setlength{\rightskip}{0pt plus 5cm}void pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl\+::\+Execute\+Insn (
 \begin{DoxyParamCaption}
 \item[{string}]{Insn\+Name, }
-\item[{std\+::vector$<$ {\bf P\+C\+Variable} $\ast$ $>$ \&}]{Ops, }
-\item[{bool}]{is\+Negated}
+\item[{std\+::vector$<$ {\bf P\+C\+Variable} $\ast$ $>$ \&}]{Ops}
 \end{DoxyParamCaption}
-)}\hypertarget{classpc__emulator_1_1PCResourceImpl_a99fe969205384c1dfbebc9418370d800}{}\label{classpc__emulator_1_1PCResourceImpl_a99fe969205384c1dfbebc9418370d800}
+)}\hypertarget{classpc__emulator_1_1PCResourceImpl_aa9579c9b7c93966abbfd167e5b00d412}{}\label{classpc__emulator_1_1PCResourceImpl_aa9579c9b7c93966abbfd167e5b00d412}
 
 
 Executes an instruction with the specified instruction name. 
@@ -147,8 +153,6 @@ Executes an instruction with the specified instruction name.
 {\em Insn\+Name} & Name of the instruction \\
 \hline
 {\em Ops} & List of operands to the instruction. The \+\_\+\+\_\+\+Current\+Result is always a default operand. \\
-\hline
-{\em is\+Negated} & Specifies if the operands are to be negated first before being operated on. \\
 \hline
 \end{DoxyParams}
 \index{pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl@{pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl}!Get\+P\+OU@{Get\+P\+OU}}
@@ -234,7 +238,16 @@ Implements \hyperlink{classpc__emulator_1_1PCResource_a511c581ba122a73010f836c84
 Associated configuration \index{pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl@{pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl}!\+\_\+\+\_\+\+Current\+Result@{\+\_\+\+\_\+\+Current\+Result}}
 \index{\+\_\+\+\_\+\+Current\+Result@{\+\_\+\+\_\+\+Current\+Result}!pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl@{pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl}}
 \subsubsection[{\texorpdfstring{\+\_\+\+\_\+\+Current\+Result}{__CurrentResult}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+C\+Variable}$\ast$ pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl\+::\+\_\+\+\_\+\+Current\+Result}\hypertarget{classpc__emulator_1_1PCResourceImpl_a3648237ffd6fc0c0d569b18f7142154f}{}\label{classpc__emulator_1_1PCResourceImpl_a3648237ffd6fc0c0d569b18f7142154f}
-CR register for the resource \index{pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl@{pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl}!clock@{clock}}
+CR register for the resource \index{pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl@{pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl}!\+\_\+\+\_\+\+Insn\+Registry@{\+\_\+\+\_\+\+Insn\+Registry}}
+\index{\+\_\+\+\_\+\+Insn\+Registry@{\+\_\+\+\_\+\+Insn\+Registry}!pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl@{pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl}}
+\subsubsection[{\texorpdfstring{\+\_\+\+\_\+\+Insn\+Registry}{__InsnRegistry}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Insn\+Registry}$\ast$ pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl\+::\+\_\+\+\_\+\+Insn\+Registry}\hypertarget{classpc__emulator_1_1PCResourceImpl_ac571faf5e66992a7e32996a613278e91}{}\label{classpc__emulator_1_1PCResourceImpl_ac571faf5e66992a7e32996a613278e91}
+Stores all registered instructions \index{pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl@{pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl}!\+\_\+\+\_\+\+S\+F\+B\+Registry@{\+\_\+\+\_\+\+S\+F\+B\+Registry}}
+\index{\+\_\+\+\_\+\+S\+F\+B\+Registry@{\+\_\+\+\_\+\+S\+F\+B\+Registry}!pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl@{pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl}}
+\subsubsection[{\texorpdfstring{\+\_\+\+\_\+\+S\+F\+B\+Registry}{__SFBRegistry}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf S\+F\+B\+Registry}$\ast$ pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl\+::\+\_\+\+\_\+\+S\+F\+B\+Registry}\hypertarget{classpc__emulator_1_1PCResourceImpl_affbb704a7c2800fb84b72409b79c7b54}{}\label{classpc__emulator_1_1PCResourceImpl_affbb704a7c2800fb84b72409b79c7b54}
+Stores executors for all S\+F\+Bs without Code body \index{pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl@{pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl}!\+\_\+\+\_\+\+S\+F\+C\+Registry@{\+\_\+\+\_\+\+S\+F\+C\+Registry}}
+\index{\+\_\+\+\_\+\+S\+F\+C\+Registry@{\+\_\+\+\_\+\+S\+F\+C\+Registry}!pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl@{pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl}}
+\subsubsection[{\texorpdfstring{\+\_\+\+\_\+\+S\+F\+C\+Registry}{__SFCRegistry}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf S\+F\+C\+Registry}$\ast$ pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl\+::\+\_\+\+\_\+\+S\+F\+C\+Registry}\hypertarget{classpc__emulator_1_1PCResourceImpl_ab0fadc7735b85b999570f02b8543bdab}{}\label{classpc__emulator_1_1PCResourceImpl_ab0fadc7735b85b999570f02b8543bdab}
+Stores all registered S\+F\+Cs \index{pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl@{pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl}!clock@{clock}}
 \index{clock@{clock}!pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl@{pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl}}
 \subsubsection[{\texorpdfstring{clock}{clock}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::unique\+\_\+ptr$<${\bf Clock}$>$ pc\+\_\+emulator\+::\+P\+C\+Resource\+Impl\+::clock}\hypertarget{classpc__emulator_1_1PCResourceImpl_ad49b0d4eb79f506f03f37518e1e70d1e}{}\label{classpc__emulator_1_1PCResourceImpl_ad49b0d4eb79f506f03f37518e1e70d1e}
 Assocaited clock 

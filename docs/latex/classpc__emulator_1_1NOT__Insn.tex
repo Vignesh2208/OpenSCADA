@@ -1,0 +1,74 @@
+\hypertarget{classpc__emulator_1_1NOT__Insn}{}\section{pc\+\_\+emulator\+:\+:N\+O\+T\+\_\+\+Insn Class Reference}
+\label{classpc__emulator_1_1NOT__Insn}\index{pc\+\_\+emulator\+::\+N\+O\+T\+\_\+\+Insn@{pc\+\_\+emulator\+::\+N\+O\+T\+\_\+\+Insn}}
+
+
+N\+OT instruction.  
+
+
+
+
+{\ttfamily \#include $<$not\+\_\+insn.\+h$>$}
+
+
+
+Inheritance diagram for pc\+\_\+emulator\+:\+:N\+O\+T\+\_\+\+Insn\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=201pt]{classpc__emulator_1_1NOT__Insn__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for pc\+\_\+emulator\+:\+:N\+O\+T\+\_\+\+Insn\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classpc__emulator_1_1NOT__Insn__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries N\+O\+T\+\_\+\+Insn} (\hyperlink{classpc__emulator_1_1PCResourceImpl}{P\+C\+Resource\+Impl} $\ast$Associated\+Resource, bool is\+Negated)\hypertarget{classpc__emulator_1_1NOT__Insn_a2dd7e20fbdd50ac413daa1ee9aa95917}{}\label{classpc__emulator_1_1NOT__Insn_a2dd7e20fbdd50ac413daa1ee9aa95917}
+
+\item 
+void \hyperlink{classpc__emulator_1_1NOT__Insn_a26832f4fb932e0162f2d80ccdbbd5983}{Execute} (\hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$Current\+Result, std\+::vector$<$ \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ $>$ \&Operands)
+\begin{DoxyCompactList}\small\item\em Called to execute the instruction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+N\+OT instruction. 
+
+\subsection{Member Function Documentation}
+\index{pc\+\_\+emulator\+::\+N\+O\+T\+\_\+\+Insn@{pc\+\_\+emulator\+::\+N\+O\+T\+\_\+\+Insn}!Execute@{Execute}}
+\index{Execute@{Execute}!pc\+\_\+emulator\+::\+N\+O\+T\+\_\+\+Insn@{pc\+\_\+emulator\+::\+N\+O\+T\+\_\+\+Insn}}
+\subsubsection[{\texorpdfstring{Execute(\+P\+C\+Variable $\ast$\+Current\+Result, std\+::vector$<$ P\+C\+Variable $\ast$ $>$ \&\+Operands)}{Execute(PCVariable *CurrentResult, std::vector< PCVariable * > &Operands)}}]{\setlength{\rightskip}{0pt plus 5cm}void pc\+\_\+emulator\+::\+N\+O\+T\+\_\+\+Insn\+::\+Execute (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Variable} $\ast$}]{Current\+Result, }
+\item[{std\+::vector$<$ {\bf P\+C\+Variable} $\ast$ $>$ \&}]{Operands}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{classpc__emulator_1_1NOT__Insn_a26832f4fb932e0162f2d80ccdbbd5983}{}\label{classpc__emulator_1_1NOT__Insn_a26832f4fb932e0162f2d80ccdbbd5983}
+
+
+Called to execute the instruction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Current\+Result} & The Current\+Result register of the task executing this \hyperlink{classpc__emulator_1_1Insn}{Insn} \\
+\hline
+{\em Operands} & Operands to the instruction \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{classpc__emulator_1_1Insn_a103d27030e872a799e313df16c1f3d66}{pc\+\_\+emulator\+::\+Insn}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/pc\+\_\+emulator/include/insns/not\+\_\+insn.\+h\end{DoxyCompactItemize}

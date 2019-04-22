@@ -1,0 +1,86 @@
+\hypertarget{classpc__emulator_1_1SFC}{}\section{pc\+\_\+emulator\+:\+:S\+FC Class Reference}
+\label{classpc__emulator_1_1SFC}\index{pc\+\_\+emulator\+::\+S\+FC@{pc\+\_\+emulator\+::\+S\+FC}}
+
+
+Generic abstract class for an IL \hyperlink{classpc__emulator_1_1SFC}{S\+FC}.  
+
+
+
+
+{\ttfamily \#include $<$sfc.\+h$>$}
+
+
+
+Inheritance diagram for pc\+\_\+emulator\+:\+:S\+FC\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=550pt]{classpc__emulator_1_1SFC__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for pc\+\_\+emulator\+:\+:S\+FC\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classpc__emulator_1_1SFC__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual void \hyperlink{classpc__emulator_1_1SFC_ab206c80fc0e429c56672b4f6a0ca8635}{Execute} (\hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$Current\+Result, std\+::vector$<$ \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ $>$ \&Operands)=0
+\begin{DoxyCompactList}\small\item\em Called to execute the sfc. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classpc__emulator_1_1PCResourceImpl}{P\+C\+Resource\+Impl} $\ast$ \hyperlink{classpc__emulator_1_1SFC_ae1021fef00752f06a7c6e6641b3e913c}{\+\_\+\+\_\+\+Associated\+Resource}
+\item 
+string \hyperlink{classpc__emulator_1_1SFC_a7b295e456008cbf12323a2880220b33e}{\+\_\+\+\_\+\+Sfc\+Name}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Generic abstract class for an IL \hyperlink{classpc__emulator_1_1SFC}{S\+FC}. 
+
+\subsection{Member Function Documentation}
+\index{pc\+\_\+emulator\+::\+S\+FC@{pc\+\_\+emulator\+::\+S\+FC}!Execute@{Execute}}
+\index{Execute@{Execute}!pc\+\_\+emulator\+::\+S\+FC@{pc\+\_\+emulator\+::\+S\+FC}}
+\subsubsection[{\texorpdfstring{Execute(\+P\+C\+Variable $\ast$\+Current\+Result, std\+::vector$<$ P\+C\+Variable $\ast$ $>$ \&\+Operands)=0}{Execute(PCVariable *CurrentResult, std::vector< PCVariable * > &Operands)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual void pc\+\_\+emulator\+::\+S\+F\+C\+::\+Execute (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Variable} $\ast$}]{Current\+Result, }
+\item[{std\+::vector$<$ {\bf P\+C\+Variable} $\ast$ $>$ \&}]{Operands}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\hypertarget{classpc__emulator_1_1SFC_ab206c80fc0e429c56672b4f6a0ca8635}{}\label{classpc__emulator_1_1SFC_ab206c80fc0e429c56672b4f6a0ca8635}
+
+
+Called to execute the sfc. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Current\+Result} & The Current\+Result register of the task executing this \hyperlink{classpc__emulator_1_1SFC}{S\+FC} \\
+\hline
+{\em Operands} & Operands to the sfc \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \hyperlink{classpc__emulator_1_1ANY__TO__ANY_abd6bf0496fa8d85b7194024b5462a0af}{pc\+\_\+emulator\+::\+A\+N\+Y\+\_\+\+T\+O\+\_\+\+A\+NY}, \hyperlink{classpc__emulator_1_1ABS_ac17315794160f617479e033609ed5f7c}{pc\+\_\+emulator\+::\+A\+BS}, \hyperlink{classpc__emulator_1_1ACOS_ab1011f059918ccb28c9309f18b01cb32}{pc\+\_\+emulator\+::\+A\+C\+OS}, \hyperlink{classpc__emulator_1_1ASIN_aa2c2e179a0d54f6cf2754c7ac4c36d62}{pc\+\_\+emulator\+::\+A\+S\+IN}, \hyperlink{classpc__emulator_1_1ATAN_a67a62838992aa4ccca28250a8f5b9a81}{pc\+\_\+emulator\+::\+A\+T\+AN}, \hyperlink{classpc__emulator_1_1COS_a66dc96f691d55d42fa20c55a5ed71a4f}{pc\+\_\+emulator\+::\+C\+OS}, \hyperlink{classpc__emulator_1_1EXP_aa5a73e7f83ab1b8c692d8a40c634f967}{pc\+\_\+emulator\+::\+E\+XP}, \hyperlink{classpc__emulator_1_1LIMIT_af8015be356d3994def6ee0bf67984bb3}{pc\+\_\+emulator\+::\+L\+I\+M\+IT}, \hyperlink{classpc__emulator_1_1LN_ae132a2caf03e39d1984a3b4e9f7be374}{pc\+\_\+emulator\+::\+LN}, \hyperlink{classpc__emulator_1_1LOG_a47e1208a029c4f2c086e0cdc0ac8e215}{pc\+\_\+emulator\+::\+L\+OG}, \hyperlink{classpc__emulator_1_1Max_a69f272b0595cb79620251b28a9711b74}{pc\+\_\+emulator\+::\+Max}, \hyperlink{classpc__emulator_1_1Min_a514862be9783380e78e8079cae70dd04}{pc\+\_\+emulator\+::\+Min}, \hyperlink{classpc__emulator_1_1MUX_abae7cc0b591d2605033ce0aece5d291f}{pc\+\_\+emulator\+::\+M\+UX}, \hyperlink{classpc__emulator_1_1SEL_a59af58bd0cba07f2ccbc35c5187e2bd6}{pc\+\_\+emulator\+::\+S\+EL}, \hyperlink{classpc__emulator_1_1SIN_a924d58a3aa229aafd276ff97ae774c2f}{pc\+\_\+emulator\+::\+S\+IN}, \hyperlink{classpc__emulator_1_1SQRT_aeeadaf7985a205f39b22fe544022bd57}{pc\+\_\+emulator\+::\+S\+Q\+RT}, and \hyperlink{classpc__emulator_1_1TAN_aee45e5d1c68b3cf4224dfdd8f8b2070e}{pc\+\_\+emulator\+::\+T\+AN}.
+
+
+
+\subsection{Member Data Documentation}
+\index{pc\+\_\+emulator\+::\+S\+FC@{pc\+\_\+emulator\+::\+S\+FC}!\+\_\+\+\_\+\+Associated\+Resource@{\+\_\+\+\_\+\+Associated\+Resource}}
+\index{\+\_\+\+\_\+\+Associated\+Resource@{\+\_\+\+\_\+\+Associated\+Resource}!pc\+\_\+emulator\+::\+S\+FC@{pc\+\_\+emulator\+::\+S\+FC}}
+\subsubsection[{\texorpdfstring{\+\_\+\+\_\+\+Associated\+Resource}{__AssociatedResource}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+C\+Resource\+Impl}$\ast$ pc\+\_\+emulator\+::\+S\+F\+C\+::\+\_\+\+\_\+\+Associated\+Resource}\hypertarget{classpc__emulator_1_1SFC_ae1021fef00752f06a7c6e6641b3e913c}{}\label{classpc__emulator_1_1SFC_ae1021fef00752f06a7c6e6641b3e913c}
+Associated resource \index{pc\+\_\+emulator\+::\+S\+FC@{pc\+\_\+emulator\+::\+S\+FC}!\+\_\+\+\_\+\+Sfc\+Name@{\+\_\+\+\_\+\+Sfc\+Name}}
+\index{\+\_\+\+\_\+\+Sfc\+Name@{\+\_\+\+\_\+\+Sfc\+Name}!pc\+\_\+emulator\+::\+S\+FC@{pc\+\_\+emulator\+::\+S\+FC}}
+\subsubsection[{\texorpdfstring{\+\_\+\+\_\+\+Sfc\+Name}{__SfcName}}]{\setlength{\rightskip}{0pt plus 5cm}string pc\+\_\+emulator\+::\+S\+F\+C\+::\+\_\+\+\_\+\+Sfc\+Name}\hypertarget{classpc__emulator_1_1SFC_a7b295e456008cbf12323a2880220b33e}{}\label{classpc__emulator_1_1SFC_a7b295e456008cbf12323a2880220b33e}
+Name of the system function 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/pc\+\_\+emulator/include/sfc/sfc.\+h\end{DoxyCompactItemize}

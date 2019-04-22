@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['resourcemanager',['ResourceManager',['../classpc__emulator_1_1ResourceManager.html',1,'pc_emulator']]],
-  ['resourceregistry',['ResourceRegistry',['../classpc__emulator_1_1ResourceRegistry.html',1,'pc_emulator']]]
+  ['insn',['Insn',['../classpc__emulator_1_1Insn.html',1,'pc_emulator']]],
+  ['insncontainer',['InsnContainer',['../classpc__emulator_1_1InsnContainer.html',1,'pc_emulator']]],
+  ['insnregistry',['InsnRegistry',['../classpc__emulator_1_1InsnRegistry.html',1,'pc_emulator']]]
 ];

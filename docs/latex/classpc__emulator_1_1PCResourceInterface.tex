@@ -1,0 +1,128 @@
+\hypertarget{classpc__emulator_1_1PCResourceInterface}{}\section{pc\+\_\+emulator\+:\+:P\+C\+Resource\+Interface Class Reference}
+\label{classpc__emulator_1_1PCResourceInterface}\index{pc\+\_\+emulator\+::\+P\+C\+Resource\+Interface@{pc\+\_\+emulator\+::\+P\+C\+Resource\+Interface}}
+
+
+Inheritance diagram for pc\+\_\+emulator\+:\+:P\+C\+Resource\+Interface\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=250pt]{classpc__emulator_1_1PCResourceInterface__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for pc\+\_\+emulator\+:\+:P\+C\+Resource\+Interface\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classpc__emulator_1_1PCResourceInterface__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classpc__emulator_1_1PCResourceInterface_ad9391f2f2b27604587f9cf00eb71cf81}{P\+C\+Resource\+Interface} (\hyperlink{classpc__emulator_1_1PCConfigurationInterface}{P\+C\+Configuration\+Interface} $\ast$configuration, string Resource\+Name, int Input\+Mem\+Size, int Output\+Mem\+Size)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+void \hyperlink{classpc__emulator_1_1PCResourceInterface_a480e635dc710a9ba4990d52659de910d}{Initialize\+All\+Po\+U\+Vars} ()\hypertarget{classpc__emulator_1_1PCResourceInterface_a480e635dc710a9ba4990d52659de910d}{}\label{classpc__emulator_1_1PCResourceInterface_a480e635dc710a9ba4990d52659de910d}
+
+\begin{DoxyCompactList}\small\item\em Register and initialize all P\+OU variables defined within the resource. \end{DoxyCompactList}\item 
+void \hyperlink{classpc__emulator_1_1PCResourceInterface_a8212f10176fa3bcdfe27691bdfbe37aa}{On\+Startup} ()\hypertarget{classpc__emulator_1_1PCResourceInterface_a8212f10176fa3bcdfe27691bdfbe37aa}{}\label{classpc__emulator_1_1PCResourceInterface_a8212f10176fa3bcdfe27691bdfbe37aa}
+
+\begin{DoxyCompactList}\small\item\em Called on resource start-\/up. \end{DoxyCompactList}\item 
+\hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1PCResourceInterface_a527cb94c2a258ccd29ce74601d93f9ac}{Get\+Extern\+Variable} (string Nested\+Field\+Name)\hypertarget{classpc__emulator_1_1PCResourceInterface_a527cb94c2a258ccd29ce74601d93f9ac}{}\label{classpc__emulator_1_1PCResourceInterface_a527cb94c2a258ccd29ce74601d93f9ac}
+
+\begin{DoxyCompactList}\small\item\em Returns a variable pointing to the subfield of a global/directly rep field. \end{DoxyCompactList}\item 
+\hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ {\bfseries Get\+Po\+U\+Field\+Variable} (string Nested\+Po\+U\+Field\+Name)\hypertarget{classpc__emulator_1_1PCResourceInterface_a839deede9f3e2dab93716b5780776fc1}{}\label{classpc__emulator_1_1PCResourceInterface_a839deede9f3e2dab93716b5780776fc1}
+
+\item 
+\hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1PCResourceInterface_aea5cc784e9e3ec2825bd525f4e7130ef}{Get\+Variable\+Pointer\+To\+Mem} (int Mem\+Type, int Byte\+Offset, int Bit\+Offset, string Variable\+Data\+Type\+Name)
+\begin{DoxyCompactList}\small\item\em Given location details, returns a \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} pointing to that location. \end{DoxyCompactList}\item 
+void \hyperlink{classpc__emulator_1_1PCResourceInterface_ac4ddba7e1d117374b040ad3c675087d4}{Cleanup} ()\hypertarget{classpc__emulator_1_1PCResourceInterface_ac4ddba7e1d117374b040ad3c675087d4}{}\label{classpc__emulator_1_1PCResourceInterface_ac4ddba7e1d117374b040ad3c675087d4}
+
+\begin{DoxyCompactList}\small\item\em Cleans up allocated memory and temporay variables. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+string \hyperlink{classpc__emulator_1_1PCResourceInterface_ad37ccb9da92a97e34a51fc92f39d191d}{\+\_\+\+\_\+\+Resource\+Name}
+\item 
+\hyperlink{classpc__emulator_1_1PCConfigurationInterface}{P\+C\+Configuration\+Interface} $\ast$ \hyperlink{classpc__emulator_1_1PCResourceInterface_a43cf1319d3500c46f211c8e649424503}{\+\_\+\+\_\+configuration}
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{pc\+\_\+emulator\+::\+P\+C\+Resource\+Interface@{pc\+\_\+emulator\+::\+P\+C\+Resource\+Interface}!P\+C\+Resource\+Interface@{P\+C\+Resource\+Interface}}
+\index{P\+C\+Resource\+Interface@{P\+C\+Resource\+Interface}!pc\+\_\+emulator\+::\+P\+C\+Resource\+Interface@{pc\+\_\+emulator\+::\+P\+C\+Resource\+Interface}}
+\subsubsection[{\texorpdfstring{P\+C\+Resource\+Interface(\+P\+C\+Configuration\+Interface $\ast$configuration, string Resource\+Name, int Input\+Mem\+Size, int Output\+Mem\+Size)}{PCResourceInterface(PCConfigurationInterface *configuration, string ResourceName, int InputMemSize, int OutputMemSize)}}]{\setlength{\rightskip}{0pt plus 5cm}pc\+\_\+emulator\+::\+P\+C\+Resource\+Interface\+::\+P\+C\+Resource\+Interface (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Configuration\+Interface} $\ast$}]{configuration, }
+\item[{string}]{Resource\+Name, }
+\item[{int}]{Input\+Mem\+Size, }
+\item[{int}]{Output\+Mem\+Size}
+\end{DoxyParamCaption}
+)}\hypertarget{classpc__emulator_1_1PCResourceInterface_ad9391f2f2b27604587f9cf00eb71cf81}{}\label{classpc__emulator_1_1PCResourceInterface_ad9391f2f2b27604587f9cf00eb71cf81}
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em configuration} & Associated configuration object \\
+\hline
+{\em Resource\+Name} & Name of the resource \\
+\hline
+{\em Input\+Mem\+Size} & Input memory size in bytes \\
+\hline
+{\em Output\+Mem\+Size} & Output memory size in bytes \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\index{pc\+\_\+emulator\+::\+P\+C\+Resource\+Interface@{pc\+\_\+emulator\+::\+P\+C\+Resource\+Interface}!Get\+Variable\+Pointer\+To\+Mem@{Get\+Variable\+Pointer\+To\+Mem}}
+\index{Get\+Variable\+Pointer\+To\+Mem@{Get\+Variable\+Pointer\+To\+Mem}!pc\+\_\+emulator\+::\+P\+C\+Resource\+Interface@{pc\+\_\+emulator\+::\+P\+C\+Resource\+Interface}}
+\subsubsection[{\texorpdfstring{Get\+Variable\+Pointer\+To\+Mem(int Mem\+Type, int Byte\+Offset, int Bit\+Offset, string Variable\+Data\+Type\+Name)}{GetVariablePointerToMem(int MemType, int ByteOffset, int BitOffset, string VariableDataTypeName)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+C\+Variable}$\ast$ pc\+\_\+emulator\+::\+P\+C\+Resource\+Interface\+::\+Get\+Variable\+Pointer\+To\+Mem (
+\begin{DoxyParamCaption}
+\item[{int}]{Mem\+Type, }
+\item[{int}]{Byte\+Offset, }
+\item[{int}]{Bit\+Offset, }
+\item[{string}]{Variable\+Data\+Type\+Name}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{classpc__emulator_1_1PCResourceInterface_aea5cc784e9e3ec2825bd525f4e7130ef}{}\label{classpc__emulator_1_1PCResourceInterface_aea5cc784e9e3ec2825bd525f4e7130ef}
+
+
+Given location details, returns a \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} pointing to that location. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Mem\+Type} & Memory Type (I\+N\+P\+UT or O\+U\+T\+P\+UT or R\+AM given in pc\+\_\+specification\+::\+Mem\+Types) \\
+\hline
+{\em Byte\+Offset} & Byte offset within the specified memory \\
+\hline
+{\em Bit\+Offset} & Bit\+Offset within the specified memory. If Variable\+Data\+Type\+Name is not B\+O\+OL, it is ignored \\
+\hline
+{\em Variable\+Data\+Type\+Name} & Initializes a variable of this datatype on the specified memory location \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The initialized variable is returned. 
+\end{DoxyReturn}
+
+
+Implements \hyperlink{classpc__emulator_1_1PCResource_a511c581ba122a73010f836c84947f332}{pc\+\_\+emulator\+::\+P\+C\+Resource}.
+
+
+
+\subsection{Member Data Documentation}
+\index{pc\+\_\+emulator\+::\+P\+C\+Resource\+Interface@{pc\+\_\+emulator\+::\+P\+C\+Resource\+Interface}!\+\_\+\+\_\+configuration@{\+\_\+\+\_\+configuration}}
+\index{\+\_\+\+\_\+configuration@{\+\_\+\+\_\+configuration}!pc\+\_\+emulator\+::\+P\+C\+Resource\+Interface@{pc\+\_\+emulator\+::\+P\+C\+Resource\+Interface}}
+\subsubsection[{\texorpdfstring{\+\_\+\+\_\+configuration}{__configuration}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+C\+Configuration\+Interface}$\ast$ pc\+\_\+emulator\+::\+P\+C\+Resource\+Interface\+::\+\_\+\+\_\+configuration}\hypertarget{classpc__emulator_1_1PCResourceInterface_a43cf1319d3500c46f211c8e649424503}{}\label{classpc__emulator_1_1PCResourceInterface_a43cf1319d3500c46f211c8e649424503}
+Associated config interface \index{pc\+\_\+emulator\+::\+P\+C\+Resource\+Interface@{pc\+\_\+emulator\+::\+P\+C\+Resource\+Interface}!\+\_\+\+\_\+\+Resource\+Name@{\+\_\+\+\_\+\+Resource\+Name}}
+\index{\+\_\+\+\_\+\+Resource\+Name@{\+\_\+\+\_\+\+Resource\+Name}!pc\+\_\+emulator\+::\+P\+C\+Resource\+Interface@{pc\+\_\+emulator\+::\+P\+C\+Resource\+Interface}}
+\subsubsection[{\texorpdfstring{\+\_\+\+\_\+\+Resource\+Name}{__ResourceName}}]{\setlength{\rightskip}{0pt plus 5cm}string pc\+\_\+emulator\+::\+P\+C\+Resource\+Interface\+::\+\_\+\+\_\+\+Resource\+Name}\hypertarget{classpc__emulator_1_1PCResourceInterface_ad37ccb9da92a97e34a51fc92f39d191d}{}\label{classpc__emulator_1_1PCResourceInterface_ad37ccb9da92a97e34a51fc92f39d191d}
+Name of the resource 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/pc\+\_\+emulator/ext\+\_\+modules/include/pc\+\_\+resource\+\_\+interface.\+h\end{DoxyCompactItemize}

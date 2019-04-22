@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['insncontainer',['InsnContainer',['../classpc__emulator_1_1InsnContainer.html',1,'pc_emulator']]],
-  ['insnregistry',['InsnRegistry',['../classpc__emulator_1_1InsnRegistry.html',1,'pc_emulator']]]
+  ['eq_5finsn',['EQ_Insn',['../classpc__emulator_1_1EQ__Insn.html',1,'pc_emulator']]],
+  ['executor',['Executor',['../classpc__emulator_1_1Executor.html',1,'pc_emulator']]],
+  ['exp',['EXP',['../classpc__emulator_1_1EXP.html',1,'pc_emulator']]],
+  ['extmodule',['ExtModule',['../classpc__emulator_1_1ExtModule.html',1,'pc_emulator']]]
 ];

@@ -157,11 +157,454 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 <tr class="memitem:a7060cb4142919527d5719f2c1c933f4b"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1Utils.html#a7060cb4142919527d5719f2c1c933f4b">WriteAccessCheck</a> (<a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *configuration, string CallingPoUType, string NestedFieldName)</td></tr>
 <tr class="memdesc:a7060cb4142919527d5719f2c1c933f4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the calling POU can access write to the NestedField.  <a href="#a7060cb4142919527d5719f2c1c933f4b">More...</a><br /></td></tr>
 <tr class="separator:a7060cb4142919527d5719f2c1c933f4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4c924801abb39d4dab05cc3000738ad"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1Utils.html#ad4c924801abb39d4dab05cc3000738ad">ReallocateTmpVariable</a> (<a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *configuration, <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *Var, <a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *new_data_type, string InitialValue)</td></tr>
+<tr class="memdesc:ad4c924801abb39d4dab05cc3000738ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears already assigned memory and reallocates new memory for a variable.  <a href="#ad4c924801abb39d4dab05cc3000738ad">More...</a><br /></td></tr>
+<tr class="separator:ad4c924801abb39d4dab05cc3000738ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb6b1dc96a12696b77948f38a5148cac"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1Utils.html#adb6b1dc96a12696b77948f38a5148cac">BOOL_TO_ANY</a> (<a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *configuration, <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *Var, <a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *new_datatype)</td></tr>
+<tr class="memdesc:adb6b1dc96a12696b77948f38a5148cac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type Casts a BOOL variable to a variable of new data type.  <a href="#adb6b1dc96a12696b77948f38a5148cac">More...</a><br /></td></tr>
+<tr class="separator:adb6b1dc96a12696b77948f38a5148cac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7367ddfa0079890945c8fc81869a9a9d"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1Utils.html#a7367ddfa0079890945c8fc81869a9a9d">BYTE_TO_ANY</a> (<a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *configuration, <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *Var, <a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *new_datatype)</td></tr>
+<tr class="memdesc:a7367ddfa0079890945c8fc81869a9a9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type Casts a BYTE variable to a variable of new data type.  <a href="#a7367ddfa0079890945c8fc81869a9a9d">More...</a><br /></td></tr>
+<tr class="separator:a7367ddfa0079890945c8fc81869a9a9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e321a64d2671f0413960b70aa890b19"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1Utils.html#a8e321a64d2671f0413960b70aa890b19">WORD_TO_ANY</a> (<a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *configuration, <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *Var, <a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *new_datatype)</td></tr>
+<tr class="memdesc:a8e321a64d2671f0413960b70aa890b19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type Casts a WORD variable to a variable of new data type.  <a href="#a8e321a64d2671f0413960b70aa890b19">More...</a><br /></td></tr>
+<tr class="separator:a8e321a64d2671f0413960b70aa890b19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a835281c18ed2920a93e7302fb5ad457c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1Utils.html#a835281c18ed2920a93e7302fb5ad457c">DWORD_TO_ANY</a> (<a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *configuration, <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *Var, <a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *new_datatype)</td></tr>
+<tr class="memdesc:a835281c18ed2920a93e7302fb5ad457c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type Casts a DWORD variable to a variable of new data type.  <a href="#a835281c18ed2920a93e7302fb5ad457c">More...</a><br /></td></tr>
+<tr class="separator:a835281c18ed2920a93e7302fb5ad457c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47d91088a292574f0293847644af41b0"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1Utils.html#a47d91088a292574f0293847644af41b0">LWORD_TO_ANY</a> (<a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *configuration, <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *Var, <a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *new_datatype)</td></tr>
+<tr class="memdesc:a47d91088a292574f0293847644af41b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type Casts a LWORD variable to a variable of new data type.  <a href="#a47d91088a292574f0293847644af41b0">More...</a><br /></td></tr>
+<tr class="separator:a47d91088a292574f0293847644af41b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc81a5b33fafaa8bf4a9b80ca15770b5"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1Utils.html#afc81a5b33fafaa8bf4a9b80ca15770b5">CHAR_TO_ANY</a> (<a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *configuration, <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *Var, <a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *new_datatype)</td></tr>
+<tr class="memdesc:afc81a5b33fafaa8bf4a9b80ca15770b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type Casts a CHAR variable to a variable of new data type.  <a href="#afc81a5b33fafaa8bf4a9b80ca15770b5">More...</a><br /></td></tr>
+<tr class="separator:afc81a5b33fafaa8bf4a9b80ca15770b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a431a9c5ceca0fe90cdd87a2a05479784"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1Utils.html#a431a9c5ceca0fe90cdd87a2a05479784">INT_TO_ANY</a> (<a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *configuration, <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *Var, <a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *new_datatype)</td></tr>
+<tr class="memdesc:a431a9c5ceca0fe90cdd87a2a05479784"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type Casts a INT variable to a variable of new data type.  <a href="#a431a9c5ceca0fe90cdd87a2a05479784">More...</a><br /></td></tr>
+<tr class="separator:a431a9c5ceca0fe90cdd87a2a05479784"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10aa502b8a0c552082352559ce25757e"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1Utils.html#a10aa502b8a0c552082352559ce25757e">SINT_TO_ANY</a> (<a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *configuration, <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *Var, <a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *new_datatype)</td></tr>
+<tr class="memdesc:a10aa502b8a0c552082352559ce25757e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type Casts a SINT variable to a variable of new data type.  <a href="#a10aa502b8a0c552082352559ce25757e">More...</a><br /></td></tr>
+<tr class="separator:a10aa502b8a0c552082352559ce25757e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96479987c0814f65737e8eeffa8b0e61"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1Utils.html#a96479987c0814f65737e8eeffa8b0e61">DINT_TO_ANY</a> (<a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *configuration, <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *Var, <a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *new_datatype)</td></tr>
+<tr class="memdesc:a96479987c0814f65737e8eeffa8b0e61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type Casts a DINT variable to a variable of new data type.  <a href="#a96479987c0814f65737e8eeffa8b0e61">More...</a><br /></td></tr>
+<tr class="separator:a96479987c0814f65737e8eeffa8b0e61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9926717443d1adac415f6a8bf5c725f7"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1Utils.html#a9926717443d1adac415f6a8bf5c725f7">LINT_TO_ANY</a> (<a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *configuration, <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *Var, <a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *new_datatype)</td></tr>
+<tr class="memdesc:a9926717443d1adac415f6a8bf5c725f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type Casts a LINT variable to a variable of new data type.  <a href="#a9926717443d1adac415f6a8bf5c725f7">More...</a><br /></td></tr>
+<tr class="separator:a9926717443d1adac415f6a8bf5c725f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9369bc339eb63f43481ea2b6165a1522"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1Utils.html#a9369bc339eb63f43481ea2b6165a1522">UINT_TO_ANY</a> (<a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *configuration, <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *Var, <a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *new_datatype)</td></tr>
+<tr class="memdesc:a9369bc339eb63f43481ea2b6165a1522"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type Casts a UINT variable to a variable of new data type.  <a href="#a9369bc339eb63f43481ea2b6165a1522">More...</a><br /></td></tr>
+<tr class="separator:a9369bc339eb63f43481ea2b6165a1522"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc006b6ca5db8593d1114737bb97332f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1Utils.html#acc006b6ca5db8593d1114737bb97332f">USINT_TO_ANY</a> (<a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *configuration, <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *Var, <a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *new_datatype)</td></tr>
+<tr class="memdesc:acc006b6ca5db8593d1114737bb97332f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type Casts a USINT variable to a variable of new data type.  <a href="#acc006b6ca5db8593d1114737bb97332f">More...</a><br /></td></tr>
+<tr class="separator:acc006b6ca5db8593d1114737bb97332f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade3492aa5889fb553725e078cce4f040"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1Utils.html#ade3492aa5889fb553725e078cce4f040">UDINT_TO_ANY</a> (<a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *configuration, <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *Var, <a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *new_datatype)</td></tr>
+<tr class="memdesc:ade3492aa5889fb553725e078cce4f040"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type Casts a UDINT variable to a variable of new data type.  <a href="#ade3492aa5889fb553725e078cce4f040">More...</a><br /></td></tr>
+<tr class="separator:ade3492aa5889fb553725e078cce4f040"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac14734b33f078b8f9796cbd59f79ca4b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1Utils.html#ac14734b33f078b8f9796cbd59f79ca4b">ULINT_TO_ANY</a> (<a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *configuration, <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *Var, <a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *new_datatype)</td></tr>
+<tr class="memdesc:ac14734b33f078b8f9796cbd59f79ca4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type Casts a ULINT variable to a variable of new data type.  <a href="#ac14734b33f078b8f9796cbd59f79ca4b">More...</a><br /></td></tr>
+<tr class="separator:ac14734b33f078b8f9796cbd59f79ca4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b12cd05a3e2271610a851da6b2d92a2"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1Utils.html#a0b12cd05a3e2271610a851da6b2d92a2">REAL_TO_ANY</a> (<a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *configuration, <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *Var, <a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *new_datatype)</td></tr>
+<tr class="memdesc:a0b12cd05a3e2271610a851da6b2d92a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type Casts a REAL variable to a variable of new data type.  <a href="#a0b12cd05a3e2271610a851da6b2d92a2">More...</a><br /></td></tr>
+<tr class="separator:a0b12cd05a3e2271610a851da6b2d92a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4385bfebe2ad37daa6ee7451c8639e2"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1Utils.html#ab4385bfebe2ad37daa6ee7451c8639e2">LREAL_TO_ANY</a> (<a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *configuration, <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *Var, <a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *new_datatype)</td></tr>
+<tr class="memdesc:ab4385bfebe2ad37daa6ee7451c8639e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type Casts a LREAL variable to a variable of new data type.  <a href="#ab4385bfebe2ad37daa6ee7451c8639e2">More...</a><br /></td></tr>
+<tr class="separator:ab4385bfebe2ad37daa6ee7451c8639e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1752451e7c722a09c92e8e8a3ed5c161"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1Utils.html#a1752451e7c722a09c92e8e8a3ed5c161">DT_TO_TOD</a> (<a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *configuration, <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *Var, <a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *new_datatype)</td></tr>
+<tr class="memdesc:a1752451e7c722a09c92e8e8a3ed5c161"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type Casts a DT variable to a TOD variable.  <a href="#a1752451e7c722a09c92e8e8a3ed5c161">More...</a><br /></td></tr>
+<tr class="separator:a1752451e7c722a09c92e8e8a3ed5c161"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe584b6abe60235ae5745b66f06b0976"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1Utils.html#abe584b6abe60235ae5745b66f06b0976">DT_TO_DATE</a> (<a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *configuration, <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *Var, <a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *new_datatype)</td></tr>
+<tr class="memdesc:abe584b6abe60235ae5745b66f06b0976"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type Casts a DT variable to a DATE variable.  <a href="#abe584b6abe60235ae5745b66f06b0976">More...</a><br /></td></tr>
+<tr class="separator:abe584b6abe60235ae5745b66f06b0976"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6895a5161c5267bba4748a173c92037a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6895a5161c5267bba4748a173c92037a"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1Utils.html#a6895a5161c5267bba4748a173c92037a">IsNumType</a> (<a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *data_type)</td></tr>
+<tr class="memdesc:a6895a5161c5267bba4748a173c92037a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the data_type is Numeric. <br /></td></tr>
+<tr class="separator:a6895a5161c5267bba4748a173c92037a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8eaca0348e91221feedffd1b2772b3a6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8eaca0348e91221feedffd1b2772b3a6"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1Utils.html#a8eaca0348e91221feedffd1b2772b3a6">IsBitType</a> (<a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *data_type)</td></tr>
+<tr class="memdesc:a8eaca0348e91221feedffd1b2772b3a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the data_type is Bit/Byte/Word/DWord/LWord. <br /></td></tr>
+<tr class="separator:a8eaca0348e91221feedffd1b2772b3a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a869b48efd6df5ed272d3c0914139ec2d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a869b48efd6df5ed272d3c0914139ec2d"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsRealType</b> (<a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *data_type)</td></tr>
+<tr class="separator:a869b48efd6df5ed272d3c0914139ec2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47bc7ad0d941b0256dd00fa21822c28c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a47bc7ad0d941b0256dd00fa21822c28c"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1Utils.html#a47bc7ad0d941b0256dd00fa21822c28c">SameClassOfDataTypes</a> (<a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *DT1, <a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *DT2)</td></tr>
+<tr class="memdesc:a47bc7ad0d941b0256dd00fa21822c28c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the data_type is REAL/LREAL. <br /></td></tr>
+<tr class="separator:a47bc7ad0d941b0256dd00fa21822c28c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb4ce66f03d351d7fb7bf0632cce5ed7"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1Utils.html#afb4ce66f03d351d7fb7bf0632cce5ed7">GetMostAppropriateTypeCast</a> (<a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *CR, std::vector&lt; <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> * &gt; &amp;Operands)</td></tr>
+<tr class="memdesc:afb4ce66f03d351d7fb7bf0632cce5ed7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts all passed operands to a common data type.  <a href="#afb4ce66f03d351d7fb7bf0632cce5ed7">More...</a><br /></td></tr>
+<tr class="separator:afb4ce66f03d351d7fb7bf0632cce5ed7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad155603916c2f69e6660378990dfed1d"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1Utils.html#ad155603916c2f69e6660378990dfed1d">GenerateFullSpecification</a> (string SystemSpecificationPath, Specification &amp;full_specification)</td></tr>
+<tr class="memdesc:ad155603916c2f69e6660378990dfed1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a pc_system_specification.SystemConfiguration proto.  <a href="#ad155603916c2f69e6660378990dfed1d">More...</a><br /></td></tr>
+<tr class="separator:ad155603916c2f69e6660378990dfed1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4f9529c4bf826187c06328dfd210c8b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af4f9529c4bf826187c06328dfd210c8b"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1Utils.html#af4f9529c4bf826187c06328dfd210c8b">IsOperandImmediate</a> (string Operand)</td></tr>
+<tr class="memdesc:af4f9529c4bf826187c06328dfd210c8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the passed string is a nested field name or an immediate operand. <br /></td></tr>
+<tr class="separator:af4f9529c4bf826187c06328dfd210c8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30fe3b319a10dc00a5805a5eba020998"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a30fe3b319a10dc00a5805a5eba020998"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1Utils.html#a30fe3b319a10dc00a5805a5eba020998">ExtractCallInterfaceMapping</a> (std::unordered_map&lt; string, string &gt; &amp;VarsToSet, std::unordered_map&lt; string, string &gt; &amp;VarsToGet, string FullInterfaceString)</td></tr>
+<tr class="memdesc:a30fe3b319a10dc00a5805a5eba020998"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used internally to parse a CAL instruction formal parameters. <br /></td></tr>
+<tr class="separator:a30fe3b319a10dc00a5805a5eba020998"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class containing Util functions. </p>
 <p>Util functions are used by other classes to perform initialization and book keeping operations </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="adb6b1dc96a12696b77948f38a5148cac"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a>* pc_emulator::Utils::BOOL_TO_ANY </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *&#160;</td>
+          <td class="paramname"><em>configuration</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td>
+          <td class="paramname"><em>Var</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *&#160;</td>
+          <td class="paramname"><em>new_datatype</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Type Casts a BOOL variable to a variable of new data type. </p>
+<p>Only Bit or Num Types are allowed for new_datatype </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">configuration</td><td>A <a class="el" href="classpc__emulator_1_1PCConfiguration.html" title="Abstract programmable controller config specification. ">PCConfiguration</a> object </td></tr>
+    <tr><td class="paramname">Var</td><td>Variable to change </td></tr>
+    <tr><td class="paramname">new_datatype</td><td>The new data type to type cast to </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>PCVariable* The newly type casted variable </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a7367ddfa0079890945c8fc81869a9a9d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a>* pc_emulator::Utils::BYTE_TO_ANY </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *&#160;</td>
+          <td class="paramname"><em>configuration</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td>
+          <td class="paramname"><em>Var</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *&#160;</td>
+          <td class="paramname"><em>new_datatype</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Type Casts a BYTE variable to a variable of new data type. </p>
+<p>Only Bit or Num Types are allowed for new_datatype </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">configuration</td><td>A <a class="el" href="classpc__emulator_1_1PCConfiguration.html" title="Abstract programmable controller config specification. ">PCConfiguration</a> object </td></tr>
+    <tr><td class="paramname">Var</td><td>Variable to change </td></tr>
+    <tr><td class="paramname">new_datatype</td><td>The new data type to type cast to </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>PCVariable* The newly type casted variable </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="afc81a5b33fafaa8bf4a9b80ca15770b5"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a>* pc_emulator::Utils::CHAR_TO_ANY </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *&#160;</td>
+          <td class="paramname"><em>configuration</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td>
+          <td class="paramname"><em>Var</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *&#160;</td>
+          <td class="paramname"><em>new_datatype</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Type Casts a CHAR variable to a variable of new data type. </p>
+<p>Only Bit or Num Types are allowed for new_datatype </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">configuration</td><td>A <a class="el" href="classpc__emulator_1_1PCConfiguration.html" title="Abstract programmable controller config specification. ">PCConfiguration</a> object </td></tr>
+    <tr><td class="paramname">Var</td><td>Variable to change </td></tr>
+    <tr><td class="paramname">new_datatype</td><td>The new data type to type cast to </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>PCVariable* The newly type casted variable </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a96479987c0814f65737e8eeffa8b0e61"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a>* pc_emulator::Utils::DINT_TO_ANY </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *&#160;</td>
+          <td class="paramname"><em>configuration</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td>
+          <td class="paramname"><em>Var</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *&#160;</td>
+          <td class="paramname"><em>new_datatype</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Type Casts a DINT variable to a variable of new data type. </p>
+<p>Only Bit or Num Types are allowed for new_datatype </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">configuration</td><td>A <a class="el" href="classpc__emulator_1_1PCConfiguration.html" title="Abstract programmable controller config specification. ">PCConfiguration</a> object </td></tr>
+    <tr><td class="paramname">Var</td><td>Variable to change </td></tr>
+    <tr><td class="paramname">new_datatype</td><td>The new data type to type cast to </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>PCVariable* The newly type casted variable </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="abe584b6abe60235ae5745b66f06b0976"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a>* pc_emulator::Utils::DT_TO_DATE </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *&#160;</td>
+          <td class="paramname"><em>configuration</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td>
+          <td class="paramname"><em>Var</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *&#160;</td>
+          <td class="paramname"><em>new_datatype</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Type Casts a DT variable to a DATE variable. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">configuration</td><td>A <a class="el" href="classpc__emulator_1_1PCConfiguration.html" title="Abstract programmable controller config specification. ">PCConfiguration</a> object </td></tr>
+    <tr><td class="paramname">Var</td><td>Variable to change </td></tr>
+    <tr><td class="paramname">new_datatype</td><td>Pointer to DATE data type </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>PCVariable* The newly type casted variable </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a1752451e7c722a09c92e8e8a3ed5c161"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a>* pc_emulator::Utils::DT_TO_TOD </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *&#160;</td>
+          <td class="paramname"><em>configuration</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td>
+          <td class="paramname"><em>Var</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *&#160;</td>
+          <td class="paramname"><em>new_datatype</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Type Casts a DT variable to a TOD variable. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">configuration</td><td>A <a class="el" href="classpc__emulator_1_1PCConfiguration.html" title="Abstract programmable controller config specification. ">PCConfiguration</a> object </td></tr>
+    <tr><td class="paramname">Var</td><td>Variable to change </td></tr>
+    <tr><td class="paramname">new_datatype</td><td>Pointer to TOD data type </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>PCVariable* The newly type casted variable </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a835281c18ed2920a93e7302fb5ad457c"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a>* pc_emulator::Utils::DWORD_TO_ANY </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *&#160;</td>
+          <td class="paramname"><em>configuration</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td>
+          <td class="paramname"><em>Var</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *&#160;</td>
+          <td class="paramname"><em>new_datatype</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Type Casts a DWORD variable to a variable of new data type. </p>
+<p>Only Bit or Num Types are allowed for new_datatype </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">configuration</td><td>A <a class="el" href="classpc__emulator_1_1PCConfiguration.html" title="Abstract programmable controller config specification. ">PCConfiguration</a> object </td></tr>
+    <tr><td class="paramname">Var</td><td>Variable to change </td></tr>
+    <tr><td class="paramname">new_datatype</td><td>The new data type to type cast to </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>PCVariable* The newly type casted variable </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a6fbc2a560927d70207c6abdcf30c1975"></a>
 <div class="memitem">
 <div class="memproto">
@@ -289,6 +732,50 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true if storage spec is in correct format, else false </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ad155603916c2f69e6660378990dfed1d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static bool pc_emulator::Utils::GenerateFullSpecification </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>SystemSpecificationPath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Specification &amp;&#160;</td>
+          <td class="paramname"><em>full_specification</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Parses a pc_system_specification.SystemConfiguration proto. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">SystemSpecificationPath</td><td>Full path containing the system specification prototxt file </td></tr>
+    <tr><td class="paramname">full_specification</td><td>Parsed proto is converted to pc_specification.Specification and returned </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool True on success </dd></dl>
 
 </div>
 </div>
@@ -431,6 +918,50 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns the initial value of the specified index </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="afb4ce66f03d351d7fb7bf0632cce5ed7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a>* pc_emulator::Utils::GetMostAppropriateTypeCast </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td>
+          <td class="paramname"><em>CR</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> * &gt; &amp;&#160;</td>
+          <td class="paramname"><em>Operands</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Converts all passed operands to a common data type. </p>
+<p>The most appropriate data type is chosen from non-temporary variables among the operands. If all variables are temporary then the one with the largest size is chosen. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">CR</td><td>CurrentResult (should always be temporary) </td></tr>
+    <tr><td class="paramname">Operands</td><td>List of operand variables </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>PCDataType* Most appropriate data type for type casting </dd></dl>
 
 </div>
 </div>
@@ -611,6 +1142,57 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 
 </div>
 </div>
+<a class="anchor" id="a431a9c5ceca0fe90cdd87a2a05479784"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a>* pc_emulator::Utils::INT_TO_ANY </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *&#160;</td>
+          <td class="paramname"><em>configuration</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td>
+          <td class="paramname"><em>Var</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *&#160;</td>
+          <td class="paramname"><em>new_datatype</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Type Casts a INT variable to a variable of new data type. </p>
+<p>Only Bit or Num Types are allowed for new_datatype </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">configuration</td><td>A <a class="el" href="classpc__emulator_1_1PCConfiguration.html" title="Abstract programmable controller config specification. ">PCConfiguration</a> object </td></tr>
+    <tr><td class="paramname">Var</td><td>Variable to change </td></tr>
+    <tr><td class="paramname">new_datatype</td><td>The new data type to type cast to </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>PCVariable* The newly type casted variable </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a0a9a00edeb05ecfcee3d57e89118d584"></a>
 <div class="memitem">
 <div class="memproto">
@@ -641,6 +1223,159 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True iff FieldInterfaceType is VAR_IN_OUT, VAR_EXTERNAL VAR_ACCESS or VAR_EXPLICIT_STORAGE. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a9926717443d1adac415f6a8bf5c725f7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a>* pc_emulator::Utils::LINT_TO_ANY </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *&#160;</td>
+          <td class="paramname"><em>configuration</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td>
+          <td class="paramname"><em>Var</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *&#160;</td>
+          <td class="paramname"><em>new_datatype</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Type Casts a LINT variable to a variable of new data type. </p>
+<p>Only Bit or Num Types are allowed for new_datatype </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">configuration</td><td>A <a class="el" href="classpc__emulator_1_1PCConfiguration.html" title="Abstract programmable controller config specification. ">PCConfiguration</a> object </td></tr>
+    <tr><td class="paramname">Var</td><td>Variable to change </td></tr>
+    <tr><td class="paramname">new_datatype</td><td>The new data type to type cast to </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>PCVariable* The newly type casted variable </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ab4385bfebe2ad37daa6ee7451c8639e2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a>* pc_emulator::Utils::LREAL_TO_ANY </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *&#160;</td>
+          <td class="paramname"><em>configuration</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td>
+          <td class="paramname"><em>Var</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *&#160;</td>
+          <td class="paramname"><em>new_datatype</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Type Casts a LREAL variable to a variable of new data type. </p>
+<p>Only Bit or Num Types are allowed for new_datatype </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">configuration</td><td>A <a class="el" href="classpc__emulator_1_1PCConfiguration.html" title="Abstract programmable controller config specification. ">PCConfiguration</a> object </td></tr>
+    <tr><td class="paramname">Var</td><td>Variable to change </td></tr>
+    <tr><td class="paramname">new_datatype</td><td>The new data type to type cast to </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>PCVariable* The newly type casted variable </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a47d91088a292574f0293847644af41b0"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a>* pc_emulator::Utils::LWORD_TO_ANY </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *&#160;</td>
+          <td class="paramname"><em>configuration</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td>
+          <td class="paramname"><em>Var</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *&#160;</td>
+          <td class="paramname"><em>new_datatype</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Type Casts a LWORD variable to a variable of new data type. </p>
+<p>Only Bit or Num Types are allowed for new_datatype </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">configuration</td><td>A <a class="el" href="classpc__emulator_1_1PCConfiguration.html" title="Abstract programmable controller config specification. ">PCConfiguration</a> object </td></tr>
+    <tr><td class="paramname">Var</td><td>Variable to change </td></tr>
+    <tr><td class="paramname">new_datatype</td><td>The new data type to type cast to </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>PCVariable* The newly type casted variable </dd></dl>
 
 </div>
 </div>
@@ -738,6 +1473,115 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 
 </div>
 </div>
+<a class="anchor" id="a0b12cd05a3e2271610a851da6b2d92a2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a>* pc_emulator::Utils::REAL_TO_ANY </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *&#160;</td>
+          <td class="paramname"><em>configuration</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td>
+          <td class="paramname"><em>Var</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *&#160;</td>
+          <td class="paramname"><em>new_datatype</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Type Casts a REAL variable to a variable of new data type. </p>
+<p>Only Bit or Num Types are allowed for new_datatype </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">configuration</td><td>A <a class="el" href="classpc__emulator_1_1PCConfiguration.html" title="Abstract programmable controller config specification. ">PCConfiguration</a> object </td></tr>
+    <tr><td class="paramname">Var</td><td>Variable to change </td></tr>
+    <tr><td class="paramname">new_datatype</td><td>The new data type to type cast to </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>PCVariable* The newly type casted variable </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ad4c924801abb39d4dab05cc3000738ad"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a>* pc_emulator::Utils::ReallocateTmpVariable </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *&#160;</td>
+          <td class="paramname"><em>configuration</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td>
+          <td class="paramname"><em>Var</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *&#160;</td>
+          <td class="paramname"><em>new_data_type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>InitialValue</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Clears already assigned memory and reallocates new memory for a variable. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">configuration</td><td>A <a class="el" href="classpc__emulator_1_1PCConfiguration.html" title="Abstract programmable controller config specification. ">PCConfiguration</a> object </td></tr>
+    <tr><td class="paramname">Var</td><td>The variable to be reallocated </td></tr>
+    <tr><td class="paramname">new_data_type</td><td>The variable's data type is to be changed to this one </td></tr>
+    <tr><td class="paramname">InitialValue</td><td>After reallocation, the variable is initialized with this value </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>PCVariable* The newly initialized variable or the same one or nullptr if the reallocation was not successful </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a70dfbf76cdece909fde22deb9e63fbeb"></a>
 <div class="memitem">
 <div class="memproto">
@@ -779,6 +1623,57 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns the original data-type name </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a10aa502b8a0c552082352559ce25757e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a>* pc_emulator::Utils::SINT_TO_ANY </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *&#160;</td>
+          <td class="paramname"><em>configuration</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td>
+          <td class="paramname"><em>Var</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *&#160;</td>
+          <td class="paramname"><em>new_datatype</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Type Casts a SINT variable to a variable of new data type. </p>
+<p>Only Bit or Num Types are allowed for new_datatype </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">configuration</td><td>A <a class="el" href="classpc__emulator_1_1PCConfiguration.html" title="Abstract programmable controller config specification. ">PCConfiguration</a> object </td></tr>
+    <tr><td class="paramname">Var</td><td>Variable to change </td></tr>
+    <tr><td class="paramname">new_datatype</td><td>The new data type to type cast to </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>PCVariable* The newly type casted variable </dd></dl>
 
 </div>
 </div>
@@ -826,6 +1721,210 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 
 </div>
 </div>
+<a class="anchor" id="ade3492aa5889fb553725e078cce4f040"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a>* pc_emulator::Utils::UDINT_TO_ANY </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *&#160;</td>
+          <td class="paramname"><em>configuration</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td>
+          <td class="paramname"><em>Var</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *&#160;</td>
+          <td class="paramname"><em>new_datatype</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Type Casts a UDINT variable to a variable of new data type. </p>
+<p>Only Bit or Num Types are allowed for new_datatype </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">configuration</td><td>A <a class="el" href="classpc__emulator_1_1PCConfiguration.html" title="Abstract programmable controller config specification. ">PCConfiguration</a> object </td></tr>
+    <tr><td class="paramname">Var</td><td>Variable to change </td></tr>
+    <tr><td class="paramname">new_datatype</td><td>The new data type to type cast to </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>PCVariable* The newly type casted variable </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a9369bc339eb63f43481ea2b6165a1522"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a>* pc_emulator::Utils::UINT_TO_ANY </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *&#160;</td>
+          <td class="paramname"><em>configuration</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td>
+          <td class="paramname"><em>Var</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *&#160;</td>
+          <td class="paramname"><em>new_datatype</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Type Casts a UINT variable to a variable of new data type. </p>
+<p>Only Bit or Num Types are allowed for new_datatype </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">configuration</td><td>A <a class="el" href="classpc__emulator_1_1PCConfiguration.html" title="Abstract programmable controller config specification. ">PCConfiguration</a> object </td></tr>
+    <tr><td class="paramname">Var</td><td>Variable to change </td></tr>
+    <tr><td class="paramname">new_datatype</td><td>The new data type to type cast to </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>PCVariable* The newly type casted variable </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ac14734b33f078b8f9796cbd59f79ca4b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a>* pc_emulator::Utils::ULINT_TO_ANY </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *&#160;</td>
+          <td class="paramname"><em>configuration</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td>
+          <td class="paramname"><em>Var</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *&#160;</td>
+          <td class="paramname"><em>new_datatype</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Type Casts a ULINT variable to a variable of new data type. </p>
+<p>Only Bit or Num Types are allowed for new_datatype </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">configuration</td><td>A <a class="el" href="classpc__emulator_1_1PCConfiguration.html" title="Abstract programmable controller config specification. ">PCConfiguration</a> object </td></tr>
+    <tr><td class="paramname">Var</td><td>Variable to change </td></tr>
+    <tr><td class="paramname">new_datatype</td><td>The new data type to type cast to </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>PCVariable* The newly type casted variable </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="acc006b6ca5db8593d1114737bb97332f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a>* pc_emulator::Utils::USINT_TO_ANY </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *&#160;</td>
+          <td class="paramname"><em>configuration</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td>
+          <td class="paramname"><em>Var</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *&#160;</td>
+          <td class="paramname"><em>new_datatype</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Type Casts a USINT variable to a variable of new data type. </p>
+<p>Only Bit or Num Types are allowed for new_datatype </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">configuration</td><td>A <a class="el" href="classpc__emulator_1_1PCConfiguration.html" title="Abstract programmable controller config specification. ">PCConfiguration</a> object </td></tr>
+    <tr><td class="paramname">Var</td><td>Variable to change </td></tr>
+    <tr><td class="paramname">new_datatype</td><td>The new data type to type cast to </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>PCVariable* The newly type casted variable </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a78c55b2d1c4bfb235a4cca17c64c961f"></a>
 <div class="memitem">
 <div class="memproto">
@@ -867,6 +1966,57 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Raises an exception if any of the validation checks fail </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a8e321a64d2671f0413960b70aa890b19"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a>* pc_emulator::Utils::WORD_TO_ANY </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCConfiguration.html">PCConfiguration</a> *&#160;</td>
+          <td class="paramname"><em>configuration</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td>
+          <td class="paramname"><em>Var</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *&#160;</td>
+          <td class="paramname"><em>new_datatype</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Type Casts a WORD variable to a variable of new data type. </p>
+<p>Only Bit or Num Types are allowed for new_datatype </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">configuration</td><td>A <a class="el" href="classpc__emulator_1_1PCConfiguration.html" title="Abstract programmable controller config specification. ">PCConfiguration</a> object </td></tr>
+    <tr><td class="paramname">Var</td><td>Variable to change </td></tr>
+    <tr><td class="paramname">new_datatype</td><td>The new data type to type cast to </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>PCVariable* The newly type casted variable </dd></dl>
 
 </div>
 </div>

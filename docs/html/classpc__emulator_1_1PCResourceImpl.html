@@ -112,15 +112,18 @@ Collaboration diagram for pc_emulator::PCResourceImpl:</div>
 <div class="dyncontent">
 <div class="center"><img src="classpc__emulator_1_1PCResourceImpl__coll__graph.png" border="0" usemap="#pc__emulator_1_1PCResourceImpl_coll__map" alt="Collaboration graph"/></div>
 <map name="pc__emulator_1_1PCResourceImpl_coll__map" id="pc__emulator_1_1PCResourceImpl_coll__map">
-<area shape="rect" id="node2" href="classpc__emulator_1_1PCResource.html" title="Abstract class definition of a resource. " alt="" coords="751,273,927,300"/>
-<area shape="rect" id="node4" href="classpc__emulator_1_1PCVariable.html" title="A class which wraps a variable and provides API to get/set its value. " alt="" coords="1218,111,1385,137"/>
-<area shape="rect" id="node3" href="classpc__emulator_1_1PCMemUnit.html" title="Describes a memory unit and provides api to access it. " alt="" coords="22,207,195,233"/>
-<area shape="rect" id="node5" href="classpc__emulator_1_1PCConfiguration.html" title="Abstract programmable controller config specification. " alt="" coords="391,101,588,128"/>
-<area shape="rect" id="node8" href="structpc__emulator_1_1DataTypeFieldAttributesStruct.html" title="Details of a data&#45;type field. " alt="" coords="1581,58,1767,99"/>
-<area shape="rect" id="node7" href="classpc__emulator_1_1PCDataType.html" title="Class which describes a PCDataType. " alt="" coords="751,43,928,69"/>
-<area shape="rect" id="node10" href="classpc__emulator_1_1PCConfigurationImpl.html" title="Specific implementation of the PCConfiguration abstract class. " alt="" coords="952,164,1175,191"/>
-<area shape="rect" id="node6" href="classpc__emulator_1_1ResourceRegistry.html" title="Registers and tracks resources. " alt="" coords="5,101,212,128"/>
-<area shape="rect" id="node9" href="classpc__emulator_1_1PCDataTypeField.html" title="Class to hold information about a data type field. " alt="" coords="1199,5,1404,32"/>
+<area shape="rect" id="node2" href="classpc__emulator_1_1PCResource.html" title="Abstract class definition of a resource. " alt="" coords="751,111,927,137"/>
+<area shape="rect" id="node5" href="classpc__emulator_1_1PCVariable.html" title="A class which wraps a variable and provides API to get/set its value. " alt="" coords="1218,275,1385,301"/>
+<area shape="rect" id="node3" href="classpc__emulator_1_1PCMemUnit.html" title="Describes a memory unit and provides api to access it. " alt="" coords="22,172,195,199"/>
+<area shape="rect" id="node6" href="classpc__emulator_1_1PCConfiguration.html" title="Abstract programmable controller config specification. " alt="" coords="391,268,588,295"/>
+<area shape="rect" id="node4" href="classpc__emulator_1_1InsnRegistry.html" title="Class which registers and tracks all valid instructions. " alt="" coords="1214,169,1389,196"/>
+<area shape="rect" id="node9" href="structpc__emulator_1_1DataTypeFieldAttributesStruct.html" title="Details of a data&#45;type field. " alt="" coords="1581,331,1767,373"/>
+<area shape="rect" id="node8" href="classpc__emulator_1_1PCDataType.html" title="Class which describes a PCDataType. " alt="" coords="751,336,928,363"/>
+<area shape="rect" id="node13" href="classpc__emulator_1_1PCConfigurationImpl.html" title="Specific implementation of the PCConfiguration abstract class. " alt="" coords="952,215,1175,241"/>
+<area shape="rect" id="node7" href="classpc__emulator_1_1ResourceRegistry.html" title="Registers and tracks resources. " alt="" coords="5,268,212,295"/>
+<area shape="rect" id="node10" href="classpc__emulator_1_1PCDataTypeField.html" title="Class to hold information about a data type field. " alt="" coords="1199,380,1404,407"/>
+<area shape="rect" id="node11" href="classpc__emulator_1_1SFBRegistry.html" title="Class which registers and tracks all valid SFB executors without code body. " alt="" coords="1213,220,1389,247"/>
+<area shape="rect" id="node12" href="classpc__emulator_1_1SFCRegistry.html" title="Class which registers and tracks all valid SFCs. " alt="" coords="1213,5,1390,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -137,6 +140,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCResourceImpl.html#ac3074be3fc6d79651d7921128c86aedb">InitializeAllPoUVars</a> ()</td></tr>
 <tr class="memdesc:ac3074be3fc6d79651d7921128c86aedb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register and initialize all POU variables defined within the resource. <br /></td></tr>
 <tr class="separator:ac3074be3fc6d79651d7921128c86aedb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a019ed31f83f95c462135c8e9a1d0cfae"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a019ed31f83f95c462135c8e9a1d0cfae"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>InitializeAllSFBVars</b> ()</td></tr>
+<tr class="separator:a019ed31f83f95c462135c8e9a1d0cfae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1da54f6b883793da02f8b8d4ff980c45"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1da54f6b883793da02f8b8d4ff980c45"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCResourceImpl.html#a1da54f6b883793da02f8b8d4ff980c45">ResolveAllExternalFields</a> ()</td></tr>
 <tr class="memdesc:a1da54f6b883793da02f8b8d4ff980c45"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve external fields of all POU variables. <br /></td></tr>
@@ -165,9 +171,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <a class="el" href="classpc__emulator_1_1Task.html">Task</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCResourceImpl.html#a72898a5dd446e142f7e5cea6ce469486">GetIntervalTaskToExecuteAt</a> (double schedule_time)</td></tr>
 <tr class="memdesc:a72898a5dd446e142f7e5cea6ce469486"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the interval task to execute at the specified time. <br /></td></tr>
 <tr class="separator:a72898a5dd446e142f7e5cea6ce469486"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a99fe969205384c1dfbebc9418370d800"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCResourceImpl.html#a99fe969205384c1dfbebc9418370d800">ExecuteInsn</a> (string InsnName, std::vector&lt; <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> * &gt; &amp;Ops, bool isNegated)</td></tr>
-<tr class="memdesc:a99fe969205384c1dfbebc9418370d800"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes an instruction with the specified instruction name.  <a href="#a99fe969205384c1dfbebc9418370d800">More...</a><br /></td></tr>
-<tr class="separator:a99fe969205384c1dfbebc9418370d800"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9579c9b7c93966abbfd167e5b00d412"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCResourceImpl.html#aa9579c9b7c93966abbfd167e5b00d412">ExecuteInsn</a> (string InsnName, std::vector&lt; <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> * &gt; &amp;Ops)</td></tr>
+<tr class="memdesc:aa9579c9b7c93966abbfd167e5b00d412"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes an instruction with the specified instruction name.  <a href="#aa9579c9b7c93966abbfd167e5b00d412">More...</a><br /></td></tr>
+<tr class="separator:aa9579c9b7c93966abbfd167e5b00d412"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab64a9dd6676b818413edc2b690dee265"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab64a9dd6676b818413edc2b690dee265"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCResourceImpl.html#ab64a9dd6676b818413edc2b690dee265">QueueTask</a> (<a class="el" href="classpc__emulator_1_1Task.html">Task</a> *Tsk)</td></tr>
 <tr class="memdesc:ab64a9dd6676b818413edc2b690dee265"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queues a task. <br /></td></tr>
@@ -188,10 +194,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a698386af76ea94866178eda4e8bbefb9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCResourceImpl.html#a698386af76ea94866178eda4e8bbefb9">GetVariableForImmediateOperand</a> (string OperandValue)</td></tr>
 <tr class="memdesc:a698386af76ea94866178eda4e8bbefb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a temporary variable of the data type encoded in the operand value.  <a href="#a698386af76ea94866178eda4e8bbefb9">More...</a><br /></td></tr>
 <tr class="separator:a698386af76ea94866178eda4e8bbefb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c043a5ecadb28a64148eafdc30c11b7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9c043a5ecadb28a64148eafdc30c11b7"></a>
-<a class="el" href="classpc__emulator_1_1PoUCodeContainer.html">PoUCodeContainer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCResourceImpl.html#a9c043a5ecadb28a64148eafdc30c11b7">CreateNewCodeContainer</a> (string PoUDataTypeName)</td></tr>
-<tr class="memdesc:a9c043a5ecadb28a64148eafdc30c11b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new code container for a POU and registers it. <br /></td></tr>
-<tr class="separator:a9c043a5ecadb28a64148eafdc30c11b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f9f8987a73c02f24f8b038c2b3f1cdd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0f9f8987a73c02f24f8b038c2b3f1cdd"></a>
+<a class="el" href="classpc__emulator_1_1PoUCodeContainer.html">PoUCodeContainer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCResourceImpl.html#a0f9f8987a73c02f24f8b038c2b3f1cdd">CreateNewCodeContainer</a> (<a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *PoUDataType)</td></tr>
+<tr class="memdesc:a0f9f8987a73c02f24f8b038c2b3f1cdd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new code container for a POU and registers it. <br /></td></tr>
+<tr class="separator:a0f9f8987a73c02f24f8b038c2b3f1cdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93b852f67ddca8d086b19a0c7daf7c42"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a93b852f67ddca8d086b19a0c7daf7c42"></a>
 <a class="el" href="classpc__emulator_1_1PoUCodeContainer.html">PoUCodeContainer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCResourceImpl.html#a93b852f67ddca8d086b19a0c7daf7c42">GetCodeContainer</a> (string PoUDataTypeName)</td></tr>
 <tr class="memdesc:a93b852f67ddca8d086b19a0c7daf7c42"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a code container for a specific POU or nullptr if not found. <br /></td></tr>
@@ -218,6 +224,12 @@ Public Attributes</h2></td></tr>
 <tr class="separator:ad49b0d4eb79f506f03f37518e1e70d1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3648237ffd6fc0c0d569b18f7142154f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCResourceImpl.html#a3648237ffd6fc0c0d569b18f7142154f">__CurrentResult</a></td></tr>
 <tr class="separator:a3648237ffd6fc0c0d569b18f7142154f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac571faf5e66992a7e32996a613278e91"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classpc__emulator_1_1InsnRegistry.html">InsnRegistry</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCResourceImpl.html#ac571faf5e66992a7e32996a613278e91">__InsnRegistry</a></td></tr>
+<tr class="separator:ac571faf5e66992a7e32996a613278e91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0fadc7735b85b999570f02b8543bdab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classpc__emulator_1_1SFCRegistry.html">SFCRegistry</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCResourceImpl.html#ab0fadc7735b85b999570f02b8543bdab">__SFCRegistry</a></td></tr>
+<tr class="separator:ab0fadc7735b85b999570f02b8543bdab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affbb704a7c2800fb84b72409b79c7b54"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classpc__emulator_1_1SFBRegistry.html">SFBRegistry</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCResourceImpl.html#affbb704a7c2800fb84b72409b79c7b54">__SFBRegistry</a></td></tr>
+<tr class="separator:affbb704a7c2800fb84b72409b79c7b54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classpc__emulator_1_1PCResource"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classpc__emulator_1_1PCResource')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classpc__emulator_1_1PCResource.html">pc_emulator::PCResource</a></td></tr>
 <tr class="memitem:afb2356d0dcf4db0b6a04302861a26f18 inherit pub_attribs_classpc__emulator_1_1PCResource"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCResource.html#afb2356d0dcf4db0b6a04302861a26f18">__InputMemSize</a></td></tr>
 <tr class="separator:afb2356d0dcf4db0b6a04302861a26f18 inherit pub_attribs_classpc__emulator_1_1PCResource"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -287,7 +299,7 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a99fe969205384c1dfbebc9418370d800"></a>
+<a class="anchor" id="aa9579c9b7c93966abbfd167e5b00d412"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -301,13 +313,7 @@ Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::vector&lt; <a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> * &gt; &amp;&#160;</td>
-          <td class="paramname"><em>Ops</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>isNegated</em>&#160;</td>
+          <td class="paramname"><em>Ops</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -322,7 +328,6 @@ Public Attributes</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">InsnName</td><td>Name of the instruction </td></tr>
     <tr><td class="paramname">Ops</td><td>List of operands to the instruction. The __CurrentResult is always a default operand. </td></tr>
-    <tr><td class="paramname">isNegated</td><td>Specifies if the operands are to be negated first before being operated on. </td></tr>
   </table>
   </dd>
 </dl>
@@ -486,6 +491,45 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>CR register for the resource </p>
+
+</div>
+</div>
+<a class="anchor" id="ac571faf5e66992a7e32996a613278e91"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classpc__emulator_1_1InsnRegistry.html">InsnRegistry</a>* pc_emulator::PCResourceImpl::__InsnRegistry</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Stores all registered instructions </p>
+
+</div>
+</div>
+<a class="anchor" id="affbb704a7c2800fb84b72409b79c7b54"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classpc__emulator_1_1SFBRegistry.html">SFBRegistry</a>* pc_emulator::PCResourceImpl::__SFBRegistry</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Stores executors for all SFBs without Code body </p>
+
+</div>
+</div>
+<a class="anchor" id="ab0fadc7735b85b999570f02b8543bdab"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classpc__emulator_1_1SFCRegistry.html">SFCRegistry</a>* pc_emulator::PCResourceImpl::__SFCRegistry</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Stores all registered SFCs </p>
 
 </div>
 </div>

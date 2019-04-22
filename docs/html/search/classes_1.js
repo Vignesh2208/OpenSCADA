@@ -1,8 +1,7 @@
 var searchData=
 [
-  ['datatypefieldattributesstruct',['DataTypeFieldAttributesStruct',['../structpc__emulator_1_1DataTypeFieldAttributesStruct.html',1,'pc_emulator']]],
-  ['datatyperegistry',['DataTypeRegistry',['../classpc__emulator_1_1DataTypeRegistry.html',1,'pc_emulator']]],
-  ['datatypeutils',['DataTypeUtils',['../classpc__emulator_1_1DataTypeUtils.html',1,'pc_emulator']]],
-  ['datedatatype',['DateDataType',['../structpc__emulator_1_1DateDataType.html',1,'pc_emulator']]],
-  ['datetoddatatype',['DateTODDataType',['../structpc__emulator_1_1DateTODDataType.html',1,'pc_emulator']]]
+  ['clock',['Clock',['../classpc__emulator_1_1Clock.html',1,'pc_emulator']]],
+  ['commmodule',['CommModule',['../classpc__emulator_1_1CommModule.html',1,'pc_emulator']]],
+  ['compacttaskdescription',['CompactTaskDescription',['../classpc__emulator_1_1CompactTaskDescription.html',1,'pc_emulator']]],
+  ['cos',['COS',['../classpc__emulator_1_1COS.html',1,'pc_emulator']]]
 ];

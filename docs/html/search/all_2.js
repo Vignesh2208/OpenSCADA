@@ -1,11 +1,7 @@
 var searchData=
 [
-  ['cleanup',['Cleanup',['../classpc__emulator_1_1PCConfiguration.html#a5440b0e7ce4034e79b0fb0ddae2a2b79',1,'pc_emulator::PCConfiguration::Cleanup()'],['../classpc__emulator_1_1PCConfigurationImpl.html#a15dff3a523e1aac72268a30cfb2edf02',1,'pc_emulator::PCConfigurationImpl::Cleanup()'],['../classpc__emulator_1_1PCDataType.html#adf28a74ce0339ba10fd866311ecaa7aa',1,'pc_emulator::PCDataType::Cleanup()'],['../classpc__emulator_1_1DataTypeRegistry.html#ae67e87cb84212168f8784fe90d95a3dc',1,'pc_emulator::DataTypeRegistry::Cleanup()'],['../classpc__emulator_1_1PCMemUnit.html#acd998eb1872e19b78403f34cc3265781',1,'pc_emulator::PCMemUnit::Cleanup()'],['../classpc__emulator_1_1PoUCodeContainer.html#af0f4209dbbb4cb09e324efe82b938784',1,'pc_emulator::PoUCodeContainer::Cleanup()'],['../classpc__emulator_1_1PCResourceImpl.html#a3d9ad2276414e07af0a9b435e17faad0',1,'pc_emulator::PCResourceImpl::Cleanup()'],['../classpc__emulator_1_1ResourceRegistry.html#afdee40d0a3d80f5b6eb36025d887e20f',1,'pc_emulator::ResourceRegistry::Cleanup()'],['../classpc__emulator_1_1PCVariable.html#a175e91c9eb31ebd6b05b308c252214ee',1,'pc_emulator::PCVariable::Cleanup()'],['../classpc__emulator_1_1PCResource.html#ad334064c7ae38db2fa54d7dd12b3ac26',1,'pc_emulator::PCResource::Cleanup()'],['../classpc__emulator_1_1Executor.html#a8bbf346063821d7a9c5e9b734f29a70f',1,'pc_emulator::Executor::CleanUp()']]],
-  ['clock',['Clock',['../classpc__emulator_1_1Clock.html#a512ea6e88d7df5ac3658cfb7e2206a3b',1,'pc_emulator::Clock::Clock()'],['../classpc__emulator_1_1PCResourceImpl.html#ad49b0d4eb79f506f03f37518e1e70d1e',1,'pc_emulator::PCResourceImpl::clock()']]],
-  ['clock',['Clock',['../classpc__emulator_1_1Clock.html',1,'pc_emulator']]],
-  ['compacttaskdescription',['CompactTaskDescription',['../classpc__emulator_1_1CompactTaskDescription.html',1,'pc_emulator']]],
-  ['compacttaskdescription',['CompactTaskDescription',['../classpc__emulator_1_1CompactTaskDescription.html#ad492c9f478f13fed82a02c6bd1e04b42',1,'pc_emulator::CompactTaskDescription']]],
-  ['copy',['Copy',['../classpc__emulator_1_1PCDataTypeField.html#a22e511238476e273c4004ca0094d2917',1,'pc_emulator::PCDataTypeField']]],
-  ['copyfrommemunit',['CopyFromMemUnit',['../classpc__emulator_1_1PCMemUnit.html#a47afeb8fd963e86394dab636ec525346',1,'pc_emulator::PCMemUnit']]],
-  ['createnewcodecontainer',['CreateNewCodeContainer',['../classpc__emulator_1_1PCResourceImpl.html#a9c043a5ecadb28a64148eafdc30c11b7',1,'pc_emulator::PCResourceImpl']]]
+  ['bool_5fto_5fany',['BOOL_TO_ANY',['../classpc__emulator_1_1Utils.html#adb6b1dc96a12696b77948f38a5148cac',1,'pc_emulator::Utils']]],
+  ['booltoany',['BoolToAny',['../classpc__emulator_1_1DataTypeUtils.html#a6b442f726a053b8f3e2982744ce1b939',1,'pc_emulator::DataTypeUtils']]],
+  ['byte_5fto_5fany',['BYTE_TO_ANY',['../classpc__emulator_1_1Utils.html#a7367ddfa0079890945c8fc81869a9a9d',1,'pc_emulator::Utils']]],
+  ['bytetoany',['ByteToAny',['../classpc__emulator_1_1DataTypeUtils.html#a53d055de7df09456a91f70803040997f',1,'pc_emulator::DataTypeUtils']]]
 ];

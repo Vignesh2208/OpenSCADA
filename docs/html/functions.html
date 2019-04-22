@@ -78,6 +78,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li class="current"><a href="functions.html#index__"><span>_</span></a></li>
       <li><a href="functions_a.html#index_a"><span>a</span></a></li>
+      <li><a href="functions_b.html#index_b"><span>b</span></a></li>
       <li><a href="functions_c.html#index_c"><span>c</span></a></li>
       <li><a href="functions_d.html#index_d"><span>d</span></a></li>
       <li><a href="functions_e.html#index_e"><span>e</span></a></li>
@@ -133,7 +134,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>__AssociatedResource
 : <a class="el" href="classpc__emulator_1_1Clock.html#aba91d4760a2681b29264c021b519b10b">pc_emulator::Clock</a>
 , <a class="el" href="classpc__emulator_1_1Executor.html#a08c9e456c5329834f50141d7add91a9f">pc_emulator::Executor</a>
+, <a class="el" href="classpc__emulator_1_1Insn.html#ae7cb9ec6f9eff913027042ad4e253bd4">pc_emulator::Insn</a>
 , <a class="el" href="classpc__emulator_1_1PCVariable.html#aee0f12f8e7ef8f3a53953823f8a28d22">pc_emulator::PCVariable</a>
+, <a class="el" href="classpc__emulator_1_1SFB.html#a8bc5e206d36f20b70f3f28ad9f83c713">pc_emulator::SFB</a>
+, <a class="el" href="classpc__emulator_1_1SFC.html#ae1021fef00752f06a7c6e6641b3e913c">pc_emulator::SFC</a>
 </li>
 <li>__AssociatedResourceName
 : <a class="el" href="classpc__emulator_1_1PCDataTypeField.html#a2616ca0d712f1e0888b8baa9340041e8">pc_emulator::PCDataTypeField</a>
@@ -150,10 +154,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>__CodeContainer
 : <a class="el" href="classpc__emulator_1_1Executor.html#a26032bb8f4fec484e14f32d07db89f5d">pc_emulator::Executor</a>
 </li>
+<li>__ConfigInterface
+: <a class="el" href="classpc__emulator_1_1ExtModule.html#abb29047b24c68d98aa045031f4a12184">pc_emulator::ExtModule</a>
+</li>
 <li>__configuration
 : <a class="el" href="classpc__emulator_1_1Executor.html#abcffb5c87513b158451390af932327e6">pc_emulator::Executor</a>
 , <a class="el" href="classpc__emulator_1_1PCDataType.html#ae1d09cd2a600dea4b584dd428140df49">pc_emulator::PCDataType</a>
 , <a class="el" href="classpc__emulator_1_1PCResourceImpl.html#a356a5f4a62005c9aee4f6ef8538ced11">pc_emulator::PCResourceImpl</a>
+, <a class="el" href="classpc__emulator_1_1PCResourceInterface.html#a43cf1319d3500c46f211c8e649424503">pc_emulator::PCResourceInterface</a>
 , <a class="el" href="classpc__emulator_1_1PCVariable.html#a83612d987fb797fc979e0c232076c675">pc_emulator::PCVariable</a>
 , <a class="el" href="classpc__emulator_1_1PoUCodeContainer.html#a148557c2b2cea42835df72bade8de647">pc_emulator::PoUCodeContainer</a>
 </li>
@@ -237,6 +245,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>__InsnCount
 : <a class="el" href="classpc__emulator_1_1PoUCodeContainer.html#a9cbc804c2057ce5c717b3af07bc4cea6">pc_emulator::PoUCodeContainer</a>
 </li>
+<li>__InsnName
+: <a class="el" href="classpc__emulator_1_1Insn.html#a7921073748a0e77469b19bad52b0518b">pc_emulator::Insn</a>
+</li>
+<li>__InsnRegistry
+: <a class="el" href="classpc__emulator_1_1PCResourceImpl.html#ac571faf5e66992a7e32996a613278e91">pc_emulator::PCResourceImpl</a>
+</li>
 <li>__Insns
 : <a class="el" href="classpc__emulator_1_1PoUCodeContainer.html#abf911d123b0145553af13b7d01a9b172">pc_emulator::PoUCodeContainer</a>
 </li>
@@ -294,6 +308,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>__ResourceName
 : <a class="el" href="classpc__emulator_1_1PCResource.html#a2ef3a8a76df532cdb7d913ee83ff67c8">pc_emulator::PCResource</a>
+, <a class="el" href="classpc__emulator_1_1PCResourceInterface.html#ad37ccb9da92a97e34a51fc92f39d191d">pc_emulator::PCResourceInterface</a>
 </li>
 <li>__ResourcePoUVars
 : <a class="el" href="classpc__emulator_1_1PCResource.html#aead21e358bfd79dd6344c34980d51d5c">pc_emulator::PCResource</a>
@@ -303,6 +318,18 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>__sem_name
 : <a class="el" href="classpc__emulator_1_1PCMemUnit.html#afa96f416f54665c3363aa4b110a6bcd9">pc_emulator::PCMemUnit</a>
+</li>
+<li>__SFBName
+: <a class="el" href="classpc__emulator_1_1SFB.html#af82a0d98ab9fd95847138ef0f8e3cf10">pc_emulator::SFB</a>
+</li>
+<li>__SFBRegistry
+: <a class="el" href="classpc__emulator_1_1PCResourceImpl.html#affbb704a7c2800fb84b72409b79c7b54">pc_emulator::PCResourceImpl</a>
+</li>
+<li>__SfcName
+: <a class="el" href="classpc__emulator_1_1SFC.html#a7b295e456008cbf12323a2880220b33e">pc_emulator::SFC</a>
+</li>
+<li>__SFCRegistry
+: <a class="el" href="classpc__emulator_1_1PCResourceImpl.html#ab0fadc7735b85b999570f02b8543bdab">pc_emulator::PCResourceImpl</a>
 </li>
 <li>__SizeInBits
 : <a class="el" href="classpc__emulator_1_1PCDataType.html#a7556d336d3903549f2be43aa5d28763d">pc_emulator::PCDataType</a>

@@ -2,8 +2,7 @@
 \label{classpc__emulator_1_1Task}\index{pc\+\_\+emulator\+::\+Task@{pc\+\_\+emulator\+::\+Task}}
 
 
-Collaboration diagram for pc\+\_\+emulator\+:\+:Task\+:
-\nopagebreak
+Collaboration diagram for pc\+\_\+emulator\+:\+:Task\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -13,7 +12,10 @@ Collaboration diagram for pc\+\_\+emulator\+:\+:Task\+:
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-{\bfseries Task} (\hyperlink{classpc__emulator_1_1PCConfigurationImpl}{P\+C\+Configuration\+Impl} $\ast$configuration, \hyperlink{classpc__emulator_1_1PCResourceImpl}{P\+C\+Resource\+Impl} $\ast$Associated\+Resource, const Task\+Specification \&task\+\_\+spec)\hypertarget{classpc__emulator_1_1Task_a74acde57ab68736994269fbc1f766b40}{}\label{classpc__emulator_1_1Task_a74acde57ab68736994269fbc1f766b40}
+{\bfseries Task} (\hyperlink{classpc__emulator_1_1PCConfigurationImpl}{P\+C\+Configuration\+Impl} $\ast$configuration, \hyperlink{classpc__emulator_1_1PCResourceImpl}{P\+C\+Resource\+Impl} $\ast$Associated\+Resource, const Interval\+Task\+Specification \&task\+\_\+spec)\hypertarget{classpc__emulator_1_1Task_a2962f1944b608ea18c7ed1e57f73b664}{}\label{classpc__emulator_1_1Task_a2962f1944b608ea18c7ed1e57f73b664}
+
+\item 
+{\bfseries Task} (\hyperlink{classpc__emulator_1_1PCConfigurationImpl}{P\+C\+Configuration\+Impl} $\ast$configuration, \hyperlink{classpc__emulator_1_1PCResourceImpl}{P\+C\+Resource\+Impl} $\ast$Associated\+Resource, const Interrupt\+Task\+Specification \&task\+\_\+spec)\hypertarget{classpc__emulator_1_1Task_a9a55ba774c61ca5e8f1c648e7e9d857f}{}\label{classpc__emulator_1_1Task_a9a55ba774c61ca5e8f1c648e7e9d857f}
 
 \item 
 void {\bfseries Set\+Next\+Schedule\+Time} (double nxt\+\_\+schedule\+\_\+time\+\_\+ms)\hypertarget{classpc__emulator_1_1Task_aff1a23718b08cc7a28ab15e1de90221f}{}\label{classpc__emulator_1_1Task_aff1a23718b08cc7a28ab15e1de90221f}
@@ -49,6 +51,9 @@ int {\bfseries \+\_\+\+\_\+interval\+\_\+ms}\hypertarget{classpc__emulator_1_1Ta
 \hyperlink{classpc__emulator_1_1PCResourceImpl}{P\+C\+Resource\+Impl} $\ast$ {\bfseries \+\_\+\+\_\+\+Associated\+Resource}\hypertarget{classpc__emulator_1_1Task_a7ece4d62e9640ec475988b6c2ad0e7e0}{}\label{classpc__emulator_1_1Task_a7ece4d62e9640ec475988b6c2ad0e7e0}
 
 \item 
+\hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ {\bfseries \+\_\+\+\_\+\+CR}\hypertarget{classpc__emulator_1_1Task_a521a83be8340451a7f6ed9f0d3944e79}{}\label{classpc__emulator_1_1Task_a521a83be8340451a7f6ed9f0d3944e79}
+
+\item 
 string {\bfseries \+\_\+\+\_\+trigger\+\_\+variable\+\_\+name}\hypertarget{classpc__emulator_1_1Task_a867ac3aa2ce1a9831309dc480ac6c23b}{}\label{classpc__emulator_1_1Task_a867ac3aa2ce1a9831309dc480ac6c23b}
 
 \item 
@@ -58,10 +63,16 @@ bool {\bfseries \+\_\+\+\_\+trigger\+\_\+variable\+\_\+previous\+\_\+value}\hype
 bool {\bfseries \+\_\+\+\_\+\+Is\+Ready}\hypertarget{classpc__emulator_1_1Task_a1e5f3bfb642ce598ffcb2a7b52b34e83}{}\label{classpc__emulator_1_1Task_a1e5f3bfb642ce598ffcb2a7b52b34e83}
 
 \item 
+bool {\bfseries \+\_\+\+\_\+\+Executing}\hypertarget{classpc__emulator_1_1Task_ac412ee6b07980e88cfbb2ae46fb006ba}{}\label{classpc__emulator_1_1Task_ac412ee6b07980e88cfbb2ae46fb006ba}
+
+\item 
 double {\bfseries \+\_\+\+\_\+nxt\+\_\+schedule\+\_\+time\+\_\+ms}\hypertarget{classpc__emulator_1_1Task_aebf00535089b78623b641fe7de77c5df}{}\label{classpc__emulator_1_1Task_aebf00535089b78623b641fe7de77c5df}
 
 \item 
 std\+::vector$<$ std\+::unique\+\_\+ptr$<$ \hyperlink{classpc__emulator_1_1ProgramContainer}{Program\+Container} $>$ $>$ {\bfseries \+\_\+\+\_\+\+Associated\+Programs}\hypertarget{classpc__emulator_1_1Task_a930efc75d9989d4f4b2d896bcf6801a5}{}\label{classpc__emulator_1_1Task_a930efc75d9989d4f4b2d896bcf6801a5}
+
+\item 
+\hyperlink{classpc__emulator_1_1FunctionsRegistry}{Functions\+Registry} $\ast$ {\bfseries F\+C\+Registry}\hypertarget{classpc__emulator_1_1Task_a4e5e7a4941d487f66ff127d5a3d08499}{}\label{classpc__emulator_1_1Task_a4e5e7a4941d487f66ff127d5a3d08499}
 
 \end{DoxyCompactItemize}
 

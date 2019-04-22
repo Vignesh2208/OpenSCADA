@@ -49,7 +49,67 @@ static bool \hyperlink{classpc__emulator_1_1Utils_aed87633e02fc22491260d495013c5
 static bool \hyperlink{classpc__emulator_1_1Utils_a22194d5b8d1dadf8fd795b6a75595fe6}{Read\+Access\+Check} (\hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$configuration, string Calling\+Po\+U\+Type, string Nested\+Field\+Name)
 \begin{DoxyCompactList}\small\item\em Checks if the calling P\+OU can read the Nested\+Field. \end{DoxyCompactList}\item 
 static bool \hyperlink{classpc__emulator_1_1Utils_a7060cb4142919527d5719f2c1c933f4b}{Write\+Access\+Check} (\hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$configuration, string Calling\+Po\+U\+Type, string Nested\+Field\+Name)
-\begin{DoxyCompactList}\small\item\em Checks if the calling P\+OU can access write to the Nested\+Field. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Checks if the calling P\+OU can access write to the Nested\+Field. \end{DoxyCompactList}\item 
+static \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1Utils_ad4c924801abb39d4dab05cc3000738ad}{Reallocate\+Tmp\+Variable} (\hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$configuration, \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$Var, \hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$new\+\_\+data\+\_\+type, string Initial\+Value)
+\begin{DoxyCompactList}\small\item\em Clears already assigned memory and reallocates new memory for a variable. \end{DoxyCompactList}\item 
+static \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1Utils_adb6b1dc96a12696b77948f38a5148cac}{B\+O\+O\+L\+\_\+\+T\+O\+\_\+\+A\+NY} (\hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$configuration, \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$Var, \hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$new\+\_\+datatype)
+\begin{DoxyCompactList}\small\item\em Type Casts a B\+O\+OL variable to a variable of new data type. \end{DoxyCompactList}\item 
+static \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1Utils_a7367ddfa0079890945c8fc81869a9a9d}{B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+NY} (\hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$configuration, \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$Var, \hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$new\+\_\+datatype)
+\begin{DoxyCompactList}\small\item\em Type Casts a B\+Y\+TE variable to a variable of new data type. \end{DoxyCompactList}\item 
+static \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1Utils_a8e321a64d2671f0413960b70aa890b19}{W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+A\+NY} (\hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$configuration, \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$Var, \hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$new\+\_\+datatype)
+\begin{DoxyCompactList}\small\item\em Type Casts a W\+O\+RD variable to a variable of new data type. \end{DoxyCompactList}\item 
+static \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1Utils_a835281c18ed2920a93e7302fb5ad457c}{D\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+A\+NY} (\hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$configuration, \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$Var, \hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$new\+\_\+datatype)
+\begin{DoxyCompactList}\small\item\em Type Casts a D\+W\+O\+RD variable to a variable of new data type. \end{DoxyCompactList}\item 
+static \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1Utils_a47d91088a292574f0293847644af41b0}{L\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+A\+NY} (\hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$configuration, \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$Var, \hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$new\+\_\+datatype)
+\begin{DoxyCompactList}\small\item\em Type Casts a L\+W\+O\+RD variable to a variable of new data type. \end{DoxyCompactList}\item 
+static \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1Utils_afc81a5b33fafaa8bf4a9b80ca15770b5}{C\+H\+A\+R\+\_\+\+T\+O\+\_\+\+A\+NY} (\hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$configuration, \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$Var, \hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$new\+\_\+datatype)
+\begin{DoxyCompactList}\small\item\em Type Casts a C\+H\+AR variable to a variable of new data type. \end{DoxyCompactList}\item 
+static \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1Utils_a431a9c5ceca0fe90cdd87a2a05479784}{I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY} (\hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$configuration, \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$Var, \hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$new\+\_\+datatype)
+\begin{DoxyCompactList}\small\item\em Type Casts a I\+NT variable to a variable of new data type. \end{DoxyCompactList}\item 
+static \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1Utils_a10aa502b8a0c552082352559ce25757e}{S\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY} (\hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$configuration, \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$Var, \hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$new\+\_\+datatype)
+\begin{DoxyCompactList}\small\item\em Type Casts a S\+I\+NT variable to a variable of new data type. \end{DoxyCompactList}\item 
+static \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1Utils_a96479987c0814f65737e8eeffa8b0e61}{D\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY} (\hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$configuration, \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$Var, \hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$new\+\_\+datatype)
+\begin{DoxyCompactList}\small\item\em Type Casts a D\+I\+NT variable to a variable of new data type. \end{DoxyCompactList}\item 
+static \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1Utils_a9926717443d1adac415f6a8bf5c725f7}{L\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY} (\hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$configuration, \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$Var, \hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$new\+\_\+datatype)
+\begin{DoxyCompactList}\small\item\em Type Casts a L\+I\+NT variable to a variable of new data type. \end{DoxyCompactList}\item 
+static \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1Utils_a9369bc339eb63f43481ea2b6165a1522}{U\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY} (\hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$configuration, \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$Var, \hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$new\+\_\+datatype)
+\begin{DoxyCompactList}\small\item\em Type Casts a U\+I\+NT variable to a variable of new data type. \end{DoxyCompactList}\item 
+static \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1Utils_acc006b6ca5db8593d1114737bb97332f}{U\+S\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY} (\hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$configuration, \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$Var, \hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$new\+\_\+datatype)
+\begin{DoxyCompactList}\small\item\em Type Casts a U\+S\+I\+NT variable to a variable of new data type. \end{DoxyCompactList}\item 
+static \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1Utils_ade3492aa5889fb553725e078cce4f040}{U\+D\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY} (\hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$configuration, \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$Var, \hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$new\+\_\+datatype)
+\begin{DoxyCompactList}\small\item\em Type Casts a U\+D\+I\+NT variable to a variable of new data type. \end{DoxyCompactList}\item 
+static \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1Utils_ac14734b33f078b8f9796cbd59f79ca4b}{U\+L\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY} (\hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$configuration, \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$Var, \hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$new\+\_\+datatype)
+\begin{DoxyCompactList}\small\item\em Type Casts a U\+L\+I\+NT variable to a variable of new data type. \end{DoxyCompactList}\item 
+static \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1Utils_a0b12cd05a3e2271610a851da6b2d92a2}{R\+E\+A\+L\+\_\+\+T\+O\+\_\+\+A\+NY} (\hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$configuration, \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$Var, \hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$new\+\_\+datatype)
+\begin{DoxyCompactList}\small\item\em Type Casts a R\+E\+AL variable to a variable of new data type. \end{DoxyCompactList}\item 
+static \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1Utils_ab4385bfebe2ad37daa6ee7451c8639e2}{L\+R\+E\+A\+L\+\_\+\+T\+O\+\_\+\+A\+NY} (\hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$configuration, \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$Var, \hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$new\+\_\+datatype)
+\begin{DoxyCompactList}\small\item\em Type Casts a L\+R\+E\+AL variable to a variable of new data type. \end{DoxyCompactList}\item 
+static \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1Utils_a1752451e7c722a09c92e8e8a3ed5c161}{D\+T\+\_\+\+T\+O\+\_\+\+T\+OD} (\hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$configuration, \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$Var, \hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$new\+\_\+datatype)
+\begin{DoxyCompactList}\small\item\em Type Casts a DT variable to a T\+OD variable. \end{DoxyCompactList}\item 
+static \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1Utils_abe584b6abe60235ae5745b66f06b0976}{D\+T\+\_\+\+T\+O\+\_\+\+D\+A\+TE} (\hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} $\ast$configuration, \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$Var, \hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$new\+\_\+datatype)
+\begin{DoxyCompactList}\small\item\em Type Casts a DT variable to a D\+A\+TE variable. \end{DoxyCompactList}\item 
+static bool \hyperlink{classpc__emulator_1_1Utils_a6895a5161c5267bba4748a173c92037a}{Is\+Num\+Type} (\hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$data\+\_\+type)\hypertarget{classpc__emulator_1_1Utils_a6895a5161c5267bba4748a173c92037a}{}\label{classpc__emulator_1_1Utils_a6895a5161c5267bba4748a173c92037a}
+
+\begin{DoxyCompactList}\small\item\em Checks if the data\+\_\+type is Numeric. \end{DoxyCompactList}\item 
+static bool \hyperlink{classpc__emulator_1_1Utils_a8eaca0348e91221feedffd1b2772b3a6}{Is\+Bit\+Type} (\hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$data\+\_\+type)\hypertarget{classpc__emulator_1_1Utils_a8eaca0348e91221feedffd1b2772b3a6}{}\label{classpc__emulator_1_1Utils_a8eaca0348e91221feedffd1b2772b3a6}
+
+\begin{DoxyCompactList}\small\item\em Checks if the data\+\_\+type is Bit/\+Byte/\+Word/\+D\+Word/\+L\+Word. \end{DoxyCompactList}\item 
+static bool {\bfseries Is\+Real\+Type} (\hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$data\+\_\+type)\hypertarget{classpc__emulator_1_1Utils_a869b48efd6df5ed272d3c0914139ec2d}{}\label{classpc__emulator_1_1Utils_a869b48efd6df5ed272d3c0914139ec2d}
+
+\item 
+static bool \hyperlink{classpc__emulator_1_1Utils_a47bc7ad0d941b0256dd00fa21822c28c}{Same\+Class\+Of\+Data\+Types} (\hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$D\+T1, \hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$D\+T2)\hypertarget{classpc__emulator_1_1Utils_a47bc7ad0d941b0256dd00fa21822c28c}{}\label{classpc__emulator_1_1Utils_a47bc7ad0d941b0256dd00fa21822c28c}
+
+\begin{DoxyCompactList}\small\item\em Checks if the data\+\_\+type is R\+E\+A\+L/\+L\+R\+E\+AL. \end{DoxyCompactList}\item 
+static \hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$ \hyperlink{classpc__emulator_1_1Utils_afb4ce66f03d351d7fb7bf0632cce5ed7}{Get\+Most\+Appropriate\+Type\+Cast} (\hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$CR, std\+::vector$<$ \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ $>$ \&Operands)
+\begin{DoxyCompactList}\small\item\em Converts all passed operands to a common data type. \end{DoxyCompactList}\item 
+static bool \hyperlink{classpc__emulator_1_1Utils_ad155603916c2f69e6660378990dfed1d}{Generate\+Full\+Specification} (string System\+Specification\+Path, Specification \&full\+\_\+specification)
+\begin{DoxyCompactList}\small\item\em Parses a pc\+\_\+system\+\_\+specification.\+System\+Configuration proto. \end{DoxyCompactList}\item 
+static bool \hyperlink{classpc__emulator_1_1Utils_af4f9529c4bf826187c06328dfd210c8b}{Is\+Operand\+Immediate} (string Operand)\hypertarget{classpc__emulator_1_1Utils_af4f9529c4bf826187c06328dfd210c8b}{}\label{classpc__emulator_1_1Utils_af4f9529c4bf826187c06328dfd210c8b}
+
+\begin{DoxyCompactList}\small\item\em Checks if the passed string is a nested field name or an immediate operand. \end{DoxyCompactList}\item 
+static void \hyperlink{classpc__emulator_1_1Utils_a30fe3b319a10dc00a5805a5eba020998}{Extract\+Call\+Interface\+Mapping} (std\+::unordered\+\_\+map$<$ string, string $>$ \&Vars\+To\+Set, std\+::unordered\+\_\+map$<$ string, string $>$ \&Vars\+To\+Get, string Full\+Interface\+String)\hypertarget{classpc__emulator_1_1Utils_a30fe3b319a10dc00a5805a5eba020998}{}\label{classpc__emulator_1_1Utils_a30fe3b319a10dc00a5805a5eba020998}
+
+\begin{DoxyCompactList}\small\item\em Used internally to parse a C\+AL instruction formal parameters. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
@@ -58,6 +118,181 @@ Class containing Util functions.
 Util functions are used by other classes to perform initialization and book keeping operations 
 
 \subsection{Member Function Documentation}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!B\+O\+O\+L\+\_\+\+T\+O\+\_\+\+A\+NY@{B\+O\+O\+L\+\_\+\+T\+O\+\_\+\+A\+NY}}
+\index{B\+O\+O\+L\+\_\+\+T\+O\+\_\+\+A\+NY@{B\+O\+O\+L\+\_\+\+T\+O\+\_\+\+A\+NY}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{B\+O\+O\+L\+\_\+\+T\+O\+\_\+\+A\+N\+Y(\+P\+C\+Configuration $\ast$configuration, P\+C\+Variable $\ast$\+Var, P\+C\+Data\+Type $\ast$new\+\_\+datatype)}{BOOL_TO_ANY(PCConfiguration *configuration, PCVariable *Var, PCDataType *new_datatype)}}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf P\+C\+Variable}$\ast$ pc\+\_\+emulator\+::\+Utils\+::\+B\+O\+O\+L\+\_\+\+T\+O\+\_\+\+A\+NY (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Configuration} $\ast$}]{configuration, }
+\item[{{\bf P\+C\+Variable} $\ast$}]{Var, }
+\item[{{\bf P\+C\+Data\+Type} $\ast$}]{new\+\_\+datatype}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_adb6b1dc96a12696b77948f38a5148cac}{}\label{classpc__emulator_1_1Utils_adb6b1dc96a12696b77948f38a5148cac}
+
+
+Type Casts a B\+O\+OL variable to a variable of new data type. 
+
+Only Bit or Num Types are allowed for new\+\_\+datatype 
+\begin{DoxyParams}{Parameters}
+{\em configuration} & A \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} object \\
+\hline
+{\em Var} & Variable to change \\
+\hline
+{\em new\+\_\+datatype} & The new data type to type cast to \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+P\+C\+Variable$\ast$ The newly type casted variable 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+NY@{B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+NY}}
+\index{B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+NY@{B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+NY}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+N\+Y(\+P\+C\+Configuration $\ast$configuration, P\+C\+Variable $\ast$\+Var, P\+C\+Data\+Type $\ast$new\+\_\+datatype)}{BYTE_TO_ANY(PCConfiguration *configuration, PCVariable *Var, PCDataType *new_datatype)}}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf P\+C\+Variable}$\ast$ pc\+\_\+emulator\+::\+Utils\+::\+B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+NY (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Configuration} $\ast$}]{configuration, }
+\item[{{\bf P\+C\+Variable} $\ast$}]{Var, }
+\item[{{\bf P\+C\+Data\+Type} $\ast$}]{new\+\_\+datatype}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_a7367ddfa0079890945c8fc81869a9a9d}{}\label{classpc__emulator_1_1Utils_a7367ddfa0079890945c8fc81869a9a9d}
+
+
+Type Casts a B\+Y\+TE variable to a variable of new data type. 
+
+Only Bit or Num Types are allowed for new\+\_\+datatype 
+\begin{DoxyParams}{Parameters}
+{\em configuration} & A \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} object \\
+\hline
+{\em Var} & Variable to change \\
+\hline
+{\em new\+\_\+datatype} & The new data type to type cast to \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+P\+C\+Variable$\ast$ The newly type casted variable 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!C\+H\+A\+R\+\_\+\+T\+O\+\_\+\+A\+NY@{C\+H\+A\+R\+\_\+\+T\+O\+\_\+\+A\+NY}}
+\index{C\+H\+A\+R\+\_\+\+T\+O\+\_\+\+A\+NY@{C\+H\+A\+R\+\_\+\+T\+O\+\_\+\+A\+NY}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{C\+H\+A\+R\+\_\+\+T\+O\+\_\+\+A\+N\+Y(\+P\+C\+Configuration $\ast$configuration, P\+C\+Variable $\ast$\+Var, P\+C\+Data\+Type $\ast$new\+\_\+datatype)}{CHAR_TO_ANY(PCConfiguration *configuration, PCVariable *Var, PCDataType *new_datatype)}}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf P\+C\+Variable}$\ast$ pc\+\_\+emulator\+::\+Utils\+::\+C\+H\+A\+R\+\_\+\+T\+O\+\_\+\+A\+NY (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Configuration} $\ast$}]{configuration, }
+\item[{{\bf P\+C\+Variable} $\ast$}]{Var, }
+\item[{{\bf P\+C\+Data\+Type} $\ast$}]{new\+\_\+datatype}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_afc81a5b33fafaa8bf4a9b80ca15770b5}{}\label{classpc__emulator_1_1Utils_afc81a5b33fafaa8bf4a9b80ca15770b5}
+
+
+Type Casts a C\+H\+AR variable to a variable of new data type. 
+
+Only Bit or Num Types are allowed for new\+\_\+datatype 
+\begin{DoxyParams}{Parameters}
+{\em configuration} & A \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} object \\
+\hline
+{\em Var} & Variable to change \\
+\hline
+{\em new\+\_\+datatype} & The new data type to type cast to \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+P\+C\+Variable$\ast$ The newly type casted variable 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!D\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY@{D\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY}}
+\index{D\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY@{D\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{D\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+N\+Y(\+P\+C\+Configuration $\ast$configuration, P\+C\+Variable $\ast$\+Var, P\+C\+Data\+Type $\ast$new\+\_\+datatype)}{DINT_TO_ANY(PCConfiguration *configuration, PCVariable *Var, PCDataType *new_datatype)}}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf P\+C\+Variable}$\ast$ pc\+\_\+emulator\+::\+Utils\+::\+D\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Configuration} $\ast$}]{configuration, }
+\item[{{\bf P\+C\+Variable} $\ast$}]{Var, }
+\item[{{\bf P\+C\+Data\+Type} $\ast$}]{new\+\_\+datatype}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_a96479987c0814f65737e8eeffa8b0e61}{}\label{classpc__emulator_1_1Utils_a96479987c0814f65737e8eeffa8b0e61}
+
+
+Type Casts a D\+I\+NT variable to a variable of new data type. 
+
+Only Bit or Num Types are allowed for new\+\_\+datatype 
+\begin{DoxyParams}{Parameters}
+{\em configuration} & A \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} object \\
+\hline
+{\em Var} & Variable to change \\
+\hline
+{\em new\+\_\+datatype} & The new data type to type cast to \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+P\+C\+Variable$\ast$ The newly type casted variable 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!D\+T\+\_\+\+T\+O\+\_\+\+D\+A\+TE@{D\+T\+\_\+\+T\+O\+\_\+\+D\+A\+TE}}
+\index{D\+T\+\_\+\+T\+O\+\_\+\+D\+A\+TE@{D\+T\+\_\+\+T\+O\+\_\+\+D\+A\+TE}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{D\+T\+\_\+\+T\+O\+\_\+\+D\+A\+T\+E(\+P\+C\+Configuration $\ast$configuration, P\+C\+Variable $\ast$\+Var, P\+C\+Data\+Type $\ast$new\+\_\+datatype)}{DT_TO_DATE(PCConfiguration *configuration, PCVariable *Var, PCDataType *new_datatype)}}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf P\+C\+Variable}$\ast$ pc\+\_\+emulator\+::\+Utils\+::\+D\+T\+\_\+\+T\+O\+\_\+\+D\+A\+TE (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Configuration} $\ast$}]{configuration, }
+\item[{{\bf P\+C\+Variable} $\ast$}]{Var, }
+\item[{{\bf P\+C\+Data\+Type} $\ast$}]{new\+\_\+datatype}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_abe584b6abe60235ae5745b66f06b0976}{}\label{classpc__emulator_1_1Utils_abe584b6abe60235ae5745b66f06b0976}
+
+
+Type Casts a DT variable to a D\+A\+TE variable. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em configuration} & A \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} object \\
+\hline
+{\em Var} & Variable to change \\
+\hline
+{\em new\+\_\+datatype} & Pointer to D\+A\+TE data type \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+P\+C\+Variable$\ast$ The newly type casted variable 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!D\+T\+\_\+\+T\+O\+\_\+\+T\+OD@{D\+T\+\_\+\+T\+O\+\_\+\+T\+OD}}
+\index{D\+T\+\_\+\+T\+O\+\_\+\+T\+OD@{D\+T\+\_\+\+T\+O\+\_\+\+T\+OD}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{D\+T\+\_\+\+T\+O\+\_\+\+T\+O\+D(\+P\+C\+Configuration $\ast$configuration, P\+C\+Variable $\ast$\+Var, P\+C\+Data\+Type $\ast$new\+\_\+datatype)}{DT_TO_TOD(PCConfiguration *configuration, PCVariable *Var, PCDataType *new_datatype)}}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf P\+C\+Variable}$\ast$ pc\+\_\+emulator\+::\+Utils\+::\+D\+T\+\_\+\+T\+O\+\_\+\+T\+OD (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Configuration} $\ast$}]{configuration, }
+\item[{{\bf P\+C\+Variable} $\ast$}]{Var, }
+\item[{{\bf P\+C\+Data\+Type} $\ast$}]{new\+\_\+datatype}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_a1752451e7c722a09c92e8e8a3ed5c161}{}\label{classpc__emulator_1_1Utils_a1752451e7c722a09c92e8e8a3ed5c161}
+
+
+Type Casts a DT variable to a T\+OD variable. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em configuration} & A \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} object \\
+\hline
+{\em Var} & Variable to change \\
+\hline
+{\em new\+\_\+datatype} & Pointer to T\+OD data type \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+P\+C\+Variable$\ast$ The newly type casted variable 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!D\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+A\+NY@{D\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+A\+NY}}
+\index{D\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+A\+NY@{D\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+A\+NY}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{D\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+A\+N\+Y(\+P\+C\+Configuration $\ast$configuration, P\+C\+Variable $\ast$\+Var, P\+C\+Data\+Type $\ast$new\+\_\+datatype)}{DWORD_TO_ANY(PCConfiguration *configuration, PCVariable *Var, PCDataType *new_datatype)}}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf P\+C\+Variable}$\ast$ pc\+\_\+emulator\+::\+Utils\+::\+D\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+A\+NY (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Configuration} $\ast$}]{configuration, }
+\item[{{\bf P\+C\+Variable} $\ast$}]{Var, }
+\item[{{\bf P\+C\+Data\+Type} $\ast$}]{new\+\_\+datatype}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_a835281c18ed2920a93e7302fb5ad457c}{}\label{classpc__emulator_1_1Utils_a835281c18ed2920a93e7302fb5ad457c}
+
+
+Type Casts a D\+W\+O\+RD variable to a variable of new data type. 
+
+Only Bit or Num Types are allowed for new\+\_\+datatype 
+\begin{DoxyParams}{Parameters}
+{\em configuration} & A \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} object \\
+\hline
+{\em Var} & Variable to change \\
+\hline
+{\em new\+\_\+datatype} & The new data type to type cast to \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+P\+C\+Variable$\ast$ The newly type casted variable 
+\end{DoxyReturn}
 \index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!Extract\+From\+Access\+Storage\+Spec@{Extract\+From\+Access\+Storage\+Spec}}
 \index{Extract\+From\+Access\+Storage\+Spec@{Extract\+From\+Access\+Storage\+Spec}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
 \subsubsection[{\texorpdfstring{Extract\+From\+Access\+Storage\+Spec(\+P\+C\+Configuration $\ast$\+\_\+\+\_\+configuration, string Storage\+Spec, int $\ast$\+Mem\+Type, int $\ast$\+Byte\+Offset, int $\ast$\+Bit\+Offset, string \&\+Candidate\+Resource\+Name)}{ExtractFromAccessStorageSpec(PCConfiguration *__configuration, string StorageSpec, int *MemType, int *ByteOffset, int *BitOffset, string &CandidateResourceName)}}]{\setlength{\rightskip}{0pt plus 5cm}static bool pc\+\_\+emulator\+::\+Utils\+::\+Extract\+From\+Access\+Storage\+Spec (
@@ -119,6 +354,28 @@ Extracts details from a storage spec string like M\+W3.0
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 true if storage spec is in correct format, else false 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!Generate\+Full\+Specification@{Generate\+Full\+Specification}}
+\index{Generate\+Full\+Specification@{Generate\+Full\+Specification}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{Generate\+Full\+Specification(string System\+Specification\+Path, Specification \&full\+\_\+specification)}{GenerateFullSpecification(string SystemSpecificationPath, Specification &full_specification)}}]{\setlength{\rightskip}{0pt plus 5cm}static bool pc\+\_\+emulator\+::\+Utils\+::\+Generate\+Full\+Specification (
+\begin{DoxyParamCaption}
+\item[{string}]{System\+Specification\+Path, }
+\item[{Specification \&}]{full\+\_\+specification}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_ad155603916c2f69e6660378990dfed1d}{}\label{classpc__emulator_1_1Utils_ad155603916c2f69e6660378990dfed1d}
+
+
+Parses a pc\+\_\+system\+\_\+specification.\+System\+Configuration proto. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em System\+Specification\+Path} & Full path containing the system specification prototxt file \\
+\hline
+{\em full\+\_\+specification} & Parsed proto is converted to pc\+\_\+specification.\+Specification and returned \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool True on success 
 \end{DoxyReturn}
 \index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!Get\+Elementary\+Data\+Type\+Name@{Get\+Elementary\+Data\+Type\+Name}}
 \index{Get\+Elementary\+Data\+Type\+Name@{Get\+Elementary\+Data\+Type\+Name}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
@@ -191,6 +448,28 @@ Returns the initial value for an element of an array datatype.
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 Returns the initial value of the specified index 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!Get\+Most\+Appropriate\+Type\+Cast@{Get\+Most\+Appropriate\+Type\+Cast}}
+\index{Get\+Most\+Appropriate\+Type\+Cast@{Get\+Most\+Appropriate\+Type\+Cast}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{Get\+Most\+Appropriate\+Type\+Cast(\+P\+C\+Variable $\ast$\+C\+R, std\+::vector$<$ P\+C\+Variable $\ast$ $>$ \&\+Operands)}{GetMostAppropriateTypeCast(PCVariable *CR, std::vector< PCVariable * > &Operands)}}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf P\+C\+Data\+Type}$\ast$ pc\+\_\+emulator\+::\+Utils\+::\+Get\+Most\+Appropriate\+Type\+Cast (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Variable} $\ast$}]{CR, }
+\item[{std\+::vector$<$ {\bf P\+C\+Variable} $\ast$ $>$ \&}]{Operands}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_afb4ce66f03d351d7fb7bf0632cce5ed7}{}\label{classpc__emulator_1_1Utils_afb4ce66f03d351d7fb7bf0632cce5ed7}
+
+
+Converts all passed operands to a common data type. 
+
+The most appropriate data type is chosen from non-\/temporary variables among the operands. If all variables are temporary then the one with the largest size is chosen. 
+\begin{DoxyParams}{Parameters}
+{\em CR} & Current\+Result (should always be temporary) \\
+\hline
+{\em Operands} & List of operand variables \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+P\+C\+Data\+Type$\ast$ Most appropriate data type for type casting 
 \end{DoxyReturn}
 \index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!Get\+Variable@{Get\+Variable}}
 \index{Get\+Variable@{Get\+Variable}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
@@ -277,6 +556,31 @@ Initializes all the fields of a data-\/type
 {\em Data\+Type\+Spec} & detailed pecification of the data-\/type fields \\
 \hline
 \end{DoxyParams}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY@{I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY}}
+\index{I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY@{I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+N\+Y(\+P\+C\+Configuration $\ast$configuration, P\+C\+Variable $\ast$\+Var, P\+C\+Data\+Type $\ast$new\+\_\+datatype)}{INT_TO_ANY(PCConfiguration *configuration, PCVariable *Var, PCDataType *new_datatype)}}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf P\+C\+Variable}$\ast$ pc\+\_\+emulator\+::\+Utils\+::\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Configuration} $\ast$}]{configuration, }
+\item[{{\bf P\+C\+Variable} $\ast$}]{Var, }
+\item[{{\bf P\+C\+Data\+Type} $\ast$}]{new\+\_\+datatype}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_a431a9c5ceca0fe90cdd87a2a05479784}{}\label{classpc__emulator_1_1Utils_a431a9c5ceca0fe90cdd87a2a05479784}
+
+
+Type Casts a I\+NT variable to a variable of new data type. 
+
+Only Bit or Num Types are allowed for new\+\_\+datatype 
+\begin{DoxyParams}{Parameters}
+{\em configuration} & A \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} object \\
+\hline
+{\em Var} & Variable to change \\
+\hline
+{\em new\+\_\+datatype} & The new data type to type cast to \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+P\+C\+Variable$\ast$ The newly type casted variable 
+\end{DoxyReturn}
 \index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!Is\+Field\+Type\+Ptr@{Is\+Field\+Type\+Ptr}}
 \index{Is\+Field\+Type\+Ptr@{Is\+Field\+Type\+Ptr}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
 \subsubsection[{\texorpdfstring{Is\+Field\+Type\+Ptr(int Field\+Interface\+Type)}{IsFieldTypePtr(int FieldInterfaceType)}}]{\setlength{\rightskip}{0pt plus 5cm}static bool pc\+\_\+emulator\+::\+Utils\+::\+Is\+Field\+Type\+Ptr (
@@ -295,6 +599,81 @@ Given a field interface type, checks if it is a pointer field.
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 True iff Field\+Interface\+Type is V\+A\+R\+\_\+\+I\+N\+\_\+\+O\+UT, V\+A\+R\+\_\+\+E\+X\+T\+E\+R\+N\+AL V\+A\+R\+\_\+\+A\+C\+C\+E\+SS or V\+A\+R\+\_\+\+E\+X\+P\+L\+I\+C\+I\+T\+\_\+\+S\+T\+O\+R\+A\+GE. 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!L\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY@{L\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY}}
+\index{L\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY@{L\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{L\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+N\+Y(\+P\+C\+Configuration $\ast$configuration, P\+C\+Variable $\ast$\+Var, P\+C\+Data\+Type $\ast$new\+\_\+datatype)}{LINT_TO_ANY(PCConfiguration *configuration, PCVariable *Var, PCDataType *new_datatype)}}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf P\+C\+Variable}$\ast$ pc\+\_\+emulator\+::\+Utils\+::\+L\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Configuration} $\ast$}]{configuration, }
+\item[{{\bf P\+C\+Variable} $\ast$}]{Var, }
+\item[{{\bf P\+C\+Data\+Type} $\ast$}]{new\+\_\+datatype}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_a9926717443d1adac415f6a8bf5c725f7}{}\label{classpc__emulator_1_1Utils_a9926717443d1adac415f6a8bf5c725f7}
+
+
+Type Casts a L\+I\+NT variable to a variable of new data type. 
+
+Only Bit or Num Types are allowed for new\+\_\+datatype 
+\begin{DoxyParams}{Parameters}
+{\em configuration} & A \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} object \\
+\hline
+{\em Var} & Variable to change \\
+\hline
+{\em new\+\_\+datatype} & The new data type to type cast to \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+P\+C\+Variable$\ast$ The newly type casted variable 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!L\+R\+E\+A\+L\+\_\+\+T\+O\+\_\+\+A\+NY@{L\+R\+E\+A\+L\+\_\+\+T\+O\+\_\+\+A\+NY}}
+\index{L\+R\+E\+A\+L\+\_\+\+T\+O\+\_\+\+A\+NY@{L\+R\+E\+A\+L\+\_\+\+T\+O\+\_\+\+A\+NY}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{L\+R\+E\+A\+L\+\_\+\+T\+O\+\_\+\+A\+N\+Y(\+P\+C\+Configuration $\ast$configuration, P\+C\+Variable $\ast$\+Var, P\+C\+Data\+Type $\ast$new\+\_\+datatype)}{LREAL_TO_ANY(PCConfiguration *configuration, PCVariable *Var, PCDataType *new_datatype)}}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf P\+C\+Variable}$\ast$ pc\+\_\+emulator\+::\+Utils\+::\+L\+R\+E\+A\+L\+\_\+\+T\+O\+\_\+\+A\+NY (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Configuration} $\ast$}]{configuration, }
+\item[{{\bf P\+C\+Variable} $\ast$}]{Var, }
+\item[{{\bf P\+C\+Data\+Type} $\ast$}]{new\+\_\+datatype}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_ab4385bfebe2ad37daa6ee7451c8639e2}{}\label{classpc__emulator_1_1Utils_ab4385bfebe2ad37daa6ee7451c8639e2}
+
+
+Type Casts a L\+R\+E\+AL variable to a variable of new data type. 
+
+Only Bit or Num Types are allowed for new\+\_\+datatype 
+\begin{DoxyParams}{Parameters}
+{\em configuration} & A \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} object \\
+\hline
+{\em Var} & Variable to change \\
+\hline
+{\em new\+\_\+datatype} & The new data type to type cast to \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+P\+C\+Variable$\ast$ The newly type casted variable 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!L\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+A\+NY@{L\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+A\+NY}}
+\index{L\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+A\+NY@{L\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+A\+NY}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{L\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+A\+N\+Y(\+P\+C\+Configuration $\ast$configuration, P\+C\+Variable $\ast$\+Var, P\+C\+Data\+Type $\ast$new\+\_\+datatype)}{LWORD_TO_ANY(PCConfiguration *configuration, PCVariable *Var, PCDataType *new_datatype)}}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf P\+C\+Variable}$\ast$ pc\+\_\+emulator\+::\+Utils\+::\+L\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+A\+NY (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Configuration} $\ast$}]{configuration, }
+\item[{{\bf P\+C\+Variable} $\ast$}]{Var, }
+\item[{{\bf P\+C\+Data\+Type} $\ast$}]{new\+\_\+datatype}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_a47d91088a292574f0293847644af41b0}{}\label{classpc__emulator_1_1Utils_a47d91088a292574f0293847644af41b0}
+
+
+Type Casts a L\+W\+O\+RD variable to a variable of new data type. 
+
+Only Bit or Num Types are allowed for new\+\_\+datatype 
+\begin{DoxyParams}{Parameters}
+{\em configuration} & A \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} object \\
+\hline
+{\em Var} & Variable to change \\
+\hline
+{\em new\+\_\+datatype} & The new data type to type cast to \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+P\+C\+Variable$\ast$ The newly type casted variable 
 \end{DoxyReturn}
 \index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!make\+\_\+mmap\+\_\+shared@{make\+\_\+mmap\+\_\+shared}}
 \index{make\+\_\+mmap\+\_\+shared@{make\+\_\+mmap\+\_\+shared}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
@@ -340,6 +719,59 @@ Checks if the calling P\+OU can read the Nested\+Field.
 {\em Nested\+Field\+Name} & The nested field name whose read permissions are to be checked \\
 \hline
 \end{DoxyParams}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!R\+E\+A\+L\+\_\+\+T\+O\+\_\+\+A\+NY@{R\+E\+A\+L\+\_\+\+T\+O\+\_\+\+A\+NY}}
+\index{R\+E\+A\+L\+\_\+\+T\+O\+\_\+\+A\+NY@{R\+E\+A\+L\+\_\+\+T\+O\+\_\+\+A\+NY}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{R\+E\+A\+L\+\_\+\+T\+O\+\_\+\+A\+N\+Y(\+P\+C\+Configuration $\ast$configuration, P\+C\+Variable $\ast$\+Var, P\+C\+Data\+Type $\ast$new\+\_\+datatype)}{REAL_TO_ANY(PCConfiguration *configuration, PCVariable *Var, PCDataType *new_datatype)}}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf P\+C\+Variable}$\ast$ pc\+\_\+emulator\+::\+Utils\+::\+R\+E\+A\+L\+\_\+\+T\+O\+\_\+\+A\+NY (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Configuration} $\ast$}]{configuration, }
+\item[{{\bf P\+C\+Variable} $\ast$}]{Var, }
+\item[{{\bf P\+C\+Data\+Type} $\ast$}]{new\+\_\+datatype}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_a0b12cd05a3e2271610a851da6b2d92a2}{}\label{classpc__emulator_1_1Utils_a0b12cd05a3e2271610a851da6b2d92a2}
+
+
+Type Casts a R\+E\+AL variable to a variable of new data type. 
+
+Only Bit or Num Types are allowed for new\+\_\+datatype 
+\begin{DoxyParams}{Parameters}
+{\em configuration} & A \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} object \\
+\hline
+{\em Var} & Variable to change \\
+\hline
+{\em new\+\_\+datatype} & The new data type to type cast to \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+P\+C\+Variable$\ast$ The newly type casted variable 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!Reallocate\+Tmp\+Variable@{Reallocate\+Tmp\+Variable}}
+\index{Reallocate\+Tmp\+Variable@{Reallocate\+Tmp\+Variable}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{Reallocate\+Tmp\+Variable(\+P\+C\+Configuration $\ast$configuration, P\+C\+Variable $\ast$\+Var, P\+C\+Data\+Type $\ast$new\+\_\+data\+\_\+type, string Initial\+Value)}{ReallocateTmpVariable(PCConfiguration *configuration, PCVariable *Var, PCDataType *new_data_type, string InitialValue)}}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf P\+C\+Variable}$\ast$ pc\+\_\+emulator\+::\+Utils\+::\+Reallocate\+Tmp\+Variable (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Configuration} $\ast$}]{configuration, }
+\item[{{\bf P\+C\+Variable} $\ast$}]{Var, }
+\item[{{\bf P\+C\+Data\+Type} $\ast$}]{new\+\_\+data\+\_\+type, }
+\item[{string}]{Initial\+Value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_ad4c924801abb39d4dab05cc3000738ad}{}\label{classpc__emulator_1_1Utils_ad4c924801abb39d4dab05cc3000738ad}
+
+
+Clears already assigned memory and reallocates new memory for a variable. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em configuration} & A \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} object \\
+\hline
+{\em Var} & The variable to be reallocated \\
+\hline
+{\em new\+\_\+data\+\_\+type} & The variable\textquotesingle{}s data type is to be changed to this one \\
+\hline
+{\em Initial\+Value} & After reallocation, the variable is initialized with this value \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+P\+C\+Variable$\ast$ The newly initialized variable or the same one or nullptr if the reallocation was not successful 
+\end{DoxyReturn}
 \index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!Resolve\+Alias\+Name@{Resolve\+Alias\+Name}}
 \index{Resolve\+Alias\+Name@{Resolve\+Alias\+Name}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
 \subsubsection[{\texorpdfstring{Resolve\+Alias\+Name(string Alias\+Name, P\+C\+Configuration $\ast$\+\_\+\+\_\+configuration)}{ResolveAliasName(string AliasName, PCConfiguration *__configuration)}}]{\setlength{\rightskip}{0pt plus 5cm}static string pc\+\_\+emulator\+::\+Utils\+::\+Resolve\+Alias\+Name (
@@ -361,6 +793,31 @@ Returns the actual data-\/type name given one of its aliases.
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 Returns the original data-\/type name 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!S\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY@{S\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY}}
+\index{S\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY@{S\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{S\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+N\+Y(\+P\+C\+Configuration $\ast$configuration, P\+C\+Variable $\ast$\+Var, P\+C\+Data\+Type $\ast$new\+\_\+datatype)}{SINT_TO_ANY(PCConfiguration *configuration, PCVariable *Var, PCDataType *new_datatype)}}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf P\+C\+Variable}$\ast$ pc\+\_\+emulator\+::\+Utils\+::\+S\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Configuration} $\ast$}]{configuration, }
+\item[{{\bf P\+C\+Variable} $\ast$}]{Var, }
+\item[{{\bf P\+C\+Data\+Type} $\ast$}]{new\+\_\+datatype}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_a10aa502b8a0c552082352559ce25757e}{}\label{classpc__emulator_1_1Utils_a10aa502b8a0c552082352559ce25757e}
+
+
+Type Casts a S\+I\+NT variable to a variable of new data type. 
+
+Only Bit or Num Types are allowed for new\+\_\+datatype 
+\begin{DoxyParams}{Parameters}
+{\em configuration} & A \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} object \\
+\hline
+{\em Var} & Variable to change \\
+\hline
+{\em new\+\_\+datatype} & The new data type to type cast to \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+P\+C\+Variable$\ast$ The newly type casted variable 
 \end{DoxyReturn}
 \index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!Test\+E\+Q\+Ptrs@{Test\+E\+Q\+Ptrs}}
 \index{Test\+E\+Q\+Ptrs@{Test\+E\+Q\+Ptrs}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
@@ -384,6 +841,106 @@ Tests if two variables are equal.
 \begin{DoxyReturn}{Returns}
 True iff both variable\textquotesingle{}s memory locations and byte and bit offsets are the same. Otherwise it returns false 
 \end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!U\+D\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY@{U\+D\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY}}
+\index{U\+D\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY@{U\+D\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{U\+D\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+N\+Y(\+P\+C\+Configuration $\ast$configuration, P\+C\+Variable $\ast$\+Var, P\+C\+Data\+Type $\ast$new\+\_\+datatype)}{UDINT_TO_ANY(PCConfiguration *configuration, PCVariable *Var, PCDataType *new_datatype)}}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf P\+C\+Variable}$\ast$ pc\+\_\+emulator\+::\+Utils\+::\+U\+D\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Configuration} $\ast$}]{configuration, }
+\item[{{\bf P\+C\+Variable} $\ast$}]{Var, }
+\item[{{\bf P\+C\+Data\+Type} $\ast$}]{new\+\_\+datatype}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_ade3492aa5889fb553725e078cce4f040}{}\label{classpc__emulator_1_1Utils_ade3492aa5889fb553725e078cce4f040}
+
+
+Type Casts a U\+D\+I\+NT variable to a variable of new data type. 
+
+Only Bit or Num Types are allowed for new\+\_\+datatype 
+\begin{DoxyParams}{Parameters}
+{\em configuration} & A \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} object \\
+\hline
+{\em Var} & Variable to change \\
+\hline
+{\em new\+\_\+datatype} & The new data type to type cast to \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+P\+C\+Variable$\ast$ The newly type casted variable 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!U\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY@{U\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY}}
+\index{U\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY@{U\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{U\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+N\+Y(\+P\+C\+Configuration $\ast$configuration, P\+C\+Variable $\ast$\+Var, P\+C\+Data\+Type $\ast$new\+\_\+datatype)}{UINT_TO_ANY(PCConfiguration *configuration, PCVariable *Var, PCDataType *new_datatype)}}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf P\+C\+Variable}$\ast$ pc\+\_\+emulator\+::\+Utils\+::\+U\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Configuration} $\ast$}]{configuration, }
+\item[{{\bf P\+C\+Variable} $\ast$}]{Var, }
+\item[{{\bf P\+C\+Data\+Type} $\ast$}]{new\+\_\+datatype}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_a9369bc339eb63f43481ea2b6165a1522}{}\label{classpc__emulator_1_1Utils_a9369bc339eb63f43481ea2b6165a1522}
+
+
+Type Casts a U\+I\+NT variable to a variable of new data type. 
+
+Only Bit or Num Types are allowed for new\+\_\+datatype 
+\begin{DoxyParams}{Parameters}
+{\em configuration} & A \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} object \\
+\hline
+{\em Var} & Variable to change \\
+\hline
+{\em new\+\_\+datatype} & The new data type to type cast to \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+P\+C\+Variable$\ast$ The newly type casted variable 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!U\+L\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY@{U\+L\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY}}
+\index{U\+L\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY@{U\+L\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{U\+L\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+N\+Y(\+P\+C\+Configuration $\ast$configuration, P\+C\+Variable $\ast$\+Var, P\+C\+Data\+Type $\ast$new\+\_\+datatype)}{ULINT_TO_ANY(PCConfiguration *configuration, PCVariable *Var, PCDataType *new_datatype)}}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf P\+C\+Variable}$\ast$ pc\+\_\+emulator\+::\+Utils\+::\+U\+L\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Configuration} $\ast$}]{configuration, }
+\item[{{\bf P\+C\+Variable} $\ast$}]{Var, }
+\item[{{\bf P\+C\+Data\+Type} $\ast$}]{new\+\_\+datatype}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_ac14734b33f078b8f9796cbd59f79ca4b}{}\label{classpc__emulator_1_1Utils_ac14734b33f078b8f9796cbd59f79ca4b}
+
+
+Type Casts a U\+L\+I\+NT variable to a variable of new data type. 
+
+Only Bit or Num Types are allowed for new\+\_\+datatype 
+\begin{DoxyParams}{Parameters}
+{\em configuration} & A \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} object \\
+\hline
+{\em Var} & Variable to change \\
+\hline
+{\em new\+\_\+datatype} & The new data type to type cast to \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+P\+C\+Variable$\ast$ The newly type casted variable 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!U\+S\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY@{U\+S\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY}}
+\index{U\+S\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY@{U\+S\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{U\+S\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+N\+Y(\+P\+C\+Configuration $\ast$configuration, P\+C\+Variable $\ast$\+Var, P\+C\+Data\+Type $\ast$new\+\_\+datatype)}{USINT_TO_ANY(PCConfiguration *configuration, PCVariable *Var, PCDataType *new_datatype)}}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf P\+C\+Variable}$\ast$ pc\+\_\+emulator\+::\+Utils\+::\+U\+S\+I\+N\+T\+\_\+\+T\+O\+\_\+\+A\+NY (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Configuration} $\ast$}]{configuration, }
+\item[{{\bf P\+C\+Variable} $\ast$}]{Var, }
+\item[{{\bf P\+C\+Data\+Type} $\ast$}]{new\+\_\+datatype}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_acc006b6ca5db8593d1114737bb97332f}{}\label{classpc__emulator_1_1Utils_acc006b6ca5db8593d1114737bb97332f}
+
+
+Type Casts a U\+S\+I\+NT variable to a variable of new data type. 
+
+Only Bit or Num Types are allowed for new\+\_\+datatype 
+\begin{DoxyParams}{Parameters}
+{\em configuration} & A \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} object \\
+\hline
+{\em Var} & Variable to change \\
+\hline
+{\em new\+\_\+datatype} & The new data type to type cast to \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+P\+C\+Variable$\ast$ The newly type casted variable 
+\end{DoxyReturn}
 \index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!Validate\+P\+O\+U\+Definition@{Validate\+P\+O\+U\+Definition}}
 \index{Validate\+P\+O\+U\+Definition@{Validate\+P\+O\+U\+Definition}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
 \subsubsection[{\texorpdfstring{Validate\+P\+O\+U\+Definition(\+P\+C\+Variable $\ast$\+P\+O\+U\+Var, P\+C\+Configuration $\ast$configuration)}{ValidatePOUDefinition(PCVariable *POUVar, PCConfiguration *configuration)}}]{\setlength{\rightskip}{0pt plus 5cm}static void pc\+\_\+emulator\+::\+Utils\+::\+Validate\+P\+O\+U\+Definition (
@@ -405,6 +962,31 @@ Performs validation check for a P\+OU.
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 Raises an exception if any of the validation checks fail 
+\end{DoxyReturn}
+\index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+A\+NY@{W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+A\+NY}}
+\index{W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+A\+NY@{W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+A\+NY}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}
+\subsubsection[{\texorpdfstring{W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+A\+N\+Y(\+P\+C\+Configuration $\ast$configuration, P\+C\+Variable $\ast$\+Var, P\+C\+Data\+Type $\ast$new\+\_\+datatype)}{WORD_TO_ANY(PCConfiguration *configuration, PCVariable *Var, PCDataType *new_datatype)}}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf P\+C\+Variable}$\ast$ pc\+\_\+emulator\+::\+Utils\+::\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+A\+NY (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+C\+Configuration} $\ast$}]{configuration, }
+\item[{{\bf P\+C\+Variable} $\ast$}]{Var, }
+\item[{{\bf P\+C\+Data\+Type} $\ast$}]{new\+\_\+datatype}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classpc__emulator_1_1Utils_a8e321a64d2671f0413960b70aa890b19}{}\label{classpc__emulator_1_1Utils_a8e321a64d2671f0413960b70aa890b19}
+
+
+Type Casts a W\+O\+RD variable to a variable of new data type. 
+
+Only Bit or Num Types are allowed for new\+\_\+datatype 
+\begin{DoxyParams}{Parameters}
+{\em configuration} & A \hyperlink{classpc__emulator_1_1PCConfiguration}{P\+C\+Configuration} object \\
+\hline
+{\em Var} & Variable to change \\
+\hline
+{\em new\+\_\+datatype} & The new data type to type cast to \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+P\+C\+Variable$\ast$ The newly type casted variable 
 \end{DoxyReturn}
 \index{pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}!Write\+Access\+Check@{Write\+Access\+Check}}
 \index{Write\+Access\+Check@{Write\+Access\+Check}!pc\+\_\+emulator\+::\+Utils@{pc\+\_\+emulator\+::\+Utils}}

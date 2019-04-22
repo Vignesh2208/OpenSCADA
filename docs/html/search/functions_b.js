@@ -1,15 +1,15 @@
 var searchData=
 [
-  ['raiseexception',['RaiseException',['../classpc__emulator_1_1Logger.html#a6a3838f5cdc03f802decfde8c06a3c9e',1,'pc_emulator::Logger']]],
-  ['readaccesscheck',['ReadAccessCheck',['../classpc__emulator_1_1Utils.html#a22194d5b8d1dadf8fd795b6a75595fe6',1,'pc_emulator::Utils']]],
-  ['reallocatestaticmemory',['ReallocateStaticMemory',['../classpc__emulator_1_1PCMemUnit.html#ab7550cf98c33fc7577bd609ce350a739',1,'pc_emulator::PCMemUnit']]],
-  ['registerdatatype',['RegisterDataType',['../classpc__emulator_1_1DataTypeRegistry.html#aeb42f0888bb6a866c5cb497f4c55e79d',1,'pc_emulator::DataTypeRegistry']]],
-  ['registerresource',['RegisterResource',['../classpc__emulator_1_1ResourceRegistry.html#a2e26433e14ffcf9c9f02621474465f80',1,'pc_emulator::ResourceRegistry']]],
-  ['resetcpuregisters',['ResetCPURegisters',['../classpc__emulator_1_1Executor.html#ae735d64520122eff70a5f539375027e6',1,'pc_emulator::Executor']]],
-  ['resolvealiasname',['ResolveAliasName',['../classpc__emulator_1_1Utils.html#a70dfbf76cdece909fde22deb9e63fbeb',1,'pc_emulator::Utils']]],
-  ['resolveallexternalfields',['ResolveAllExternalFields',['../classpc__emulator_1_1PCResourceImpl.html#a1da54f6b883793da02f8b8d4ff980c45',1,'pc_emulator::PCResourceImpl::ResolveAllExternalFields()'],['../classpc__emulator_1_1PCVariable.html#a84e7c6bba79c8e9ba002e7055ed85c70',1,'pc_emulator::PCVariable::ResolveAllExternalFields()']]],
-  ['resourceregistry',['ResourceRegistry',['../classpc__emulator_1_1ResourceRegistry.html#ae3ae928fd560cd39f3d8de651fa3797c',1,'pc_emulator::ResourceRegistry']]],
-  ['restorecpuregisters',['RestoreCPURegisters',['../classpc__emulator_1_1Executor.html#af20b7d1a162e6b974ff228c51ea86d92',1,'pc_emulator::Executor']]],
-  ['run',['Run',['../classpc__emulator_1_1Executor.html#a2fd64c8278fe4cb4b3040c1f1cc0c874',1,'pc_emulator::Executor']]],
-  ['runinsn',['RunInsn',['../classpc__emulator_1_1Executor.html#abf2af6604c54863a1a67a36a2526e357',1,'pc_emulator::Executor']]]
+  ['pcconfiguration',['PCConfiguration',['../classpc__emulator_1_1PCConfiguration.html#ae07e6861ec53d04f892c6bba07535c40',1,'pc_emulator::PCConfiguration']]],
+  ['pcconfigurationimpl',['PCConfigurationImpl',['../classpc__emulator_1_1PCConfigurationImpl.html#a43cbbf707440d2e928c4048afca1fe95',1,'pc_emulator::PCConfigurationImpl']]],
+  ['pcconfigurationinterface',['PCConfigurationInterface',['../classpc__emulator_1_1PCConfigurationInterface.html#a872d1e0ea21289f6fa9cf4936d9d800a',1,'pc_emulator::PCConfigurationInterface']]],
+  ['pcdatatype',['PCDataType',['../classpc__emulator_1_1PCDataType.html#a8cbc9ebdfa3cdcf2c5e14d9a89146619',1,'pc_emulator::PCDataType::PCDataType(PCConfiguration *configuration, string AliasName, string DataTypeName, DataTypeCategory Category=DataTypeCategory::NOT_ASSIGNED, string InitialValue=&quot;&quot;, s64 RangeMin=LLONG_MIN, s64 RangeMax=LLONG_MAX)'],['../classpc__emulator_1_1PCDataType.html#ae6697f7f255e12eb7c72edb1e1820760',1,'pc_emulator::PCDataType::PCDataType(PCConfiguration *configuration, string AliasName, string DataTypeName, int DimSize, DataTypeCategory Category, string InitialValue=&quot;&quot;, s64 RangeMin=LLONG_MIN, s64 RangeMax=LLONG_MAX)'],['../classpc__emulator_1_1PCDataType.html#a6df10ab73eed90400db983f09367b070',1,'pc_emulator::PCDataType::PCDataType(PCConfiguration *configuration, string AliasName, string DataTypeName, int Dim1Size, int Dim2Size, DataTypeCategory Category, string InitialValue=&quot;&quot;, s64 RangeMin=LLONG_MIN, s64 RangeMax=LLONG_MAX)']]],
+  ['pcdatatypefield',['PCDataTypeField',['../classpc__emulator_1_1PCDataTypeField.html#ad79aded41d3f9f6c3502e8d7d784a1f8',1,'pc_emulator::PCDataTypeField::PCDataTypeField()'],['../classpc__emulator_1_1PCDataTypeField.html#aff9ec977701c593f8b6ac163907780d5',1,'pc_emulator::PCDataTypeField::PCDataTypeField(string FieldName, string FieldTypeName, DataTypeCategory FieldTypeCategory, int FieldQualifier, s64 RangeMin, s64 RangeMax, string InitialValue, int FieldInterfaceType, PCDataType *FieldTypePtr, string ResourceName=&quot;NONE&quot;, string FullStorageSpec=&quot;NONE&quot;)']]],
+  ['pcmemunit',['PCMemUnit',['../classpc__emulator_1_1PCMemUnit.html#a13340ee696d0d3f5b6858791b64a9de5',1,'pc_emulator::PCMemUnit']]],
+  ['pcresource',['PCResource',['../classpc__emulator_1_1PCResource.html#af36e5647ce9cd1b05765f5225d69faa5',1,'pc_emulator::PCResource']]],
+  ['pcresourceimpl',['PCResourceImpl',['../classpc__emulator_1_1PCResourceImpl.html#ad8122975b5daf8683d9599176a63b33a',1,'pc_emulator::PCResourceImpl']]],
+  ['pcresourceinterface',['PCResourceInterface',['../classpc__emulator_1_1PCResourceInterface.html#ad9391f2f2b27604587f9cf00eb71cf81',1,'pc_emulator::PCResourceInterface']]],
+  ['pcvariable',['PCVariable',['../classpc__emulator_1_1PCVariable.html#a96143aec6480ffb9ac1002ca76face34',1,'pc_emulator::PCVariable']]],
+  ['pcvariablecontainer',['PCVariableContainer',['../classpc__emulator_1_1PCVariableContainer.html#a9e311e87909b9eb1a296d5a9a7d99b12',1,'pc_emulator::PCVariableContainer']]],
+  ['poucodecontainer',['PoUCodeContainer',['../classpc__emulator_1_1PoUCodeContainer.html#ad2c9ea317e610e81b96aaee501305c24',1,'pc_emulator::PoUCodeContainer']]]
 ];
