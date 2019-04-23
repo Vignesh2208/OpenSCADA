@@ -56,14 +56,13 @@ PCConfigurationImpl::PCConfigurationImpl(string ConfigurationPath) {
         __RAMmemSize = __specification.machine_spec().ram_mem_size_bytes();
         assert(__RAMmemSize > 0);
         
-        std::cout << "Allocating Shared Memory " << std::endl;
+        std::cout << "Allocating Shared RAM Memory " << std::endl;
 
         __RAMMemory.AllocateSharedMemory(__RAMmemSize,
                 "/tmp/" + __ConfigurationName + "_RAM",
                 __ConfigurationName + "_RamLock");
 
         //__RAMMemory.AllocateStaticMemory(__RAMmemSize);
-        std::cout << "Allocated Shared Memory " << std::endl;
         __NumResources = __specification.machine_spec().num_cpus();
         assert(__NumResources >= 0);
 
@@ -321,7 +320,8 @@ void PCConfigurationImpl::RegisterAllComplexDataTypes() {
 
 void PCConfigurationImpl::InitializeAllPOUVariables() {
     if (__global_pou_var) {
-        std::cout << "Initializing GLOBAL VAR ****\n";
+        PCLogger->LogMessage(LogLevels::LOG_INFO,
+            "Initializing Configuration GLOBAL variables ****");
 
         __global_pou_var->AllocateAndInitialize("/tmp/" + __ConfigurationName
                 + "_" + "__CONFIG_GLOBAL__");
@@ -329,7 +329,8 @@ void PCConfigurationImpl::InitializeAllPOUVariables() {
         __global_pou_var->__VariableDataType->__PoUType 
                 = pc_specification::PoUType::PROGRAM;
         Utils::ValidatePOUDefinition(__global_pou_var.get(), this);
-        std::cout << "Finished Initializing Global VAR *****\n";
+        PCLogger->LogMessage(LogLevels::LOG_INFO, 
+        "Finished Initializing Configuration GLOBAL Variables *****");
     }
 
     for (auto& resource_spec 
@@ -362,7 +363,8 @@ void PCConfigurationImpl::InitializeAllPOUVariables() {
 
     if (__access_pou_var) {
 
-        std::cout << "Initializing ACCESS VAR ****\n";
+        PCLogger->LogMessage(LogLevels::LOG_INFO,
+         "Initializing ACCESS Paths ****");
         __access_pou_var->AllocateAndInitialize("/tmp/" + __ConfigurationName
             + "_" + "__CONFIG_ACCESS__");
         __access_pou_var->__VariableDataType->__PoUType 
@@ -388,11 +390,11 @@ void PCConfigurationImpl::InitializeAllPOUVariables() {
                     string StorageSpec 
                         = field.field_storage_spec().full_storage_spec();
 
-                    std::cout << "Getting Ptr for: " << StorageSpec << std::endl;
+                    //std::cout << "Getting Ptr for: " << StorageSpec << std::endl;
 
                     PCVariable * desired_ptr = Utils::GetVariable(
                         StorageSpec, this);
-                    std::cout << "Got Ptr for: " << StorageSpec << std::endl;
+                    //std::cout << "Got Ptr for: " << StorageSpec << std::endl;
                     if(!desired_ptr) {
                         PCLogger->RaiseException("Error in storage spec"
                                 " of access variable: " + StorageSpec);
@@ -432,8 +434,10 @@ void PCConfigurationImpl::InitializeAllPOUVariables() {
                             resource_spec.resource_name());            
             new_resource->ResolveAllExternalFields();
     }
-    std::cout << "Finished Initializing ACCESS VAR *****\n";
-    std::cout << "Finished Initializing Resource POU Variables *****\n";
+    PCLogger->LogMessage(LogLevels::LOG_INFO,
+        "Finished Initializing ACCESS Variables *****");
+    PCLogger->LogMessage(LogLevels::LOG_INFO,
+        "Finished Initializing Resource POU Variables *****");
 }
 
 PCVariable * PCConfigurationImpl::GetPOU(string NestedPoUName) {
@@ -466,8 +470,6 @@ PCVariable * PCConfigurationImpl::GetVariablePointerToMem(int ByteOffset,
                             + "." + std::to_string(memType)
                             + "." + std::to_string(ByteOffset)
                             + "." + std::to_string(BitOffset);
-    std::cout << "Called VariablePointerToMem for TypeName: " << VariableDataTypeName
-        << std::endl;
     // need to track and delete this variable later on
     auto got = __AccessedFields.find(VariableName);
     if(got == __AccessedFields.end()) {

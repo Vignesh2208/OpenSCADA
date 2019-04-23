@@ -491,10 +491,6 @@ PCVariable* PCVariable::GetPtrToField(string NestedFieldName) {
         VariablePtrToField->__TotalSizeInBits = sizeof(PCVariable *) * 8;   
     }
 
-    if (Attributes.FieldDetails.__FieldName == "CU") {
-        std::cout << "CU Qualifier: " 
-        << Attributes.FieldDetails.__FieldQualifier << std::endl;
-    }
     VariablePtrToField->__VariableAttributes = Attributes;
     VariablePtrToField->__IsTemporary = __IsTemporary;
 
@@ -793,8 +789,8 @@ void PCVariable::InitializeAllDirectlyRepresentedFields() {
             
             PCVariable* FieldVariable;  
             if (DefinedField.__StorageMemType == MemType::RAM_MEM) { 
-                std::cout << "Initializing DIRECTLY REP FIELDS !" 
-                    << std::endl;       
+                //std::cout << "Initializing DIRECTLY REP FIELDS !" 
+                //    << std::endl;       
                 FieldVariable 
                     = __configuration->GetVariablePointerToMem(
                         DefinedField.__StorageByteOffset,
@@ -812,7 +808,6 @@ void PCVariable::InitializeAllDirectlyRepresentedFields() {
                             DefinedField.__StorageBitOffset,
                             DefinedField.__FieldTypeName);
                 } else {
-                    //std::cout << " __VariableName: " << __VariableName << std::endl;
                     assert(__VariableName == "__CONFIG_ACCESS_VAR__");
                     auto resource 
                         = __configuration->RegisteredResources->GetResource(
@@ -836,15 +831,6 @@ void PCVariable::InitializeAllDirectlyRepresentedFields() {
                 != DataTypeCategory::DERIVED 
                 && DefinedField.__FieldTypeCategory 
                                 != DataTypeCategory::ARRAY) {
-                /*
-                if(DefinedField.__FieldName == "global_int_var") {
-                    std::cout << "*** Initializing : " 
-                            << DefinedField.__FieldName
-                            << " DataType: " << DefinedField.__FieldTypeName
-                            << " Alias: " << DefinedField.__FieldTypePtr->__AliasName
-                            << " Initial: " << DefinedField.__InitialValue
-                            << std::endl;
-                }*/
                 FieldVariable->SetField("", 
                                 DefinedField.__InitialValue);
             }
@@ -1537,8 +1523,6 @@ void PCVariable::GetAndStoreValue(string NestedFieldName,
             if (PointedVariable->__VariableAttributes
                 .FieldDetails.__FieldQualifier 
                 == pc_specification::FieldQualifiers::R_EDGE) {
-
-                std::cout << "Reading TRUE R_EDGE" << std::endl;
                 
                 if (!PointedVariable->__PrevValue) {
                     *(bool *) Value = true;
@@ -1552,7 +1536,6 @@ void PCVariable::GetAndStoreValue(string NestedFieldName,
                     if (PointedVariable->__FirstRead) 
                         PointedVariable->__PrevValue = true;
                 }
-                std::cout << "Value returned: " << *(bool *)Value << std::endl;
             } else if (PointedVariable->__VariableAttributes
                 .FieldDetails.__FieldQualifier 
                 == pc_specification::FieldQualifiers::F_EDGE) {
@@ -1578,8 +1561,6 @@ void PCVariable::GetAndStoreValue(string NestedFieldName,
             if (PointedVariable->__VariableAttributes
                 .FieldDetails.__FieldQualifier 
                 == pc_specification::FieldQualifiers::R_EDGE) {
-
-                std::cout << "Reading FALSE R_EDGE" << std::endl;
                 if (!PointedVariable->__PrevValue) {
                     *(bool *) Value = false;
 
@@ -1593,7 +1574,6 @@ void PCVariable::GetAndStoreValue(string NestedFieldName,
                         PointedVariable->__PrevValue = false;
 
                 }
-                std::cout << "Value returned: " << *(bool *)Value << std::endl;
             } else if (PointedVariable->__VariableAttributes
                 .FieldDetails.__FieldQualifier 
                 == pc_specification::FieldQualifiers::F_EDGE) {

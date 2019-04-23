@@ -28,11 +28,11 @@ void PCMemUnit::AllocateSharedMemory(int MemSize, string mmap_file_name,
         //__BaseStorageLocation = make_mmap_shared<char>(MemSize, fd_mem);
 
         bool file_exists = Utils::does_file_exist(mmap_file_name.c_str());
-        std::cout << "Opening sem lock: " << lock_name << std::endl;
+        //std::cout << "Opening sem lock: " << lock_name << std::endl;
         assert((__sem_lock = sem_open(lock_name.c_str(), O_CREAT, 0644, 1))
                 != SEM_FAILED);
-        std::cout << "Opening sem lock: " << lock_name 
-                  << " success" << std::endl;
+        //std::cout << "Opening sem lock: " << lock_name 
+        //          << " success" << std::endl;
         __sem_name = lock_name;
 
         sem_wait(__sem_lock);
@@ -43,7 +43,7 @@ void PCMemUnit::AllocateSharedMemory(int MemSize, string mmap_file_name,
                 [](char *p) {});
         __MemUnitSizeBytes = MemSize;
 
-        std::cout << "MMAP memory allocated !: " << MemSize << std::endl;
+        std::cout << "MMAP memory allocated size: " << MemSize << std::endl;
         assert((char *)ptr != (char *)-1);
 
         if (!file_exists) {
@@ -83,7 +83,7 @@ void PCMemUnit::Cleanup() {
     if (__isMemControllerActive) {
         sem_close(__sem_lock);
         sem_unlink(__sem_name.c_str());
-        std::cout << "MunMapping ... " << std::endl;
+        //std::cout << "MunMapping ... " << std::endl;
         munmap(__BaseStorageLocation.get(), __MemUnitSizeBytes);
 
         std::remove((__mmap_file_name).c_str());

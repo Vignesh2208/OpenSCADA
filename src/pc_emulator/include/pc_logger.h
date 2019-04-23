@@ -42,6 +42,7 @@ namespace pc_emulator {
                                             | std::ofstream::app );
 
                         assert (LogLevel == LogLevels::LOG_NONE
+                                || LogLevel == LogLevels::LOG_NOTICE
                                 || LogLevel == LogLevels::LOG_ERROR
                                 || LogLevel == LogLevels::LOG_INFO 
                                 || LogLevel == LogLevels::LOG_VERBOSE);

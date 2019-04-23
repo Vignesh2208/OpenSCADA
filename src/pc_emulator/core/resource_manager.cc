@@ -43,7 +43,7 @@ void ResourceManager::ExecuteResource() {
                 __AssociatedResource->clock->SleepFor(US_IN_MS);
             } else {
                 __AssociatedResource->__configuration->PCLogger->LogMessage(
-                LogLevels::LOG_INFO,
+                LogLevels::LOG_NOTICE,
                 std::to_string(curr_time) +
                 " >> Resource: " 
                 + __AssociatedResource->__ResourceName +  " Executing Task: "
@@ -55,7 +55,7 @@ void ResourceManager::ExecuteResource() {
             }
         } else {
             __AssociatedResource->__configuration->PCLogger->LogMessage(
-                LogLevels::LOG_INFO,
+                LogLevels::LOG_NOTICE,
                 std::to_string(curr_time) +
                 " >> Resource: " 
                 + __AssociatedResource->__ResourceName +  " Executing Task: "
@@ -65,8 +65,9 @@ void ResourceManager::ExecuteResource() {
         }
 
         if (!is_virtual && (curr_time - start_time > run_time_secs)) {
-            std:: cout << "STOPPING Resource: " 
-            << __AssociatedResource->__ResourceName << std::endl;
+            __AssociatedResource->__configuration->PCLogger->LogMessage(
+                LogLevels::LOG_NOTICE, "STOPPING Resource: " +
+             __AssociatedResource->__ResourceName );
             break;
 
         }

@@ -76,9 +76,10 @@ enum PoUType {
 
 enum LogLevels {
     LOG_NONE = 0;
-    LOG_INFO = 1;
-    LOG_ERROR = 2;
-    LOG_VERBOSE = 3;
+    LOG_NOTICE = 1;
+    LOG_INFO = 2;
+    LOG_ERROR = 3;
+    LOG_VERBOSE = 4;
 };
 
 // Can either be specified using the 3 fields

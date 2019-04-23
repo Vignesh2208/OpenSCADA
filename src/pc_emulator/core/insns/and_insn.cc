@@ -84,7 +84,6 @@ void AND_Insn::Execute(PCVariable * __CurrentResult,
 
     
     if (IsNegated) {
-        std::cout << "Executing ANDN" << std::endl;
         auto tmp = Operand->GetCopy();
         *CurrentResult = *CurrentResult & !(*tmp);
     } else {

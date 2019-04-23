@@ -52,7 +52,7 @@ void Executor::Run() {
         if (!insn_container) {
             string SFBName 
             = __ExecPoUVariable->__VariableDataType->__DataTypeName;
-            std::cout << "Executing SFB: " << SFBName << std::endl;
+            //std::cout << "Executing SFB: " << SFBName << std::endl;
             // This is a SFB without a code body
             assert(__ExecPoUVariable->__VariableDataType->__PoUType
                 == PoUType::FB);
@@ -78,6 +78,7 @@ void Executor::Run() {
             if (EligibleTask != nullptr
                 && EligibleTask->__priority < __AssociatedTask->__priority) {
                 if (!EligibleTask->__Executing) {
+
                     SaveCPURegisters();
                     EligibleTask->Execute();
                     RestoreCPURegisters();
@@ -135,8 +136,8 @@ int Executor::RunInsn(InsnContainer& insn_container) {
 
         string PoUName = insn_container.OperandList[0];
 
-        std:: cout << "PoUName: " << PoUName 
-            << " Operands: " << insn_container.OperandList[1] << std::endl;
+        //std:: cout << "PoUName: " << PoUName 
+        //    << " Operands: " << insn_container.OperandList[1] << std::endl;
         auto PoU = __ExecPoUVariable->GetPtrToField(PoUName);
 
         assert(PoU != nullptr);
@@ -145,7 +146,8 @@ int Executor::RunInsn(InsnContainer& insn_container) {
 
         for (auto it = VarsToSet.begin(); it != VarsToSet.end(); it++) {
             PCVariable * VarToSet;
-            std::cout << "Var To Set: " << it->second << " to: " << it->first << std::endl;
+            //std::cout << "Var To Set: " 
+            //<< it->second << " to: " << it->first << std::endl;
             if (Utils::IsOperandImmediate(it->second)) {
                 VarToSet 
                 = __AssociatedResource->GetVariableForImmediateOperand(
@@ -176,7 +178,8 @@ int Executor::RunInsn(InsnContainer& insn_container) {
         Executor new_executor(__AssociatedResource->__configuration,
                     __AssociatedResource, __AssociatedTask);
 
-        std::cout << "Executing PoU: " << PoU->__VariableDataType->__DataTypeName << std::endl;
+        //std::cout << "Executing PoU: " 
+        //<< PoU->__VariableDataType->__DataTypeName << std::endl;
         new_executor.SetExecPoUVariable(PoU);
         new_executor.Run();
         new_executor.CleanUp();
@@ -234,8 +237,8 @@ int Executor::RunInsn(InsnContainer& insn_container) {
             __AssociatedResource->__configuration->PCLogger->RaiseException(
             "Jmp Label: " + JmpLabel + " jumping to same line!"); 
         }
-        std::cout << "Executing: " << insn_container.InsnName << " "
-                << JmpLabel << std::endl;
+        //std::cout << "Executing: " << insn_container.InsnName << " "
+        //        << JmpLabel << std::endl;
         return nxt_insn_container->InsnPosition;
 
     } else if (insn_container.InsnName == "RET" 
@@ -253,13 +256,14 @@ int Executor::RunInsn(InsnContainer& insn_container) {
         auto Fn = __AssociatedTask->FCRegistry->GetFunction(
                 insn_container.InsnName);
 
+        /*
         if (insn_container.OperandList.size() > 0) {
                 std::cout << "Executing Insn: " << insn_container.InsnName 
                 << " " << insn_container.OperandList[0] << std::endl;
-            } else {
+        } else {
                 std::cout << "Executing Insn: " << insn_container.InsnName 
                  << std::endl;
-            }
+        }*/
         std::vector <PCVariable *> Ops;
         for (int i = 0; i < insn_container.OperandList.size(); i++) {
             if(Utils::IsOperandImmediate(insn_container.OperandList[i])) {
@@ -297,7 +301,7 @@ int Executor::RunInsn(InsnContainer& insn_container) {
                 }
             }
             
-            std::cout << "Finished Insn" << std::endl;
+            //std::cout << "Finished Insn" << std::endl;
             return insn_container.InsnPosition + 1;
         } else {
             auto FnDataType = Fn->__VariableDataType;

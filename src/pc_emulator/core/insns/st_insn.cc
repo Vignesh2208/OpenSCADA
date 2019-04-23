@@ -22,7 +22,6 @@ void ST_Insn::Execute(PCVariable * __CurrentResult,
     PCVariable * Operand = Operands[0];
     assert(Operand != nullptr);
     if (Operand->__IsVariableContentTypeAPtr) {
-        std::cout << "ST Variable Content Type is Ptr: " << std::endl;
         Operand = Operand->GetPtrStoredAtField("");
         assert(Operand != nullptr);
     }

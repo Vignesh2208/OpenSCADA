@@ -20,6 +20,8 @@ void Logger::LogMessage(int LogLevel, std::string Message) {
             Qualifier = "INFO";
         } else if (LogLevel == LogLevels::LOG_ERROR) {
             Qualifier = "ERROR";
+        } else if (LogLevel == LogLevels::LOG_NOTICE) {
+            Qualifier = "NOTICE";
         } else {
             Qualifier = "VERBOSE";
         }
@@ -27,11 +29,11 @@ void Logger::LogMessage(int LogLevel, std::string Message) {
         if (!__LogFile.empty()){
             __ofs << Qualifier << " >> " << Message << std::endl;
         } else {
-            
+            std::cout << Qualifier << " >> " << Message << std::endl;
         }
     }
 
-    std::cout << Qualifier << " >> " << Message << std::endl;
+    
 }
 
 void Logger::RaiseException(std::string Message) {

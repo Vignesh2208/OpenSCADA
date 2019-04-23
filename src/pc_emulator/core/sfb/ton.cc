@@ -10,7 +10,6 @@ void TON::Execute(PCVariable * __CurrentResult, PCVariable * SFB) {
     assert(SFB != nullptr && SFB->__VariableDataType->__DataTypeName
         == __SFBName);
 
-    std::cout << "Executing TON\n";
     bool IN = SFB->GetValueStoredAtField<bool>("IN", DataTypeCategory::BOOL);
     bool IN_PREV = SFB->GetValueStoredAtField<bool>("IN_PREV",
                     DataTypeCategory::BOOL);
@@ -33,7 +32,6 @@ void TON::Execute(PCVariable * __CurrentResult, PCVariable * SFB) {
         SFB->SetField("Q", "FALSE");
         SFB->SetField("ET", "t#0s");
         SFB->SetField("TIMER_STARTED", "TRUE");
-        std::cout << "Finished TON\n";
         return;
     } 
 
@@ -43,7 +41,6 @@ void TON::Execute(PCVariable * __CurrentResult, PCVariable * SFB) {
         SFB->SetField("Q", "FALSE");
         SFB->SetField("ET", "t#0s");
         SFB->SetField("TIMER_STARTED", "FALSE");
-        std::cout << "Finished TON\n";
         return;
     }
     
@@ -66,5 +63,4 @@ void TON::Execute(PCVariable * __CurrentResult, PCVariable * SFB) {
         SFB->SetField("IN_PREV", "TRUE");
     else
         SFB->SetField("IN_PREV", "FALSE");
-    std::cout << "Finished TON\n";
 }

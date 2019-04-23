@@ -852,34 +852,23 @@ char * Utils::make_mmap_shared(int nElements, string FileName) {
         
         fseek(fp,0,SEEK_END);
         int file_size = ftell(fp);
-        std::cout << "Initializing MMAP file: " 
-            << FileName 
-            << " Does it already exist?: " << file_exists
-            << " Current Size: " << file_size
-            << " Required Size: " << sizeof(char)*nElements << std::endl;
+        std::cout << "Initializing MMAP file: " << FileName << std::endl;
         if (!file_exists || file_size < sizeof(char)*nElements) {
-            
-            std::cout << "Setting File to 0s" << std::endl;
-            
-            //if (file_size < sizeof(char)*nElements) {
                 char init = '\0';
                 for(int i = 0; i < nElements; i++)
                     fwrite(&init, sizeof(char), 1, fp);
-            //}
         }
-        //fseek(fp, 0, SEEK_SET);
         int fd = fileno(fp);
 
         assert (nElements > 0 && fd != -1);
-        
+        errno = 0;
         auto ptr = mmap(0,
                         sizeof(char)*nElements, PROT_RW, MAP_ALLOC, fd, 0);
-        std::cout << "MMAP Status: " << std::strerror(errno) << '\n';
+        std::cout << "MMAP Initialization Status: " << std::strerror(errno) 
+        << std::endl;
         fclose(fp);
         return (char *)ptr;
-    
-        //std::cout << "MMAP failed !" << std::endl;
-        //throw std::bad_alloc();
+
     }
 
 
@@ -1004,9 +993,9 @@ bool Utils::TestEQPtrs(PCVariable * Var1, PCVariable *  Var2) {
     
     if (Var1->__MemoryLocation == Var2->__MemoryLocation) {
         if (Var1->__ByteOffset == Var2->__ByteOffset)
-            std::cout << "Unequal Byte Offset " << std::endl;
-        else
             std::cout << "Unequal Bit Offset " << std::endl;
+        else
+            std::cout << "Unequal Byte Offset " << std::endl;
     } else {
         std::cout << "Unequal MemLocations " << std::endl;
     }
@@ -1160,9 +1149,6 @@ bool Utils::ExtractFromAccessStorageSpec(PCConfiguration * __configuration,
             *BitOffset = std::stoi(StorageSpec.substr(StorageSpec.find('.') + 1,
                                                         string::npos));
         }
-        std::cout << "Storage Spec: " << StorageSpec << " MemType: " << *memType
-            << " Byte: " << *ByteOffset << " Bit: " << *BitOffset << std::endl;
-
         return true;
     } else {
         std::vector<string> results;
@@ -1248,10 +1234,6 @@ void Utils::InitializeDataType(PCConfiguration * __configuration,
             && (field.intf_type() != FieldIntfType::VAR_INPUT
               || field.intf_type() != FieldIntfType::VAR_EXPLICIT_STORAGE)) {
             field_qualifier = FieldQualifiers::NONE; 
-        }
-        
-        if (field.field_name() == "CU") {
-            std::cout << "CU Set qualifier: " << field_qualifier << std::endl;
         }
         
         if (field.has_initial_value())
@@ -1358,7 +1340,6 @@ bool Utils::GetFieldAttributesForAccessPath(string AccessPathStorageSpec,
 
     boost::split(results, AccessPathStorageSpec,
                 boost::is_any_of("."), boost::token_compress_on);
-    std::cout << "Resource Name: " << results[0] << std::endl;
     PCResource * resource = configuration->RegisteredResources->GetResource(
                         results[0]);
     if (resource == nullptr) {
@@ -1369,7 +1350,6 @@ bool Utils::GetFieldAttributesForAccessPath(string AccessPathStorageSpec,
                         AccessPathStorageSpec, FieldAttributes);
             return true;
         }
-        std::cout << "Resource is NULL!" << std::endl;
         return false;
         
     } else {
@@ -1385,9 +1365,6 @@ bool Utils::GetFieldAttributesForAccessPath(string AccessPathStorageSpec,
         string PoUVariableName = AccessPathStorageSpec.substr(
                         results[0].length() + results[1].length() + 2,
                         string::npos);
-
-        std::cout << "POU NAME: = " << PoUName << " VarName: "
-                << PoUVariableName << std::endl;
 
         auto pou_var = resource->__ResourcePoUVars.find(PoUName)->second.get();
         if (pou_var == nullptr) {
@@ -1434,8 +1411,6 @@ PCVariable * Utils::GetVariable(string NestedFieldName,
                     results[0].length() + results[1].length() + 2,
                     string::npos);
 
-    std::cout << "POU NAME: = " << PoUName << " VarName: "
-                << PoUVariableName << std::endl;
 
     auto pou_var = resource->__ResourcePoUVars.find(PoUName)->second.get();
     if (pou_var == nullptr) {

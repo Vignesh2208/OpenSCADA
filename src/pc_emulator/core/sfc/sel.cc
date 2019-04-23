@@ -35,7 +35,6 @@ void SEL::Execute(PCVariable * __CurrentResult,
     
     bool SelValue = CR->GetValueStoredAtField<bool>("", DataTypeCategory::BOOL);
 
-    std::cout << "Selection Value: " << SelValue << std::endl;
 
     if(SelValue == false) {
         *CR = *Operands[0];

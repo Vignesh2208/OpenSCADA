@@ -123,8 +123,6 @@ PCVariable * PCResourceImpl::GetPOUGlobalVariable(string NestedFieldName) {
     boost::split(results, NestedFieldName, boost::is_any_of("."),
             boost::token_compress_on);
 
-    std::cout << "GetPOUGlobalVariable: " << NestedFieldName 
-    << " ResourceName: " << __ResourceName << std::endl;
     PCVariable * AssociatedPOU = nullptr;
     if (results.size() > 1 
         && __ResourcePoUVars.find(results[0]) != __ResourcePoUVars.end()) {
@@ -151,11 +149,11 @@ PCVariable * PCResourceImpl::GetPOUGlobalVariable(string NestedFieldName) {
 
         if (FieldAttributes.FieldDetails.__FieldInterfaceType 
             == FieldIntfType::VAR_EXPLICIT_STORAGE) {
-            std::cout << "Returned: " 
-            << FieldAttributes.FieldDetails.__StorageMemType
-            << " Byte: " << FieldAttributes.FieldDetails.__StorageByteOffset
-            << " Bit: " << FieldAttributes.FieldDetails.__StorageBitOffset
-            << std::endl;
+            //std::cout << "Returned: " 
+            //<< FieldAttributes.FieldDetails.__StorageMemType
+            //<< " Byte: " << FieldAttributes.FieldDetails.__StorageByteOffset
+            //<< " Bit: " << FieldAttributes.FieldDetails.__StorageBitOffset
+            //<< std::endl;
             return AssociatedPOU->GetPtrStoredAtField(RemFieldName);
         }
     }

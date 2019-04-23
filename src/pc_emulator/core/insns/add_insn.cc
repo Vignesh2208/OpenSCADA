@@ -45,9 +45,6 @@ void ADD_Insn::Execute(PCVariable * __CurrentResult,
                     Logger->RaiseException("ADD: Cannot type cast operands");
             }
             assert(Utils::IsNumType(DesiredDataType));
-
-            std::cout << "Desired DataType: " << DesiredDataType->__DataTypeName << std::endl;
-
             for (int i = 0; i < modified_operands.size(); i++) {
                 if (modified_operands[i]->__IsTemporary
                         && modified_operands[i]->__VariableDataType
