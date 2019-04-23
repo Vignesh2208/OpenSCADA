@@ -68,6 +68,17 @@ cc_binary(
 )
 
 cc_binary(
+    name="example_simple_plc",
+    srcs = [
+        "examples/simple_plc/plc.cc"
+    ],
+    deps = [":pc_emulator_lib"], 
+    copts = ["-Iexternal/gtest/include -fpermissive -Wno-reorder"],
+    linkstatic = 1,
+
+)
+
+cc_binary(
     name="example_comm_module",
     srcs = [
         "examples/idle_plc/comm_module.cc"

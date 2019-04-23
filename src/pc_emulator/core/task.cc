@@ -11,6 +11,7 @@
 #include "src/pc_emulator/include/pc_resource.h"
 #include "src/pc_emulator/include/executor.h"
 #include "src/pc_emulator/include/task.h"
+#include "src/pc_emulator/include/utils.h"
 #include "src/pc_emulator/include/functions_registry.h"
 
 
@@ -120,10 +121,19 @@ void Task::Execute() {
                 = __configuration->GetExternVariable(
                         map.mapped_variable_field_name());
 
-                if (mappedVariable == nullptr) { 
+                if (mappedVariable == nullptr 
+                    && !Utils::IsOperandImmediate(
+                            map.mapped_variable_field_name())) { 
                     __configuration->PCLogger->RaiseException(
                         "Mapped variable"
                         + map.mapped_variable_field_name() + " not found!");
+                } else if (mappedVariable == nullptr){
+                    mappedVariable 
+                    = __AssociatedResource->GetVariableForImmediateOperand(
+                        map.mapped_variable_field_name());
+
+                    assert(mappedVariable != nullptr);
+                    
                 }
                 
                 container->__ExecPoUVariable->SetField(

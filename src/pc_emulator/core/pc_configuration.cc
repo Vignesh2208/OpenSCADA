@@ -30,29 +30,6 @@ using std::to_string;
 
 PCConfigurationImpl::PCConfigurationImpl(string ConfigurationPath) {
 
-        /*
-        int fileDescriptor = open(ConfigurationPath.c_str(),
-                                O_RDONLY);
-
-
-
-        if( fileDescriptor < 0 ) {
-            std::cerr << " Error opening the specification file " 
-                        << std::endl;
-            exit(-1);
-        }
-
-        google::protobuf::io::FileInputStream 
-                                        fileInput(fileDescriptor);
-        fileInput.SetCloseOnDelete( true );
-
-        if (!google::protobuf::TextFormat::Parse(&fileInput,
-                                        &__specification)) {
-            std::cerr << std::endl << "Failed to parse spec file!" 
-                << std::endl;
-            exit(-1);
-        }
-        */
 
        Utils::GenerateFullSpecification(ConfigurationPath, __specification);
 
@@ -94,8 +71,9 @@ PCConfigurationImpl::PCConfigurationImpl(string ConfigurationPath) {
         RegisterAllElementaryDataTypes();
         RegisterAllResources();
         RegisterAllComplexDataTypes();
-
         InitializeAllPOUVariables();
+
+
 
 };
 
@@ -106,9 +84,16 @@ PCConfigurationImpl::PCConfigurationImpl(string ConfigurationPath) {
                                         resource_spec.resource_name(),
                                         resource_spec.input_mem_size_bytes(),
                                         resource_spec.output_mem_size_bytes()));
+
+        __ResourceManagers.insert(std::make_pair(
+            resource_spec.resource_name(), 
+            std::unique_ptr<ResourceManager>(new ResourceManager(
+                new_resource.get()))));
         //new_resource->InitializeAllPoUVars();
         RegisteredResources->RegisterResource(
                 resource_spec.resource_name(), std::move(new_resource));
+
+        
         
     }
 }
@@ -584,6 +569,35 @@ PCVariable * PCConfigurationImpl::GetAccessPathVariable(string AccessPath) {
 
 PCDataType * PCConfigurationImpl::LookupDataType(string DataTypeName) {
     return RegisteredDataTypes->GetDataType(DataTypeName);
+}
+
+void PCConfigurationImpl::RunPLC() {
+
+    std::vector <std::thread> LaunchedResources;
+    for (auto it = __ResourceManagers.begin();
+        it != __ResourceManagers.end(); it++) {
+
+        PCLogger->LogMessage(LogLevels::LOG_INFO, "Launching Resource: "
+            + it->first);
+
+        auto ResourceManager = it->second.get();
+        assert(ResourceManager != nullptr);
+
+        LaunchedResources.push_back(ResourceManager->LaunchResourceManager());
+    }
+
+    PCLogger->LogMessage(LogLevels::LOG_INFO, 
+        "Waiting for all resources to finish");
+
+    for (auto th = LaunchedResources.begin(); th != LaunchedResources.end();
+        th++) {
+        th->join();
+    }
+
+    PCLogger->LogMessage(LogLevels::LOG_INFO, 
+        "Finished executing all programs");
+
+
 }
 
 void PCConfigurationImpl::Cleanup() {

@@ -13,6 +13,7 @@
 #include "pc_resource_registry.h"
 #include "task.h"
 #include "configuration.h"
+#include "src/pc_emulator/include/resource_manager.h"
 #include "src/pc_emulator/proto/configuration.pb.h"
 #include "src/pc_emulator/proto/system_specification.pb.h"
 
@@ -40,6 +41,9 @@ namespace pc_emulator {
 
             //! Initialize all access paths and each resource specific POUs
             void InitializeAllPOUVariables();
+
+            unordered_map<std::string, std::unique_ptr<ResourceManager>>
+                __ResourceManagers;
         public:
 
             //! Returns a variable pointing to the subfield of a global/directly rep field
@@ -105,6 +109,9 @@ namespace pc_emulator {
             PCVariable * GetVariablePointerToResourceMem(string ResourceName,
                         int MemType, int ByteOffset,
                         int BitOffset, string VariableDataTypeName);
+
+            
+            void RunPLC();
 
             //! Cleans up all resources and frees allocated memory
             void Cleanup();

@@ -1,13 +1,13 @@
-configuration_name: "Idle_PLC_Configuration"
+configuration_name: "DataType_Test_Configuration"
 log_level: LOG_INFO
 enable_kronos: false
-run_time_secs: 1
+run_time_secs: 10
+
 hardware_spec {
     num_resources: 1
     ram_mem_size_bytes: 10000
 }
 
-# DataType Declarations ...
 datatype_declaration {
     name: "BOOL_TYPE_DEF"
     datatype_category: BOOL
@@ -15,6 +15,7 @@ datatype_declaration {
         initial_value: "1"
     }
 }
+
 datatype_declaration {
     name: "INT_TYPE_DEF"
     datatype_category: INT
@@ -22,6 +23,7 @@ datatype_declaration {
         initial_value: "10"
     }
 }
+
 datatype_declaration {
     name: "TIME_TYPE_DEF"
     datatype_category: TIME
@@ -29,6 +31,7 @@ datatype_declaration {
         initial_value: "t#1s"
     }
 }
+
 datatype_declaration {
     name: "INT_1DARR_TYPE_DEF"
     datatype_category: INT
@@ -39,6 +42,7 @@ datatype_declaration {
         dimension_1:  10
     }   
 }
+
 datatype_declaration {
     name: "INT_2DARR_TYPE_DEF"
     datatype_category: INT
@@ -50,6 +54,7 @@ datatype_declaration {
         dimension_2: 2
     }   
 }
+
 datatype_declaration {
     name: "COMPLEX_STRUCT_1"
     datatype_category: DERIVED
@@ -77,6 +82,7 @@ datatype_declaration {
         field_datatype_name: "INT_2DARR_TYPE_DEF"
     }
 }
+
 datatype_declaration {
     name: "COMPLEX_STRUCT_2"
     datatype_category: DERIVED
@@ -100,7 +106,6 @@ datatype_declaration {
     datatype_field {
         field_name: "date_field"
         field_datatype_name: "DATE"
-        initial_value: "d#2020-01-01"
     }
     datatype_field {
         field_name: "date_tod_field"
@@ -121,9 +126,6 @@ datatype_declaration {
     }
 }
 
-# END OF DataType declarations ...
-
-# Configuration GLOBAL variables ...
 var_global {
     name: "__CONFIG_GLOBAL__"
     datatype_field {
@@ -138,7 +140,7 @@ var_global {
     }
     datatype_field {
         field_name: "global_int_var"
-        field_datatype_name: "INT_TYPE_DEF"
+        field_datatype_name: "INT"
         intf_type : VAR_EXPLICIT_STORAGE
         field_storage_spec {
             full_storage_spec: "%MW4"
@@ -178,133 +180,11 @@ var_global {
     datatype_field {
         field_name: "complex_global"
         field_datatype_name: "COMPLEX_STRUCT_1"
-        dimension_1: 1
         intf_type: VAR_EXPLICIT_STORAGE
         field_storage_spec {
             full_storage_spec: "%MW30"
         }
     }
-    datatype_field {
-        field_name: "complex_global_2"
-        field_datatype_name: "COMPLEX_STRUCT_3"
-        dimension_1: 2
-        intf_type: VAR_EXPLICIT_STORAGE
-        field_storage_spec {
-            full_storage_spec: "%MW2500"
-        }
-    }
 }
 
-# Configuration ACCESS variables ...
-var_access {
-    name: "__CONFIG_ACCESS__"
-    datatype_field {
-        field_name: "GLOBAL_BOOL_VAR"
-        field_datatype_name: "BOOL"
-        field_storage_spec {
-            full_storage_spec: "global_bool_var"
-        }
-        field_qualifier: READ_ONLY
-    }
-    datatype_field {
-        field_name: "GLOBAL_INT_VAR"
-        field_datatype_name: "INT"
-        field_storage_spec {
-            full_storage_spec: "global_int_var"
-        }
-        field_qualifier: READ_WRITE
-    }
-    datatype_field {
-        field_name: "GLOBAL_BOOL_ARR"
-        field_datatype_name: "BOOL"
-        field_storage_spec {
-            full_storage_spec: "global_bool_arr"
-        }
-    }
-    datatype_field {
-        field_name: "GLOBAL_INT_ARR"
-        field_datatype_name: "INT"
-        field_storage_spec {
-            full_storage_spec: "global_int_arr"
-        }
-    }
-    datatype_field {
-        field_name: "ACCESS_INT_ARR"
-        field_datatype_name: "INT"
-        dimension_1: 2
-        dimension_2: 2
-        field_storage_spec {
-            full_storage_spec: "%MW100"
-        }
-    }
-
-    datatype_field {
-        field_name: "GLOBAL_COMPLEX_VAR"
-        field_datatype_name: "COMPLEX_STRUCT_3"
-        field_storage_spec {
-            full_storage_spec: "complex_global_2"
-        }
-        field_qualifier: READ_WRITE
-    }  
-
-    datatype_field {
-        field_name: "SENSOR_IN_1"
-        field_datatype_name: "INT_TYPE_DEF"
-        field_storage_spec {
-            full_storage_spec: "CPU_001.PROGRAM_1.sensor_input_1"
-        }
-        field_qualifier: READ_WRITE
-    }  
-
-    datatype_field {
-        field_name: "SENSOR_IN_2"
-        field_datatype_name: "BOOL_TYPE_DEF"
-        field_storage_spec {
-            full_storage_spec: "CPU_001.PROGRAM_1.sensor_input_2"
-        }
-        field_qualifier: READ_WRITE
-    }  
-
-
-    datatype_field {
-        field_name: "MOTOR_OUT_1"
-        field_datatype_name: "INT_TYPE_DEF"
-        field_storage_spec {
-            full_storage_spec: "CPU_001.PROGRAM_1.motor_output_1"
-        }
-        field_qualifier: READ_WRITE
-    }  
-
-
-    datatype_field {
-        field_name: "MOTOR_OUT_2"
-        field_datatype_name: "BOOL_TYPE_DEF"
-        field_storage_spec {
-            full_storage_spec: "CPU_001.PROGRAM_1.motor_output_2"
-        }
-        field_qualifier: READ_WRITE
-    }  
-
-
-
-    datatype_field {
-        field_name: "SENSOR_IN_3"
-        field_datatype_name: "COMPLEX_STRUCT_3"
-        field_storage_spec {
-            full_storage_spec: "CPU_001.PROGRAM_1.sensor_input_3"
-        }
-        field_qualifier: READ_WRITE
-    }  
-
-    datatype_field {
-        field_name: "MOTOR_OUT_3"
-        field_datatype_name: "COMPLEX_STRUCT_3"
-        field_storage_spec {
-            full_storage_spec: "CPU_001.%QW2000"
-        }
-        field_qualifier: READ_WRITE
-    }  
-}
-
-
-resource_file_path: "/home/moses/OpenSCADA/examples/idle_plc/CPU_001.prototxt"
+resource_file_path: "/home/moses/OpenSCADA/examples/simple_plc/CPU_001.prototxt"

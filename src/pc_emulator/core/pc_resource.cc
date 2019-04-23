@@ -562,12 +562,14 @@ Task * PCResourceImpl::GetInterruptTaskToExecute() {
                 }
 
                 it->second[itt]->__IsReady = true;
-                it->second[itt]->__trigger_variable_previous_value = true;
+                it->second[itt]->__trigger_variable_previous_value = curr_value;
             } else if (it->second[itt]->__IsReady == true) {
                 if (it->second[itt]->__priority < highest_priority) {
                     highest_priority = it->second[itt]->__priority;
                     EligibleTask = it->second[itt];
                 }
+
+                it->second[itt]->__trigger_variable_previous_value = curr_value;
             }
         }
     }
@@ -579,7 +581,7 @@ Task * PCResourceImpl::GetInterruptTaskToExecute() {
 
 Task * PCResourceImpl::GetIntervalTaskToExecuteAt(double schedule_time) {
 
-    if (__IntervalTask && __IntervalTask->__nxt_schedule_time_ms 
+    if (__IntervalTask && __IntervalTask->__nxt_schedule_time_ms
         <= schedule_time)
         return __IntervalTask;
 
@@ -597,7 +599,7 @@ void PCResourceImpl::InitializeAllTasks() {
                                 new Task(__configuration, this,
                                     resource_spec.interval_task()));
             auto interval_task_ptr = interval_task.get();       
-            interval_task->SetNextScheduleTime(clock->GetCurrentTime()
+            interval_task->SetNextScheduleTime(clock->GetCurrentTime()*1000.0
                                     + (float)interval_task->__interval_ms);
             AddTask(std::move(interval_task));
             QueueTask(interval_task_ptr);
@@ -609,7 +611,7 @@ void PCResourceImpl::InitializeAllTasks() {
                     auto new_task_ptr = new_task.get();
 
                     if (new_task->type == TaskType::INTERVAL) {
-                        new_task->SetNextScheduleTime(clock->GetCurrentTime()
+                        new_task->SetNextScheduleTime(clock->GetCurrentTime()*1000.0
                             + (float)new_task->__interval_ms);
                     }
 

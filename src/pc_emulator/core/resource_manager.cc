@@ -38,7 +38,7 @@ void ResourceManager::ExecuteResource() {
         if (!NxtTask) {
             NxtTask = 
                 __AssociatedResource->GetIntervalTaskToExecuteAt(
-                    curr_time);
+                    curr_time*1000.0);
             if (!NxtTask) {
                 __AssociatedResource->clock->SleepFor(US_IN_MS);
             } else {
@@ -48,7 +48,10 @@ void ResourceManager::ExecuteResource() {
                 " >> Resource: " 
                 + __AssociatedResource->__ResourceName +  " Executing Task: "
                 + NxtTask->__TaskName);
+                assert (NxtTask->type == TaskType::INTERVAL);
                 NxtTask->Execute();
+                NxtTask->SetNextScheduleTime(curr_time*1000.0 
+                    + NxtTask->__interval_ms);
             }
         } else {
             __AssociatedResource->__configuration->PCLogger->LogMessage(
@@ -57,11 +60,16 @@ void ResourceManager::ExecuteResource() {
                 " >> Resource: " 
                 + __AssociatedResource->__ResourceName +  " Executing Task: "
                 + NxtTask->__TaskName);
+            assert (NxtTask->type == TaskType::INTERRUPT);
             NxtTask->Execute();
         }
 
-        if (!is_virtual && curr_time - start_time > run_time_secs*MS_IN_SEC);
+        if (!is_virtual && (curr_time - start_time > run_time_secs)) {
+            std:: cout << "STOPPING Resource: " 
+            << __AssociatedResource->__ResourceName << std::endl;
             break;
+
+        }
 
     }
 

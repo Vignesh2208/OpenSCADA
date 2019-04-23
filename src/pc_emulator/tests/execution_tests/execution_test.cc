@@ -22,7 +22,7 @@ using MemType  = pc_specification::MemType;
 using DataTypeCategory = pc_specification::DataTypeCategory;
 using FieldInterfaceType = pc_specification::FieldInterfaceType;
 
-/*
+
 TEST(ExecutionTestSuite, InsnCodeBodyProcessingTest) {
     string TestDir = Utils::GetInstallationDirectory() 
             + "/src/pc_emulator/tests/execution_tests";
@@ -1260,7 +1260,7 @@ TEST(ExecutionTestSuite, TP_Timer_Execution_Test) {
     new_executor.CleanUp();
     configuration.Cleanup();
 
-}*/
+}
 
 
 TEST(ExecutionTestSuite, Program_Execution_Test) {

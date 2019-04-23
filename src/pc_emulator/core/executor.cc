@@ -71,17 +71,13 @@ void Executor::Run() {
             idx = RunInsn(*insn_container);
         }
 
-        /*
+        
         Task * EligibleTask = nullptr;
         do {
             EligibleTask = __AssociatedResource->GetInterruptTaskToExecute();
             if (EligibleTask != nullptr
                 && EligibleTask->__priority < __AssociatedTask->__priority) {
                 if (!EligibleTask->__Executing) {
-                    //__AssociatedTask->__configuration->PCLogger->RaiseException(
-                    //    "Attempting to re-execute an already executing task!"
-                    //);
-                
                     SaveCPURegisters();
                     EligibleTask->Execute();
                     RestoreCPURegisters();
@@ -101,7 +97,7 @@ void Executor::Run() {
                 RestoreCPURegisters();    
             }
         }
-        */
+        
         if (idx < 0 || idx >= __CodeContainer->__InsnCount)
             break;
     }
