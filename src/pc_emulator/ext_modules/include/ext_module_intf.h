@@ -20,6 +20,18 @@ namespace pc_emulator {
             PCVariableContainer(PCVariable * AssociatedVariable):
                 __AssociatedVariable(AssociatedVariable){};
 
+            //! Returns the data type of the nested field
+            /*!
+                \param NestedFieldName  The field whose data type is to be returned
+                \return PCDataType  A pointer to the data type of the field
+            */
+            PCDataType * GetDataTypeOfField(string NestedFieldName) {
+                DataTypeFieldAttributes FieldAttributes;
+                __AssociatedVariable->GetFieldAttributes(NestedFieldName, 
+                            FieldAttributes);
+                return FieldAttributes.FieldDetails.__FieldTypePtr;
+            }
+
             
             //! Returns the current value stored at a nested field
             /*!

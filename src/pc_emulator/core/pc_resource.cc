@@ -52,6 +52,39 @@ PCResourceImpl::PCResourceImpl(PCConfigurationImpl * configuration,
     __InsnRegistry = new InsnRegistry(this);
     __SFCRegistry = new SFCRegistry(this);
     __SFBRegistry = new SFBRegistry(this);
+
+    for (auto ins_spec: 
+            configuration->__specification.machine_spec().ins_spec()) {
+
+        if (ins_spec.mu_exec_time_ns() > 0 && ins_spec.sigma_exec_time_ns() >= 0)
+        __ExecTimes.insert(std::make_pair(ins_spec.ins_name(),
+            std::unique_ptr<std::normal_distribution<double>>(
+                new std::normal_distribution<double>(
+                        ins_spec.mu_exec_time_ns(), 
+                        ins_spec.sigma_exec_time_ns()))));
+   
+    }
+
+    for (auto sfc_spec: 
+            configuration->__specification.machine_spec().sfc_spec()) {
+        if (sfc_spec.mu_exec_time_ns() > 0 && sfc_spec.sigma_exec_time_ns() >= 0)
+        __ExecTimes.insert(std::make_pair(sfc_spec.sfc_name(),
+            std::unique_ptr<std::normal_distribution<double>>(
+                new std::normal_distribution<double>(
+                        sfc_spec.mu_exec_time_ns(), 
+                        sfc_spec.sigma_exec_time_ns()))));
+    }
+
+    for (auto sfb_spec: 
+            configuration->__specification.machine_spec().sfb_spec()) {
+        if (sfb_spec.mu_exec_time_ns() > 0 && sfb_spec.sigma_exec_time_ns() >= 0)
+        __ExecTimes.insert(std::make_pair(sfb_spec.sfb_name(),
+            std::unique_ptr<std::normal_distribution<double>>(
+                new std::normal_distribution<double>(
+                        sfb_spec.mu_exec_time_ns(), 
+                        sfb_spec.sigma_exec_time_ns()))));
+    }
+
     InitializeClock();
 }
 

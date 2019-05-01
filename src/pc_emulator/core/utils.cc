@@ -142,6 +142,10 @@ bool Utils::GenerateFullSpecification(string SystemSpecificationPath,
     machine_spec->set_ram_mem_size_bytes(
         configuration.hardware_spec().ram_mem_size_bytes());
 
+    if (configuration.hardware_spec().has_random_number_seed()) 
+        machine_spec->set_random_number_seed(
+            configuration.hardware_spec().random_number_seed());
+
     for (auto& ins_spec: configuration.hardware_spec().ins_spec()) {
         auto new_ins = machine_spec->add_ins_spec();
         new_ins->CopyFrom(ins_spec);

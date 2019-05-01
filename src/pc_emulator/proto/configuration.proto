@@ -179,19 +179,22 @@ message DataType {
 // Describes a SFB and time to execute the SFB
 message SFBSpecification {
     required string sfb_name = 1;
-    required int64 exec_time_ns = 2;
+    required int64 mu_exec_time_ns = 2;
+    required int64 sigma_exec_time_ns = 3;
 }
 
 // Describes a SFC and time to execute the SFC
 message SFCSpecification {
     required string sfc_name = 1;
-    required int64 exec_time_ns = 2;
+    required int64 mu_exec_time_ns = 2;
+    required int64 sigma_exec_time_ns = 3;
 }
 
 // Describes an IL instruction and time to execute the instruction
 message InstructionSpecification {
     required string ins_name = 1;
-    required int64 exec_time_ns = 2;
+    required int64 mu_exec_time_ns = 2;
+    required int64 sigma_exec_time_ns = 3;
 }
 
 // The time period of the interval task
@@ -275,10 +278,12 @@ message ResourceSpecification {
 message MachineSpecification {
     required int32 num_cpus = 1;
     optional int64 ram_mem_size_bytes = 2;
-    repeated InstructionSpecification ins_spec = 3;
-    repeated SFCSpecification sfc_spec = 4;
-    repeated SFBSpecification sfb_spec = 5;
-    repeated ResourceSpecification resource_spec = 6;
+    // random number seed
+    optional int64 random_number_seed = 3;
+    repeated InstructionSpecification ins_spec = 4;
+    repeated SFCSpecification sfc_spec = 5;
+    repeated SFBSpecification sfb_spec = 6;
+    repeated ResourceSpecification resource_spec = 7;
 }
 
 // These are created by the emulator and used internally

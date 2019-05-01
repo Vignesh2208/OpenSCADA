@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <unordered_map>
 #include <queue>
+#include <random>
 #include "pc_variable.h"
 #include "pc_mem_unit.h"
 #include "pc_pou_code_container.h"
@@ -105,6 +106,8 @@ namespace pc_emulator {
             SFCRegistry * __SFCRegistry; /*!< Stores all registered SFCs */
             SFBRegistry * __SFBRegistry; /*!< Stores executors for all SFBs without
                 Code body */
+            std::unordered_map<string, 
+                std::unique_ptr<std::normal_distribution<double>>> __ExecTimes;
             
             //!Constructor
             /*!

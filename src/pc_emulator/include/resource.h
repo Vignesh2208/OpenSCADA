@@ -9,6 +9,7 @@
 #include <queue>
 #include "pc_variable.h"
 #include "pc_mem_unit.h"
+#include "synchronized_queue.h"
 #include "src/pc_emulator/proto/configuration.pb.h"
 
 using namespace std;
@@ -29,6 +30,8 @@ namespace pc_emulator {
             std::unordered_map<std::string, std::unique_ptr<PCVariable>> 
                 __AccessedFields; /*!< A hasmap of FieldName to Variable */
             string __ResourceName; /*!< Name of the resource */
+            SynchronizedQueue<string> FromResourceManager; /* For virtual time */
+            SynchronizedQueue<string> ToResourceManager; /* For virtual time */
 
             //! Default constructor
             PCResource(void) {};

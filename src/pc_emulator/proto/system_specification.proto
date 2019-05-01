@@ -58,12 +58,15 @@ message HardwareSpecification {
     // size of the PLCs RAM
     required int64 ram_mem_size_bytes = 2;
 
+    // random number seed
+    optional int64 random_number_seed = 3;
+
     // timing specification for each IL instruction
-    repeated pc_specification.InstructionSpecification ins_spec = 3;
+    repeated pc_specification.InstructionSpecification ins_spec = 4;
 
     // timing specification for each SFC
-    repeated pc_specification.SFCSpecification sfc_spec = 4;
+    repeated pc_specification.SFCSpecification sfc_spec = 5;
 
     // timing specification for each SFB
-    repeated pc_specification.SFBSpecification sfb_spec = 5;
+    repeated pc_specification.SFBSpecification sfb_spec = 6;
 }

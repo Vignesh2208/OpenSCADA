@@ -66,9 +66,20 @@ void Executor::Run() {
             }
 
             SFBExecutor->Execute(__AssociatedTask->__CR, __ExecPoUVariable);
+            __AssociatedResource->clock->UpdateCurrentTime(SFBName);
+            if (__AssociatedResource->clock->__stop) {
+                __AssociatedTask->__Executing = false;
+                return;
+            }
             idx = -1;
         } else {
             idx = RunInsn(*insn_container);
+            __AssociatedResource->clock->UpdateCurrentTime(
+                (*insn_container).InsnName);
+            if (__AssociatedResource->clock->__stop) {
+                __AssociatedTask->__Executing = false;
+                return;
+            }
         }
 
         
@@ -98,9 +109,15 @@ void Executor::Run() {
                 RestoreCPURegisters();    
             }
         }
+        if (__AssociatedResource->clock->__stop) {
+            __AssociatedTask->__Executing = false;
+            return;
+        }
         
         if (idx < 0 || idx >= __CodeContainer->__InsnCount)
             break;
+
+        
     }
     __AssociatedTask->__Executing = false;
 }
