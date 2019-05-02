@@ -575,7 +575,7 @@ PCDataType * PCConfigurationImpl::LookupDataType(string DataTypeName) {
 
 void PCConfigurationImpl::RunPLC() {
 
-    std::vector <std::thread> LaunchedResources;
+    
     for (auto it = __ResourceManagers.begin();
         it != __ResourceManagers.end(); it++) {
 
@@ -600,6 +600,34 @@ void PCConfigurationImpl::RunPLC() {
         "Finished executing all programs");
 
 
+}
+
+void PCConfigurationImpl::LaunchPLC() {
+    for (auto it = __ResourceManagers.begin();
+        it != __ResourceManagers.end(); it++) {
+
+        PCLogger->LogMessage(LogLevels::LOG_INFO, "Launching Resource: "
+            + it->first);
+
+        auto ResourceManager = it->second.get();
+        assert(ResourceManager != nullptr);
+
+        LaunchedResources.push_back(ResourceManager->LaunchResourceManager());
+    }
+
+}
+
+void PCConfigurationImpl::WaitForCompletion() {
+    PCLogger->LogMessage(LogLevels::LOG_INFO, 
+        "Waiting for all resources to finish");
+
+    for (auto th = LaunchedResources.begin(); th != LaunchedResources.end();
+        th++) {
+        th->join();
+    }
+
+    PCLogger->LogMessage(LogLevels::LOG_INFO, 
+        "Finished executing all programs");
 }
 
 void PCConfigurationImpl::Cleanup() {

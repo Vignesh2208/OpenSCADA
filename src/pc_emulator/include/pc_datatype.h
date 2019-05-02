@@ -20,7 +20,7 @@ using FieldInterfaceType = pc_specification::FieldInterfaceType;
 
 
 
-typedef long long int s64;
+typedef long long unsigned int s64;
 
 namespace pc_emulator {
     class PCConfiguration;

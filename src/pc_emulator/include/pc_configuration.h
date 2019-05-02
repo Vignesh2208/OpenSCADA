@@ -44,6 +44,9 @@ namespace pc_emulator {
 
             unordered_map<std::string, std::unique_ptr<ResourceManager>>
                 __ResourceManagers;
+
+            std::vector <std::thread> LaunchedResources;
+
         public:
 
             //! Returns a variable pointing to the subfield of a global/directly rep field
@@ -112,6 +115,10 @@ namespace pc_emulator {
 
             
             void RunPLC();
+
+            void LaunchPLC();
+
+            void WaitForCompletion();
 
             //! Cleans up all resources and frees allocated memory
             void Cleanup();

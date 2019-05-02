@@ -24,3 +24,18 @@ git_repository(
 load("@com_github_nelhage_rules_boost//:boost/boost.bzl", "boost_deps")
 boost_deps()
 
+new_local_repository(
+    name = "kronoslib",
+    # pkg-config --variable=libdir kronosapi
+    path = "/usr/lib",
+    build_file_content = """
+cc_library(
+    name = "kronosapi",
+    srcs = ["libkronosapi.so"],
+    visibility = ["//visibility:public"],
+    alwayslink = 1,
+)
+""",
+)
+
+

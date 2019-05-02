@@ -1034,6 +1034,9 @@ string Utils::GetInitialValueForArrayIdx(int Idx, string InitialValue,
 string Utils::GetInstallationDirectory() {
 
     string InstallationDir = getpwuid(getuid())->pw_dir;
+
+    if (InstallationDir == "/root")
+        InstallationDir = "/home/moses";
     return InstallationDir + "/OpenSCADA";
 }
 

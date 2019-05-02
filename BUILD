@@ -49,6 +49,7 @@ cc_library(
             "@boost//:lexical_cast",
             "@boost//:program_options",
             "@boost//:exception",
+            "@kronoslib//:kronosapi",
             ":pc_system_specification_cc_proto"],
     
     copts = ["-fpermissive -Wno-reorder -DDIR=\"$$PWD/\""],
@@ -73,7 +74,7 @@ cc_binary(
         "examples/simple_plc/plc.cc"
     ],
     deps = [":pc_emulator_lib"], 
-    copts = ["-Iexternal/gtest/include -fpermissive -Wno-reorder"],
+    copts = ["-Iexternal/gtest/include -I/usr/local/include -fpermissive -Wno-reorder"],
     linkstatic = 1,
 
 )
@@ -81,12 +82,12 @@ cc_binary(
 cc_binary(
     name="example_vt_plc",
     srcs = [
-        "examples/vt_plc/plc.cc"
+        "examples/vt_plc/plc.cc",
     ],
-    deps = [":pc_emulator_lib"], 
-    copts = ["-Iexternal/gtest/include -fpermissive -Wno-reorder"],
+    #linkopts = ["-Wl,/usr/lib/libkronosapi.so"],
+    deps = [":pc_emulator_lib", "@kronoslib//:kronosapi"],
+    copts = ["-Iexternal/gtest/include -I/usr/local/include -fpermissive -Wno-reorder"],
     linkstatic = 1,
-
 )
 
 cc_binary(

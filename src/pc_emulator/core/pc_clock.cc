@@ -67,7 +67,7 @@ void Clock::UpdateCurrentTime(string ExecutedFn) {
         __AssociatedResource->__configuration->PCLogger->LogMessage(
                     LogLevels::LOG_INFO,
                     "Executed: " + ExecutedFn + ". Using an increment of " 
-                    + std::to_string(inc_amount) + " Curr Time: "
+                    + std::to_string(inc_amount) + "(ns) Curr Time: "
                     + std::to_string(GetCurrentTime()));
     }
 };

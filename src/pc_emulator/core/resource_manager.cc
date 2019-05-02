@@ -5,6 +5,8 @@
 #include <boost/algorithm/string.hpp>
 #include <vector>
 
+
+#include "src/pc_emulator/include/kronos_api.h"
 #include "src/pc_emulator/include/pc_configuration.h"
 #include "src/pc_emulator/include/pc_resource.h"
 #include "src/pc_emulator/include/executor.h"
@@ -37,6 +39,7 @@ void ResourceManager::ExecuteResource() {
              __AssociatedResource->__ResourceName );
 
     if (is_virtual) {
+        set_tid();
         auto cmd = __AssociatedResource->FromResourceManager.pop();
         if (cmd == "STOP") {
             __AssociatedResource->__configuration->PCLogger->LogMessage(
@@ -110,6 +113,7 @@ std::thread ResourceManager::LaunchResourceManager() {
 void ResourceManager::ExecuteResourceManager() {
     
     bool is_virtual;
+    string nxt_command = "0";
     if (__AssociatedResource->__configuration->__specification
             .has_enable_kronos()) {
         is_virtual = __AssociatedResource->__configuration->__specification
@@ -127,24 +131,31 @@ void ResourceManager::ExecuteResourceManager() {
 
         auto ResourceThread = LaunchResource();
 
+
         auto per_round_advance_ns = 10000.0;
         auto nxt_round_inc = per_round_advance_ns;
         auto curr_time = 0.0;
         long run_time_secs 
             = __AssociatedResource->__configuration
                 ->__specification.run_time_secs();
+
+        pid_t thread_pid = get_tid();
+        std::cout << "####### Thread Pid = " 
+            << thread_pid << " My Pid = " << gettid() << std::endl;
+        
+        
+        std::cout << "Registering Tracer Status: " 
+        << addToExp_child(1.0, (int)per_round_advance_ns, thread_pid)
+        << std::endl;
+        
+        GetNxtCommand(nxt_command);
         while (true) {
             // get each round params from kronos, send it to Resource thread
             // through some shared queue and wait until completion of round.
 
             // if stop command is received from kronos, send exit command to
             // resource thread and break;
-
-            // Just a temporary stopping condition
-            if (curr_time >= run_time_secs*1000000000.0) {
-                std::cout << "Stopping Resource: " << 
-                    __AssociatedResource->__ResourceName << std::endl;
-                __AssociatedResource->FromResourceManager.push("STOP");
+            if (nxt_command == "STOP") {
                 break;
             }
             
@@ -153,30 +164,22 @@ void ResourceManager::ExecuteResourceManager() {
             auto recv = __AssociatedResource->ToResourceManager.pop();
 
             if (recv == "WAIT_FOR_IO") {
-                //std::cout << "Waiting for IO. Current time: " << __AssociatedResource->clock->GetCurrentTime()
-                //<< std::endl;
                 curr_time = __AssociatedResource->clock->__time;
-                if (curr_time > 0 && (s64)curr_time % 100000000 == 0) {
-                            std::cout << "Current time: " 
-                            << __AssociatedResource->clock->GetCurrentTime()
-                            << std::endl;
-                }
-
                 while (recv != "FINISHED_IO") {
-                    __AssociatedResource->clock->__time += per_round_advance_ns;
-                    // should be waiting for next round update fro kronos. 
-                    // sleeping for now.
-                    std::this_thread::sleep_for(std::chrono::microseconds(
-                            (int)per_round_advance_ns/1000));
+                    
+                    nxt_command = "0";
+                    GetNxtCommand(nxt_command);
+                    if (nxt_command == "STOP") {
+                        break;
+                    }
                     if (!__AssociatedResource->ToResourceManager.IsEmpty()) {
                         recv = __AssociatedResource->ToResourceManager.pop();
+                    } else {
+                        __AssociatedResource->clock->__time 
+                            += per_round_advance_ns;
                     }
                     curr_time = __AssociatedResource->clock->__time;
-                    if ((s64)curr_time % 100000000 == 0) {
-                            std::cout << "Current time: " 
-                            << __AssociatedResource->clock->GetCurrentTime()
-                            << std::endl;
-                    }
+                    
                 }
                 
             } else {
@@ -184,20 +187,22 @@ void ResourceManager::ExecuteResourceManager() {
 
                 if (recv == "0") {
                     nxt_round_inc = per_round_advance_ns;
+                    
                 } else {
                     nxt_round_inc = per_round_advance_ns - std::stod(recv);
                 }
-
-                curr_time = __AssociatedResource->clock->__time;
-                // print every 100ms
-                if ((s64)curr_time % 100000000 == 0) {
-                    std::cout << "Current time: " 
-                    << __AssociatedResource->clock->GetCurrentTime()
-                    << std::endl;
+                nxt_command = recv;
+                GetNxtCommand(nxt_command);
+                if (nxt_command == "STOP") {
+                    break;
                 }
+                curr_time = __AssociatedResource->clock->__time;
             }
             
         }
+        std::cout << "Stopping Resource: " << 
+                __AssociatedResource->__ResourceName << std::endl;
+        __AssociatedResource->FromResourceManager.push("STOP");
         std::cout << "Waiting for resrouce thread to finish " << std::endl;
         ResourceThread.join();
     } else {
