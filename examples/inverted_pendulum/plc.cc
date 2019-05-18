@@ -23,9 +23,15 @@ using FieldInterfaceType = pc_specification::FieldInterfaceType;
 PCConfigurationImpl * configuration = nullptr;
 
 
+void signalHandler( int signum ) {
+   std:: cout << "Interrupt signal (" << signum << ") received.\n";
+   if (configuration != nullptr)
+        configuration->stop = true;
+}
+
 int main() {
 
-
+    signal(SIGINT, signalHandler);  
     string SpecDir =  "/home/moses/OpenSCADA/examples/inverted_pendulum";    
     std::cout << "Reading System specification from: " 
         << SpecDir + "/system_specification.prototxt" << std::endl;
@@ -36,7 +42,7 @@ int main() {
     std::cout << "Starting PLC Resources ...."  << std::endl;
     configuration->RunPLC();
 
-    std::cout << "Finished Running PLC for specified run time " << std::endl;
+    std::cout << "Finished Running PLC ..." << std::endl;
     PCResourceImpl * resource 
         = (PCResourceImpl*) configuration->RegisteredResources->GetResource(
                     "CPU_001");

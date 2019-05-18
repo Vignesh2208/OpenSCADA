@@ -73,7 +73,7 @@ void Executor::Run() {
             }
             idx = -1;
         } else {
-            std::cout << "Executing Insn: " << insn_container->InsnName << std::endl;
+            //std::cout << "Executing Insn: " << insn_container->InsnName << std::endl;
             idx = RunInsn(*insn_container);
             __AssociatedResource->clock->UpdateCurrentTime(
                 (*insn_container).InsnName);
@@ -155,8 +155,8 @@ int Executor::RunInsn(InsnContainer& insn_container) {
 
         string PoUName = insn_container.OperandList[0];
 
-        std:: cout << "PoUName: " << PoUName 
-            << " Operands: " << insn_container.OperandList[1] << std::endl;
+        //std:: cout << "PoUName: " << PoUName 
+        //    << " Operands: " << insn_container.OperandList[1] << std::endl;
         auto PoU = __ExecPoUVariable->GetPtrToField(PoUName);
 
         assert(PoU != nullptr);
@@ -165,8 +165,8 @@ int Executor::RunInsn(InsnContainer& insn_container) {
 
         for (auto it = VarsToSet.begin(); it != VarsToSet.end(); it++) {
             PCVariable * VarToSet;
-            std::cout << "Var To Set: " 
-            << it->second << " to: " << it->first << std::endl;
+            //std::cout << "Var To Set: " 
+            //<< it->second << " to: " << it->first << std::endl;
             if (Utils::IsOperandImmediate(it->second)) {
                 VarToSet 
                 = __AssociatedResource->GetVariableForImmediateOperand(
@@ -184,7 +184,7 @@ int Executor::RunInsn(InsnContainer& insn_container) {
                     __AssociatedResource->__configuration->PCLogger->RaiseException(
                         "Error processing operand: " + it->second);
                 if (VarToSet->__IsVariableContentTypeAPtr) {
-                    std::cout << "Here ..." << std::endl;
+                    //std::cout << "Here ..." << std::endl;
                     VarToSet = __ExecPoUVariable->GetPtrStoredAtField(it->second);
                     assert(VarToSet != nullptr);
                 }
@@ -324,7 +324,7 @@ int Executor::RunInsn(InsnContainer& insn_container) {
                 auto SFCObj = __AssociatedResource->__SFCRegistry->GetSFC(
                     insn_container.InsnName);
 
-                std::cout << "SFC Name: " << insn_container.InsnName << std::endl;
+                //std::cout << "SFC Name: " << insn_container.InsnName << std::endl;
 
                 if (SFCObj != nullptr) {
                     SFCObj->Execute(__AssociatedTask->__CR, Ops);

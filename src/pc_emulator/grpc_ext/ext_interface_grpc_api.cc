@@ -31,9 +31,9 @@ void ExtInterfaceAPI::SetSensorInput(
                 ResourceName, MemType, ByteOffset, BitOffset,
                 VariableDataTypeName);
 
-    std::cout << "Called SetSensorInput: " << ResourceName
-            << " " << MemType << " " << ByteOffset << " " << BitOffset
-            << " " << VariableDataTypeName << " " << Value << std::endl;
+    //std::cout << "Called SetSensorInput: " << ResourceName
+    //        << " " << MemType << " " << ByteOffset << " " << BitOffset
+    //        << " " << VariableDataTypeName << " " << Value << std::endl;
     if (V != nullptr) {
         V->SetField("", Value);
     }

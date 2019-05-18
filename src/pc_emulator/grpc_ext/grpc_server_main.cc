@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <thread>
 #include <grpc/grpc.h>
 #include <grpcpp/server.h>
 #include <grpcpp/server_builder.h>
@@ -19,6 +20,13 @@ using namespace pc_emulator;
 using namespace pc_specification;
 using namespace mem_access;
 
+bool to_stop = false;
+
+void signalHandler( int signum ) {
+   std:: cout << "Interrupt signal (" << signum << ") received.\n";
+   to_stop = true;
+}
+
 void RunServer(string PLCSpecificationsDir) {
       string server_address("0.0.0.0:50051");
       AccessServiceImpl service(PLCSpecificationsDir);
@@ -29,8 +37,21 @@ void RunServer(string PLCSpecificationsDir) {
 
       //interval_map_example();
 
-      cout << "GRPC Server listening on " << server_address << endl;
-      server->Wait();
+      
+
+      auto serveFn = [&]() {
+        cout << "GRPC Server listening on " << server_address << endl;
+        server->Wait();
+      };
+
+    std::thread serving_thread(serveFn);
+
+    while (to_stop == false) {
+        usleep(100000);
+    }
+    cout << "GRPC Server: Shutting down ..."  << endl;
+    server->Shutdown();
+    serving_thread.join();
 }
 
 int main(int argc, char* argv[]) {
@@ -39,6 +60,7 @@ int main(int argc, char* argv[]) {
             << std::endl;
         return 0;
     }
+    signal(SIGINT, signalHandler);  
     RunServer(argv[1]);
     return 0;
 }

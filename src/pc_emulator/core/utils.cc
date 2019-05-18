@@ -350,7 +350,6 @@ PCVariable* Utils::ReallocateTmpVariable(PCConfiguration * configuration,
         Var->__VariableAttributes.FieldDetails.__Dimension2 = -1;
         Var->__PrevValue = false;
 
-        std::cout << "Setting CR to " << InitialValue << " DT: " << new_data_type->__DataTypeName << std::endl;
         Var->SetField("", InitialValue);
         return Var;
     }
@@ -887,8 +886,8 @@ char * Utils::make_mmap_shared(int nElements, string FileName) {
         errno = 0;
         auto ptr = mmap(0,
                         sizeof(char)*nElements, PROT_RW, MAP_ALLOC, fd, 0);
-        std::cout << "MMAP Initialization Status: " << std::strerror(errno) 
-        << std::endl;
+        //std::cout << "MMAP Initialization Status: " << std::strerror(errno) 
+        //<< std::endl;
         fclose(fp);
         return (char *)ptr;
 
@@ -1238,7 +1237,7 @@ void Utils::InitializeDataType(PCConfiguration * __configuration,
         PCDataType * field_type_ptr 
             = __configuration->LookupDataType(field.field_datatype_name());
 
-        std::cout << "Data Type Name = " << field.field_datatype_name() << std::endl;
+        //std::cout << "Data Type Name = " << field.field_datatype_name() << std::endl;
         assert(field_type_ptr != nullptr);
         initial_value = field.has_initial_value() ? field.initial_value()
                                 : field_type_ptr->__InitialValue;

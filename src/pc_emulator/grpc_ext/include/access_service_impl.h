@@ -69,7 +69,18 @@ namespace pc_emulator {
 
             bool CheckProtoFormat(string ProtoFilePath);
 
-            ~AccessServiceImpl() {};
+            ~AccessServiceImpl() {
+                std::cout << "Cleaning up ..." << std::endl;
+                for ( auto it = ExtInterface.begin(); it != ExtInterface.end(); 
+                        ++it ) {
+                    auto PLCExtInterface = it->second.get();
+                    std::cout << "Cleaning up GRPC interface for: "
+                        << PLCExtInterface->__ConfigInterface.__ConfigurationName
+                        << std::endl;
+                    PLCExtInterface->__ConfigInterface.Cleanup();
+                }
+
+            };
 
             grpc::Status SetSensorInput(ServerContext*, 
                 const SensorInput*, mem_access::Status* ) override;

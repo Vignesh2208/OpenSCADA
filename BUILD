@@ -147,6 +147,14 @@ cc_binary(
     linkstatic = 1,
 )
 
+py_binary(
+    name="pendulum_simulator",
+    srcs = [
+        "examples/inverted_pendulum/pendulum_simulator.py",
+    ],
+    deps = [":py_access_service_proto"],
+)
+
 cc_binary(
     name="example_comm_module",
     srcs = [

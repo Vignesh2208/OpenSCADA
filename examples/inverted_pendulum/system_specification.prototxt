@@ -1,5 +1,5 @@
 configuration_name: "Pendulum_PLC"
-log_level: LOG_INFO
+log_level: LOG_NOTICE
 enable_kronos: false
 run_time_secs: 30
 

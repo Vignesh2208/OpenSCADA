@@ -53,6 +53,7 @@ void PCMemUnit::AllocateSharedMemory(int MemSize, string mmap_file_name,
         }
         
     }
+    __mmap_file_name = mmap_file_name;
     __Initialized = true;
     __isMemControllerActive = true;
 }

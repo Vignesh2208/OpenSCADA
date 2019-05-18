@@ -41,7 +41,7 @@ pou_var {
     }
     datatype_field {
         field_name: "Quotient"
-        field_datatype_name: "REAL"
+        field_datatype_name: "INT"
         intf_type: VAR_OUTPUT
     }
     datatype_field {
@@ -60,7 +60,8 @@ pou_var {
         insn: "EQ Divisor" 
         insn: "JMPC Error" 
         insn: "LD Dividend" 
-        insn: "DIV Divisor" 
+        insn: "DIV Divisor"
+        insn: "REAL_TO_INT"
         insn: "ST Quotient"
         insn: "MUL Divisor"
         insn: "ST DivRem" 
@@ -295,6 +296,8 @@ pou_var {
         insn: "CAL get_control(time_delta:= time_delta, curr_error:= curr_error, prev_error:= prev_error, integral:= prev_integral)"
         insn: "LD get_control.force"
         insn: "ST force"
+        insn: "LD curr_error"
+        insn: "ST prev_error"
         insn: "RET"
     }
 }
@@ -303,7 +306,7 @@ interval_task {
     task_name: "CYCLIC_TASK"
     priority: 1
     interval_task_params {
-        interval_ms: 1000
+        interval_ms: 10
     }
 }
 

@@ -485,8 +485,8 @@ void PCResourceImpl::Cleanup() {
     std::cout << "Removing MMap files: " << __ResourceName << std::endl;
     __InputMemory.Cleanup();
     __OutputMemory.Cleanup();
-    std::remove(("/tmp/Output_" + __ResourceName).c_str());
-    std::remove(("/tmp/Input_" + __ResourceName).c_str());
+    //std::remove(("/tmp/Output_" + __ResourceName).c_str());
+    //std::remove(("/tmp/Input_" + __ResourceName).c_str());
 
     __CurrentResult->Cleanup();
     delete __CurrentResult;

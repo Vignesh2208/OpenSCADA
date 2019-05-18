@@ -49,6 +49,8 @@ namespace pc_emulator {
 
         public:
 
+            bool stop;
+
             //! Returns a variable pointing to the subfield of a global/directly rep field
             PCVariable * GetExternVariable(string NestedFieldName);
 

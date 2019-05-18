@@ -96,6 +96,13 @@ void ResourceManager::ExecuteResource() {
 
         }
 
+        if (!is_virtual && __AssociatedResource->__configuration->stop) {
+            __AssociatedResource->__configuration->PCLogger->LogMessage(
+                LogLevels::LOG_NOTICE, "STOPPING Resource: " +
+             __AssociatedResource->__ResourceName );
+            break;
+        }
+
     }
 
 }

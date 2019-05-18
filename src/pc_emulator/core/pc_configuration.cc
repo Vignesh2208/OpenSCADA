@@ -43,6 +43,8 @@ PCConfigurationImpl::PCConfigurationImpl(string ConfigurationPath) {
 
         __ConfigurationName = "Default_Configuration";
         __ConfigurationPath = ConfigurationPath;
+
+        stop = false;
         
         int logLevel = LogLevels::LOG_INFO;
         string logFilePath = "";

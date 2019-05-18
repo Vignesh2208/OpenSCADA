@@ -57,13 +57,21 @@ grpc::Status AccessServiceImpl::SetSensorInput(ServerContext*,
                 const SensorInput* sensor_desc, mem_access::Status* status) {
     auto got = ExtInterface.find(sensor_desc->plc_id());
     if (got == ExtInterface.end()) {
-        std::cout << "PLC: " << sensor_desc->plc_id() << " not found!" 
-            << std::endl;
+        //std::cout << "PLC: " << sensor_desc->plc_id() << " not found!" 
+        //    << std::endl;
         status->set_status("NOT_FOUND");
         return grpc::Status::OK;
     }
     auto PLCExtInterface = got->second.get();
 
+    string ram_f_name = "/tmp/" 
+    + PLCExtInterface->__ConfigInterface.__ConfigurationName + "_RAM";
+    if (!Utils::does_file_exist(ram_f_name.c_str())) {
+        PLCExtInterface->__ConfigInterface.Cleanup();
+        ExtInterface.erase(sensor_desc->plc_id());
+        status->set_status("NOT_FOUND");
+        return grpc::Status::OK;  
+    }
 
     PLCExtInterface->SetSensorInput(sensor_desc->resourcename(), 
             sensor_desc->memtype(), sensor_desc->byteoffset(), 
@@ -79,19 +87,29 @@ grpc::Status AccessServiceImpl::GetActuatorOutput(ServerContext*,
     
     auto got = ExtInterface.find(actuator_desc->plc_id());
     if (got == ExtInterface.end()) {
-        std::cout << "PLC: " << actuator_desc->plc_id() << " not found!" 
-            << std::endl;
+        //std::cout << "PLC: " << actuator_desc->plc_id() << " not found!" 
+        //    << std::endl;
         result->set_status("NOT_FOUND");
         result->set_value("NONE");
         return grpc::Status::OK;
     }
     auto PLCExtInterface = got->second.get();
 
+    string ram_f_name = "/tmp/" 
+    + PLCExtInterface->__ConfigInterface.__ConfigurationName + "_RAM";
+    if (!Utils::does_file_exist(ram_f_name.c_str())) {
+        PLCExtInterface->__ConfigInterface.Cleanup();
+        ExtInterface.erase(actuator_desc->plc_id());
+        result->set_status("NOT_FOUND");
+        result->set_value("NONE");
+        return grpc::Status::OK;  
+    }
 
     string value = PLCExtInterface->GetActuatorOutput(actuator_desc->resourcename(), 
             actuator_desc->memtype(), actuator_desc->byteoffset(), 
             actuator_desc->bitoffset(), actuator_desc->variabledatatypename());
     
+    //std::cout << "Value returned = " << value << std::endl;
     result->set_status("SUCCESS");
     result->set_value(value);
     return grpc::Status::OK;

@@ -16,5 +16,4 @@ void GTOD::Execute(PCVariable * __CurrentResult,
     *CR = *Tmp;
     auto curr_time = __AssociatedResource->clock->GetCurrentTime();
     CR->SetField("", "t#" + std::to_string(curr_time) + "s");
-    std::cout << "Executed GTOD" << std::endl;
 }
