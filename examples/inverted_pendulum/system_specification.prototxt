@@ -1,0 +1,243 @@
+configuration_name: "Pendulum_PLC"
+log_level: LOG_INFO
+enable_kronos: false
+run_time_secs: 30
+
+hardware_spec {
+    num_resources: 1
+    ram_mem_size_bytes: 10000
+
+    # Instruction mean, std execution times
+    ins_spec {
+        ins_name:   "ADD"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "AND"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "DIV"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "EQ"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "GE"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "GT"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "LD"
+        mu_exec_time_ns:    2000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "LE"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "LT"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "MOD"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "MUL"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "NE"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "NOT"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "OR"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "SHL"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "SHR"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "ST"
+        mu_exec_time_ns:    1500
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "SUB"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "XOR"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    # SFCs - mean, std of execution times
+    sfc_spec {
+        sfc_name: "ABS"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "ACOS"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "ASIN"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "ATAN"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "COS"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "EXP"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "LIMIT"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "LN"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "LOG"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "MAX"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "MIN"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "MUX"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "SEL"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "SIN"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "SQRT"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "TAN"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    # SFBs - mean, std of execution times
+
+    sfb_spec {
+        sfb_name: "TON"
+        mu_exec_time_ns: 1500
+        sigma_exec_time_ns: 0
+    }
+
+    sfb_spec {
+        sfb_name: "TOF"
+        mu_exec_time_ns: 1500
+        sigma_exec_time_ns: 0
+    }
+
+    sfb_spec {
+        sfb_name: "TP"
+        mu_exec_time_ns: 1500
+        sigma_exec_time_ns: 0
+    }
+}
+
+resource_file_path: "/home/moses/OpenSCADA/examples/inverted_pendulum/CPU_001.prototxt"

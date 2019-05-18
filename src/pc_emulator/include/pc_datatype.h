@@ -620,6 +620,9 @@ namespace pc_emulator {
             static bool LRealToAny(double Value, int DataTypeCategory,
                     string& Result);
 
+            static bool TimeToAny(TimeType time_value, int DataTypeCategory,
+                    string& Result);
+
             //! Converts a DateTime object into a DT string
             static string DTToDTString(DateTODDataType& dt);
 

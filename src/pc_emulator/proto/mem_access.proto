@@ -1,0 +1,42 @@
+  
+syntax = "proto2";
+
+package mem_access;
+
+service AccessService {
+
+  rpc SetSensorInput(SensorInput) 
+    returns (Status) {}
+
+  rpc GetActuatorOutput(ActuatorOutput) 
+    returns (Result) {}
+}
+
+
+message SensorInput {
+    required string PLC_ID = 1;
+    required string ResourceName = 2;
+    required int64 MemType = 3;
+    required int64 ByteOffset = 4;
+    required int64 BitOffset = 5;
+    required string VariableDataTypeName = 6;
+    required string ValueToSet = 7;
+}
+
+message ActuatorOutput {
+    required string PLC_ID = 1;
+    required string ResourceName = 2;
+    required int64 MemType = 3;
+    required int64 ByteOffset = 4;
+    required int64 BitOffset = 5;
+    required string VariableDataTypeName = 6;
+}
+
+message Status {
+    required string status = 1;
+}
+
+message Result {
+    required string value = 1;
+    required string status = 2;
+}

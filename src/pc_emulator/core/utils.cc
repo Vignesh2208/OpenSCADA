@@ -106,7 +106,7 @@ bool Utils::GenerateFullSpecification(string SystemSpecificationPath,
     if( fileDescriptor < 0 ) {
         std::cerr << " Error opening the specification file " 
                     << std::endl;
-        exit(-1);
+        return false;
     }
 
     google::protobuf::io::FileInputStream 
@@ -117,7 +117,7 @@ bool Utils::GenerateFullSpecification(string SystemSpecificationPath,
                                     &configuration)) {
         std::cerr << std::endl << "Failed to parse system spec file!" 
         << std::endl;
-        exit(-1);
+        return false;
     }
 
     if (configuration.has_configuration_name())
@@ -173,7 +173,7 @@ bool Utils::GenerateFullSpecification(string SystemSpecificationPath,
         if( fd < 0 ) {
             std::cerr << " Error opening resource specification file " 
                       << resource_file_path << std::endl;
-            exit(-1);
+            return false;
         }
 
         google::protobuf::io::FileInputStream 
@@ -184,7 +184,7 @@ bool Utils::GenerateFullSpecification(string SystemSpecificationPath,
                                         resource_spec)) {
             std::cerr << std::endl << "Failed to parse resource spec file!" 
              << resource_file_path << std::endl;
-            exit(-1);
+            return false;
         }
     }
 
@@ -350,6 +350,7 @@ PCVariable* Utils::ReallocateTmpVariable(PCConfiguration * configuration,
         Var->__VariableAttributes.FieldDetails.__Dimension2 = -1;
         Var->__PrevValue = false;
 
+        std::cout << "Setting CR to " << InitialValue << " DT: " << new_data_type->__DataTypeName << std::endl;
         Var->SetField("", InitialValue);
         return Var;
     }
@@ -650,6 +651,24 @@ PCVariable* Utils::LREAL_TO_ANY(PCConfiguration * configuration,
     string Result;
     assert(DataTypeUtils::LRealToAny(StoredValue,
         new_datatype->__DataTypeCategory,Result));
+
+    return ReallocateTmpVariable(configuration, Var, new_datatype, Result);
+}
+
+PCVariable* Utils::TIME_TO_ANY(PCConfiguration * configuration, 
+    PCVariable * Var, PCDataType * new_datatype) {
+
+
+    if(!Var 
+    || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::TIME)
+        return false;
+
+    auto StoredValue = Var->GetValueStoredAtField<TimeType>("",
+            DataTypeCategory::TIME);
+
+    string Result;
+    assert(DataTypeUtils::TimeToAny(StoredValue,
+        new_datatype->__DataTypeCategory, Result));
 
     return ReallocateTmpVariable(configuration, Var, new_datatype, Result);
 }
@@ -1219,6 +1238,7 @@ void Utils::InitializeDataType(PCConfiguration * __configuration,
         PCDataType * field_type_ptr 
             = __configuration->LookupDataType(field.field_datatype_name());
 
+        std::cout << "Data Type Name = " << field.field_datatype_name() << std::endl;
         assert(field_type_ptr != nullptr);
         initial_value = field.has_initial_value() ? field.initial_value()
                                 : field_type_ptr->__InitialValue;

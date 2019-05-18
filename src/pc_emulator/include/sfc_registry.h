@@ -13,6 +13,7 @@
 #include "sfc/atan.h"
 #include "sfc/cos.h"
 #include "sfc/exp.h"
+#include "sfc/gtod.h"
 #include "sfc/limit.h"
 #include "sfc/ln.h"
 #include "sfc/log.h"

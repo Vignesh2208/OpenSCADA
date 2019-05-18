@@ -9,15 +9,20 @@ using namespace pc_specification;
 
 void ANY_TO_ANY::Execute(PCVariable * __CurrentResult,
     std::vector<PCVariable*>& Operands) {
-    for(int i = 0; i < Operands.size(); i++) {
-        auto returnVal = Execute(__CurrentResult, Operands[i]);
-        if (returnVal == nullptr) {
-            __AssociatedResource->__configuration->PCLogger->RaiseException(
-                "Type conversion error for: " 
-                    + Operands[i]->__VariableDataType->__DataTypeName
-            );
+
+    if (Operands.size()) {
+        for(int i = 0; i < Operands.size(); i++) {
+            auto returnVal = Execute(__CurrentResult, Operands[i]);
+            if (returnVal == nullptr) {
+                __AssociatedResource->__configuration->PCLogger->RaiseException(
+                    "Type conversion error for: " 
+                        + Operands[i]->__VariableDataType->__DataTypeName
+                );
+            }
+            Operands[i] = returnVal;
         }
-        Operands[i] = returnVal;
+    } else {
+        Execute(__CurrentResult, __CurrentResult);
     }
     
 }
@@ -33,8 +38,7 @@ PCVariable * ANY_TO_ANY::Execute(PCVariable * __CurrentResult,
             "Operand: " + Op->__VariableName + " is not Temporary and of an"
             " incompatible type");
     }
-
-
+    
     if (Op->__IsTemporary) {
         switch(Op->__VariableDataType->__DataTypeCategory) {
             case DataTypeCategory::BOOL :  return Utils::BOOL_TO_ANY(
@@ -98,6 +102,11 @@ PCVariable * ANY_TO_ANY::Execute(PCVariable * __CurrentResult,
                                             Op, __TargetDataType);
                                             
             case DataTypeCategory::LREAL :  return Utils::LREAL_TO_ANY(
+                                            configuration,
+                                            Op, __TargetDataType);
+
+            case DataTypeCategory::TIME :  
+                                    return Utils::TIME_TO_ANY(
                                             configuration,
                                             Op, __TargetDataType);
                                             

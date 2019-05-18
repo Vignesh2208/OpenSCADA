@@ -107,7 +107,7 @@ PCVariable * PCResourceImpl::GetExternVariable(string NestedFieldName) {
     assert(!NestedFieldName.empty());
     DataTypeFieldAttributes FieldAttributes;
     auto got = __ResourcePoUVars.find(
-            "__RESOURCE_" + __ResourceName + "_GLOBAL__");
+            "__RESOURCE_" + __ResourceName + "_GLOBAL_VAR__");
     PCVariable * global_var;
 
     if (got == __ResourcePoUVars.end())
@@ -312,9 +312,13 @@ void PCResourceImpl::InitializeAllPoUVars() {
                         "__RESOURCE_" + __ResourceName + "_GLOBAL_VAR__",
                         "__RESOURCE_" + __ResourceName + "_GLOBAL__"));
 
+                __global_pou_var->__VariableDataType->__PoUType 
+                = pc_specification::PoUType::PROGRAM;
+
                 RegisterPoUVariable(
                     "__RESOURCE_" + __ResourceName + "_GLOBAL_VAR__",
                     std::move(__global_pou_var));
+
 
             }
 

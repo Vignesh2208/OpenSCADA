@@ -1668,6 +1668,54 @@ bool DataTypeUtils::LRealToAny(double Value, int Category,
     }
 }
 
+static bool DataTypeUtils::TimeToAny(TimeType Value, int Category,
+                    string& Result) {
+    switch(Category) {
+        case DataTypeCategory::BOOL :  Result = (Value.SecsElapsed > 0.0 ? "1" : "0");
+                                        return true;
+
+        case DataTypeCategory::BYTE :   
+        case DataTypeCategory::WORD :
+        case DataTypeCategory::DWORD :
+        case DataTypeCategory::LWORD :
+        case DataTypeCategory::CHAR :   return false;
+        case DataTypeCategory::INT :    Result = std::to_string((int16_t )(
+                                                    Value.SecsElapsed));
+                                        return true;
+        case DataTypeCategory::SINT :   Result = std::to_string((int8_t )(
+                                                    Value.SecsElapsed));
+                                        return true;
+        case DataTypeCategory::DINT :   Result = std::to_string((int32_t )(
+                                                    Value.SecsElapsed));
+                                        return true;
+        case DataTypeCategory::LINT :   Result = std::to_string((int64_t)(
+                                                    Value.SecsElapsed));
+                                        return true;
+        case DataTypeCategory::UINT :   Result = std::to_string((uint16_t )(
+                                                    Value.SecsElapsed));
+                                        return true;
+        case DataTypeCategory::USINT :  Result = std::to_string((uint8_t )(
+                                                    Value.SecsElapsed));
+                                        return true;
+        case DataTypeCategory::UDINT :  Result = std::to_string((uint32_t )(
+                                                    Value.SecsElapsed));
+                                        return true;
+        case DataTypeCategory::ULINT :  Result = std::to_string((uint64_t )(
+                                                    Value.SecsElapsed));
+                                        return true;
+        case DataTypeCategory::REAL :   Result = std::to_string((float)(
+                                                    Value.SecsElapsed));
+                                        return true;
+        case DataTypeCategory::LREAL :  Result = std::to_string((double)(
+                                                    Value.SecsElapsed));
+                                        return true;
+        case DataTypeCategory::TIME:    Result = "t#" 
+                + std::to_string(Value.SecsElapsed) + "s";
+                                        return true;
+        default: return false;
+    }
+
+}
 
 
 

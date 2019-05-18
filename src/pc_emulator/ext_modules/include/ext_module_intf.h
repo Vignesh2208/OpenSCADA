@@ -161,6 +161,7 @@ namespace pc_emulator {
 
             //!Cleans up the configuration interface object
             void Cleanup() { __ConfigInterface.Cleanup();};
+
     };
 }
 

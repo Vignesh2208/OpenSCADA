@@ -52,7 +52,7 @@ void Executor::Run() {
         if (!insn_container) {
             string SFBName 
             = __ExecPoUVariable->__VariableDataType->__DataTypeName;
-            //std::cout << "Executing SFB: " << SFBName << std::endl;
+            std::cout << "Executing SFB: " << SFBName << std::endl;
             // This is a SFB without a code body
             assert(__ExecPoUVariable->__VariableDataType->__PoUType
                 == PoUType::FB);
@@ -73,9 +73,11 @@ void Executor::Run() {
             }
             idx = -1;
         } else {
+            std::cout << "Executing Insn: " << insn_container->InsnName << std::endl;
             idx = RunInsn(*insn_container);
             __AssociatedResource->clock->UpdateCurrentTime(
                 (*insn_container).InsnName);
+            
             if (__AssociatedResource->clock->__stop) {
                 __AssociatedTask->__Executing = false;
                 return;
@@ -153,18 +155,18 @@ int Executor::RunInsn(InsnContainer& insn_container) {
 
         string PoUName = insn_container.OperandList[0];
 
-        //std:: cout << "PoUName: " << PoUName 
-        //    << " Operands: " << insn_container.OperandList[1] << std::endl;
+        std:: cout << "PoUName: " << PoUName 
+            << " Operands: " << insn_container.OperandList[1] << std::endl;
         auto PoU = __ExecPoUVariable->GetPtrToField(PoUName);
 
         assert(PoU != nullptr);
         if(PoU->__IsVariableContentTypeAPtr)
-            PoU = PoU->GetPtrStoredAtField("");
+            PoU = __ExecPoUVariable->GetPtrStoredAtField(PoUName);
 
         for (auto it = VarsToSet.begin(); it != VarsToSet.end(); it++) {
             PCVariable * VarToSet;
-            //std::cout << "Var To Set: " 
-            //<< it->second << " to: " << it->first << std::endl;
+            std::cout << "Var To Set: " 
+            << it->second << " to: " << it->first << std::endl;
             if (Utils::IsOperandImmediate(it->second)) {
                 VarToSet 
                 = __AssociatedResource->GetVariableForImmediateOperand(
@@ -181,8 +183,11 @@ int Executor::RunInsn(InsnContainer& insn_container) {
                 if(VarToSet == nullptr)
                     __AssociatedResource->__configuration->PCLogger->RaiseException(
                         "Error processing operand: " + it->second);
-                if (VarToSet->__IsVariableContentTypeAPtr)
-                    VarToSet = VarToSet->GetPtrStoredAtField("");
+                if (VarToSet->__IsVariableContentTypeAPtr) {
+                    std::cout << "Here ..." << std::endl;
+                    VarToSet = __ExecPoUVariable->GetPtrStoredAtField(it->second);
+                    assert(VarToSet != nullptr);
+                }
 
                 assert(Utils::WriteAccessCheck(
                         __AssociatedResource->__configuration,
@@ -288,8 +293,19 @@ int Executor::RunInsn(InsnContainer& insn_container) {
                     __AssociatedResource->GetVariableForImmediateOperand(
                     insn_container.OperandList[i]));
             } else {
-                Ops.push_back(__ExecPoUVariable->GetPtrToField(
-                    insn_container.OperandList[i]));   
+
+                auto field = __ExecPoUVariable->GetPtrToField(
+                    insn_container.OperandList[i]);
+                Ops.push_back(field);
+                
+                /*if (!field->__IsVariableContentTypeAPtr)
+                    Ops.push_back(field);
+                else {
+                    field = __ExecPoUVariable->GetPtrStoredAtField(
+                        insn_container.OperandList[i]);
+                    assert(field != nullptr);
+                    Ops.push_back(field);
+                }*/  
             }
         }
 
@@ -307,6 +323,8 @@ int Executor::RunInsn(InsnContainer& insn_container) {
 
                 auto SFCObj = __AssociatedResource->__SFCRegistry->GetSFC(
                     insn_container.InsnName);
+
+                std::cout << "SFC Name: " << insn_container.InsnName << std::endl;
 
                 if (SFCObj != nullptr) {
                     SFCObj->Execute(__AssociatedTask->__CR, Ops);

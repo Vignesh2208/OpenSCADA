@@ -21,13 +21,15 @@ SFCRegistry::SFCRegistry(PCResourceImpl * AssociatedResource) {
 
         for (int j = 0; j < ElementaryDatatypes.size(); j ++) {
             if(ElementaryDatatypes[i]->__DataTypeCategory 
-                <= DataTypeCategory::LREAL
+                <= DataTypeCategory::TIME
                 && ElementaryDatatypes[j]->__DataTypeCategory 
                 <= DataTypeCategory::LREAL) {
 
                 string conv_block_name 
                 = ElementaryDatatypes[i]->__DataTypeName + "_TO_"
                   + ElementaryDatatypes[j]->__DataTypeName;
+
+                //std::cout << "CREATING SFC: " << conv_block_name << std::endl;
                 __SFC.insert(std::make_pair(conv_block_name,
                     std::unique_ptr<ANY_TO_ANY>(new ANY_TO_ANY(
                         AssociatedResource, ElementaryDatatypes[j],
@@ -79,6 +81,9 @@ SFCRegistry::SFCRegistry(PCResourceImpl * AssociatedResource) {
 
     __SFC.insert(std::make_pair("EXP", 
         std::unique_ptr<EXP>(new EXP(AssociatedResource))));
+
+    __SFC.insert(std::make_pair("GTOD", 
+        std::unique_ptr<GTOD>(new GTOD(AssociatedResource))));
 
     __SFC.insert(std::make_pair("LIMIT", 
         std::unique_ptr<LIMIT>(new LIMIT(AssociatedResource))));

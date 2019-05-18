@@ -7,12 +7,20 @@
 #include <fstream>
 #include <cstdio>
 
+extern "C"
+{
+    #include <Kronos_functions.h>   
+}
+
 #include "src/pc_emulator/include/pc_variable.h"
 #include "src/pc_emulator/include/pc_datatype.h"
 #include "src/pc_emulator/include/pc_configuration.h"
 #include "src/pc_emulator/include/pc_resource.h"
 #include "src/pc_emulator/include/utils.h"
 #include "src/pc_emulator/include/task.h"
+#include "src/pc_emulator/include/kronos_api.h"
+
+
 
 using namespace std;
 using namespace pc_emulator;
@@ -576,30 +584,45 @@ PCDataType * PCConfigurationImpl::LookupDataType(string DataTypeName) {
 void PCConfigurationImpl::RunPLC() {
 
     
-    for (auto it = __ResourceManagers.begin();
-        it != __ResourceManagers.end(); it++) {
+    LaunchPLC();
+    auto n_tracers = LaunchedResources.size();
 
-        PCLogger->LogMessage(LogLevels::LOG_INFO, "Launching Resource: "
-            + it->first);
+    if (__specification.enable_kronos() == true) {
+        int n_inc_per_round_us = 10;
+        int run_time_us = __specification.run_time_secs()*1000000;
+        double curr_time = 0.0;
+        int total_rounds = run_time_us/n_inc_per_round_us;
+        PCLogger->LogMessage(LogLevels::LOG_INFO,
+         "######## Initializing Kronos ##########");
+        initializeExp(1);
 
-        auto ResourceManager = it->second.get();
-        assert(ResourceManager != nullptr);
+        PCLogger->LogMessage(LogLevels::LOG_INFO,
+         "Synchronizing and Freezing ....");
+        while (synchronizeAndFreeze(n_tracers) < 0) {
+            PCLogger->LogMessage(LogLevels::LOG_INFO,
+             "Sync and Freeze Failed. Retrying in 1 sec");
+            usleep(1000000);
+        }
 
-        LaunchedResources.push_back(ResourceManager->LaunchResourceManager());
+        PCLogger->LogMessage(LogLevels::LOG_INFO,
+            "Synchronizing and Freezing: SUCCESS");
+
+        for(int i = 0; i < total_rounds; i++) {
+            progress_n_rounds(1);
+
+            if (i != 0 && i % 10000 == 0) {
+                curr_time += 0.1;
+                std::cout << "Curr Time: " << curr_time << std::endl;
+            }
+            
+        }
+
+        PCLogger->LogMessage(LogLevels::LOG_INFO,
+            "Stopping Kronos experiment ...");
+        stopExp();
+        
     }
-
-    PCLogger->LogMessage(LogLevels::LOG_INFO, 
-        "Waiting for all resources to finish");
-
-    for (auto th = LaunchedResources.begin(); th != LaunchedResources.end();
-        th++) {
-        th->join();
-    }
-
-    PCLogger->LogMessage(LogLevels::LOG_INFO, 
-        "Finished executing all programs");
-
-
+    WaitForCompletion();
 }
 
 void PCConfigurationImpl::LaunchPLC() {

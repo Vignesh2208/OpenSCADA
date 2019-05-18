@@ -415,6 +415,9 @@ namespace pc_emulator {
             static PCVariable* LREAL_TO_ANY(PCConfiguration * configuration, 
                 PCVariable * Var, PCDataType * new_datatype);
 
+            static PCVariable* TIME_TO_ANY(PCConfiguration * configuration, 
+                PCVariable * Var, PCDataType * new_datatype);
+
             //! Type Casts a DT variable to a TOD variable
             /*!
                 \param configuration A PCConfiguration object

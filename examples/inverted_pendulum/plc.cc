@@ -26,7 +26,7 @@ PCConfigurationImpl * configuration = nullptr;
 int main() {
 
 
-    string SpecDir =  "/home/moses/OpenSCADA/examples/vt_plc";    
+    string SpecDir =  "/home/moses/OpenSCADA/examples/inverted_pendulum";    
     std::cout << "Reading System specification from: " 
         << SpecDir + "/system_specification.prototxt" << std::endl;
     configuration = new PCConfigurationImpl(SpecDir 
@@ -40,11 +40,6 @@ int main() {
     PCResourceImpl * resource 
         = (PCResourceImpl*) configuration->RegisteredResources->GetResource(
                     "CPU_001");
-
-    PCVariable * Program_1 = resource->GetPOU("PROGRAM_1");
-    std::cout << "Counter SFB Call Count = " 
-              << Program_1->GetValueStoredAtField<int16_t>("FnCallCount",
-                DataTypeCategory::INT) << std::endl;
     
     std::cout << "Cleaning up configuration ... " << std::endl;
     configuration->Cleanup();

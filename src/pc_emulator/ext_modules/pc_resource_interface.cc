@@ -60,8 +60,90 @@ void PCResourceInterface::RegisterPoUVariable(string VariableName,
 
 }
 
+void PCResourceInterface::InitializeAllSFBVars() {
+    string sfb_spec_file = Utils::GetInstallationDirectory() 
+        + "/src/pc_emulator/proto/system_pous.prototxt";
+    SystemPOUs system_pous;
+    int fileDescriptor = open(sfb_spec_file.c_str(),
+                            O_RDONLY);
+
+    if( fileDescriptor < 0 ) {
+        std::cerr << " Error opening the specification file " 
+                    << std::endl;
+        exit(-1);
+    }
+
+    google::protobuf::io::FileInputStream 
+                                    fileInput(fileDescriptor);
+    fileInput.SetCloseOnDelete( true );
+
+    if (!google::protobuf::TextFormat::Parse(&fileInput,
+                                    &system_pous)) {
+        std::cerr << std::endl << "Failed to parse system spec file!" 
+        << std::endl;
+        exit(-1);
+    }
+    for (auto& pou_var : system_pous.system_pou()) {
+
+        assert(pou_var.datatype_category() == DataTypeCategory::POU);
+        assert(pou_var.has_pou_type()
+            && (pou_var.pou_type() == PoUType::FC || 
+                pou_var.pou_type() == PoUType::FB ||
+                pou_var.pou_type() == PoUType::PROGRAM));
+                    
+        auto new_var_type = std::unique_ptr<PCDataType>(
+            new PCDataType((PCConfiguration *)__configuration, 
+                pou_var.name(), pou_var.name(), DataTypeCategory::POU));
+
+        Utils::InitializeDataType(__configuration, new_var_type.get(),
+                                pou_var);
+
+
+        __configuration->RegisteredDataTypes->RegisterDataType(
+                                    pou_var.name(),
+                                    std::move(new_var_type));
+
+        
+        auto new_pou_var = std::unique_ptr<PCVariable>(new PCVariable(
+            (PCConfiguration *)__configuration,
+            (PCResource *) this, pou_var.name(), pou_var.name()));
+        
+
+        if (pou_var.pou_type() == PoUType::FC)
+            new_pou_var->__VariableDataType->__PoUType = PoUType::FC;
+        else if (pou_var.pou_type() == PoUType::FB)
+            new_pou_var->__VariableDataType->__PoUType = PoUType::FB;
+        else
+            new_pou_var->__VariableDataType->__PoUType 
+                                                    = PoUType::PROGRAM;
+
+        RegisterPoUVariable(pou_var.name(), std::move(new_pou_var));
+        
+    }
+
+    for(auto it = __ResourcePoUVars.begin();
+            it != __ResourcePoUVars.end(); it ++) {
+        PCVariable * pou_var = it->second.get();
+        pou_var->AllocateStorage("/tmp/" + __ResourceName
+            + "_" + pou_var->__VariableName);
+    
+        Utils::ValidatePOUDefinition(pou_var, __configuration);
+        if (pou_var->__VariableDataType->__PoUType 
+            == pc_specification::PoUType::PROGRAM) {
+                if (pou_var->__VariableDataType
+                    ->__FieldsByInterfaceType[
+                        FieldIntfType::VAR_ACCESS].size())
+                __configuration->PCLogger->RaiseException(
+                    "A PROGRAM: " + pou_var->__VariableName
+                    + " cannot define ACCESS variables!");
+        }
+    }
+
+}
+
 void PCResourceInterface::InitializeAllPoUVars() {
 
+    InitializeAllSFBVars();
     
     for (auto & resource_spec : 
             __configuration->__specification.machine_spec().resource_spec()) {
@@ -89,9 +171,14 @@ void PCResourceInterface::InitializeAllPoUVars() {
                         "__RESOURCE_" + __ResourceName + "_GLOBAL_VAR__",
                         "__RESOURCE_" + __ResourceName + "_GLOBAL__"));
 
+                __global_pou_var->__VariableDataType->__PoUType 
+                = pc_specification::PoUType::PROGRAM;
+
                 RegisterPoUVariable(
                     "__RESOURCE_" + __ResourceName + "_GLOBAL_VAR__",
                     std::move(__global_pou_var));
+
+
 
             }
 
@@ -247,7 +334,7 @@ PCVariable * PCResourceInterface::GetExternVariable(string NestedFieldName) {
     assert(!NestedFieldName.empty());
     DataTypeFieldAttributes FieldAttributes;
     auto got = __ResourcePoUVars.find(
-            "__RESOURCE_" + __ResourceName + "_GLOBAL__");
+            "__RESOURCE_" + __ResourceName + "_GLOBAL_VAR__");
     PCVariable * global_var;
 
     if (got == __ResourcePoUVars.end())

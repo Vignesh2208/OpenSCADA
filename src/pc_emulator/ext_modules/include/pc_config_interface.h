@@ -88,6 +88,7 @@ namespace pc_emulator {
             //! Cleans up all resources and frees allocated memory
             void Cleanup();    
 
+            ~PCConfigurationInterface() {};
 
     };        
 }

@@ -906,9 +906,22 @@ void PCVariable::ResolveAllExternalFields() {
                 // A program's extern can only be global variables defined in configuration/resource
                 // definition
                 if (FieldVariable == nullptr) {
-                    __configuration->PCLogger->RaiseException(
+
+                    if (__AssociatedResource == nullptr)
+                        __configuration->PCLogger->RaiseException(
                         "Undefined extern reference to: " + DefinedField.__FieldName
                         + " in definition of " + __VariableName);
+                    else {
+                        FieldVariable = __AssociatedResource->GetExternVariable(
+                                        DefinedField.__FieldName);
+
+                        if (FieldVariable == nullptr) {
+                            __configuration->PCLogger->RaiseException(
+                            "Undefined extern reference to: " 
+                            + DefinedField.__FieldName
+                            + " in definition of " + __VariableName);
+                        }
+                    }
                 }
             } else {
             
@@ -944,6 +957,15 @@ void PCVariable::ResolveAllExternalFields() {
  */
 PCVariable * PCVariable::GetPtrStoredAtField(string NestedFieldName) {
     DataTypeFieldAttributes Attributes;
+
+    
+
+    if (__IsVariableContentTypeAPtr) {
+        PCVariable *StoredPointer;
+        SafeMemRead(&StoredPointer,
+                    &__MemoryLocation, sizeof (PCVariable*), __ByteOffset);
+        return StoredPointer;
+    }
 
     if (NestedFieldName.empty())
         return nullptr;

@@ -42,7 +42,11 @@ namespace pc_emulator {
             std::unique_ptr<PCVariableContainer> GetVariableContainer(
                 string ResourceName, int MemType, int ByteOffset, int BitOffset,
                 string VariableDataTypeName);
+
     };
+
+
+
 }
 
 #endif

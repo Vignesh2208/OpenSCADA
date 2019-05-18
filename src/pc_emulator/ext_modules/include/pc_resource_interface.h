@@ -41,6 +41,9 @@ namespace pc_emulator {
             //! Registers a POU for internal book keeping
             void RegisterPoUVariable(string VariableName,
                             std::unique_ptr<PCVariable> Var);
+
+            void InitializeAllSFBVars();
+            
         public :
             string __ResourceName; /*!< Name of the resource*/
             PCConfigurationInterface * __configuration; /*!< Associated config
@@ -84,6 +87,8 @@ namespace pc_emulator {
 
             //! Cleans up allocated memory and temporay variables
             void Cleanup();
+
+            ~PCResourceInterface() {};
     };
 
 }
