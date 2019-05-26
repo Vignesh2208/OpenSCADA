@@ -163,11 +163,30 @@ namespace pc_emulator {
             void Cleanup() { __ConfigInterface.Cleanup();};
 
 
-            uint8_t * GetPtrToRAMMemory();
+            uint8_t * GetPtrToRAMMemory() { 
+                return __ConfigInterface.GetPtrToRAMMemory()};
 
-            uint8_t * GetPtrToInputMemory(string ResourceName);
+            uint8_t * GetPtrToInputMemory(string ResourceName) {
+                return __ConfigInterface.GetPtrToInputMemory(ResourceName);
+            };
 
-            uint8_t * GetPtrToOutputMemory(string ResourceName);
+            uint8_t * GetPtrToOutputMemory(string ResourceName) {
+                return __ConfigInterface.GetPtrToOutputMemory(ResourceName);
+            };   
+
+            int GetRAMMemSize() {
+                return __ConfigInterface.GetRAMMemSize();
+            };
+
+            int GetInputMemSize(string ResourceName) {
+                return __ConfigInterface.GetInputMemSize(ResourceName);
+            };
+
+            int GetOutputMemSize(string ResourceName) {
+                return __ConfigInterface.GetOutputMemSize(ResourceName);
+            };
+
+
 
     };
 }

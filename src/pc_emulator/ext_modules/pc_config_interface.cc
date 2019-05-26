@@ -633,3 +633,28 @@ uint8_t * PCConfigurationInterface::GetPtrToOutputMemory(string ResourceName) {
 
     return (uint8_t *) resource->__OutputMemory.GetStorageLocation().get();
 }  
+
+
+
+
+int PCConfigurationInterface::GetRAMMemSize() {
+    return __RAMMemory.GetMemUnitSize();
+}
+
+int PCConfigurationInterface::GetInputMemSize(string ResourceName) {
+    auto resource = RegisteredResources->GetResource(ResourceName);
+
+    if (!resource)
+        return -1;
+
+    return (uint8_t *) resource->__InputMemory.GetMemUnitSize();
+}
+
+int PCConfigurationInterface::GetOutputMemSize(string ResourceName) {
+     auto resource = RegisteredResources->GetResource(ResourceName);
+
+    if (!resource)
+        return -1;
+
+    return (uint8_t *) resource->__OutputMemory.GetMemUnitSize();
+}

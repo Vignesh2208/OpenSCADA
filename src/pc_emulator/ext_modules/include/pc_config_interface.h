@@ -95,6 +95,12 @@ namespace pc_emulator {
 
             uint8_t * GetPtrToOutputMemory(string ResourceName);   
 
+            int GetRAMMemSize();
+
+            int GetInputMemSize(string ResourceName);
+
+            int GetOutputMemSize(string ResourceName);
+
             ~PCConfigurationInterface() {};
 
     };        
