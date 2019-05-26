@@ -19,8 +19,7 @@ using namespace pc_emulator;
 using SystemConfiguration = pc_system_specification::SystemConfiguration;
 
 void AccessServiceImpl::read_directory(
-    const std::string& name, std::vector<string>& v)
-{
+    const std::string& name, std::vector<string>& v) {
     boost::filesystem::path p(name);
     boost::filesystem::directory_iterator start(p);
     boost::filesystem::directory_iterator end;

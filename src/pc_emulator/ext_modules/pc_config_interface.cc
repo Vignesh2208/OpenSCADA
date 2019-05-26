@@ -609,3 +609,27 @@ PCVariable * PCConfigurationInterface::GetExternVariable(string AccessPath) {
     return return_var;
 }
 
+
+
+
+uint8_t * PCConfigurationInterface::GetPtrToRAMMemory() {
+    return (uint8_t *) __RAMMemory.GetStorageLocation().get();
+}
+
+uint8_t * PCConfigurationInterface::GetPtrToInputMemory(string ResourceName) {
+    auto resource = RegisteredResources->GetResource(ResourceName);
+
+    if (!resource)
+        return nullptr;
+
+    return (uint8_t *) resource->__InputMemory.GetStorageLocation().get();
+}
+
+uint8_t * PCConfigurationInterface::GetPtrToOutputMemory(string ResourceName) {
+    auto resource = RegisteredResources->GetResource(ResourceName);
+
+    if (!resource)
+        return nullptr;
+
+    return (uint8_t *) resource->__OutputMemory.GetStorageLocation().get();
+}  

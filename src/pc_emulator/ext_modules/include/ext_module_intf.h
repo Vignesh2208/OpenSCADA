@@ -162,6 +162,13 @@ namespace pc_emulator {
             //!Cleans up the configuration interface object
             void Cleanup() { __ConfigInterface.Cleanup();};
 
+
+            uint8_t * GetPtrToRAMMemory();
+
+            uint8_t * GetPtrToInputMemory(string ResourceName);
+
+            uint8_t * GetPtrToOutputMemory(string ResourceName);
+
     };
 }
 

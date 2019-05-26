@@ -86,7 +86,14 @@ namespace pc_emulator {
             };
 
             //! Cleans up all resources and frees allocated memory
-            void Cleanup();    
+            void Cleanup(); 
+
+
+            uint8_t * GetPtrToRAMMemory();
+
+            uint8_t * GetPtrToInputMemory(string ResourceName);
+
+            uint8_t * GetPtrToOutputMemory(string ResourceName);   
 
             ~PCConfigurationInterface() {};
 

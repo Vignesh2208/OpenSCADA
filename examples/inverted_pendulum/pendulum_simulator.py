@@ -74,13 +74,14 @@ def get_actuator_output():
 
             if response.status == "SUCCESS":
                 return float(response.value)
-            print "Returning 0.0"
+            #print "Returning 0.0"
             return 0.0
     except Exception as e:
         return 0.0
 
 def main():
-	# Initializing mass values, g, world size, simulation time and variables required to terminate the simulation
+	# Initializing mass values, g, world size, simulation time and variables
+    # required to terminate the simulation
     mass_of_ball = 1.0
     mass_of_cart = 5.0
     g = 9.81
@@ -91,7 +92,7 @@ def main():
     end_time = previous_timestamp + simulation_time
 
     # Initializing cart and pendulum objects
-    cart = Cart(int(0.2 * world_size),mass_of_cart,world_size)
+    cart = Cart(int(0.5 * world_size),mass_of_cart,world_size)
     pendulum = Pendulum(1,1,mass_of_ball)
 
     # Initializing other variables needed for the simulation
@@ -102,7 +103,7 @@ def main():
     # The simulation must run for the desired amount of time
     while time.time() <= end_time:		
         current_timestamp = time.time()
-        #time_delta = (current_timestamp - previous_timestamp)
+        time_delta = (current_timestamp - previous_timestamp)
         time_delta = 0.01
         if previous_time_delta != 0:
             theta_dot = (theta_tminus1 - theta_tminus2 ) / previous_time_delta				
@@ -116,13 +117,13 @@ def main():
         # Update the variables and display stuff
         set_sensor_input(pendulum.theta)
         display_stuff(world_size,cart,pendulum)
-        previous_time_delta = time_delta # This can be set here as well as in the PLC
-        previous_timestamp = current_timestamp # This can be set here as well as in the PLC
-        theta_tminus2 = theta_tminus1 # This can be set here only
-        theta_tminus1 = pendulum.theta	# This can be set here only
-        x_tminus2 = x_tminus1	# This can be set here only
-        x_tminus1 = cart.x	# This can be set here only
-        time.sleep(0.01)
+        previous_time_delta = time_delta
+        previous_timestamp = current_timestamp
+        theta_tminus2 = theta_tminus1 
+        theta_tminus1 = pendulum.theta
+        x_tminus2 = x_tminus1
+        x_tminus1 = cart.x
+        #time.sleep(0.01)
 
 if __name__ == "__main__":
 	main()

@@ -7,7 +7,7 @@ hardware_spec {
     num_resources: 1
     ram_mem_size_bytes: 10000
 
-    # Instruction mean, std execution times
+    # Instruction mean, std execution times, used only in virtual time mode
     ins_spec {
         ins_name:   "ADD"
         mu_exec_time_ns:    1000
@@ -122,7 +122,7 @@ hardware_spec {
         sigma_exec_time_ns: 100
     }
 
-    # SFCs - mean, std of execution times
+    # SFCs (System functions) - mean, std of execution times
     sfc_spec {
         sfc_name: "ABS"
         mu_exec_time_ns: 2000
@@ -219,8 +219,7 @@ hardware_spec {
         sigma_exec_time_ns: 0
     }
 
-    # SFBs - mean, std of execution times
-
+    # SFBs (System function blocks) - mean, std of execution times
     sfb_spec {
         sfb_name: "TON"
         mu_exec_time_ns: 1500
