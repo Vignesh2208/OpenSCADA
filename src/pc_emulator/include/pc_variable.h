@@ -521,9 +521,9 @@ namespace pc_emulator {
                         return false;
                     for (int i = 0 ; i < CopySize; i++) {
                         char * val1 
-                            = V1.__MemoryLocation.GetPointerToMemory(
+                            = (char *)V1.__MemoryLocation.GetPointerToMemory(
                                 V1.__ByteOffset + i);
-                        char * val2 = V2.__MemoryLocation.GetPointerToMemory(
+                        char * val2 = (char *)V2.__MemoryLocation.GetPointerToMemory(
                                 V2.__ByteOffset + i);
                         if (*val1 != *val2)
                             return false;

@@ -1668,7 +1668,7 @@ bool DataTypeUtils::LRealToAny(double Value, int Category,
     }
 }
 
-static bool DataTypeUtils::TimeToAny(TimeType Value, int Category,
+bool DataTypeUtils::TimeToAny(TimeType Value, int Category,
                     string& Result) {
     switch(Category) {
         case DataTypeCategory::BOOL :  Result = (Value.SecsElapsed > 0.0 ? "1" : "0");

@@ -83,6 +83,7 @@ namespace pc_emulator {
             //! GetPOU is not implemented for this config_interface
             PCVariable * GetPOU(string PoUName) {
                 std::domain_error("NOT IMPLEMENTED !");
+                return nullptr;
             };
 
             //! Cleans up all resources and frees allocated memory

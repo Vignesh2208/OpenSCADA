@@ -74,7 +74,7 @@ cc_library(
             "@kronoslib//:kronosapi",
             ":pc_system_specification_cc_proto"],
     
-    copts = ["-fpermissive -Wno-reorder -DDIR=\"$$PWD/\""],
+    copts = ["-fpermissive -Wno-reorder -DDIR=\"$$PWD/\" -Wno-sign-compare -Wno-unused-variable"],
     visibility = ["//visibility:public"],
     alwayslink = True,
 )
@@ -90,62 +90,20 @@ cc_library(
             ":pc_emulator_lib", ":access_service_proto_cpp", 
             "@boost//:filesystem"],
     
-    copts = ["-fpermissive -Wno-reorder -DDIR=\"$$PWD/\""],
+    copts = ["-fpermissive -Wno-reorder -DDIR=\"$$PWD/\" -Wno-sign-compare"],
     visibility = ["//visibility:public"],
     alwayslink = True,
 )
 
 cc_binary(
-    name="grpc_ext",
+    name="pc_grpc_server",
     srcs = ["src/pc_emulator/grpc_ext/grpc_server_main.cc"],
     deps = [":grpc_ext_lib", ":access_service_proto_cpp"],
-    copts = ["-fpermissive -Wno-reorder -DDIR=\"$$PWD/\""],
+    copts = ["-fpermissive -Wno-reorder -DDIR=\"$$PWD/\" -Wno-sign-compare"],
     visibility = ["//visibility:public"],
     linkstatic = 1,
 )
 
-cc_binary(
-    name="example_idle_plc",
-    srcs = [
-        "examples/idle_plc/plc.cc"
-    ],
-    deps = [":pc_emulator_lib"], 
-    copts = ["-Iexternal/gtest/include -fpermissive -Wno-reorder"],
-    linkstatic = 1,
-
-)
-
-cc_binary(
-    name="example_simple_plc",
-    srcs = [
-        "examples/simple_plc/plc.cc"
-    ],
-    deps = [":pc_emulator_lib",
-        ], 
-    copts = ["-Iexternal/gtest/include -I/usr/local/include -fpermissive -Wno-reorder"],
-    linkstatic = 1,
-
-)
-
-cc_binary(
-    name="example_vt_plc",
-    srcs = [
-        "examples/vt_plc/plc.cc",
-    ],
-    deps = [":pc_emulator_lib", "@kronoslib//:kronosapi"],
-    copts = ["-Iexternal/gtest/include -I/usr/local/include -fpermissive -Wno-reorder"],
-    linkstatic = 1,
-)
-
-cc_binary(
-    name="inverted_pendulum_plc",
-    srcs = [
-        "examples/inverted_pendulum/plc.cc",
-    ],
-    deps = [":pc_emulator_lib", "@kronoslib//:kronosapi"],
-    copts = ["-Iexternal/gtest/include -I/usr/local/include -fpermissive -Wno-reorder"],
-    linkstatic = 1,
-)
 
 py_binary(
     name="pendulum_simulator",
@@ -161,9 +119,39 @@ cc_binary(
         "examples/idle_plc/comm_module.cc"
     ],
     deps = [":pc_emulator_lib"], 
-    copts = ["-Iexternal/gtest/include -fpermissive -Wno-reorder"],
+    copts = ["-Iexternal/gtest/include -I/usr/local/include -fpermissive -Wno-reorder"],
     linkstatic = 1,
 
+)
+
+cc_binary(
+    name="example_hmi",
+    srcs = [
+        "examples/hmi/hmi_client.cc"
+    ],
+    deps = ["@boost//:algorithm", "@modbuslib//:modbusapi"], 
+    copts = ["-Iexternal/gtest/include -I/usr/local/include -fpermissive -Wno-reorder"],
+    linkstatic = 1,
+)
+
+cc_binary(
+    name="modbus_comm_module",
+    srcs = [
+        "contrib/modbus_comm_module.cc"
+    ],
+    deps = [":pc_emulator_lib", "@modbuslib//:modbusapi"], 
+    copts = ["-Iexternal/gtest/include -fpermissive -Wno-reorder -Wno-sign-compare -Wno-delete-non-virtual-dtor"],
+    linkstatic = 1,
+)
+
+cc_binary(
+    name="plc_runner",
+    srcs = [
+        "contrib/plc_runner.cc"
+    ],
+    deps = [":pc_emulator_lib",  "@kronoslib//:kronosapi"], 
+    copts = ["-Iexternal/gtest/include -I/usr/local/include -fpermissive -Wno-reorder -Wno-switch -Wno-delete-non-virtual-dtor"],
+    linkstatic = 1, 
 )
 
 py_binary(

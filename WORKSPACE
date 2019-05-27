@@ -39,6 +39,21 @@ cc_library(
 """,
 )
 
+new_local_repository(
+    name = "modbuslib",
+    # pkg-config --variable=libdir kronosapi
+    path = "/usr/local/lib",
+    build_file_content = """
+cc_library(
+    name = "modbusapi",
+    srcs = ["libmodbus.so"],
+    visibility = ["//visibility:public"],
+    alwayslink = 1,
+)
+""",
+)
+
+
 http_archive(
     name = "build_stack_rules_proto",
     urls = ["https://github.com/stackb/rules_proto/archive/d86ca6bc56b1589677ec59abfa0bed784d6b7767.tar.gz"],

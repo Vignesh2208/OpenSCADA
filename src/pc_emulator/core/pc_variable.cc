@@ -1144,6 +1144,7 @@ void PCVariable::SetField(string NestedFieldName, string Value) {
     DateType Date;
     TODType TOD;
     DateTODDataType Dt;
+    PCDataType * ElementDataType;
 
     // For Category Type ARRAY
     string Init, FieldName;
@@ -1360,7 +1361,7 @@ void PCVariable::SetField(string NestedFieldName, string Value) {
                     sizeof(DateTODDataType), FieldVariable->__ByteOffset, &Dt);
             break;
         case DataTypeCategory::ARRAY:
-            PCDataType * ElementDataType = __configuration->LookupDataType(
+            ElementDataType = __configuration->LookupDataType(
                 __VariableDataType->__DataTypeName);
             assert(ElementDataType != nullptr 
                     && ElementDataType != __VariableDataType);
@@ -1391,11 +1392,11 @@ void PCVariable::SetField(string NestedFieldName, string Value) {
                     InitializeVariable(FieldVariable, Init);
                 }
             }   
-
             break;
         default :           __configuration->PCLogger->RaiseException(
                                 "Only fields pointing to elementary data types"
                                 " can be set with passed string values !");
+            break;
     }
 }
 

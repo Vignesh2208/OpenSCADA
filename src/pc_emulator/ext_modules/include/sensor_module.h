@@ -25,6 +25,7 @@ namespace pc_emulator {
                 int RamByteOffset, int RamBitOffset,
                 string VariableDataTypeName) {
                 std::domain_error("NOT IMPLEMENTED !");
+                return nullptr;
             };
             
             //! NOT IMPLEMENTED, Sensor modules cannot query access paths. 
@@ -34,6 +35,7 @@ namespace pc_emulator {
             std::unique_ptr<PCVariableContainer>
                 GetVariableContainer(string AccessPath) {
                 std::domain_error("NOT IMPLEMENTED !");
+                return nullptr;
             };
 
 

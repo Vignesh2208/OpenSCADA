@@ -1,26 +1,80 @@
 
+
+#include <iostream>
+#include <cstdint>
+#include <cstring>
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/algorithm/string.hpp>
+#include <vector>
+
+extern "C"
+{
+
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <modbus/modbus.h>   
+}
+
 #include "src/pc_emulator/ext_modules/include/comm_module.h"
-#include "contrib/modbus_comm_module.h"
+#include "src/pc_emulator/include/utils.h"
+
+
+using namespace std;
+using namespace pc_emulator;
+using namespace pc_specification;
+
+using MemType  = pc_specification::MemType;
+using DataTypeCategory = pc_specification::DataTypeCategory;
+using FieldInterfaceType = pc_specification::FieldInterfaceType;
+
+class InputParser{
+    public:
+        InputParser (int &argc, char **argv){
+            for (int i=1; i < argc; ++i)
+                this->tokens.push_back(std::string(argv[i]));
+        }
+        const std::string& getCmdOption(const std::string &option) const{
+            std::vector<std::string>::const_iterator itr;
+            itr =  std::find(this->tokens.begin(), this->tokens.end(), option);
+            if (itr != this->tokens.end() && ++itr != this->tokens.end()){
+                return *itr;
+            }
+            static const std::string empty_string("");
+            return empty_string;
+        }
+        bool cmdOptionExists(const std::string &option) const{
+            return std::find(this->tokens.begin(), this->tokens.end(), option)
+                   != this->tokens.end();
+        }
+    private:
+        std::vector <std::string> tokens;
+};
 
 using namespace std;
 
 void print_usage() {
-    std::cout << "./modbus_comm_module -f <path_plc_spec_prototxt> -i <ip_address_to_list>"
+    std::cout << "modbus_comm_module -f <path_plc_spec_prototxt> "
+        "-i <ip_address_to_list>"
         " -p <listen_port> -r <resource_name>" << std::endl;
+}
 
 CommModule * comm_module = nullptr;
 modbus_t *ctx;
-uint8_t *query;
+uint8_t query[MODBUS_TCP_MAX_ADU_LENGTH];
   
 void signalHandler( int signal_num ) { 
     std::cout << "Interrupted! Stopping Comm Module .... " << std::endl; 
      
     if (comm_module != nullptr) {
-        comm_module->Cleanup();
-        delete comm_module;
-        free(query);
+        
         modbus_close(ctx);
         modbus_free(ctx);
+
+        comm_module->Cleanup();
+        delete comm_module;
     }
 
     std::cout << "Comm module Stopped ..." << std::endl;
@@ -31,7 +85,7 @@ void signalHandler( int signal_num ) {
 int main(int argc, char **argv) {
     InputParser input(argc, argv);
     modbus_mapping_t mb_mapping;
-    int s, rc, header_length;
+    int s, rc;
 
 
     signal(SIGINT, signalHandler);  
@@ -50,6 +104,7 @@ int main(int argc, char **argv) {
     string resource_name  = input.getCmdOption("-r");
     int port_no = 1502;
 
+
     if (input.cmdOptionExists("-i")) {
         ip_address = input.getCmdOption("-i");
     }
@@ -62,6 +117,10 @@ int main(int argc, char **argv) {
     comm_module = new CommModule(plc_filename);
 
     ctx = modbus_new_tcp(ip_address.c_str(), port_no);
+    if (ctx == NULL) {
+        std::cout << "Failed to initialize ..." << std::endl;
+        exit(-1);
+    }
     mb_mapping.nb_bits = comm_module->GetRAMMemSize()*8;
     mb_mapping.nb_input_bits = comm_module->GetInputMemSize(resource_name)*8;
     mb_mapping.nb_input_registers = comm_module->GetInputMemSize(resource_name);
@@ -73,39 +132,37 @@ int main(int argc, char **argv) {
 
     mb_mapping.tab_bits = comm_module->GetPtrToRAMMemory();
     mb_mapping.tab_input_bits = comm_module->GetPtrToInputMemory(resource_name);
-    mb_mapping.tab_registers = mb_mapping.tab_bits;
-    mb_mapping.tab_input_registers = mb_mapping.tab_input_bits;
+    mb_mapping.tab_registers = (uint16_t *) mb_mapping.tab_bits;
+    mb_mapping.tab_input_registers = (uint16_t *) mb_mapping.tab_input_bits;
 
-    std::cout << "ModBUS server started (Press Ctrl-C to quit)..." << std::endl;
-    s = modbus_tcp_listen(ctx, 1);
-    modbus_tcp_accept(ctx, &s);
-    query = malloc(MODBUS_TCP_MAX_ADU_LENGTH);
+    while (1) {
+        std::cout << "ModBUS waiting for new connection (Press Ctrl-C to quit)..." 
+                << std::endl;
+        s = modbus_tcp_listen(ctx, 1);
+        modbus_tcp_accept(ctx, &s);
+        memset(&query, 0, MODBUS_TCP_MAX_ADU_LENGTH);
 
-    header_length = modbus_get_header_length(ctx);
-    modbus_set_debug(ctx, TRUE);
+        modbus_set_debug(ctx, TRUE);
+        for (;;) {
+            do {
+                rc = modbus_receive(ctx, query);
+            } while (rc == 0);
 
+            if (rc == -1 && errno != EMBBADCRC) {
+                break;
+            }
 
-    for (;;) {
-        do {
-            rc = modbus_receive(ctx, query);
-        } while (rc == 0);
-
-        if (rc == -1 && errno != EMBBADCRC) {
-            break;
+            rc = modbus_reply(ctx, query, rc, &mb_mapping);
+            if (rc == -1) {
+                break;
+            }
         }
 
-        rc = modbus_reply(ctx, query, rc, mb_mapping);
-        if (rc == -1) {
-            break;
-        }
+        std::cout << "Closing connection ..." << std::endl;
+        if (s != -1) {
+            close(s);
+        }   
     }
-
-    printf("Quit the loop: %s\n", modbus_strerror(errno));
-    if (s != -1) {
-        close(s);
-    }
-    
-    free(query);
     modbus_close(ctx);
     modbus_free(ctx);
 

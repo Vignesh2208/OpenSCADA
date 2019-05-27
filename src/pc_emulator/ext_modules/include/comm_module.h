@@ -38,6 +38,7 @@ namespace pc_emulator {
                 string ResourceName, int MemType, 
                 int ByteOffset, int BitOffset, string VariableDataTypeName) {
                 std::domain_error("NOT IMPLEMENTED !");
+                return nullptr;
             };
 
             //! Returns a variable container for a given nested access path

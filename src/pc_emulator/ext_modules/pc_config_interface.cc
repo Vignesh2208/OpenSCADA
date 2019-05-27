@@ -647,7 +647,7 @@ int PCConfigurationInterface::GetInputMemSize(string ResourceName) {
     if (!resource)
         return -1;
 
-    return (uint8_t *) resource->__InputMemory.GetMemUnitSize();
+    return resource->__InputMemory.GetMemUnitSize();
 }
 
 int PCConfigurationInterface::GetOutputMemSize(string ResourceName) {
@@ -656,5 +656,5 @@ int PCConfigurationInterface::GetOutputMemSize(string ResourceName) {
     if (!resource)
         return -1;
 
-    return (uint8_t *) resource->__OutputMemory.GetMemUnitSize();
+    return resource->__OutputMemory.GetMemUnitSize();
 }

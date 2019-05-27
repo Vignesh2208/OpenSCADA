@@ -13,7 +13,7 @@ extern "C"
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
-#include <modbus.h>   
+#include <modbus/modbus.h>   
 }
 
 const uint16_t UT_REGISTERS_ADDRESS = 10;
@@ -37,12 +37,14 @@ int equal_dword(uint16_t *tab_reg, const uint32_t value) {
     return ((tab_reg[0] == (value >> 16)) && (tab_reg[1] == (value & 0xFFFF)));
 }
 
+using namespace std;
 
 int main(int argc, char **argv) {
     modbus_mapping_t mb_mapping;
     int s, rc, header_length, i;
     uint8_t *tab_rp_bits = NULL;
     uint16_t *tab_rp_registers = NULL;
+    modbus_t *ctx;
 
     string ip_address = "127.0.0.1";
     int port_no = 1502;
@@ -70,11 +72,11 @@ int main(int argc, char **argv) {
     /** COIL BITS **/
 
     /* Single */
-    rc = modbus_write_bit(ctx, UT_BITS_ADDRESS, ON);
+    rc = modbus_write_bit(ctx, 1, ON);
     std::cout << "1/2 modbus_write_bit: " << std::endl;
     ASSERT_TRUE(rc == 1, "");
 
-    rc = modbus_read_bits(ctx, UT_BITS_ADDRESS, 1, tab_rp_bits);
+    rc = modbus_read_bits(ctx, 1, 1, tab_rp_bits);
     std::cout << "2/2 modbus_read_bits: " << std::endl;
     ASSERT_TRUE(rc == 1, "FAILED (nb points %d)\n", rc);
     ASSERT_TRUE(tab_rp_bits[0] == ON, "FAILED (%0X != %0X)\n",
@@ -142,6 +144,8 @@ int main(int argc, char **argv) {
 
 
     std::cout << "All Tests PASS. Stopping HMI ..." << std::endl;
+    close:
+    modbus_close(ctx);
     modbus_free(ctx);
 
     return 0;

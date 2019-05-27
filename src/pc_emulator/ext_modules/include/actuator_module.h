@@ -24,6 +24,7 @@ namespace pc_emulator {
                 int RamByteOffset, int RamBitOffset,
                 string VariableDataTypeName) {
                 std::domain_error("NOT IMPLEMENTED !");
+                return nullptr;
             };
         
             //! NOT IMPLEMENTED, Actuator modules cannot query access paths. 
@@ -33,6 +34,7 @@ namespace pc_emulator {
             std::unique_ptr<PCVariableContainer>
                 GetVariableContainer(string AccessPath) {
                 std::domain_error("NOT IMPLEMENTED !");
+                return nullptr;
             };
 
             //! Returns a variable container for the specified resource mem location

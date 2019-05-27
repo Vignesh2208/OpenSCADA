@@ -64,6 +64,8 @@ void MUX::Execute(PCVariable * __CurrentResult,
             SelValue = (uint64_t) CR->GetValueStoredAtField<uint8_t>("",
                 DataTypeCategory::LINT);
                 break;
+        default: configuration->PCLogger->RaiseException("MUX not supported ");
+                break;
     }
     if (Operands.size() == 0) {
         configuration->PCLogger->RaiseException("MUX SFC error: "

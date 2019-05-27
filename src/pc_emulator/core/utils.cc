@@ -367,7 +367,7 @@ PCVariable* Utils::BOOL_TO_ANY(PCConfiguration * configuration,
 
     if(!Var 
     || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::BOOL)
-        return false;
+        return nullptr;
 
     auto StoredValue = Var->GetValueStoredAtField<bool>("",
             DataTypeCategory::BOOL);
@@ -386,7 +386,7 @@ PCVariable* Utils::BYTE_TO_ANY(PCConfiguration * configuration,
     
     if(!Var 
     || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::BYTE)
-        return false;
+        return nullptr;
 
     auto StoredValue = Var->GetValueStoredAtField<uint8_t>("",
             DataTypeCategory::BYTE);
@@ -404,7 +404,7 @@ PCVariable* Utils::CHAR_TO_ANY(PCConfiguration * configuration,
     
     if(!Var 
     || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::CHAR)
-        return false;
+        return nullptr;
 
     auto StoredValue = Var->GetValueStoredAtField<uint8_t>("",
             DataTypeCategory::CHAR);
@@ -422,7 +422,7 @@ PCVariable* Utils::WORD_TO_ANY(PCConfiguration * configuration,
 
     if(!Var 
     || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::WORD)
-        return false;
+        return nullptr;
 
     auto StoredValue = Var->GetValueStoredAtField<uint16_t>("",
             DataTypeCategory::WORD);
@@ -440,7 +440,7 @@ PCVariable* Utils::DWORD_TO_ANY(PCConfiguration * configuration,
 
     if(!Var 
     || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::DWORD)
-        return false;
+        return nullptr;
 
     auto StoredValue = Var->GetValueStoredAtField<uint32_t>("",
             DataTypeCategory::DWORD);
@@ -458,7 +458,7 @@ PCVariable* Utils::LWORD_TO_ANY(PCConfiguration * configuration,
 
     if(!Var 
     || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::LWORD)
-        return false;
+        return nullptr;
 
     auto StoredValue = Var->GetValueStoredAtField<uint64_t>("",
             DataTypeCategory::LWORD);
@@ -476,7 +476,7 @@ PCVariable* Utils::INT_TO_ANY(PCConfiguration * configuration,
 
     if(!Var 
     || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::INT)
-        return false;
+        return nullptr;
 
     auto StoredValue = Var->GetValueStoredAtField<int16_t>("",
             DataTypeCategory::INT);
@@ -494,7 +494,7 @@ PCVariable* Utils::SINT_TO_ANY(PCConfiguration * configuration,
 
     if(!Var 
     || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::SINT)
-        return false;
+        return nullptr;
 
     auto StoredValue = Var->GetValueStoredAtField<int8_t>("",
             DataTypeCategory::SINT);
@@ -513,7 +513,7 @@ PCVariable* Utils::DINT_TO_ANY(PCConfiguration * configuration,
 
     if(!Var 
     || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::DINT)
-        return false;
+        return nullptr;
 
     auto StoredValue = Var->GetValueStoredAtField<int32_t>("",
             DataTypeCategory::DINT);
@@ -532,7 +532,7 @@ PCVariable* Utils::LINT_TO_ANY(PCConfiguration * configuration,
 
     if(!Var 
     || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::LINT)
-        return false;
+        return nullptr;
 
     auto StoredValue = Var->GetValueStoredAtField<int64_t>("",
             DataTypeCategory::LINT);
@@ -552,7 +552,7 @@ PCVariable* Utils::UINT_TO_ANY(PCConfiguration * configuration,
 
     if(!Var 
     || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::UINT)
-        return false;
+        return nullptr;
 
     auto StoredValue = Var->GetValueStoredAtField<uint16_t>("",
             DataTypeCategory::UINT);
@@ -570,7 +570,7 @@ PCVariable* Utils::USINT_TO_ANY(PCConfiguration * configuration,
 
     if(!Var 
     || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::USINT)
-        return false;
+        return nullptr;
 
     auto StoredValue = Var->GetValueStoredAtField<uint8_t>("",
             DataTypeCategory::USINT);
@@ -588,7 +588,7 @@ PCVariable* Utils::UDINT_TO_ANY(PCConfiguration * configuration,
 
     if(!Var 
     || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::UDINT)
-        return false;
+        return nullptr;
 
     auto StoredValue = Var->GetValueStoredAtField<uint32_t>("",
             DataTypeCategory::UDINT);
@@ -606,7 +606,7 @@ PCVariable* Utils::ULINT_TO_ANY(PCConfiguration * configuration,
 
     if(!Var 
     || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::ULINT)
-        return false;
+        return nullptr;
 
     auto StoredValue = Var->GetValueStoredAtField<uint64_t>("",
             DataTypeCategory::ULINT);
@@ -624,7 +624,7 @@ PCVariable* Utils::REAL_TO_ANY(PCConfiguration * configuration,
 
     if(!Var 
     || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::REAL)
-        return false;
+        return nullptr;
 
     auto StoredValue = Var->GetValueStoredAtField<float>("",
             DataTypeCategory::REAL);
@@ -642,7 +642,7 @@ PCVariable* Utils::LREAL_TO_ANY(PCConfiguration * configuration,
 
     if(!Var 
     || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::LREAL)
-        return false;
+        return nullptr;
 
     auto StoredValue = Var->GetValueStoredAtField<double>("",
             DataTypeCategory::LREAL);
@@ -660,7 +660,7 @@ PCVariable* Utils::TIME_TO_ANY(PCConfiguration * configuration,
 
     if(!Var 
     || Var->__VariableDataType->__DataTypeCategory != DataTypeCategory::TIME)
-        return false;
+        return nullptr;
 
     auto StoredValue = Var->GetValueStoredAtField<TimeType>("",
             DataTypeCategory::TIME);
@@ -679,7 +679,7 @@ PCVariable* Utils::DT_TO_TOD(PCConfiguration * configuration,
     if(!Var 
     || Var->__VariableDataType->__DataTypeCategory 
         != DataTypeCategory::DATE_AND_TIME)
-        return false;
+        return nullptr;
     auto StoredValue = Var->GetValueStoredAtField<DateTODDataType>("",
             DataTypeCategory::DATE_AND_TIME);
     string Result, Hr, Min, Sec;
@@ -706,7 +706,7 @@ PCVariable* Utils::DT_TO_DATE(PCConfiguration * configuration,
     if(!Var 
     || Var->__VariableDataType->__DataTypeCategory 
         != DataTypeCategory::DATE_AND_TIME)
-        return false;
+        return nullptr;
 
     auto StoredValue = Var->GetValueStoredAtField<DateTODDataType>("",
             DataTypeCategory::DATE_AND_TIME);

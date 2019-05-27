@@ -88,6 +88,9 @@ void SHL_Insn::Execute(PCVariable * __CurrentResult,
             shift_amt = Operand->GetValueStoredAtField<uint64_t>("",
                         DataTypeCategory::ULINT);
             break;
+
+        default: configuration->PCLogger->RaiseException("SHL unsupported!");
+                break;
     }
     
     if (shift_amt < 0) {
@@ -120,6 +123,9 @@ void SHL_Insn::Execute(PCVariable * __CurrentResult,
             LWordValue = LWordValue << shift_amt;
             CR->SetField("", &LWordValue, sizeof(LWordValue));
             break;
+        
+        default: configuration->PCLogger->RaiseException("SHL unsupported!");
+                break;
     }
 
 }

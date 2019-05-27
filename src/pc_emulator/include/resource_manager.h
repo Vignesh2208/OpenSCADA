@@ -7,7 +7,10 @@ using namespace std;
 #include "pc_datatype.h"
 #include "pc_variable.h"
 #include "pc_resource.h"
+
+#ifndef _GNU_SOURCE
 #define _GNU_SOURCE         /* See feature_test_macros(7) */
+#endif
 #include <unistd.h>       
 #include <sys/syscall.h>
 #define gettid() syscall(SYS_gettid)

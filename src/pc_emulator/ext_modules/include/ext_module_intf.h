@@ -164,7 +164,8 @@ namespace pc_emulator {
 
 
             uint8_t * GetPtrToRAMMemory() { 
-                return __ConfigInterface.GetPtrToRAMMemory()};
+                return __ConfigInterface.GetPtrToRAMMemory();
+            };
 
             uint8_t * GetPtrToInputMemory(string ResourceName) {
                 return __ConfigInterface.GetPtrToInputMemory(ResourceName);
