@@ -667,8 +667,7 @@ void PCResourceImpl::InitializeAllTasks() {
 }
 
  void PCResourceImpl::InitializeClock() {
-     if (__configuration->__specification.has_enable_kronos() && 
-            __configuration->__specification.enable_kronos())
+     if (__configuration->enable_kronos)
         clock = std::unique_ptr<Clock>(new Clock(true, this));
     else {
         clock = std::unique_ptr<Clock>(new Clock(false, this));

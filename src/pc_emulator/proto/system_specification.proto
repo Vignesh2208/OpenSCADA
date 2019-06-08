@@ -23,29 +23,26 @@ message SystemConfiguration {
     // Log files are stored here
     optional string log_file_path = 3;
 
-    // Whether Kronos is enabled/disabled ?
-    optional bool enable_kronos = 4;
-
     // Running time of the emulator
-    required int32 run_time_secs = 5;
+    required int32 run_time_secs = 4;
 
     // Description of the PLC's hardware
-    required HardwareSpecification hardware_spec = 6;
+    required HardwareSpecification hardware_spec = 5;
 
     // Declaration of all data types
-    repeated pc_specification.DataType datatype_declaration = 7;
+    repeated pc_specification.DataType datatype_declaration = 6;
 
     // Declaration of all global variables visible over the entire configuration
     // and to all resources. 
-    optional pc_specification.DataType var_global = 8;
+    optional pc_specification.DataType var_global = 7;
 
     // Declaration of access paths visible to other configruations and communication
     // modules
-    optional pc_specification.DataType var_access =9;
+    optional pc_specification.DataType var_access =8;
 
     // Each resource, its POUs and tasks associated with each POU are defined here
     // according to pc_specification.ResourceSpecification proto
-    repeated string resource_file_path = 10;
+    repeated string resource_file_path = 9;
 }
 
 

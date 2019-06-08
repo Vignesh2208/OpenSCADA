@@ -129,8 +129,6 @@ bool Utils::GenerateFullSpecification(string SystemSpecificationPath,
     if (configuration.has_log_file_path())
         full_specification.set_log_file_path(configuration.log_file_path());
 
-    if (configuration.has_enable_kronos())
-        full_specification.set_enable_kronos(configuration.enable_kronos());
     
     full_specification.set_run_time_secs(configuration.run_time_secs());
 

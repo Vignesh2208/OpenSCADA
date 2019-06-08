@@ -57,7 +57,7 @@ using namespace std;
 
 void print_usage() {
     std::cout << "modbus_comm_module -f <path_plc_spec_prototxt> "
-        "-i <ip_address_to_list>"
+        "-i <ip_address_to_listen on>"
         " -p <listen_port> -r <resource_name>" << std::endl;
 }
 

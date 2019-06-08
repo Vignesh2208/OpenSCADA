@@ -36,7 +36,8 @@ using std::unordered_map;
 using std::to_string;
 
 
-PCConfigurationImpl::PCConfigurationImpl(string ConfigurationPath) {
+PCConfigurationImpl::PCConfigurationImpl(string ConfigurationPath,
+        bool enable_kronos) {
 
 
        Utils::GenerateFullSpecification(ConfigurationPath, __specification);
@@ -45,6 +46,7 @@ PCConfigurationImpl::PCConfigurationImpl(string ConfigurationPath) {
         __ConfigurationPath = ConfigurationPath;
 
         stop = false;
+        enable_kronos = enable_kronos;
         
         int logLevel = LogLevels::LOG_INFO;
         string logFilePath = "";
@@ -589,7 +591,7 @@ void PCConfigurationImpl::RunPLC() {
     LaunchPLC();
     auto n_tracers = LaunchedResources.size();
 
-    if (__specification.enable_kronos() == true) {
+    if (enable_kronos == true) {
         int n_inc_per_round_us = 10;
         int run_time_us = __specification.run_time_secs()*1000000;
         double curr_time = 0.0;

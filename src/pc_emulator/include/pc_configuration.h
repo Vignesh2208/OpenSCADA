@@ -51,6 +51,8 @@ namespace pc_emulator {
 
             bool stop;
 
+            bool enable_kronos;
+
             //! Returns a variable pointing to the subfield of a global/directly rep field
             PCVariable * GetExternVariable(string NestedFieldName);
 
@@ -82,8 +84,11 @@ namespace pc_emulator {
             /*!
                 \param ConfigurationPath    Path to txt file specified in
                     configuration.proto format
+                \param enable_kronos    Whether this PLC is run under virtual time
+                    or not
             */
-            PCConfigurationImpl(string ConfigurationPath);
+            PCConfigurationImpl(string ConfigurationPath, 
+                bool enable_kronos=false);
 
 
             //! Given RAM memory location details, returns a PCVariable pointing to that location

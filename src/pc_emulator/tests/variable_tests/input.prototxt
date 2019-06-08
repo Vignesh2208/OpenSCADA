@@ -1,6 +1,5 @@
 configuration_name: "Variable_Test_Configuration"
 log_level: LOG_INFO
-enable_kronos: false
 run_time_secs: 1
 hardware_spec {
     num_resources: 1

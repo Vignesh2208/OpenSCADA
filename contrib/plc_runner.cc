@@ -62,24 +62,30 @@ int main(int argc, char **argv) {
 
     signal(SIGINT, signal_handler); 
     InputParser input(argc, argv);
+    bool enable_kronos = false
 
     if (!input.cmdOptionExists("-f")) {
         std::cout << "ERROR: Missing specification file! " << std::endl;
         std::cout << "Usage: plc_runner -f <path_to_system_spec prototxt file>"
+                " [-e ] "
                 << std::endl;
         exit(0);
     }
 
+    if (input.cmdOptionExists("-e")) {
+        enable_kronos = true;
+    }
+
     string SpecFile =  input.getCmdOption("-f");
 
-    configuration = new PCConfigurationImpl(SpecFile);
+    configuration = new PCConfigurationImpl(SpecFile, enable_kronos);
 
     std::cout << "########################################" << std::endl;
     std::cout << "Starting PLC Resources ...."  << std::endl;
     configuration->RunPLC();
 
     std::cout << "########################################" << std::endl;
-    std::cout << "Finished Running PLC for specified run time " << std::endl;
+    std::cout << "Finished Running PLC ... " << std::endl;
     std::cout << "Cleaning up ... " << std::endl;
     configuration->Cleanup();
     delete configuration;

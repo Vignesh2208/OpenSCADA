@@ -121,10 +121,8 @@ void ResourceManager::ExecuteResourceManager() {
     
     bool is_virtual;
     string nxt_command = "0";
-    if (__AssociatedResource->__configuration->__specification
-            .has_enable_kronos()) {
-        is_virtual = __AssociatedResource->__configuration->__specification
-                                                .enable_kronos();
+    if (__AssociatedResource->__configuration->enable_kronos) {
+        is_virtual = true;
     } else {
         is_virtual = false;
     }

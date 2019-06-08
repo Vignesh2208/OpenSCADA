@@ -6,7 +6,8 @@ import kronos_functions as kf
 class EmulationDriver(object):
 
     def __init__(self, number_nodes, n_insns_per_round=1000000,
-            rel_cpu_speed=1.0, is_virtual=False):
+            rel_cpu_speed=1.0, is_virtual=False,
+            physical_system_sim_driver=None):
         self.is_virtual = is_virtual
         self.num_tracers = number_nodes
         self.n_progressed_rounds = 0
@@ -18,7 +19,7 @@ class EmulationDriver(object):
             print "Initializing Kronos ..."
             kf.initializeExp(1)
 
-        self.wait_for_initialization()
+        self.physical_system_sim_driver = physical_system_sim_driver
 
     def wait_for_initialization(self):
         print "Waiting for all nodes to register ..."
@@ -42,6 +43,30 @@ class EmulationDriver(object):
             time.sleep(time_step_secs)
 
         self.total_time_elapsed += float(time_step_secs)
+        if self.physical_system_sim_driver is not None:
+            self.physical_system_sim_driver.progress(float(time_step_secs))
+
+    def run_for(self, run_time):
+        if self.is_virtual:
+            current_timestamp = 0.0
+        else:
+            current_timestamp = time.time()
+        end_time = current_timestamp + run_time
+
+        synchronization_timestep = self.timestep_per_round_secs
+        while current_timestamp <= end_time:
+
+            if self.is_virtual == False:		
+                current_timestamp = time.time()
+            else:
+                current_timestamp += synchronization_timestep
+
+            if self.is_virtual == True and (current_timestamp * 10) % 1 == 0 :
+                print "Current Time: ", current_timestamp
+                
+            self.progress_for(synchronization_timestep)
+
+
 
     def stop_exp(self):
         if self.is_virtual:
