@@ -106,9 +106,9 @@ cc_binary(
 
 
 py_binary(
-    name="pendulum_simulator",
+    name="simulation",
     srcs = [
-        "examples/inverted_pendulum/pendulum_simulator.py",
+        "examples/inverted_pendulum/simulation.py",
     ],
     deps = [":py_access_service_proto"],
 )

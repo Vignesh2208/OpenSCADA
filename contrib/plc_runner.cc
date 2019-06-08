@@ -62,7 +62,7 @@ int main(int argc, char **argv) {
 
     signal(SIGINT, signal_handler); 
     InputParser input(argc, argv);
-    bool enable_kronos = false
+    bool enable_kronos = false;
 
     if (!input.cmdOptionExists("-f")) {
         std::cout << "ERROR: Missing specification file! " << std::endl;

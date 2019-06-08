@@ -8,6 +8,7 @@ from pendulum_sim import PendulumSimulator
 import argparse
 import os
 import signal
+import sys
 
 
 stop = False
@@ -26,7 +27,8 @@ def start_grpc_server(path_to_plc_specifications_dir, log_file_fd):
     if newpid == 0:
         os.dup2(log_file_fd, sys.stdout.fileno())
         os.dup2(log_file_fd, sys.stderr.fileno())
-        os.execvp("pc_grpc_server", path_to_plc_specifications_dir)
+        args = ["pc_grpc_server", path_to_plc_specifications_dir]
+        os.execvp(args[0], args)
     else:
         print "Started PC GRPC Server with pid ", newpid
         return newpid
@@ -38,10 +40,11 @@ def start_plc(path_to_plc_specification_file, is_virtual, log_file_fd):
         os.dup2(log_file_fd, sys.stdout.fileno())
         os.dup2(log_file_fd, sys.stderr.fileno())
         if is_virtual:
-            
-            os.execvp("plc_runner", "-f", path_to_plc_specification_file, "-e")
+            args = ["plc_runner", "-f", path_to_plc_specification_file, "-e"]
+            os.execvp(args[0], args)
         else:
-            os.execvp("plc_runner", "-f", path_to_plc_specification_file)
+            args = ["plc_runner", "-f", path_to_plc_specification_file]
+            os.execvp(args[0], args)
     else:
         print "Started PLC Runner with pid ", newpid
         return newpid
@@ -59,12 +62,13 @@ def start_comm_module(path_to_plc_specification_file, ip_address_to_listen,
             cmd_str = "modbus_comm_module -f %s \
                 -i %s -p %s -r  %s" % (path_to_plc_specification_file,
                     ip_address_to_listen, listen_port, resource_to_attach)
-            
-            os.execvp("tracer", "-c", cmd_str, "-r", rel_cpu_speed, "-n", \
-                n_insns_per_round)
+            args = ["tracer", "-c", cmd_str, "-r", rel_cpu_speed, "-n", \
+                n_insns_per_round]
+            os.execvp(args[0], args)
         else:
-            os.execvp("modbus_comm_module", "-f", path_to_plc_specification_file,
-                "-i", ip_address_to_listen, "-p", listen_port, "-r", resource_to_attach)
+            args = ["modbus_comm_module", "-f", path_to_plc_specification_file, \
+                "-i", ip_address_to_listen, "-p", listen_port, "-r", resource_to_attach]
+            os.execvp(args[0], args)
     else:
         print "Started Modbus comm module with pid ", newpid
         return newpid
@@ -123,7 +127,7 @@ def main(is_virtual=False,
     comm_module_pid = start_comm_module(args.plc_spec_file, \
         args.comm_module_bind_ip, args.comm_module_listen_port, \
         args.comm_module_attached_resource, is_virtual, rel_cpu_speed, \
-        n_insns_per_round, fd3)
+        num_insns_per_round, fd3)
 
 
     # Wait until all processes have started and registered themselves
@@ -131,8 +135,8 @@ def main(is_virtual=False,
 
     total_time_elapsed = 0.0
     while total_time_elapsed <= run_time:
-        emulation.run_for(0.1)
-        total_time_elapsed += 0.1
+        emulation.run_for(0.01)
+        total_time_elapsed += 0.01
 
         if stop == True:
             break
@@ -142,7 +146,18 @@ def main(is_virtual=False,
 
     os.close(fd1)
     os.close(fd2)
-    os.close(fd3) 
+    os.close(fd3)
+
+
+
+    print "Interrupting/Killing all spawned processes !"
+    os.kill(grpc_server_pid, signal.SIGINT)
+    os.kill(plc_pid, signal.SIGINT)
+    os.kill(comm_module_pid, signal.SIGINT)
+
+    print "Emulation finished ! "
+
+
 
 
 if __name__ == "__main__":

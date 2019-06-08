@@ -86,7 +86,7 @@ class PendulumSimulator(PhysicalSystemSim):
         
     
     # Implementation of abstract class method
-    def progress(time_step_size):
+    def progress(self,time_step_size):
         if self.previous_time_delta != 0:
             self.theta_dot = (self.theta_tminus1 
                 - self.theta_tminus2 ) / self.previous_time_delta				
