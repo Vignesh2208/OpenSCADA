@@ -22,7 +22,7 @@ TEST(SFCTestSuite, ConversionSFCTest) {
             + "/src/pc_emulator/tests/insn_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
 
     PCResourceImpl * resource 
         = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
@@ -372,7 +372,7 @@ TEST(SFCTestSuite, NumericSFCTest) {
             + "/src/pc_emulator/tests/insn_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
 
     PCResourceImpl * resource 
         = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
@@ -470,7 +470,7 @@ TEST(SFCTestSuite, SelectionSFCTest) {
             + "/src/pc_emulator/tests/insn_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
 
     PCResourceImpl * resource 
         = (PCResourceImpl*) configuration.RegisteredResources->GetResource(

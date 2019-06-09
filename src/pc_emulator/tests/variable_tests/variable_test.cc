@@ -18,7 +18,7 @@ TEST(VariableTestSuite, ConfigGlobalVariableTest) {
             + "/src/pc_emulator/tests/variable_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
     PCVariable * global_var = configuration.__global_pou_var.get();
 
     
@@ -76,7 +76,7 @@ TEST(VariableTestSuite, ResourcePoUVariableTest) {
             + "/src/pc_emulator/tests/variable_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
     PCVariable * pou_var = configuration.GetPOU("CPU_001.PROGRAM_1");
     PCVariable * global_var = configuration.__global_pou_var.get();
 
@@ -136,7 +136,7 @@ TEST(VariableTestSuite, ConfigComplexDirectlyRepVariableTest) {
             + "/src/pc_emulator/tests/variable_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
     PCVariable * global_var = configuration.__global_pou_var.get();
     ASSERT_TRUE(global_var != nullptr);
     EXPECT_EQ(global_var->GetPtrStoredAtField("complex_global"),
@@ -215,7 +215,7 @@ TEST(VariableTestSuite, AccessCheckTest) {
             + "/src/pc_emulator/tests/variable_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
     
     EXPECT_EQ(Utils::ReadAccessCheck(&configuration, "PROGRAM_1", "input_1"),
                 true);

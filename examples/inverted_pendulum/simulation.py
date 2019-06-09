@@ -33,14 +33,16 @@ def start_grpc_server(path_to_plc_specifications_dir, log_file_fd):
         print "Started PC GRPC Server with pid ", newpid
         return newpid
 
-def start_plc(path_to_plc_specification_file, is_virtual, log_file_fd):
+def start_plc(path_to_plc_specification_file, is_virtual, rel_cpu_speed, 
+    n_insns_per_round, log_file_fd):
 
     newpid = os.fork()
     if newpid == 0:
         os.dup2(log_file_fd, sys.stdout.fileno())
         os.dup2(log_file_fd, sys.stderr.fileno())
-        if is_virtual:
-            args = ["plc_runner", "-f", path_to_plc_specification_file, "-e"]
+        if is_virtual == True:
+            args = ["plc_runner", "-f", path_to_plc_specification_file, "-e", "1",
+            "-n", str(n_insns_per_round), "-s", str(rel_cpu_speed)]
             os.execvp(args[0], args)
         else:
             args = ["plc_runner", "-f", path_to_plc_specification_file]
@@ -59,11 +61,11 @@ def start_comm_module(path_to_plc_specification_file, ip_address_to_listen,
         os.dup2(log_file_fd, sys.stdout.fileno())
         os.dup2(log_file_fd, sys.stderr.fileno())
         if is_virtual:
-            cmd_str = "modbus_comm_module -f %s \
-                -i %s -p %s -r  %s" % (path_to_plc_specification_file,
+            cmd_str = "modbus_comm_module -f %s -i %s -p %s -r  %s" \
+                % (path_to_plc_specification_file,
                     ip_address_to_listen, listen_port, resource_to_attach)
-            args = ["tracer", "-c", cmd_str, "-r", rel_cpu_speed, "-n", \
-                n_insns_per_round]
+            args = ["tracer", "-c", cmd_str, "-r", str(rel_cpu_speed), "-n", \
+                str(n_insns_per_round)]
             os.execvp(args[0], args)
         else:
             args = ["modbus_comm_module", "-f", path_to_plc_specification_file, \
@@ -76,7 +78,7 @@ def start_comm_module(path_to_plc_specification_file, ip_address_to_listen,
 
 def main(is_virtual=False,
         num_dilated_nodes=2,
-        run_time=10, 
+        run_time=5, 
         rel_cpu_speed=1.0,
         num_insns_per_round=1000000):
 
@@ -121,7 +123,8 @@ def main(is_virtual=False,
     grpc_server_pid = start_grpc_server(args.plc_spec_dir, fd1)
 
     print "Starting PLC ..."
-    plc_pid = start_plc(args.plc_spec_file, is_virtual, fd2)
+    plc_pid = start_plc(args.plc_spec_file, is_virtual, rel_cpu_speed, \
+        num_insns_per_round, fd2)
 
     print "Starting Modbus Comm module ..."
     comm_module_pid = start_comm_module(args.plc_spec_file, \
@@ -137,7 +140,8 @@ def main(is_virtual=False,
     while total_time_elapsed <= run_time:
         emulation.run_for(0.01)
         total_time_elapsed += 0.01
-
+        if is_virtual:
+            print "Time Elapsed: ", total_time_elapsed
         if stop == True:
             break
 
@@ -161,4 +165,4 @@ def main(is_virtual=False,
 
 
 if __name__ == "__main__":
-	main()
+	main(is_virtual=True)

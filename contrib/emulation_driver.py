@@ -2,6 +2,7 @@ import sys
 import os
 import time
 import kronos_functions as kf
+import sys
 
 class EmulationDriver(object):
 
@@ -17,14 +18,19 @@ class EmulationDriver(object):
         assert number_nodes > 0 
         if self.is_virtual == True:
             print "Initializing Kronos ..."
-            kf.initializeExp(1)
+            if kf.initializeExp(1) < 0 :
+                print "Kronos initialization failed ! Make sure you are running\
+                    the dilated kernel and kronos module is loaded !"
+                sys.exit(0)
 
         self.physical_system_sim_driver = physical_system_sim_driver
 
     def wait_for_initialization(self):
         print "Waiting for all nodes to register ..."
         if self.is_virtual == True:
-            kf.synchronizeAndFreeze(self.num_tracers)
+            while kf.synchronizeAndFreeze(self.num_tracers) <= 0:
+                print "Kronos >> Synchronize and Freeze failed. Retrying in 1 sec"
+                time.sleep(1)
         print "Resuming ..."
 
     def progress_for(self, time_step_secs):
@@ -38,7 +44,8 @@ class EmulationDriver(object):
 
             if n_rounds <= 0 :
                 n_rounds = 1
-            kf.progress_n_rounds(n_rounds)
+            kf.progress_n_rounds(int(n_rounds))
+            self.n_progressed_rounds += int(n_rounds)
         else:
             pass
             #time.sleep(time_step_secs)

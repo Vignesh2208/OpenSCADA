@@ -137,7 +137,10 @@ void ResourceManager::ExecuteResourceManager() {
         auto ResourceThread = LaunchResource();
 
 
-        auto per_round_advance_ns = 10000.0;
+        auto per_round_advance_ns 
+            = (float)__AssociatedResource->__configuration->per_round_inc_ns;
+        
+        
         auto nxt_round_inc = per_round_advance_ns;
         auto curr_time = 0.0;
         long run_time_secs 
@@ -153,7 +156,8 @@ void ResourceManager::ExecuteResourceManager() {
             << __AssociatedResource->__ResourceName 
             << std::endl;
 
-        addToExp_child(1.0, (int)per_round_advance_ns, thread_pid);
+        addToExp_child(1.0, 
+            (int)per_round_advance_ns, thread_pid);
         GetNxtCommand(nxt_command);
         while (true) {
             // get each round params from kronos, send it to Resource thread

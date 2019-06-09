@@ -64,21 +64,46 @@ int main(int argc, char **argv) {
     InputParser input(argc, argv);
     bool enable_kronos = false;
 
+    long num_insns_per_round = 1000000;
+    long per_round_inc_ns;
+    float relative_cpu_speed = 1.0;
+
     if (!input.cmdOptionExists("-f")) {
         std::cout << "ERROR: Missing specification file! " << std::endl;
         std::cout << "Usage: plc_runner -f <path_to_system_spec prototxt file>"
-                " [-e ] "
+                " [-e <1 or 0 to enable/disable kronos>] [-n <num_insns_per_round>] "
+                " [-s <relative cpu speed>]"
                 << std::endl;
         exit(0);
     }
 
     if (input.cmdOptionExists("-e")) {
-        enable_kronos = true;
+        string is_virtual = input.getCmdOption("-e");
+
+        if (is_virtual == "1") {
+            std::cout << "Starting PLC under virtual time ..." << std::endl;
+            enable_kronos = true;
+        }
+        
     }
+
+
+    if (input.cmdOptionExists("-n")) {
+        num_insns_per_round = std::stol(input.getCmdOption("-n"));        
+    }
+
+    if (input.cmdOptionExists("-s")) {
+        relative_cpu_speed = std::stof(input.getCmdOption("-s"));
+        if (relative_cpu_speed <= 0.0) 
+            relative_cpu_speed = 1.0;        
+    }
+
+    per_round_inc_ns = num_insns_per_round /  relative_cpu_speed;
 
     string SpecFile =  input.getCmdOption("-f");
 
-    configuration = new PCConfigurationImpl(SpecFile, enable_kronos);
+    configuration = new PCConfigurationImpl(SpecFile, enable_kronos,
+            per_round_inc_ns);
 
     std::cout << "########################################" << std::endl;
     std::cout << "Starting PLC Resources ...."  << std::endl;

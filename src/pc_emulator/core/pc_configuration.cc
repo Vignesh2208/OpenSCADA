@@ -37,7 +37,7 @@ using std::to_string;
 
 
 PCConfigurationImpl::PCConfigurationImpl(string ConfigurationPath,
-        bool enable_kronos) {
+        bool enable_kronos, long per_round_inc_ns) {
 
 
        Utils::GenerateFullSpecification(ConfigurationPath, __specification);
@@ -46,7 +46,8 @@ PCConfigurationImpl::PCConfigurationImpl(string ConfigurationPath,
         __ConfigurationPath = ConfigurationPath;
 
         stop = false;
-        enable_kronos = enable_kronos;
+        this->enable_kronos = enable_kronos;
+        this->per_round_inc_ns = per_round_inc_ns;
         
         int logLevel = LogLevels::LOG_INFO;
         string logFilePath = "";
@@ -589,43 +590,6 @@ void PCConfigurationImpl::RunPLC() {
 
     
     LaunchPLC();
-    auto n_tracers = LaunchedResources.size();
-
-    if (enable_kronos == true) {
-        int n_inc_per_round_us = 10;
-        int run_time_us = __specification.run_time_secs()*1000000;
-        double curr_time = 0.0;
-        int total_rounds = run_time_us/n_inc_per_round_us;
-        PCLogger->LogMessage(LogLevels::LOG_INFO,
-         "######## Initializing Kronos ##########");
-        initializeExp(1);
-
-        PCLogger->LogMessage(LogLevels::LOG_INFO,
-         "Synchronizing and Freezing ....");
-        while (synchronizeAndFreeze(n_tracers) < 0) {
-            PCLogger->LogMessage(LogLevels::LOG_INFO,
-             "Sync and Freeze Failed. Retrying in 1 sec");
-            usleep(1000000);
-        }
-
-        PCLogger->LogMessage(LogLevels::LOG_INFO,
-            "Synchronizing and Freezing: SUCCESS");
-
-        for(int i = 0; i < total_rounds; i++) {
-            progress_n_rounds(1);
-
-            if (i != 0 && i % 10000 == 0) {
-                curr_time += 0.1;
-                std::cout << "Curr Time: " << curr_time << std::endl;
-            }
-            
-        }
-
-        PCLogger->LogMessage(LogLevels::LOG_INFO,
-            "Stopping Kronos experiment ...");
-        stopExp();
-        
-    }
     WaitForCompletion();
 }
 

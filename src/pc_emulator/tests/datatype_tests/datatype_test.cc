@@ -19,7 +19,7 @@ TEST(DataTypeTestSuite, BasicDataTypeTest) {
             + "/src/pc_emulator/tests/datatype_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
     auto int_type_def = configuration.LookupDataType("INT_TYPE_DEF");
     auto int_1d = configuration.LookupDataType("INT_1DARR_TYPE_DEF");
     auto int_2d = configuration.LookupDataType("INT_2DARR_TYPE_DEF");
@@ -112,7 +112,7 @@ TEST(DataTypeTestSuite, ComplexDataTypeTest1) {
             + "/src/pc_emulator/tests/datatype_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
     auto complex_1 = configuration.LookupDataType("COMPLEX_STRUCT_1");
     ASSERT_TRUE(complex_1 != nullptr);
     EXPECT_EQ(complex_1->__AliasName, "COMPLEX_STRUCT_1");
@@ -218,7 +218,7 @@ TEST(DataTypeTestSuite, ComplexDataTypeTest2) {
             + "/src/pc_emulator/tests/datatype_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
     auto complex_1 = configuration.LookupDataType("COMPLEX_STRUCT_2");
     ASSERT_TRUE(complex_1 != nullptr);
     EXPECT_EQ(complex_1->__AliasName, "COMPLEX_STRUCT_2");
@@ -341,7 +341,7 @@ TEST(DataTypeTestSuite, ComplexDataTypeTest3) {
             + "/src/pc_emulator/tests/datatype_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
     auto complex_3 = configuration.LookupDataType("COMPLEX_STRUCT_3");
     ASSERT_TRUE(complex_3 != nullptr);
     EXPECT_EQ(complex_3->__AliasName, "COMPLEX_STRUCT_3");
@@ -503,7 +503,7 @@ TEST(DataTypeTestSuite, GlobalVariablesTest) {
             + "/src/pc_emulator/tests/datatype_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
     auto global = configuration.LookupDataType("__CONFIG_GLOBAL__");
     ASSERT_TRUE(global != nullptr);
     EXPECT_EQ(global->__DataTypeCategory, DataTypeCategory::POU);

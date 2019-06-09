@@ -53,6 +53,10 @@ namespace pc_emulator {
 
             bool enable_kronos;
 
+            float rel_cpu_speed;
+
+            long  per_round_inc_ns;
+
             //! Returns a variable pointing to the subfield of a global/directly rep field
             PCVariable * GetExternVariable(string NestedFieldName);
 
@@ -88,7 +92,8 @@ namespace pc_emulator {
                     or not
             */
             PCConfigurationImpl(string ConfigurationPath, 
-                bool enable_kronos=false);
+                bool enable_kronos,
+                long per_round_inc_ns=1000000);
 
 
             //! Given RAM memory location details, returns a PCVariable pointing to that location

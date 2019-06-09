@@ -28,7 +28,7 @@ TEST(ExecutionTestSuite, InsnCodeBodyProcessingTest) {
             + "/src/pc_emulator/tests/execution_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
 
     PCResourceImpl * resource 
         = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
@@ -253,7 +253,7 @@ TEST(ExecutionTestSuite, R_TRIG_Execution_Test) {
             + "/src/pc_emulator/tests/execution_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
 
     PCResourceImpl * resource 
         = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
@@ -299,7 +299,7 @@ TEST(ExecutionTestSuite, F_TRIG_Execution_Test) {
             + "/src/pc_emulator/tests/execution_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
 
     PCResourceImpl * resource 
         = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
@@ -363,7 +363,7 @@ TEST(ExecutionTestSuite, SR_FlipFlop_Execution_Test) {
             + "/src/pc_emulator/tests/execution_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
 
     PCResourceImpl * resource 
         = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
@@ -427,7 +427,7 @@ TEST(ExecutionTestSuite, RS_FlipFlop_Execution_Test) {
             + "/src/pc_emulator/tests/execution_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
 
     PCResourceImpl * resource 
         = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
@@ -498,7 +498,7 @@ TEST(ExecutionTestSuite, CTU_Counter_Execution_Test) {
             + "/src/pc_emulator/tests/execution_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
 
     PCResourceImpl * resource 
         = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
@@ -634,7 +634,7 @@ TEST(ExecutionTestSuite, CTD_Counter_Execution_Test) {
             + "/src/pc_emulator/tests/execution_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
 
     PCResourceImpl * resource 
         = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
@@ -772,7 +772,7 @@ TEST(ExecutionTestSuite, CTUD_Counter_Execution_Test) {
             + "/src/pc_emulator/tests/execution_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
 
     PCResourceImpl * resource 
         = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
@@ -1018,7 +1018,7 @@ TEST(ExecutionTestSuite, TON_Timer_Execution_Test) {
             + "/src/pc_emulator/tests/execution_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
 
     PCResourceImpl * resource 
         = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
@@ -1091,7 +1091,7 @@ TEST(ExecutionTestSuite, TOF_Timer_Execution_Test) {
             + "/src/pc_emulator/tests/execution_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
 
     PCResourceImpl * resource 
         = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
@@ -1164,7 +1164,7 @@ TEST(ExecutionTestSuite, TP_Timer_Execution_Test) {
             + "/src/pc_emulator/tests/execution_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
 
     PCResourceImpl * resource 
         = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
@@ -1268,7 +1268,7 @@ TEST(ExecutionTestSuite, Program_Execution_Test) {
             + "/src/pc_emulator/tests/execution_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
 
     PCResourceImpl * resource 
         = (PCResourceImpl*) configuration.RegisteredResources->GetResource(

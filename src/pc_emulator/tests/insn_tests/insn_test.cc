@@ -22,10 +22,10 @@ TEST(InsnTestSuite, LD_ST_InsnTest) {
             + "/src/pc_emulator/tests/insn_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
 
     // For testing if mmap works
-    PCConfigurationImpl configuration2(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration2(TestDir + "/input.prototxt", false);
 
     PCResourceImpl * resource 
         = (PCResourceImpl*) configuration.RegisteredResources->GetResource(
@@ -306,10 +306,10 @@ TEST(InsnTestSuite, LD_ST_ComplexDataTypeTest) {
             + "/src/pc_emulator/tests/insn_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
 
     // For testing if mmap works
-    PCConfigurationImpl configuration2(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration2(TestDir + "/input.prototxt", false);
 
     PCResourceImpl * resource 
         = (PCResourceImpl *) configuration.RegisteredResources->GetResource(
@@ -420,7 +420,7 @@ TEST(InsnTestSuite,ADD_SUB_InsnTest) {
             + "/src/pc_emulator/tests/insn_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
 
     PCResourceImpl * resource 
         = (PCResourceImpl *) configuration.RegisteredResources->GetResource(
@@ -631,7 +631,7 @@ TEST(InsnTestSuite, MUL_DIV_InsnTest) {
             + "/src/pc_emulator/tests/insn_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
 
     PCResourceImpl * resource 
         = (PCResourceImpl *) configuration.RegisteredResources->GetResource(
@@ -749,7 +749,7 @@ TEST(InsnTestSuite,LE_LT_InsnTest) {
             + "/src/pc_emulator/tests/insn_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
 
     PCResourceImpl * resource 
         = (PCResourceImpl *) configuration.RegisteredResources->GetResource(
@@ -912,7 +912,7 @@ TEST(InsnTestSuite,GE_GT_InsnTest) {
             + "/src/pc_emulator/tests/insn_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
 
     PCResourceImpl * resource 
         = (PCResourceImpl *) configuration.RegisteredResources->GetResource(
@@ -1095,7 +1095,7 @@ TEST(InsnTestSuite,EQ_NE_InsnTest) {
             + "/src/pc_emulator/tests/insn_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
 
     PCResourceImpl * resource 
         = (PCResourceImpl *) configuration.RegisteredResources->GetResource(
@@ -1278,7 +1278,7 @@ TEST(InsnTestSuite, BitwiseOps_InsnTest) {
             + "/src/pc_emulator/tests/insn_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
 
     PCResourceImpl * resource 
         = (PCResourceImpl *) configuration.RegisteredResources->GetResource(

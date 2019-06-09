@@ -22,7 +22,7 @@ TEST(AccessVariableTestSuite, SimpleAccessVariableTest) {
             + "/src/pc_emulator/tests/access_variable_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
     PCVariable * access_var = configuration.__access_pou_var.get();
 
     ASSERT_TRUE(access_var != nullptr);
@@ -257,7 +257,7 @@ TEST(AccessVariableTestSuite, ExtConfigInterfaceTest) {
             + "/src/pc_emulator/tests/access_variable_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
     PCConfigurationInterface config_ext_interface(TestDir + "/input.prototxt");
 
         
@@ -501,7 +501,7 @@ TEST(AccessVariableTestSuite, CommModuleInterfaceTest) {
             + "/src/pc_emulator/tests/access_variable_tests";
 
     std::cout << "Config File: " << TestDir + "/input.prototxt" << std::endl;
-    PCConfigurationImpl configuration(TestDir + "/input.prototxt");
+    PCConfigurationImpl configuration(TestDir + "/input.prototxt", false);
     CommModule communication_module(TestDir + "/input.prototxt");
 
     auto VarContainer = communication_module.GetVariableContainer("GLOBAL_COMPLEX_VAR[1]."
