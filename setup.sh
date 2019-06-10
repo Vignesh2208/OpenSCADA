@@ -26,6 +26,10 @@ if [ "$1" == "install" ]; then
     bazel build :plc_runner
     sudo cp bazel-bin/plc_runner /usr/bin
 
+    echo "Building Example HMI ..."
+    bazel build :example_hmi
+    sudo cp bazel-bin/example_hmi /usr/bin
+
     echo "Build and Install finished ..."
 else
     if [ "$1" == "uninstall" ]; then
@@ -34,6 +38,7 @@ else
         rm /usr/bin/pc_grpc_server || true
         rm /usr/bin/modbus_comm_module || true
         rm /usr/bin/plc_runner || true
+        rm /usr/bin/example_hmi || true
 
         cd contrib/libmodbus && make uninstall
         cd ../../ 

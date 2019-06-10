@@ -127,7 +127,7 @@ cc_binary(
 cc_binary(
     name="example_hmi",
     srcs = [
-        "examples/hmi/hmi_client.cc"
+        "examples/inverted_pendulum/hmi.cc"
     ],
     deps = ["@boost//:algorithm", "@modbuslib//:modbusapi"], 
     copts = ["-Iexternal/gtest/include -I/usr/local/include -fpermissive -Wno-reorder"],

@@ -123,8 +123,8 @@ int main(int argc, char **argv) {
     }
     mb_mapping.nb_bits = comm_module->GetRAMMemSize()*8;
     mb_mapping.nb_input_bits = comm_module->GetInputMemSize(resource_name)*8;
-    mb_mapping.nb_input_registers = comm_module->GetInputMemSize(resource_name);
-    mb_mapping.nb_registers = comm_module->GetRAMMemSize();
+    mb_mapping.nb_input_registers = comm_module->GetInputMemSize(resource_name)/2;
+    mb_mapping.nb_registers = comm_module->GetRAMMemSize()/2;
     mb_mapping.start_bits = 0;
     mb_mapping.start_input_bits = 0;
     mb_mapping.start_input_registers = 0;
