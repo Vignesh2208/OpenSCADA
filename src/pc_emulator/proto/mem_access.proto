@@ -3,40 +3,69 @@ syntax = "proto2";
 
 package mem_access;
 
+// This service is exposed by a GRPC server. The GRPC server would attach
+// to all spawned PLCs and provide an interface to access each PLC's input
+// and output memory values
 service AccessService {
 
+  // This rpc call can be leveraged by a sensor implementation to set values
+  // of a PLC's input memory
   rpc SetSensorInput(SensorInput) 
     returns (Status) {}
 
+  // This rpc call can be leveraged by an actuator implementation to get values
+  // of a PLC's output memory
   rpc GetActuatorOutput(ActuatorOutput) 
     returns (Result) {}
 }
 
-
+// SensorInput proto definition. Used by a sensor to set PLC's input memory
+// values.
 message SensorInput {
-    required string PLC_ID = 1;
-    required string ResourceName = 2;
-    required int64 MemType = 3;
-    required int64 ByteOffset = 4;
-    required int64 BitOffset = 5;
-    required string VariableDataTypeName = 6;
+    required string PLC_ID = 1; // ID of the PLC
+    required string ResourceName = 2; // CPU Name inside the PLC
+    required int64 MemType = 3; // MemType (should typically be 0 - to denote Input Memory)
+    required int64 ByteOffset = 4; // Byte Number in the specified memory
+    required int64 BitOffset = 5; // Bit offset inside the byte. Ignored unless
+                                  // variable datatype is BOOL.
+
+    // Variable data type. For instance if the variable data type is INT, 
+    // then the memory location referred to by the ByteOffset is interpreted
+    // as an INT pointer. The value passed in the ValueToSet field is stored
+    // over 2 bytes (since sizeof(INT) is 2 bytes) starting at ByteOffset.
+    // Only elementary data type names specified in configuration.proto are allowed
+    required string VariableDataTypeName = 6; 
+
+    // ValueToSet. Interpreted based on the specifed Variable data type name                             
     required string ValueToSet = 7;
 }
 
+// ActuatorOutput proto definition. Used by an actuator to get PLC's output
+// memory values.
 message ActuatorOutput {
-    required string PLC_ID = 1;
-    required string ResourceName = 2;
-    required int64 MemType = 3;
-    required int64 ByteOffset = 4;
-    required int64 BitOffset = 5;
+    required string PLC_ID = 1; // ID of the PLC
+    required string ResourceName = 2; // CPU Name inside the PLC
+    required int64 MemType = 3; // MemType (should typically be 2 - to denote Output Memory)
+    required int64 ByteOffset = 4;  // Byte Number in the specified memory
+    required int64 BitOffset = 5;   // Bit offset inside the byte. Ignored unless
+                                    // variable datatype is BOOL.
+
+    // Variable data type. For instance if the variable data type is INT, 
+    // then the memory location referred to by the ByteOffset is interpreted
+    // as an INT pointer. The content of memory location over 2 bytes 
+    // (since sizeof(INT) is 2 bytes) starting at ByteOffset is returned
+    // Only elementary data type names specified in configuration.proto are allowed
     required string VariableDataTypeName = 6;
 }
 
 message Status {
+    // status is either set as "SUCCESS" or "NOT_FOUND"
     required string status = 1;
 }
 
 message Result {
+    // Returned value. Is set to "NONE" is status is "NOT_FOUND"
     required string value = 1;
+    // status is either set to "SUCCESS" or "NOT_FOUND"
     required string status = 2;
 }

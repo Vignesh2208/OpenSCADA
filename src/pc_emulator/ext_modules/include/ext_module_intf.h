@@ -162,27 +162,46 @@ namespace pc_emulator {
             //!Cleans up the configuration interface object
             void Cleanup() { __ConfigInterface.Cleanup();};
 
-
+            //! Returns pointer to PLC's RAM Memory
             uint8_t * GetPtrToRAMMemory() { 
                 return __ConfigInterface.GetPtrToRAMMemory();
             };
 
+            //! Returns pointer to underlying Input memory of a CPU
+            /*!
+                \param ResourceName: Name of the CPU whose input memory pointer
+                    is to be retrieved
+            */
             uint8_t * GetPtrToInputMemory(string ResourceName) {
                 return __ConfigInterface.GetPtrToInputMemory(ResourceName);
             };
 
+            //! Returns pointer to underlying Output memory of a CPU
+            /*!
+                \param ResourceName: Name of the CPU whose output memory pointer
+                    is to be retrieved
+            */
             uint8_t * GetPtrToOutputMemory(string ResourceName) {
                 return __ConfigInterface.GetPtrToOutputMemory(ResourceName);
             };   
 
+            //! Returns the size of the PLC's RAM memory
             int GetRAMMemSize() {
                 return __ConfigInterface.GetRAMMemSize();
             };
 
+            //! Returns the size of a CPU's input memory
+            /*!
+                \param ResourceName: Name of the CPU
+            */
             int GetInputMemSize(string ResourceName) {
                 return __ConfigInterface.GetInputMemSize(ResourceName);
             };
 
+            //! Returns the size of a CPU's output memory
+            /*!
+                \param ResourceName: Name of the CPU
+            */
             int GetOutputMemSize(string ResourceName) {
                 return __ConfigInterface.GetOutputMemSize(ResourceName);
             };

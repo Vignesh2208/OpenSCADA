@@ -1,3 +1,8 @@
+# Inbuilt SFB definitions. For reference/details about each SFB's
+# functionality see docs/reference. This file contains the implementation
+# of all SFBs described in the book
+
+# SR Flip flop
 system_pou {
     name: "SR"
     pou_type: FB
@@ -25,6 +30,7 @@ system_pou {
     }
 }
 
+# RS flip flop
 system_pou {
     name: "RS"
     pou_type: FB
@@ -52,6 +58,7 @@ system_pou {
     }
 }
 
+# Rising edge detection
 system_pou {
     name: "R_TRIG"
     pou_type: FB
@@ -81,6 +88,7 @@ system_pou {
     }
 }
 
+# Falling edge detection
 system_pou {
     name: "F_TRIG"
     pou_type: FB
@@ -110,6 +118,7 @@ system_pou {
     }
 }
 
+# Up Counter
 system_pou {
     name: "CTU"
     pou_type: FB
@@ -161,6 +170,7 @@ system_pou {
     }
 }
 
+# Down counter
 system_pou {
     name: "CTD"
     pou_type: FB
@@ -211,6 +221,7 @@ system_pou {
     }
 }
 
+# Up-down counter
 system_pou {
     name: "CTUD"
     pou_type: FB
@@ -309,6 +320,7 @@ system_pou {
     }
 }
 
+# Trigger Pulse
 system_pou {
     name: "TP"
     pou_type: FB
@@ -354,6 +366,7 @@ system_pou {
     }
 }
 
+# On- Timer
 system_pou {
     name: "TON"
     pou_type: FB
@@ -394,6 +407,7 @@ system_pou {
     }
 }
 
+# Off- Timer
 system_pou {
     name: "TOF"
     pou_type: FB

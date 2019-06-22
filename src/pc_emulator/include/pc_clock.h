@@ -47,6 +47,7 @@ namespace pc_emulator {
             //!Increments current time by the specified amount
             void UpdateCurrentTime(double inc_amount);
 
+            //! Update current time depending on the executed function.
             void UpdateCurrentTime(string ExecutedFn);
 
             //! Sleep for specified duration in microseconds

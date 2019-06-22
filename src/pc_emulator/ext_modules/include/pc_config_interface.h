@@ -89,17 +89,37 @@ namespace pc_emulator {
             //! Cleans up all resources and frees allocated memory
             void Cleanup(); 
 
-
+            //! Returns pointer to PLC's RAM Memory
             uint8_t * GetPtrToRAMMemory();
 
+            //! Returns pointer to underlying Input memory of a CPU
+            /*!
+                \param ResourceName: Name of the CPU whose input memory pointer
+                    is to be retrieved
+            */
             uint8_t * GetPtrToInputMemory(string ResourceName);
 
+
+            //! Returns pointer to underlying Output memory of a CPU
+            /*!
+                \param ResourceName: Name of the CPU whose output memory pointer
+                    is to be retrieved
+            */
             uint8_t * GetPtrToOutputMemory(string ResourceName);   
 
+            //! Returns the size of the PLC's RAM memory
             int GetRAMMemSize();
 
+            //! Returns the size of a CPU's input memory
+            /*!
+                \param ResourceName: Name of the CPU
+            */
             int GetInputMemSize(string ResourceName);
 
+            //! Returns the size of a CPU's output memory
+            /*!
+                \param ResourceName: Name of the CPU
+            */
             int GetOutputMemSize(string ResourceName);
 
             ~PCConfigurationInterface() {};

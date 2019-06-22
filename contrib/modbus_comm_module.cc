@@ -1,5 +1,14 @@
 
-
+/*
+ * A binary which starts a Modbus server and attaches the server to a specific
+ * CPU of a specific PLC. A modbus client or hmi can then query this server
+ * to get /set values. The Modbus server uses the CommModule interface and 
+ * can read from the CPU's input memory and write to the PLC's RAM memory
+ * Usage:
+ *  modbus_comm_module -f <path_plc_spec_prototxt> \
+                       -i <ip_address_to_listen on> \
+                       -p <listen_port> -r <cpu_resource_name>
+ */
 #include <iostream>
 #include <cstdint>
 #include <cstring>

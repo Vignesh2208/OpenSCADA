@@ -1,4 +1,16 @@
 
+/*
+ * A binary which accepts a PLC specification prototx file, and launches and
+ * runs the underlying PLC. Optionally it may also be instructed to run the
+ * PLC in virtual time by registering with Kronos.
+ * Usage: plc_runner [Options] -f <path_to_system_spec prototx file> 
+ * 
+ *        Optional options:
+ *              -e: 1 or 0 to enable/disable kronos"
+                -n: num_insns_per_round - only valid if Kronos is enabled
+                -s: relative cpu speed - only valid if Kronos is enabled
+ * 
+*/
 #include <iostream> 
 #include <csignal> 
 #include <ctime>
@@ -71,8 +83,9 @@ int main(int argc, char **argv) {
     if (!input.cmdOptionExists("-f")) {
         std::cout << "ERROR: Missing specification file! " << std::endl;
         std::cout << "Usage: plc_runner -f <path_to_system_spec prototxt file>"
-                " [-e <1 or 0 to enable/disable kronos>] [-n <num_insns_per_round>] "
-                " [-s <relative cpu speed>]"
+                " [-e <1 or 0 to enable/disable kronos>] "
+                " [-n <num_insns_per_round - only valid if Kronos is enabled >] "
+                " [-s <relative cpu speed - only valid if Kronos is enabled>]"
                 << std::endl;
         exit(0);
     }

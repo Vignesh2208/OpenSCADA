@@ -19,7 +19,7 @@ typedef unsigned long u32;
 
 #define TRACER_RESULTS 'J'
 
-// Synchronization Functions **********************
+//! Synchronization Functions 
 int GetNxtCommand(string& result);
 
 

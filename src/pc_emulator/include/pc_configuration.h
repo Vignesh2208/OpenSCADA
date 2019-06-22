@@ -126,10 +126,13 @@ namespace pc_emulator {
                         int BitOffset, string VariableDataTypeName);
 
             
+            //! Launches a PLC and waits for completion
             void RunPLC();
 
+            //! Launch a PLC
             void LaunchPLC();
 
+            //! Wait for the specified run time to elapse
             void WaitForCompletion();
 
             //! Cleans up all resources and frees allocated memory

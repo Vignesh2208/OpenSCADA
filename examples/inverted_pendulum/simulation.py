@@ -133,9 +133,9 @@ def main(is_virtual=False,
      
     pendulum_sim = PendulumSimulator()
 
-    emulation = EmulationDriver(number_nodes=num_dilated_nodes, is_virtual=is_virtual,
-        n_insns_per_round=num_insns_per_round, rel_cpu_speed=rel_cpu_speed,
-        physical_system_sim_driver=pendulum_sim)
+    emulation = EmulationDriver(number_dilated_nodes=num_dilated_nodes, 
+        is_virtual=is_virtual, n_insns_per_round=num_insns_per_round, 
+        rel_cpu_speed=rel_cpu_speed, physical_system_sim_driver=pendulum_sim)
 
     # Start pc_grpc_server, all PLCs and all communication modules here 
     print "Starting PC GRPC Server ..."
