@@ -238,4 +238,93 @@ hardware_spec {
     }
 }
 
+datatype_declaration {
+    name: "INT_TYPE_DEF"
+    datatype_category: INT
+    datatype_spec {
+        initial_value: "10"
+    }
+}
+
+datatype_declaration {
+    name: "INT_1DARR_TYPE_DEF"
+    datatype_category: INT
+    datatype_spec {
+        initial_value: "{-1,0,1,2,3,4,5,6,7,8}"
+        dimension_1:  10
+    }   
+}
+
+datatype_declaration {
+    name: "INT_2DARR_TYPE_DEF"
+    datatype_category: INT
+    datatype_spec {
+        initial_value: "{{0,1},{2,3}}"
+        dimension_1:  2
+        dimension_2: 2
+    }   
+}
+
+datatype_declaration {
+    name: "COMPLEX_STRUCT"
+    datatype_category: DERIVED
+    datatype_field {
+        field_name: "string_field"
+        field_datatype_name: "STRING"
+    }
+    datatype_field {
+        field_name: "int_field"
+        field_datatype_name: "INT_TYPE_DEF"
+    }
+    datatype_field {
+        field_name: "real_field"
+        field_datatype_name: "REAL"
+        initial_value: "0.1"
+        range_min: -10
+        range_max: 10
+    }
+    datatype_field {
+        field_name: "oned_arr_field"
+        field_datatype_name: "INT_1DARR_TYPE_DEF"
+    }
+    datatype_field {
+        field_name: "twod_arr_field"
+        field_datatype_name: "INT_2DARR_TYPE_DEF"
+    }
+}
+
+var_global {
+    name: "__CONFIG_GLOBAL__"
+    datatype_field {
+        field_name: "global_bool_var"
+        field_datatype_name: "BOOL"
+        intf_type : VAR_EXPLICIT_STORAGE
+        field_storage_spec {
+            mem_type: RAM_MEM
+            byte_offset: 3
+            bit_offset: 1
+        }
+    }
+    datatype_field {
+        field_name: "global_int_var"
+        field_datatype_name: "INT"
+        intf_type : VAR_EXPLICIT_STORAGE
+        field_storage_spec {
+            full_storage_spec: "%MW10"
+        }
+    }
+    datatype_field {
+        field_name: "start_int"
+        field_datatype_name: "INT_TYPE_DEF"
+    }
+    datatype_field {
+        field_name: "complex_global"
+        field_datatype_name: "COMPLEX_STRUCT"
+        intf_type: VAR_EXPLICIT_STORAGE
+        field_storage_spec {
+            full_storage_spec: "%MW30"
+        }
+    }
+}
+
 resource_file_path: "/home/moses/OpenSCADA/examples/inverted_pendulum/CPU_001.prototxt"
