@@ -549,3 +549,63 @@ OpenSCADA ships with following System Function Blocks (SFBs). For further detail
 	CTU		CTD		CTUD		TP
 	TON		TOFF				
 	=============	==============	=============	==============
+
+Tasks
+^^^^^
+
+POUs merely contain the calling interface and the logic to be executed upon invocation. Tasks specify conditions underwhich a POU is invoked. There are type types of tasks:
+
+* **Interval Tasks**: Interval Tasks are executed periodically at a specified period. In OpenSCADA, each CPU can have atmost one associated interval task. Interval tasks are specified using the **interval_task** field in Resource Specification. The following example defines an interval_task called CYCLIC_TASK which has a period of 10ms::
+
+          interval_task {
+                task_name: "CYCLIC_TASK"
+                priority: 1
+                interval_task_params {
+                        interval_ms: 10
+                }
+          }
+
+
+* **Interrupt Tasks**: Interrupt Tasks are configured with a boolean trigger variable which could be a PLC level global variable or a resource level global variable. Interrupt tasks are invoked when the trigger variable goes from FALSE to TRUE i.e during a positive transition. In OpenSCADA, each CPU can have multiple associated interrupt tasks and interrupt tasks always have a higher priority over interval tasks and can pre-empt any currently running interval task. If multiple interrupt tasks become simultaneously active, they are executed in the order of their priority. The trigger condition is checked after each instruction execution. The following example defines an interrupt_task called INTERRUPT_TASK which is triggered by "global_bool_var" (which is global variable) defined in System Specification::
+
+          interrupt_task {
+                task_name: "INTERRUPT_TASK"
+                priority: 1
+                interrupt_task_params {
+                        trigger_variable_field: "global_bool_var"
+                }
+          }
+
+
+Attaching POUs to Tasks
+-----------------------
+
+Task definition by itself does not specify which POUs are attached to a task. In OpenSCADA, POUs of type FBs and PROGRAMS can be attached to Tasks using the **programs** field of the Resource Specification. It is a message of type ProgramSpecification described in `configuration.proto <https://github.com/Vignesh2208/OpenSCADA/tree/master/src/pc_emulator/proto/configuration.proto/>`_. Each programs field defines a mapping between a POU of interest and a task of interest. Multiple POUs can be attached to the same task. A separate programs field is used for each attachement. In this example the POU "PID_CONTROL" is attached with the task "CYCLIC_TASK". Thus the program "PID_CONTROL" gets invoked every 10ms.::
+
+	programs {
+	    program_name: "PID_CONTROL"
+	    pou_variable_type: "PID_CONTROL"
+	    task_name: "CYCLIC_TASK"
+	    initialization_maps {
+		pou_variable_field_name: "dummy_in"
+		mapped_variable_field_name: "start_int"
+	    }
+	    initialization_maps {
+		pou_variable_field_name: "dummy_out"
+		mapped_variable_field_name: "global_int_var"
+	    }
+	}
+
+
+Arguments to each invocation of the POU can be passed through initialization_maps (a subfield of the ProgramSpecification message). Initialization maps can be used to initialize the POUs input/inout variables as well as specify where output variables could be stored after the invocation. In this example, the program "PID_CONTROL"'s input variable "dummy_in" at the start of every invocation is assigned the value of the global variable "start_int" (which was specified in the System specification i.e, in the previous section). At the end of the invocation, the value of the output variable of the PROGRAM called "dummy_out" is copied to "global_int_var" (which was created in the previous section as a PLC level global variable). It must be noted that the mapped_variable_field_name for an VAR_INPUT variable could also be an immediate value. For instance in the above example, if "dummy_in" needs to be initialized with 10 for every invocation, the initialization map could be modified to::
+
+	    initialization_maps {
+		pou_variable_field_name: "dummy_in"
+		mapped_variable_field_name: "10"
+	    }
+
+
+
+
+
+

@@ -11,8 +11,6 @@ User Guide
    il_programming
    running_plc
    plc_io
-   building_sensors
-   building_actuators
    plc_communication
    building_physical_simulations
    co_simulation

@@ -17,7 +17,7 @@
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Advanced Topics" href="advanced_features.html" />
+    <link rel="next" title="Advanced Topics" href="advanced_topics.html" />
     <link rel="prev" title="Resource Specification" href="resource_specification.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -771,6 +771,60 @@
 </div></blockquote>
 </div>
 </div>
+<div class="section" id="tasks">
+<h2>Tasks<a class="headerlink" href="#tasks" title="Permalink to this headline">¶</a></h2>
+<p>POUs merely contain the calling interface and the logic to be executed upon invocation. Tasks specify conditions underwhich a POU is invoked. There are type types of tasks:</p>
+<ul>
+<li><p class="first"><strong>Interval Tasks</strong>: Interval Tasks are executed periodically at a specified period. In OpenSCADA, each CPU can have atmost one associated interval task. Interval tasks are specified using the <strong>interval_task</strong> field in Resource Specification. The following example defines an interval_task called CYCLIC_TASK which has a period of 10ms:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">interval_task</span> <span class="p">{</span>
+      <span class="n">task_name</span><span class="p">:</span> <span class="s2">&quot;CYCLIC_TASK&quot;</span>
+      <span class="n">priority</span><span class="p">:</span> <span class="mi">1</span>
+      <span class="n">interval_task_params</span> <span class="p">{</span>
+              <span class="n">interval_ms</span><span class="p">:</span> <span class="mi">10</span>
+      <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>Interrupt Tasks</strong>: Interrupt Tasks are configured with a boolean trigger variable which could be a PLC level global variable or a resource level global variable. Interrupt tasks are invoked when the trigger variable goes from FALSE to TRUE i.e during a positive transition. In OpenSCADA, each CPU can have multiple associated interrupt tasks and interrupt tasks always have a higher priority over interval tasks and can pre-empt any currently running interval task. If multiple interrupt tasks become simultaneously active, they are executed in the order of their priority. The trigger condition is checked after each instruction execution. The following example defines an interrupt_task called INTERRUPT_TASK which is triggered by “global_bool_var” (which is global variable) defined in System Specification:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">interrupt_task</span> <span class="p">{</span>
+      <span class="n">task_name</span><span class="p">:</span> <span class="s2">&quot;INTERRUPT_TASK&quot;</span>
+      <span class="n">priority</span><span class="p">:</span> <span class="mi">1</span>
+      <span class="n">interrupt_task_params</span> <span class="p">{</span>
+              <span class="n">trigger_variable_field</span><span class="p">:</span> <span class="s2">&quot;global_bool_var&quot;</span>
+      <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="section" id="attaching-pous-to-tasks">
+<h3>Attaching POUs to Tasks<a class="headerlink" href="#attaching-pous-to-tasks" title="Permalink to this headline">¶</a></h3>
+<p>Task definition by itself does not specify which POUs are attached to a task. In OpenSCADA, POUs of type FBs and PROGRAMS can be attached to Tasks using the <strong>programs</strong> field of the Resource Specification. It is a message of type ProgramSpecification described in <a class="reference external" href="https://github.com/Vignesh2208/OpenSCADA/tree/master/src/pc_emulator/proto/configuration.proto/">configuration.proto</a>. Each programs field defines a mapping between a POU of interest and a task of interest. Multiple POUs can be attached to the same task. A separate programs field is used for each attachement. In this example the POU “PID_CONTROL” is attached with the task “CYCLIC_TASK”. Thus the program “PID_CONTROL” gets invoked every 10ms.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">programs</span> <span class="p">{</span>
+    <span class="n">program_name</span><span class="p">:</span> <span class="s2">&quot;PID_CONTROL&quot;</span>
+    <span class="n">pou_variable_type</span><span class="p">:</span> <span class="s2">&quot;PID_CONTROL&quot;</span>
+    <span class="n">task_name</span><span class="p">:</span> <span class="s2">&quot;CYCLIC_TASK&quot;</span>
+    <span class="n">initialization_maps</span> <span class="p">{</span>
+        <span class="n">pou_variable_field_name</span><span class="p">:</span> <span class="s2">&quot;dummy_in&quot;</span>
+        <span class="n">mapped_variable_field_name</span><span class="p">:</span> <span class="s2">&quot;start_int&quot;</span>
+    <span class="p">}</span>
+    <span class="n">initialization_maps</span> <span class="p">{</span>
+        <span class="n">pou_variable_field_name</span><span class="p">:</span> <span class="s2">&quot;dummy_out&quot;</span>
+        <span class="n">mapped_variable_field_name</span><span class="p">:</span> <span class="s2">&quot;global_int_var&quot;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Arguments to each invocation of the POU can be passed through initialization_maps (a subfield of the ProgramSpecification message). Initialization maps can be used to initialize the POUs input/inout variables as well as specify where output variables could be stored after the invocation. In this example, the program “PID_CONTROL“‘s input variable “dummy_in” at the start of every invocation is assigned the value of the global variable “start_int” (which was specified in the System specification i.e, in the previous section). At the end of the invocation, the value of the output variable of the PROGRAM called “dummy_out” is copied to “global_int_var” (which was created in the previous section as a PLC level global variable). It must be noted that the mapped_variable_field_name for an VAR_INPUT variable could also be an immediate value. For instance in the above example, if “dummy_in” needs to be initialized with 10 for every invocation, the initialization map could be modified to:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">initialization_maps</span> <span class="p">{</span>
+    <span class="n">pou_variable_field_name</span><span class="p">:</span> <span class="s2">&quot;dummy_in&quot;</span>
+    <span class="n">mapped_variable_field_name</span><span class="p">:</span> <span class="s2">&quot;10&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
 </div>
 
 
@@ -809,12 +863,16 @@
 <li class="toctree-l4"><a class="reference internal" href="#supported-system-function-blocks">Supported System Function Blocks</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#tasks">Tasks</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#attaching-pous-to-tasks">Attaching POUs to Tasks</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="user_guide.html#indices-and-tables">Indices and tables</a></li>
-<li class="toctree-l1"><a class="reference internal" href="advanced_features.html">Advanced Topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced_topics.html">Advanced Topics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers_guide.html">Developer’s Guide</a></li>
 </ul>
 
@@ -824,7 +882,7 @@
   <li><a href="index.html">Documentation overview</a><ul>
   <li><a href="user_guide.html">User Guide</a><ul>
       <li>Previous: <a href="resource_specification.html" title="previous chapter">Resource Specification</a></li>
-      <li>Next: <a href="advanced_features.html" title="next chapter">Advanced Topics</a></li>
+      <li>Next: <a href="advanced_topics.html" title="next chapter">Advanced Topics</a></li>
   </ul></li>
   </ul></li>
 </ul>
