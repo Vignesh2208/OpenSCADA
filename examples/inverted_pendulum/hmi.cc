@@ -78,13 +78,15 @@ int main(int argc, char **argv) {
             break;
 
     
-        // reads 4 bytes
+        // reads registers starting at 0 and ending at 3 i.e, registers 0 to 3
         rc = modbus_read_input_registers(ctx, 0, 3, input_mem_registers);
 
         if (rc < 0) {
             std::cout << "Error reading input registers ! Stopping HMI "
             << std::endl;
         }
+
+	input_mem_bytes = (uint8_t *) input_mem_registers;
         memcpy(&current_theta, &input_mem_bytes[1], sizeof(float));
 
         auto curr = std::chrono::steady_clock::now();
