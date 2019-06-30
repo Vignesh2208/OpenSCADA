@@ -1,4 +1,0 @@
-<map id="pc_emulator::PCResource" name="pc_emulator::PCResource">
-<area shape="rect" id="node2" href="$classpc__emulator_1_1PCResourceImpl.html" title="Specific implementation of the PCResource class. It defines one CPU on a PLC. " alt="" coords="5,80,207,107"/>
-<area shape="rect" id="node3" href="$classpc__emulator_1_1PCResourceInterface.html" title="pc_emulator::PCResourceInterface" alt="" coords="231,80,458,107"/>
-</map>

@@ -272,7 +272,7 @@ var_access {
         field_storage_spec {
             full_storage_spec: "CPU_001.PROGRAM_1.motor_output_1"
         }
-        field_qualifier: READ_WRITE
+        field_qualifier: READ
     }  
 
 
@@ -282,7 +282,7 @@ var_access {
         field_storage_spec {
             full_storage_spec: "CPU_001.PROGRAM_1.motor_output_2"
         }
-        field_qualifier: READ_WRITE
+        field_qualifier: READ
     }  
 
 

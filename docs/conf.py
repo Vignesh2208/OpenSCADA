@@ -189,3 +189,5 @@ todo_include_todos = True
 
 import subprocess
 subprocess.call('cd .. ; doxygen', shell=True)
+subprocess.call('mv html/index.html html/index_doxy.html', shell=True)
+html_extra_path = ['../docs/html']

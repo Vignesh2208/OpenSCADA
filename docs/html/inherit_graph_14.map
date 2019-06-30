@@ -1,5 +1,0 @@
-<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classpc__emulator_1_1PCConfiguration.html" title="Abstract programmable controller config specification. " alt="" coords="5,35,203,61"/>
-<area shape="rect" id="node2" href="$classpc__emulator_1_1PCConfigurationImpl.html" title="Specific implementation of the PCConfiguration abstract class. " alt="" coords="251,5,473,32"/>
-<area shape="rect" id="node3" href="$classpc__emulator_1_1PCConfigurationInterface.html" title="pc_emulator::PCConfiguration\lInterface" alt="" coords="263,57,461,98"/>
-</map>

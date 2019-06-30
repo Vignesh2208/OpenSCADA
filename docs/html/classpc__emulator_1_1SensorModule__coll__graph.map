@@ -1,7 +1,0 @@
-<map id="pc_emulator::SensorModule" name="pc_emulator::SensorModule">
-<area shape="rect" id="node2" href="$classpc__emulator_1_1ExtModule.html" title="External module interface. " alt="" coords="134,275,297,301"/>
-<area shape="rect" id="node3" href="$classpc__emulator_1_1PCConfigurationInterface.html" title="pc_emulator::PCConfiguration\lInterface" alt="" coords="117,171,314,212"/>
-<area shape="rect" id="node4" href="$classpc__emulator_1_1PCConfiguration.html" title="Abstract programmable controller config specification. " alt="" coords="117,95,314,121"/>
-<area shape="rect" id="node5" href="$classpc__emulator_1_1ResourceRegistry.html" title="Registers and tracks resources. " alt="" coords="5,5,212,32"/>
-<area shape="rect" id="node6" href="$classpc__emulator_1_1PCMemUnit.html" title="Describes a memory unit and provides api to access it. " alt="" coords="237,5,410,32"/>
-</map>

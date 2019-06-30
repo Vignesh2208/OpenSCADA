@@ -1,5 +1,0 @@
-<map id="pc_emulator::ExtModule" name="pc_emulator::ExtModule">
-<area shape="rect" id="node2" href="$classpc__emulator_1_1ActuatorModule.html" title="pc_emulator::ActuatorModule" alt="" coords="5,80,197,107"/>
-<area shape="rect" id="node3" href="$classpc__emulator_1_1CommModule.html" title="pc_emulator::CommModule" alt="" coords="222,80,405,107"/>
-<area shape="rect" id="node4" href="$classpc__emulator_1_1SensorModule.html" title="pc_emulator::SensorModule" alt="" coords="429,80,613,107"/>
-</map>
