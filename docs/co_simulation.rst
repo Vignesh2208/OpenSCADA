@@ -60,6 +60,8 @@ Using the tracer binary, OpenSCADA PLCs, communication modules and HMIs are adde
 	example_hmi_pid = start_example_hmi(is_virtual, rel_cpu_speed, \
 	num_insns_per_round, fd4)
 
+.. note:: The start_plc function does not invoke a tracer explicitly. Instead it passes rome arguments to plc_runner which implicitly tell it to mimic multiple tracers (one for each CPU) and register each one with Kronos.
+
 Subsequently, the next step involves waiting for all started process to register themselves with Kronos::
 
 	# Wait until all processes have started and registered themselves

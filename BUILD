@@ -154,13 +154,6 @@ cc_binary(
     linkstatic = 1, 
 )
 
-py_binary(
-    name = "example_grpc_client",
-    srcs = [
-        "examples/simple_plc/example_grpc_client.py",
-    ],
-    deps = [":py_access_service_proto"],
-)
 
 cc_test(
     name = "datatype_test",
