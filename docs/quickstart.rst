@@ -6,7 +6,7 @@ The quick start example references code included in the `inverted_pendulum <http
 Description
 ^^^^^^^^^^^
 
-In this example, a cart-pole simulator, a PLC, a modbus communication module and a hmi are started. The cart-pole simulator contains a cart which can move sideways. A pendulum is attached to the cart and it can swing freely. The goal of the experiment is to move the car so that the swinging motion of the pendulum is influenced and the pendulum is eventually made to stand upright and balanced.
+In this example, a cart-pole simulator, a PLC, a modbus communication module and a hmi are started. The cart-pole simulator contains a cart which can move sideways. A pendulum is attached to the cart and it can swing freely. The goal of the experiment is to move the cart so that the swinging motion of the pendulum is influenced and the pendulum is eventually made to stand upright and balanced.
 
 The PLC uses one CPU and periodically reads the current angle made by the pendulum with a normal and directs how much force should be applied on the cart. A PID control has been implemented in IL for this purpose. The constants involved in the control algorithm were carefully chosen to ensure quick stability.
 

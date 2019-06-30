@@ -17,8 +17,8 @@
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Advanced Topics" href="advanced_topics.html" />
-    <link rel="prev" title="Kronos driven co-simulation" href="co_simulation.html" /> 
+    <link rel="next" title="User Guide" href="user_guide.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
           <span>OpenSCADA 1.0 documentation</span></a></h1>
@@ -27,11 +27,11 @@
       <div class="topnav" role="navigation" aria-label="top navigation">
       
         <p>
-        «&#160;&#160;<a href="co_simulation.html">Kronos driven co-simulation</a>
+        «&#160;&#160;<a href="installation.html">Installation</a>
         &#160;&#160;::&#160;&#160;
         <a class="uplink" href="index.html">Contents</a>
         &#160;&#160;::&#160;&#160;
-        <a href="advanced_topics.html">Advanced Topics</a>&#160;&#160;»
+        <a href="user_guide.html">User Guide</a>&#160;&#160;»
         </p>
 
       </div>
@@ -43,7 +43,7 @@
 <p>The quick start example references code included in the <a class="reference external" href="https://github.com/Vignesh2208/OpenSCADA/tree/master/examples/inverted_pendulum">inverted_pendulum</a> directory.</p>
 <div class="section" id="description">
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
-<p>In this example, a cart-pole simulator, a PLC, a modbus communication module and a hmi are started. The cart-pole simulator contains a cart which can move sideways. A pendulum is attached to the cart and it can swing freely. The goal of the experiment is to move the car so that the swinging motion of the pendulum is influenced and the pendulum is eventually made to stand upright and balanced.</p>
+<p>In this example, a cart-pole simulator, a PLC, a modbus communication module and a hmi are started. The cart-pole simulator contains a cart which can move sideways. A pendulum is attached to the cart and it can swing freely. The goal of the experiment is to move the cart so that the swinging motion of the pendulum is influenced and the pendulum is eventually made to stand upright and balanced.</p>
 <p>The PLC uses one CPU and periodically reads the current angle made by the pendulum with a normal and directs how much force should be applied on the cart. A PID control has been implemented in IL for this purpose. The constants involved in the control algorithm were carefully chosen to ensure quick stability.</p>
 <p>The modbus communication module attaches to the PLC and waits for queries. The example hmi client periodically (every 100ms) queries the communication module for the current angle made by the pendulum. The communication module receives each query and fetches the result from the PLC CPU’s input memory. The hmi client stores the read values with relative timestamps inside a file.</p>
 </div>
@@ -93,11 +93,11 @@ bazel run :simulation -- --plc_spec_file=$OSCADA_INSTALLATION/examples/inverted_
       <div class="bottomnav" role="navigation" aria-label="bottom navigation">
       
         <p>
-        «&#160;&#160;<a href="co_simulation.html">Kronos driven co-simulation</a>
+        «&#160;&#160;<a href="installation.html">Installation</a>
         &#160;&#160;::&#160;&#160;
         <a class="uplink" href="index.html">Contents</a>
         &#160;&#160;::&#160;&#160;
-        <a href="advanced_topics.html">Advanced Topics</a>&#160;&#160;»
+        <a href="user_guide.html">User Guide</a>&#160;&#160;»
         </p>
 
       </div>

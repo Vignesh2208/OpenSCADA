@@ -1,0 +1,178 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Access Variables &#8212; OpenSCADA 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Extending Communication Modules" href="ext_comm_modules.html" />
+    <link rel="prev" title="Advanced Topics" href="advanced_topics.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="index.html">
+          <span>OpenSCADA 1.0 documentation</span></a></h1>
+        <h2 class="heading"><span>Access Variables</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="advanced_topics.html">Advanced Topics</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="ext_comm_modules.html">Extending Communication Modules</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="access-variables">
+<h1>Access Variables<a class="headerlink" href="#access-variables" title="Permalink to this headline">¶</a></h1>
+<p>Access variables are defined in IEC 61131-3 specification as a means to allow access to PLC program variables. Variables which are declared under this scope can be accessed within the program as well as by external modules (e.g communication modules). In OpenSCADA, Access variables can be defined in the system specification. The may be referenced inside any POU by declaring the same variable as VAR_EXTERNAL in the PoU definition. They are not statically allocated but they may point to memory locations or to other global variables or to input and output variables of PROGRAMS defined in any CPU.</p>
+<p>For illustration purposes we use the <a class="reference external" href="https://github.com/Vignesh2208/OpenSCADA/tree/master/examples/idle_plc">idle_plc</a> example. The <strong>system_specification.prototxt</strong> file included with the example declares many access variables in the <strong>var_access</strong> block:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">var_access</span> <span class="p">{</span>
+        <span class="n">name</span><span class="p">:</span> <span class="s2">&quot;__CONFIG_ACCESS__&quot;</span>
+        <span class="n">datatype_field</span> <span class="p">{</span>
+                <span class="n">field_name</span><span class="p">:</span> <span class="s2">&quot;GLOBAL_BOOL_VAR&quot;</span>
+                <span class="n">field_datatype_name</span><span class="p">:</span> <span class="s2">&quot;BOOL&quot;</span>
+                <span class="n">field_storage_spec</span> <span class="p">{</span>
+                    <span class="n">full_storage_spec</span><span class="p">:</span> <span class="s2">&quot;global_bool_var&quot;</span>
+                <span class="p">}</span>
+                <span class="n">field_qualifier</span><span class="p">:</span> <span class="n">READ_ONLY</span>
+        <span class="p">}</span>
+        <span class="n">datatype_field</span> <span class="p">{</span>
+                <span class="n">field_name</span><span class="p">:</span> <span class="s2">&quot;GLOBAL_INT_VAR&quot;</span>
+                <span class="n">field_datatype_name</span><span class="p">:</span> <span class="s2">&quot;INT&quot;</span>
+                <span class="n">field_storage_spec</span> <span class="p">{</span>
+                    <span class="n">full_storage_spec</span><span class="p">:</span> <span class="s2">&quot;global_int_var&quot;</span>
+                <span class="p">}</span>
+                <span class="n">field_qualifier</span><span class="p">:</span> <span class="n">READ_WRITE</span>
+        <span class="p">}</span>
+        <span class="n">datatype_field</span> <span class="p">{</span>
+                <span class="n">field_name</span><span class="p">:</span> <span class="s2">&quot;GLOBAL_BOOL_ARR&quot;</span>
+                <span class="n">field_datatype_name</span><span class="p">:</span> <span class="s2">&quot;BOOL&quot;</span>
+                <span class="n">field_storage_spec</span> <span class="p">{</span>
+                    <span class="n">full_storage_spec</span><span class="p">:</span> <span class="s2">&quot;global_bool_arr&quot;</span>
+                <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="n">datatype_field</span> <span class="p">{</span>
+                <span class="n">field_name</span><span class="p">:</span> <span class="s2">&quot;GLOBAL_INT_ARR&quot;</span>
+                <span class="n">field_datatype_name</span><span class="p">:</span> <span class="s2">&quot;INT&quot;</span>
+                <span class="n">field_storage_spec</span> <span class="p">{</span>
+                    <span class="n">full_storage_spec</span><span class="p">:</span> <span class="s2">&quot;global_int_arr&quot;</span>
+                <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="n">datatype_field</span> <span class="p">{</span>
+                <span class="n">field_name</span><span class="p">:</span> <span class="s2">&quot;ACCESS_INT_ARR&quot;</span>
+                <span class="n">field_datatype_name</span><span class="p">:</span> <span class="s2">&quot;INT&quot;</span>
+                <span class="n">dimension_1</span><span class="p">:</span> <span class="mi">2</span>
+                <span class="n">dimension_2</span><span class="p">:</span> <span class="mi">2</span>
+                <span class="n">field_storage_spec</span> <span class="p">{</span>
+                    <span class="n">full_storage_spec</span><span class="p">:</span> <span class="s2">&quot;%MW100&quot;</span>
+                <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="n">datatype_field</span> <span class="p">{</span>
+                <span class="n">field_name</span><span class="p">:</span> <span class="s2">&quot;GLOBAL_COMPLEX_VAR&quot;</span>
+                <span class="n">field_datatype_name</span><span class="p">:</span> <span class="s2">&quot;COMPLEX_STRUCT_3&quot;</span>
+                <span class="n">field_storage_spec</span> <span class="p">{</span>
+                    <span class="n">full_storage_spec</span><span class="p">:</span> <span class="s2">&quot;complex_global_2&quot;</span>
+                <span class="p">}</span>
+                <span class="n">field_qualifier</span><span class="p">:</span> <span class="n">READ_WRITE</span>
+        <span class="p">}</span>
+        <span class="n">datatype_field</span> <span class="p">{</span>
+                <span class="n">field_name</span><span class="p">:</span> <span class="s2">&quot;SENSOR_IN_1&quot;</span>
+                <span class="n">field_datatype_name</span><span class="p">:</span> <span class="s2">&quot;INT_TYPE_DEF&quot;</span>
+                <span class="n">field_storage_spec</span> <span class="p">{</span>
+                    <span class="n">full_storage_spec</span><span class="p">:</span> <span class="s2">&quot;CPU_001.PROGRAM_1.sensor_input_1&quot;</span>
+                <span class="p">}</span>
+                <span class="n">field_qualifier</span><span class="p">:</span> <span class="n">READ_WRITE</span>
+         <span class="p">}</span>
+
+         <span class="n">datatype_field</span> <span class="p">{</span>
+                <span class="n">field_name</span><span class="p">:</span> <span class="s2">&quot;SENSOR_IN_2&quot;</span>
+                <span class="n">field_datatype_name</span><span class="p">:</span> <span class="s2">&quot;BOOL_TYPE_DEF&quot;</span>
+                <span class="n">field_storage_spec</span> <span class="p">{</span>
+                    <span class="n">full_storage_spec</span><span class="p">:</span> <span class="s2">&quot;CPU_001.PROGRAM_1.sensor_input_2&quot;</span>
+                <span class="p">}</span>
+                <span class="n">field_qualifier</span><span class="p">:</span> <span class="n">READ_WRITE</span>
+        <span class="p">}</span>
+
+
+        <span class="n">datatype_field</span> <span class="p">{</span>
+                <span class="n">field_name</span><span class="p">:</span> <span class="s2">&quot;MOTOR_OUT_1&quot;</span>
+                <span class="n">field_datatype_name</span><span class="p">:</span> <span class="s2">&quot;INT_TYPE_DEF&quot;</span>
+                <span class="n">field_storage_spec</span> <span class="p">{</span>
+                    <span class="n">full_storage_spec</span><span class="p">:</span> <span class="s2">&quot;CPU_001.PROGRAM_1.motor_output_1&quot;</span>
+                <span class="p">}</span>
+                <span class="c1"># must be read when pointing to an output variable</span>
+                <span class="n">field_qualifier</span><span class="p">:</span> <span class="n">READ</span>
+        <span class="p">}</span>
+        <span class="n">datatype_field</span> <span class="p">{</span>
+                <span class="n">field_name</span><span class="p">:</span> <span class="s2">&quot;MOTOR_OUT_2&quot;</span>
+                <span class="n">field_datatype_name</span><span class="p">:</span> <span class="s2">&quot;BOOL_TYPE_DEF&quot;</span>
+                <span class="n">field_storage_spec</span> <span class="p">{</span>
+                    <span class="n">full_storage_spec</span><span class="p">:</span> <span class="s2">&quot;CPU_001.PROGRAM_1.motor_output_2&quot;</span>
+                <span class="p">}</span>
+                <span class="c1"># must be read when pointing to an output variable</span>
+                <span class="n">field_qualifier</span><span class="p">:</span> <span class="n">READ</span>
+        <span class="p">}</span>
+        <span class="n">datatype_field</span> <span class="p">{</span>
+                <span class="n">field_name</span><span class="p">:</span> <span class="s2">&quot;SENSOR_IN_3&quot;</span>
+                <span class="n">field_datatype_name</span><span class="p">:</span> <span class="s2">&quot;COMPLEX_STRUCT_3&quot;</span>
+                <span class="n">field_storage_spec</span> <span class="p">{</span>
+                    <span class="n">full_storage_spec</span><span class="p">:</span> <span class="s2">&quot;CPU_001.PROGRAM_1.sensor_input_3&quot;</span>
+                <span class="p">}</span>
+                <span class="n">field_qualifier</span><span class="p">:</span> <span class="n">READ_WRITE</span>
+        <span class="p">}</span>
+        <span class="n">datatype_field</span> <span class="p">{</span>
+                <span class="n">field_name</span><span class="p">:</span> <span class="s2">&quot;MOTOR_OUT_3&quot;</span>
+                <span class="n">field_datatype_name</span><span class="p">:</span> <span class="s2">&quot;COMPLEX_STRUCT_3&quot;</span>
+                <span class="n">field_storage_spec</span> <span class="p">{</span>
+                    <span class="n">full_storage_spec</span><span class="p">:</span> <span class="s2">&quot;CPU_001.%QW2000&quot;</span>
+                <span class="p">}</span>
+                <span class="n">field_qualifier</span><span class="p">:</span> <span class="n">READ_WRITE</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>In this example 12 Access variables are declared. All of these access variables point to other global variables or memory locations or input/output variables of PROGRAM POUs. Each access variable is also assigned a field qualifier which indicates permissions given to an external module trying to access it. If an access variable only has READ permissions, it cannot be written to by an external module.</li>
+<li>The <strong>GLOBAL_BOOL_VAR</strong> access variable points to the memory location of the <strong>global_bool_var</strong> global variable (which is also declared in the <strong>var_global</strong> section in the specification file. Similarly <strong>GLOBAL_INT_VAR</strong>, <strong>GLOBAL_BOOL_ARR</strong> and <strong>GLOBAL_INT_ARR</strong> also point to other global variables.</li>
+<li><strong>ACCESS_INT_ARR</strong> is a 2 x 2 INT array pointing to RAM memory 100 while <strong>MOTOR_OUT_3</strong> is of type COMPLEX_STRUCT_3 and points to output memory byte no 2000 of CPU_001</li>
+<li>Access variables can also point to input and output memory locations of POUs of type PROGRAMS. These POUs could be defined in any of the managed CPUs. For instance, in this example, <strong>SENSOR_IN_1</strong> and <strong>SENSOR_IN_2</strong> point to sensor_input_1 and sensor_input_2 input variables of PROGRAM_1 defined in CPU_001. Similarly, <strong>MOTOR_OUT_1</strong> and <strong>MOTOR_OUT_2</strong> point to two output variables of the same program.</li>
+</ul>
+<p>Access variables can be used to build custom communication modules as we show in next section.</p>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="advanced_topics.html">Advanced Topics</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="ext_comm_modules.html">Extending Communication Modules</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Vignesh Babu.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+    </div>
+  </body>
+</html>

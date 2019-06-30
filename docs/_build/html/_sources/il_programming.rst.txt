@@ -194,7 +194,7 @@ Program Organization Units are special categories of DataTypes which include pro
 
 Functions are stateless i.e every invocation of an Function with the same input produces the same output. Functions cannot have fields with interface type VAR. Function Blocks and Programs are stateful operations. Each FB, PROGRAM is like a class and variables of their type are like objects of the class. Invocations of a variable of type FB or PROGRAM can store state which may be used by the logic during its next invocation.
 
-Here, we illustrate how POUs can be written and how then can invoke other POUs to perform various tasks. We used the PID control example given `here <https://github.com/Vignesh2208/OpenSCADA/tree/master/examples/inverted_pendulum/CPU_001.proto/txt>`_. The first POU we look at is a Function Block called DivideFB which takes a Dividend, Divisor as inputs and returns a Quotient and Reminder. It also sets an error flag if the divisor is 0::
+Here, we illustrate how POUs can be written and how then can invoke other POUs to perform various tasks. We used the PID control example given `here <https://github.com/Vignesh2208/OpenSCADA/tree/master/examples/inverted_pendulum/CPU_001.prototxt>`_. The first POU we look at is a Function Block called DivideFB which takes a Dividend, Divisor as inputs and returns a Quotient and Reminder. It also sets an error flag if the divisor is 0::
 
 	pou_var {
 	    name: "DivideFB"
@@ -328,7 +328,7 @@ In the next step, we look at one other FB and a PROGRAM which invokes both. The 
 	    }
 	}
 
-In the calling interface of the PID_CONTROL program, notice two fields "div" and "get_control" whose datatypes are the two previously defined Function Blocks. This is an example of an instantiation of a POU in IL. The fields "div" and "get_control" are objects of type "DivideFB" and "GetControlInputFB" respectively. These objects can be invoked/called within the POU to execute their embedded logic. Also notice, two other fields "current_theta" and "force" which are declared as VAR_EXTERNAL. These are global variables which are defined at the resource level in the resource specification `file <https://github.com/Vignesh2208/OpenSCADA/tree/master/examples/inverted_pendulum/CPU_001.proto/txt>`_::
+In the calling interface of the PID_CONTROL program, notice two fields "div" and "get_control" whose datatypes are the two previously defined Function Blocks. This is an example of an instantiation of a POU in IL. The fields "div" and "get_control" are objects of type "DivideFB" and "GetControlInputFB" respectively. These objects can be invoked/called within the POU to execute their embedded logic. Also notice, two other fields "current_theta" and "force" which are declared as VAR_EXTERNAL. These are global variables which are defined at the resource level in the resource specification `file <https://github.com/Vignesh2208/OpenSCADA/tree/master/examples/inverted_pendulum/CPU_001.prototxt>`_::
 
 	pou_var {
 	    name: "PID_CONTROL"
