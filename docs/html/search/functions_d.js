@@ -14,5 +14,6 @@ var searchData=
   ['resourceregistry',['ResourceRegistry',['../classpc__emulator_1_1ResourceRegistry.html#ae3ae928fd560cd39f3d8de651fa3797c',1,'pc_emulator::ResourceRegistry']]],
   ['restorecpuregisters',['RestoreCPURegisters',['../classpc__emulator_1_1Executor.html#af20b7d1a162e6b974ff228c51ea86d92',1,'pc_emulator::Executor']]],
   ['run',['Run',['../classpc__emulator_1_1Executor.html#a2fd64c8278fe4cb4b3040c1f1cc0c874',1,'pc_emulator::Executor']]],
-  ['runinsn',['RunInsn',['../classpc__emulator_1_1Executor.html#abf2af6604c54863a1a67a36a2526e357',1,'pc_emulator::Executor']]]
+  ['runinsn',['RunInsn',['../classpc__emulator_1_1Executor.html#abf2af6604c54863a1a67a36a2526e357',1,'pc_emulator::Executor']]],
+  ['runplc',['RunPLC',['../classpc__emulator_1_1PCConfigurationImpl.html#a7720a1df058b8f2c65b42a61ee0ccce8',1,'pc_emulator::PCConfigurationImpl']]]
 ];

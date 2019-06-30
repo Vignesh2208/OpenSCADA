@@ -11,5 +11,7 @@ var searchData=
   ['sin',['SIN',['../classpc__emulator_1_1SIN.html',1,'pc_emulator']]],
   ['sqrt',['SQRT',['../classpc__emulator_1_1SQRT.html',1,'pc_emulator']]],
   ['st_5finsn',['ST_Insn',['../classpc__emulator_1_1ST__Insn.html',1,'pc_emulator']]],
-  ['sub_5finsn',['SUB_Insn',['../classpc__emulator_1_1SUB__Insn.html',1,'pc_emulator']]]
+  ['sub_5finsn',['SUB_Insn',['../classpc__emulator_1_1SUB__Insn.html',1,'pc_emulator']]],
+  ['synchronizedqueue',['SynchronizedQueue',['../classSynchronizedQueue.html',1,'']]],
+  ['synchronizedqueue_3c_20string_20_3e',['SynchronizedQueue&lt; string &gt;',['../classSynchronizedQueue.html',1,'']]]
 ];

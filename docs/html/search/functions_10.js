@@ -6,7 +6,7 @@ var searchData=
   ['uinttoany',['UIntToAny',['../classpc__emulator_1_1DataTypeUtils.html#a2ac017f0098d96cecfadd6ef7b6b4c25',1,'pc_emulator::DataTypeUtils']]],
   ['ulint_5fto_5fany',['ULINT_TO_ANY',['../classpc__emulator_1_1Utils.html#ac14734b33f078b8f9796cbd59f79ca4b',1,'pc_emulator::Utils']]],
   ['ulinttoany',['UlintToAny',['../classpc__emulator_1_1DataTypeUtils.html#a1c58bda1f1704afe30da939e02791f56',1,'pc_emulator::DataTypeUtils']]],
-  ['updatecurrenttime',['UpdateCurrentTime',['../classpc__emulator_1_1Clock.html#a4c54d7f36d90db5ddae81fca94d835c9',1,'pc_emulator::Clock']]],
+  ['updatecurrenttime',['UpdateCurrentTime',['../classpc__emulator_1_1Clock.html#a4c54d7f36d90db5ddae81fca94d835c9',1,'pc_emulator::Clock::UpdateCurrentTime(double inc_amount)'],['../classpc__emulator_1_1Clock.html#aa53deb20f779836ac4a9a629a1e5915a',1,'pc_emulator::Clock::UpdateCurrentTime(string ExecutedFn)']]],
   ['usint_5fto_5fany',['USINT_TO_ANY',['../classpc__emulator_1_1Utils.html#acc006b6ca5db8593d1114737bb97332f',1,'pc_emulator::Utils']]],
   ['usinttoany',['USintToAny',['../classpc__emulator_1_1DataTypeUtils.html#a045630f4aa8a7fb18d08092321a8af8f',1,'pc_emulator::DataTypeUtils']]]
 ];

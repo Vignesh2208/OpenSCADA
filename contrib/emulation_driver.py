@@ -49,7 +49,7 @@ class EmulationDriver(object):
         self.timestep_per_round_secs =\
              (float(n_insns_per_round)/rel_cpu_speed)/1000000000.0
         self.total_time_elapsed = 0.0
-        assert number_nodes > 0 
+        assert number_dilated_nodes > 0 
         if self.is_virtual == True:
             print "Initializing Kronos ..."
             if kf.initializeExp(1) < 0 :

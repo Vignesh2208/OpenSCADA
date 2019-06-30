@@ -2,8 +2,7 @@
 \label{classpc__emulator_1_1PCConfigurationInterface}\index{pc\+\_\+emulator\+::\+P\+C\+Configuration\+Interface@{pc\+\_\+emulator\+::\+P\+C\+Configuration\+Interface}}
 
 
-Inheritance diagram for pc\+\_\+emulator\+:\+:P\+C\+Configuration\+Interface\+:
-\nopagebreak
+Inheritance diagram for pc\+\_\+emulator\+:\+:P\+C\+Configuration\+Interface\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -12,8 +11,7 @@ Inheritance diagram for pc\+\_\+emulator\+:\+:P\+C\+Configuration\+Interface\+:
 \end{figure}
 
 
-Collaboration diagram for pc\+\_\+emulator\+:\+:P\+C\+Configuration\+Interface\+:
-\nopagebreak
+Collaboration diagram for pc\+\_\+emulator\+:\+:P\+C\+Configuration\+Interface\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -40,11 +38,89 @@ Collaboration diagram for pc\+\_\+emulator\+:\+:P\+C\+Configuration\+Interface\+
 \begin{DoxyCompactList}\small\item\em Get\+P\+OU is not implemented for this config\+\_\+interface. \end{DoxyCompactList}\item 
 void \hyperlink{classpc__emulator_1_1PCConfigurationInterface_aab4b87faab438a8a73c9dc58a741cf90}{Cleanup} ()\hypertarget{classpc__emulator_1_1PCConfigurationInterface_aab4b87faab438a8a73c9dc58a741cf90}{}\label{classpc__emulator_1_1PCConfigurationInterface_aab4b87faab438a8a73c9dc58a741cf90}
 
-\begin{DoxyCompactList}\small\item\em Cleans up all resources and frees allocated memory. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Cleans up all resources and frees allocated memory. \end{DoxyCompactList}\item 
+uint8\+\_\+t $\ast$ \hyperlink{classpc__emulator_1_1PCConfigurationInterface_a646a467a93a750510327ceedb7fb1bd9}{Get\+Ptr\+To\+R\+A\+M\+Memory} ()\hypertarget{classpc__emulator_1_1PCConfigurationInterface_a646a467a93a750510327ceedb7fb1bd9}{}\label{classpc__emulator_1_1PCConfigurationInterface_a646a467a93a750510327ceedb7fb1bd9}
+
+\begin{DoxyCompactList}\small\item\em Returns pointer to P\+LC\textquotesingle{}s R\+AM Memory. \end{DoxyCompactList}\item 
+uint8\+\_\+t $\ast$ \hyperlink{classpc__emulator_1_1PCConfigurationInterface_afb09deefc9ee060f2117e54c48c1357d}{Get\+Ptr\+To\+Input\+Memory} (string Resource\+Name)
+\begin{DoxyCompactList}\small\item\em Returns pointer to underlying Input memory of a C\+PU. \end{DoxyCompactList}\item 
+uint8\+\_\+t $\ast$ \hyperlink{classpc__emulator_1_1PCConfigurationInterface_a9685cf3cc6152c11cef901889e2a3607}{Get\+Ptr\+To\+Output\+Memory} (string Resource\+Name)
+\begin{DoxyCompactList}\small\item\em Returns pointer to underlying Output memory of a C\+PU. \end{DoxyCompactList}\item 
+int \hyperlink{classpc__emulator_1_1PCConfigurationInterface_a31688bbdaa34feed20a542389350a126}{Get\+R\+A\+M\+Mem\+Size} ()\hypertarget{classpc__emulator_1_1PCConfigurationInterface_a31688bbdaa34feed20a542389350a126}{}\label{classpc__emulator_1_1PCConfigurationInterface_a31688bbdaa34feed20a542389350a126}
+
+\begin{DoxyCompactList}\small\item\em Returns the size of the P\+LC\textquotesingle{}s R\+AM memory. \end{DoxyCompactList}\item 
+int \hyperlink{classpc__emulator_1_1PCConfigurationInterface_a915c91da9ecab58700b8e70e17a3de85}{Get\+Input\+Mem\+Size} (string Resource\+Name)
+\begin{DoxyCompactList}\small\item\em Returns the size of a C\+PU\textquotesingle{}s input memory. \end{DoxyCompactList}\item 
+int \hyperlink{classpc__emulator_1_1PCConfigurationInterface_a989a6eec4f1da040ecd8d8c1ec9ee334}{Get\+Output\+Mem\+Size} (string Resource\+Name)
+\begin{DoxyCompactList}\small\item\em Returns the size of a C\+PU\textquotesingle{}s output memory. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Additional Inherited Members}
 
 
 \subsection{Member Function Documentation}
+\index{pc\+\_\+emulator\+::\+P\+C\+Configuration\+Interface@{pc\+\_\+emulator\+::\+P\+C\+Configuration\+Interface}!Get\+Input\+Mem\+Size@{Get\+Input\+Mem\+Size}}
+\index{Get\+Input\+Mem\+Size@{Get\+Input\+Mem\+Size}!pc\+\_\+emulator\+::\+P\+C\+Configuration\+Interface@{pc\+\_\+emulator\+::\+P\+C\+Configuration\+Interface}}
+\subsubsection[{\texorpdfstring{Get\+Input\+Mem\+Size(string Resource\+Name)}{GetInputMemSize(string ResourceName)}}]{\setlength{\rightskip}{0pt plus 5cm}int pc\+\_\+emulator\+::\+P\+C\+Configuration\+Interface\+::\+Get\+Input\+Mem\+Size (
+\begin{DoxyParamCaption}
+\item[{string}]{Resource\+Name}
+\end{DoxyParamCaption}
+)}\hypertarget{classpc__emulator_1_1PCConfigurationInterface_a915c91da9ecab58700b8e70e17a3de85}{}\label{classpc__emulator_1_1PCConfigurationInterface_a915c91da9ecab58700b8e70e17a3de85}
+
+
+Returns the size of a C\+PU\textquotesingle{}s input memory. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Resource\+Name} & Name of the C\+PU \\
+\hline
+\end{DoxyParams}
+\index{pc\+\_\+emulator\+::\+P\+C\+Configuration\+Interface@{pc\+\_\+emulator\+::\+P\+C\+Configuration\+Interface}!Get\+Output\+Mem\+Size@{Get\+Output\+Mem\+Size}}
+\index{Get\+Output\+Mem\+Size@{Get\+Output\+Mem\+Size}!pc\+\_\+emulator\+::\+P\+C\+Configuration\+Interface@{pc\+\_\+emulator\+::\+P\+C\+Configuration\+Interface}}
+\subsubsection[{\texorpdfstring{Get\+Output\+Mem\+Size(string Resource\+Name)}{GetOutputMemSize(string ResourceName)}}]{\setlength{\rightskip}{0pt plus 5cm}int pc\+\_\+emulator\+::\+P\+C\+Configuration\+Interface\+::\+Get\+Output\+Mem\+Size (
+\begin{DoxyParamCaption}
+\item[{string}]{Resource\+Name}
+\end{DoxyParamCaption}
+)}\hypertarget{classpc__emulator_1_1PCConfigurationInterface_a989a6eec4f1da040ecd8d8c1ec9ee334}{}\label{classpc__emulator_1_1PCConfigurationInterface_a989a6eec4f1da040ecd8d8c1ec9ee334}
+
+
+Returns the size of a C\+PU\textquotesingle{}s output memory. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Resource\+Name} & Name of the C\+PU \\
+\hline
+\end{DoxyParams}
+\index{pc\+\_\+emulator\+::\+P\+C\+Configuration\+Interface@{pc\+\_\+emulator\+::\+P\+C\+Configuration\+Interface}!Get\+Ptr\+To\+Input\+Memory@{Get\+Ptr\+To\+Input\+Memory}}
+\index{Get\+Ptr\+To\+Input\+Memory@{Get\+Ptr\+To\+Input\+Memory}!pc\+\_\+emulator\+::\+P\+C\+Configuration\+Interface@{pc\+\_\+emulator\+::\+P\+C\+Configuration\+Interface}}
+\subsubsection[{\texorpdfstring{Get\+Ptr\+To\+Input\+Memory(string Resource\+Name)}{GetPtrToInputMemory(string ResourceName)}}]{\setlength{\rightskip}{0pt plus 5cm}uint8\+\_\+t$\ast$ pc\+\_\+emulator\+::\+P\+C\+Configuration\+Interface\+::\+Get\+Ptr\+To\+Input\+Memory (
+\begin{DoxyParamCaption}
+\item[{string}]{Resource\+Name}
+\end{DoxyParamCaption}
+)}\hypertarget{classpc__emulator_1_1PCConfigurationInterface_afb09deefc9ee060f2117e54c48c1357d}{}\label{classpc__emulator_1_1PCConfigurationInterface_afb09deefc9ee060f2117e54c48c1357d}
+
+
+Returns pointer to underlying Input memory of a C\+PU. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Resource\+Name} & Name of the C\+PU whose input memory pointer is to be retrieved \\
+\hline
+\end{DoxyParams}
+\index{pc\+\_\+emulator\+::\+P\+C\+Configuration\+Interface@{pc\+\_\+emulator\+::\+P\+C\+Configuration\+Interface}!Get\+Ptr\+To\+Output\+Memory@{Get\+Ptr\+To\+Output\+Memory}}
+\index{Get\+Ptr\+To\+Output\+Memory@{Get\+Ptr\+To\+Output\+Memory}!pc\+\_\+emulator\+::\+P\+C\+Configuration\+Interface@{pc\+\_\+emulator\+::\+P\+C\+Configuration\+Interface}}
+\subsubsection[{\texorpdfstring{Get\+Ptr\+To\+Output\+Memory(string Resource\+Name)}{GetPtrToOutputMemory(string ResourceName)}}]{\setlength{\rightskip}{0pt plus 5cm}uint8\+\_\+t$\ast$ pc\+\_\+emulator\+::\+P\+C\+Configuration\+Interface\+::\+Get\+Ptr\+To\+Output\+Memory (
+\begin{DoxyParamCaption}
+\item[{string}]{Resource\+Name}
+\end{DoxyParamCaption}
+)}\hypertarget{classpc__emulator_1_1PCConfigurationInterface_a9685cf3cc6152c11cef901889e2a3607}{}\label{classpc__emulator_1_1PCConfigurationInterface_a9685cf3cc6152c11cef901889e2a3607}
+
+
+Returns pointer to underlying Output memory of a C\+PU. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Resource\+Name} & Name of the C\+PU whose output memory pointer is to be retrieved \\
+\hline
+\end{DoxyParams}
 \index{pc\+\_\+emulator\+::\+P\+C\+Configuration\+Interface@{pc\+\_\+emulator\+::\+P\+C\+Configuration\+Interface}!Get\+Variable\+Pointer\+To\+Mem@{Get\+Variable\+Pointer\+To\+Mem}}
 \index{Get\+Variable\+Pointer\+To\+Mem@{Get\+Variable\+Pointer\+To\+Mem}!pc\+\_\+emulator\+::\+P\+C\+Configuration\+Interface@{pc\+\_\+emulator\+::\+P\+C\+Configuration\+Interface}}
 \subsubsection[{\texorpdfstring{Get\+Variable\+Pointer\+To\+Mem(int Byte\+Offset, int Bit\+Offset, string Variable\+Data\+Type\+Name)}{GetVariablePointerToMem(int ByteOffset, int BitOffset, string VariableDataTypeName)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+C\+Variable}$\ast$ pc\+\_\+emulator\+::\+P\+C\+Configuration\+Interface\+::\+Get\+Variable\+Pointer\+To\+Mem (

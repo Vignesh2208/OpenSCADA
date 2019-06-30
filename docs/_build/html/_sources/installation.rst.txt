@@ -1,7 +1,7 @@
 Installation
 ============
 
-To setup OpenSCADA, grpc and bazel package manager need to be first installed. To install them follow the steps given below:
+To setup OpenSCADA, Kronos, grpc and bazel package manager need to be first installed. To install Kronos, follow steps included in the `documentation <https://github.com/Vignesh2208/Kronos>`_. To install all the other dependencies, follow the steps given below:
 
 Installing GRPC
 ^^^^^^^^^^^^^^^
@@ -16,7 +16,7 @@ Installing GRPC
 Installing Bazel
 ^^^^^^^^^^^^^^^^
 
-* Install OpenJdk::
+* Install OpenJDK::
 
 	sudo apt-get install openjdk-8-jdk
 

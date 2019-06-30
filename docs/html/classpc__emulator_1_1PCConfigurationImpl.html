@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>My Project: pc_emulator::PCConfigurationImpl Class Reference</title>
+<title>OpenSCADA: pc_emulator::PCConfigurationImpl Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -23,7 +23,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">My Project
+   <div id="projectname">OpenSCADA
    </div>
   </td>
  </tr>
@@ -88,6 +88,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classpc__emulator_1_1PCConfigurationImpl-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">pc_emulator::PCConfigurationImpl Class Reference</div>  </div>
@@ -132,15 +133,27 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abad943ac691a001ec5606d9d69aa6a0d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCConfigurationImpl.html#abad943ac691a001ec5606d9d69aa6a0d">LookupDataType</a> (string DataTypeName)</td></tr>
 <tr class="memdesc:abad943ac691a001ec5606d9d69aa6a0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a registered data type with the specified data type name.  <a href="#abad943ac691a001ec5606d9d69aa6a0d">More...</a><br /></td></tr>
 <tr class="separator:abad943ac691a001ec5606d9d69aa6a0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43cbbf707440d2e928c4048afca1fe95"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCConfigurationImpl.html#a43cbbf707440d2e928c4048afca1fe95">PCConfigurationImpl</a> (string ConfigurationPath)</td></tr>
-<tr class="memdesc:a43cbbf707440d2e928c4048afca1fe95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a43cbbf707440d2e928c4048afca1fe95">More...</a><br /></td></tr>
-<tr class="separator:a43cbbf707440d2e928c4048afca1fe95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6e084d4242e24198c0dce6baef45bf1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCConfigurationImpl.html#ae6e084d4242e24198c0dce6baef45bf1">PCConfigurationImpl</a> (string ConfigurationPath, bool enable_kronos, long per_round_inc_ns=1000000)</td></tr>
+<tr class="memdesc:ae6e084d4242e24198c0dce6baef45bf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#ae6e084d4242e24198c0dce6baef45bf1">More...</a><br /></td></tr>
+<tr class="separator:ae6e084d4242e24198c0dce6baef45bf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae083ff203d78246a9c2ea8f3d8ec20a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCConfigurationImpl.html#ae083ff203d78246a9c2ea8f3d8ec20a8">GetVariablePointerToMem</a> (int ByteOffset, int BitOffset, string VariableDataTypeName)</td></tr>
 <tr class="memdesc:ae083ff203d78246a9c2ea8f3d8ec20a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given RAM memory location details, returns a <a class="el" href="classpc__emulator_1_1PCVariable.html" title="A class which wraps a variable and provides API to get/set its value. ">PCVariable</a> pointing to that location.  <a href="#ae083ff203d78246a9c2ea8f3d8ec20a8">More...</a><br /></td></tr>
 <tr class="separator:ae083ff203d78246a9c2ea8f3d8ec20a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae09c2ded1759b34e1ea304f715c74fe3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCConfigurationImpl.html#ae09c2ded1759b34e1ea304f715c74fe3">GetVariablePointerToResourceMem</a> (string ResourceName, int MemType, int ByteOffset, int BitOffset, string VariableDataTypeName)</td></tr>
 <tr class="memdesc:ae09c2ded1759b34e1ea304f715c74fe3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given location details, returns a <a class="el" href="classpc__emulator_1_1PCVariable.html" title="A class which wraps a variable and provides API to get/set its value. ">PCVariable</a> pointing to that location.  <a href="#ae09c2ded1759b34e1ea304f715c74fe3">More...</a><br /></td></tr>
 <tr class="separator:ae09c2ded1759b34e1ea304f715c74fe3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7720a1df058b8f2c65b42a61ee0ccce8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7720a1df058b8f2c65b42a61ee0ccce8"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCConfigurationImpl.html#a7720a1df058b8f2c65b42a61ee0ccce8">RunPLC</a> ()</td></tr>
+<tr class="memdesc:a7720a1df058b8f2c65b42a61ee0ccce8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Launches a PLC and waits for completion. <br /></td></tr>
+<tr class="separator:a7720a1df058b8f2c65b42a61ee0ccce8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bc0a2d0db10cd899baac75d7d79f33f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6bc0a2d0db10cd899baac75d7d79f33f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCConfigurationImpl.html#a6bc0a2d0db10cd899baac75d7d79f33f">LaunchPLC</a> ()</td></tr>
+<tr class="memdesc:a6bc0a2d0db10cd899baac75d7d79f33f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Launch a PLC. <br /></td></tr>
+<tr class="separator:a6bc0a2d0db10cd899baac75d7d79f33f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a710983b0fa5c90e9d98d42b5cffda7bd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a710983b0fa5c90e9d98d42b5cffda7bd"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCConfigurationImpl.html#a710983b0fa5c90e9d98d42b5cffda7bd">WaitForCompletion</a> ()</td></tr>
+<tr class="memdesc:a710983b0fa5c90e9d98d42b5cffda7bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wait for the specified run time to elapse. <br /></td></tr>
+<tr class="separator:a710983b0fa5c90e9d98d42b5cffda7bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a15dff3a523e1aac72268a30cfb2edf02"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a15dff3a523e1aac72268a30cfb2edf02"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCConfigurationImpl.html#a15dff3a523e1aac72268a30cfb2edf02">Cleanup</a> ()</td></tr>
 <tr class="memdesc:a15dff3a523e1aac72268a30cfb2edf02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cleans up all resources and frees allocated memory. <br /></td></tr>
@@ -155,8 +168,20 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memdesc:a0d52d8b4cca4b054e86a2d46eb4e0993 inherit pub_methods_classpc__emulator_1_1PCConfiguration"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
 <tr class="separator:a0d52d8b4cca4b054e86a2d46eb4e0993 inherit pub_methods_classpc__emulator_1_1PCConfiguration"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
-Additional Inherited Members</h2></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a5fa854b73309ce8c8a1c91e385a65c34"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5fa854b73309ce8c8a1c91e385a65c34"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>stop</b></td></tr>
+<tr class="separator:a5fa854b73309ce8c8a1c91e385a65c34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32a79edc91700f5c8f14a548fb02167f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a32a79edc91700f5c8f14a548fb02167f"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>enable_kronos</b></td></tr>
+<tr class="separator:a32a79edc91700f5c8f14a548fb02167f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0c39af31f210109df318e77a9dbab14"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad0c39af31f210109df318e77a9dbab14"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>rel_cpu_speed</b></td></tr>
+<tr class="separator:ad0c39af31f210109df318e77a9dbab14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a760b0e1484136ef12687deee70d25987"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a760b0e1484136ef12687deee70d25987"></a>
+long&#160;</td><td class="memItemRight" valign="bottom"><b>per_round_inc_ns</b></td></tr>
+<tr class="separator:a760b0e1484136ef12687deee70d25987"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classpc__emulator_1_1PCConfiguration"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classpc__emulator_1_1PCConfiguration')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classpc__emulator_1_1PCConfiguration.html">pc_emulator::PCConfiguration</a></td></tr>
 <tr class="memitem:ab74d020cc35875ac3092a4db604ad322 inherit pub_attribs_classpc__emulator_1_1PCConfiguration"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classpc__emulator_1_1Logger.html">Logger</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCConfiguration.html#ab74d020cc35875ac3092a4db604ad322">PCLogger</a></td></tr>
 <tr class="separator:ab74d020cc35875ac3092a4db604ad322 inherit pub_attribs_classpc__emulator_1_1PCConfiguration"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -186,7 +211,7 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Specific implementation of the <a class="el" href="classpc__emulator_1_1PCConfiguration.html" title="Abstract programmable controller config specification. ">PCConfiguration</a> abstract class. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a43cbbf707440d2e928c4048afca1fe95"></a>
+<a class="anchor" id="ae6e084d4242e24198c0dce6baef45bf1"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -194,8 +219,24 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">pc_emulator::PCConfigurationImpl::PCConfigurationImpl </td>
           <td>(</td>
           <td class="paramtype">string&#160;</td>
-          <td class="paramname"><em>ConfigurationPath</em></td><td>)</td>
+          <td class="paramname"><em>ConfigurationPath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enable_kronos</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long&#160;</td>
+          <td class="paramname"><em>per_round_inc_ns</em> = <code>1000000</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -204,6 +245,7 @@ Additional Inherited Members</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">ConfigurationPath</td><td>Path to txt file specified in configuration.proto format </td></tr>
+    <tr><td class="paramname">enable_kronos</td><td>Whether this PLC is run under virtual time or not </td></tr>
   </table>
   </dd>
 </dl>

@@ -1,5 +1,10 @@
 # Description:  This programs runs a simulation of a cart-pole system
 #		The conrol algorithm used to balance the pendulum is PID
+# To start this simulation run:
+#  	cd ~/OpenSCADA
+#	bazel run :simulation -- --plc_spec_file=<system spec file> \
+#				 --plc_spec_dir=<directory containing plc system spec file> \
+#				 --is_virtual=<True/False>
  
 
 
@@ -94,8 +99,7 @@ def start_example_hmi(is_virtual, rel_cpu_speed,
         return newpid
 
 
-def main(is_virtual=False,
-        num_dilated_nodes=3,
+def main(num_dilated_nodes=3,
         run_time=5, 
         rel_cpu_speed=1.0,
         num_insns_per_round=1000000):
@@ -109,6 +113,9 @@ def main(is_virtual=False,
     parser.add_argument('--plc_spec_file', dest='plc_spec_file',
                         help='path to plc spec prototxt file')
 
+    parser.add_argument('--is_virtual', dest='is_virtual',
+                        help='with Kronos', default="False")
+
     parser.add_argument('--plc_spec_dir', dest='plc_spec_dir',
             help='path to directory containing spec protxt files of all plcs')
 
@@ -121,7 +128,8 @@ def main(is_virtual=False,
 
     parser.add_argument('--comm_module_attached_resource', \
         dest='comm_module_attached_resource',
-        help='comm module attaches to this resource of the plc')
+        help='comm module attaches to this resource of the plc',
+        default='CPU_001')
 
 
     fd1 = os.open( "/tmp/pc_grpc_server_log.txt", os.O_RDWR | os.O_CREAT )
@@ -132,6 +140,10 @@ def main(is_virtual=False,
     args = parser.parse_args()
      
     pendulum_sim = PendulumSimulator()
+    if args.is_virtual == "True":
+        is_virtual = True
+    else:
+        is_virtual = False
 
     emulation = EmulationDriver(number_dilated_nodes=num_dilated_nodes, 
         is_virtual=is_virtual, n_insns_per_round=num_insns_per_round, 
@@ -192,4 +204,4 @@ def main(is_virtual=False,
 
 
 if __name__ == "__main__":
-	main(is_virtual=True)
+	main()

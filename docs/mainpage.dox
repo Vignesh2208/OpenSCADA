@@ -1,0 +1,12 @@
+/*! \mainpage About
+
+ * 
+ * OpenSCADA is platform which supports high fidelity emulation of IEC 61131-3 compliant PLCs and SCADA protocols. It can be used to build and simulate complex
+ * environments involving cyber-physical systems. OpenSCADA PLCs can be run inside network emulators like CORE/Mininet and interact with other emulated processes.
+ * OpenSCADA also provides python interfaces to link the network emulation with a physical system simulator. Using these interfaces OpenSCADA PLCs can interact 
+ * with physical system simulators like Matpower, Simulink, ManPy etc. OpenSCADA also ships with support for virtual time based control which is handled by 
+ * <a href=http://www.github.com/Vignesh2208/Kronos>Kronos</a>. This allows tight time-synchronization between the physical system simulation and OpenSCADA 
+ * network emulation. 
+
+ * In this webpage, you can find all the documented C++ class header files used in OpenSCADA PLC implementation.
+ */

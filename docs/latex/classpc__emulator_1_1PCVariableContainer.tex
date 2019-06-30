@@ -6,6 +6,8 @@
 \hyperlink{classpc__emulator_1_1PCVariableContainer_a9e311e87909b9eb1a296d5a9a7d99b12}{P\+C\+Variable\+Container} (\hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$Associated\+Variable)\hypertarget{classpc__emulator_1_1PCVariableContainer_a9e311e87909b9eb1a296d5a9a7d99b12}{}\label{classpc__emulator_1_1PCVariableContainer_a9e311e87909b9eb1a296d5a9a7d99b12}
 
 \begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$ \hyperlink{classpc__emulator_1_1PCVariableContainer_a727089d5202172b66a127da58b772519}{Get\+Data\+Type\+Of\+Field} (string Nested\+Field\+Name)
+\begin{DoxyCompactList}\small\item\em Returns the data type of the nested field. \end{DoxyCompactList}\item 
 {\footnotesize template$<$typename T $>$ }\\T \hyperlink{classpc__emulator_1_1PCVariableContainer_ae4cd77bbd392e5a3fce3c320e466a66f}{Get\+Value\+Stored\+At\+Field} (string Nested\+Field\+Name, int Category\+Of\+Data\+Type)
 \begin{DoxyCompactList}\small\item\em Returns the current value stored at a nested field. \end{DoxyCompactList}\item 
 int \hyperlink{classpc__emulator_1_1PCVariableContainer_a4d40aee4f0cd19a0ae7b7ea0e3ed22ed}{Set\+Field} (string Nested\+Field\+Name, void $\ast$value, int Copy\+Size\+Bytes)
@@ -15,6 +17,25 @@ int \hyperlink{classpc__emulator_1_1PCVariableContainer_a2fc5ee4f597f99a5a825769
 
 
 \subsection{Member Function Documentation}
+\index{pc\+\_\+emulator\+::\+P\+C\+Variable\+Container@{pc\+\_\+emulator\+::\+P\+C\+Variable\+Container}!Get\+Data\+Type\+Of\+Field@{Get\+Data\+Type\+Of\+Field}}
+\index{Get\+Data\+Type\+Of\+Field@{Get\+Data\+Type\+Of\+Field}!pc\+\_\+emulator\+::\+P\+C\+Variable\+Container@{pc\+\_\+emulator\+::\+P\+C\+Variable\+Container}}
+\subsubsection[{\texorpdfstring{Get\+Data\+Type\+Of\+Field(string Nested\+Field\+Name)}{GetDataTypeOfField(string NestedFieldName)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+C\+Data\+Type}$\ast$ pc\+\_\+emulator\+::\+P\+C\+Variable\+Container\+::\+Get\+Data\+Type\+Of\+Field (
+\begin{DoxyParamCaption}
+\item[{string}]{Nested\+Field\+Name}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classpc__emulator_1_1PCVariableContainer_a727089d5202172b66a127da58b772519}{}\label{classpc__emulator_1_1PCVariableContainer_a727089d5202172b66a127da58b772519}
+
+
+Returns the data type of the nested field. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Nested\+Field\+Name} & The field whose data type is to be returned \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} A pointer to the data type of the field 
+\end{DoxyReturn}
 \index{pc\+\_\+emulator\+::\+P\+C\+Variable\+Container@{pc\+\_\+emulator\+::\+P\+C\+Variable\+Container}!Get\+Value\+Stored\+At\+Field@{Get\+Value\+Stored\+At\+Field}}
 \index{Get\+Value\+Stored\+At\+Field@{Get\+Value\+Stored\+At\+Field}!pc\+\_\+emulator\+::\+P\+C\+Variable\+Container@{pc\+\_\+emulator\+::\+P\+C\+Variable\+Container}}
 \subsubsection[{\texorpdfstring{Get\+Value\+Stored\+At\+Field(string Nested\+Field\+Name, int Category\+Of\+Data\+Type)}{GetValueStoredAtField(string NestedFieldName, int CategoryOfDataType)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T $>$ T pc\+\_\+emulator\+::\+P\+C\+Variable\+Container\+::\+Get\+Value\+Stored\+At\+Field (

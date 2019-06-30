@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>My Project: pc_emulator::PCVariableContainer Class Reference</title>
+<title>OpenSCADA: pc_emulator::PCVariableContainer Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -23,7 +23,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">My Project
+   <div id="projectname">OpenSCADA
    </div>
   </td>
  </tr>
@@ -100,6 +100,9 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCVariableContainer.html#a9e311e87909b9eb1a296d5a9a7d99b12">PCVariableContainer</a> (<a class="el" href="classpc__emulator_1_1PCVariable.html">PCVariable</a> *AssociatedVariable)</td></tr>
 <tr class="memdesc:a9e311e87909b9eb1a296d5a9a7d99b12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. <br /></td></tr>
 <tr class="separator:a9e311e87909b9eb1a296d5a9a7d99b12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a727089d5202172b66a127da58b772519"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCVariableContainer.html#a727089d5202172b66a127da58b772519">GetDataTypeOfField</a> (string NestedFieldName)</td></tr>
+<tr class="memdesc:a727089d5202172b66a127da58b772519"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the data type of the nested field.  <a href="#a727089d5202172b66a127da58b772519">More...</a><br /></td></tr>
+<tr class="separator:a727089d5202172b66a127da58b772519"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4cd77bbd392e5a3fce3c320e466a66f"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ae4cd77bbd392e5a3fce3c320e466a66f"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classpc__emulator_1_1PCVariableContainer.html#ae4cd77bbd392e5a3fce3c320e466a66f">GetValueStoredAtField</a> (string NestedFieldName, int CategoryOfDataType)</td></tr>
 <tr class="memdesc:ae4cd77bbd392e5a3fce3c320e466a66f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current value stored at a nested field.  <a href="#ae4cd77bbd392e5a3fce3c320e466a66f">More...</a><br /></td></tr>
@@ -112,6 +115,39 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a2fc5ee4f597f99a5a82576921388fd70"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a727089d5202172b66a127da58b772519"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classpc__emulator_1_1PCDataType.html">PCDataType</a>* pc_emulator::PCVariableContainer::GetDataTypeOfField </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>NestedFieldName</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the data type of the nested field. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">NestedFieldName</td><td>The field whose data type is to be returned </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classpc__emulator_1_1PCDataType.html" title="Class which describes a PCDataType. ">PCDataType</a> A pointer to the data type of the field </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="ae4cd77bbd392e5a3fce3c320e466a66f"></a>
 <div class="memitem">
 <div class="memproto">

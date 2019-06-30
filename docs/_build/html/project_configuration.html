@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Creating a PLC &#8212; OpenSCADA 1.0 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
@@ -18,119 +18,53 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="System Specification" href="system_specification.html" />
-    <link rel="prev" title="Prerequisites" href="prerequisites.html" />
-   
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
+    <link rel="prev" title="Prerequisites" href="prerequisites.html" /> 
   </head><body>
-  
+      <div class="header" role="banner"><h1 class="heading"><a href="index.html">
+          <span>OpenSCADA 1.0 documentation</span></a></h1>
+        <h2 class="heading"><span>Creating a PLC</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="prerequisites.html">Prerequisites</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="system_specification.html">System Specification</a>&#160;&#160;»
+        </p>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
-
-          <div class="body" role="main">
-            
+      </div>
+      <div class="content">
+        
+        
   <div class="section" id="creating-a-plc">
 <h1>Creating a PLC<a class="headerlink" href="#creating-a-plc" title="Permalink to this headline">¶</a></h1>
 <p>A PLC in OpenSCADA comprises of a RAM module and one or more CPUs. Each CPU module encompasses an Input and Output Memory module and a description of the program or set of programs to execute on that CPU. Thus a single PLC can define and run multiple Instruction List (IL) programs. To completely describe a PLC, a user would need to provide two types of configuration files:</p>
 <ul class="simple">
-<li>A system specification: The system specification file includes hardware specific details about the PLC which includes the number of CPUs, the size of RAM memory and the mean and standard deviation of instruction execution times. The system specification file also declares data-types which are used by all IL programs and global variables which may be used by them. Access variables (described in Advanced Topics) can also be declared and made accesible outside the PLC to communication modules.</li>
-<li>A resource specification: A separate resource specification should be defined for each CPU on the PLC. The resource specification includes the size of Input and Output memory attached to the CPU as well as all global variables specific to the CPU. Periodic and interrupt tasks can be defined in the resource specification. Functions, Function blocks and Programs to be run on that CPU are also defined and attached to tasks.</li>
+<li><strong>A system specification</strong>: The system specification file includes hardware specific details about the PLC which includes the number of CPUs, the size of RAM memory and the mean and standard deviation of instruction execution times. The system specification file also declares data-types which are used by all IL programs and global variables which may be used by them. Access variables (described in Advanced Topics) can also be declared and made accesible outside the PLC to communication modules.</li>
+<li><strong>A resource specification</strong>: A separate resource specification should be defined for each CPU on the PLC. The resource specification includes the size of Input and Output memory attached to the CPU as well as all global variables specific to the CPU. Periodic and interrupt tasks can be defined in the resource specification. Functions, Function blocks and Programs to be run on that CPU are also defined and attached to tasks.</li>
 </ul>
 <p>In subsequent sections, we describe each configuration in detail with examples.</p>
 </div>
 
 
-          </div>
-          
-        </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">OpenSCADA</a></h1>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="prerequisites.html">Prerequisites</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="system_specification.html">System Specification</a>&#160;&#160;»
+        </p>
 
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="user_guide.html">User Guide</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="prerequisites.html">Prerequisites</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Creating a PLC</a></li>
-<li class="toctree-l2"><a class="reference internal" href="system_specification.html">System Specification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="resource_specification.html">Resource Specification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="il_programming.html">Instruction List Programming</a></li>
-<li class="toctree-l2"><a class="reference internal" href="running_plc.html">Starting the PLC</a></li>
-<li class="toctree-l2"><a class="reference internal" href="plc_io.html">PLC I/O</a></li>
-<li class="toctree-l2"><a class="reference internal" href="plc_communication.html">PLC Communication</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="user_guide.html#indices-and-tables">Indices and tables</a></li>
-<li class="toctree-l1"><a class="reference internal" href="advanced_topics.html">Advanced Topics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="developers_guide.html">Developer’s Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-  <li><a href="user_guide.html">User Guide</a><ul>
-      <li>Previous: <a href="prerequisites.html" title="previous chapter">Prerequisites</a></li>
-      <li>Next: <a href="system_specification.html" title="next chapter">System Specification</a></li>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
-
-        </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2019, Vignesh Babu.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="_sources/project_configuration.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
 
-    
-
-    
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Vignesh Babu.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+    </div>
   </body>
 </html>

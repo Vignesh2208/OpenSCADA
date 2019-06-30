@@ -1,9 +1,10 @@
 <map id="pc_emulator::PCVariable" name="pc_emulator::PCVariable">
-<area shape="rect" id="node7" href="$structpc__emulator_1_1DataTypeFieldAttributesStruct.html" title="Details of a data&#45;type field. " alt="" coords="1535,129,1721,170"/>
-<area shape="rect" id="node2" href="$classpc__emulator_1_1PCResource.html" title="Abstract class definition of a resource. " alt="" coords="612,39,788,65"/>
-<area shape="rect" id="node3" href="$classpc__emulator_1_1PCMemUnit.html" title="Describes a memory unit and provides api to access it. " alt="" coords="22,39,195,65"/>
-<area shape="rect" id="node4" href="$classpc__emulator_1_1PCConfiguration.html" title="Abstract programmable controller config specification. " alt="" coords="391,116,588,143"/>
-<area shape="rect" id="node6" href="$classpc__emulator_1_1PCDataType.html" title="Class which describes a PCDataType. " alt="" coords="812,163,989,189"/>
-<area shape="rect" id="node5" href="$classpc__emulator_1_1ResourceRegistry.html" title="Registers and tracks resources. " alt="" coords="5,129,212,156"/>
-<area shape="rect" id="node8" href="$classpc__emulator_1_1PCDataTypeField.html" title="Class to hold information about a data type field. " alt="" coords="1160,181,1365,208"/>
+<area shape="rect" id="node8" href="$structpc__emulator_1_1DataTypeFieldAttributesStruct.html" title="Details of a data&#45;type field. " alt="" coords="1480,196,1667,237"/>
+<area shape="rect" id="node2" href="$classpc__emulator_1_1PCResource.html" title="Abstract class definition of a resource. " alt="" coords="408,55,584,82"/>
+<area shape="rect" id="node3" href="$classpc__emulator_1_1PCMemUnit.html" title="Describes a memory unit and provides api to access it. " alt="" coords="22,117,195,143"/>
+<area shape="rect" id="node5" href="$classpc__emulator_1_1PCConfiguration.html" title="Abstract programmable controller config specification. " alt="" coords="397,183,595,210"/>
+<area shape="rect" id="node4" href="$classSynchronizedQueue.html" title="SynchronizedQueue\&lt;\l string \&gt;" alt="" coords="35,5,182,47"/>
+<area shape="rect" id="node7" href="$classpc__emulator_1_1PCDataType.html" title="Class which describes a PCDataType. " alt="" coords="757,230,935,257"/>
+<area shape="rect" id="node6" href="$classpc__emulator_1_1ResourceRegistry.html" title="Registers and tracks resources. " alt="" coords="5,197,212,223"/>
+<area shape="rect" id="node9" href="$classpc__emulator_1_1PCDataTypeField.html" title="Class to hold information about a data type field. " alt="" coords="1105,249,1311,275"/>
 </map>

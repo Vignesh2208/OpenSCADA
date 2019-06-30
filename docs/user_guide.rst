@@ -14,7 +14,6 @@ User Guide
    plc_communication
    building_physical_simulations
    co_simulation
-   quick_start
 
    :caption: User Guide:
 

@@ -14,8 +14,8 @@ var searchData=
   ['sfbregistry',['SFBRegistry',['../classpc__emulator_1_1SFBRegistry.html',1,'pc_emulator']]],
   ['sfbregistry',['SFBRegistry',['../classpc__emulator_1_1SFBRegistry.html#a3c26ab83ad835d9c03c43e866f68160b',1,'pc_emulator::SFBRegistry']]],
   ['sfc',['SFC',['../classpc__emulator_1_1SFC.html',1,'pc_emulator']]],
-  ['sfcregistry',['SFCRegistry',['../classpc__emulator_1_1SFCRegistry.html#a899569d48a587ba8c883c47997411f37',1,'pc_emulator::SFCRegistry']]],
   ['sfcregistry',['SFCRegistry',['../classpc__emulator_1_1SFCRegistry.html',1,'pc_emulator']]],
+  ['sfcregistry',['SFCRegistry',['../classpc__emulator_1_1SFCRegistry.html#a899569d48a587ba8c883c47997411f37',1,'pc_emulator::SFCRegistry']]],
   ['shl_5finsn',['SHL_Insn',['../classpc__emulator_1_1SHL__Insn.html',1,'pc_emulator']]],
   ['shr_5finsn',['SHR_Insn',['../classpc__emulator_1_1SHR__Insn.html',1,'pc_emulator']]],
   ['shutdown',['ShutDown',['../classpc__emulator_1_1Logger.html#a8df868de90c2149fefacbbbe0ff91539',1,'pc_emulator::Logger']]],
@@ -30,5 +30,7 @@ var searchData=
   ['subdts',['SubDTs',['../classpc__emulator_1_1DataTypeUtils.html#a211df36821d3c8c3403481b4f164736d',1,'pc_emulator::DataTypeUtils']]],
   ['subfromdt',['SubFromDT',['../classpc__emulator_1_1DataTypeUtils.html#a0086a7eba79bb1d0049d74e172103168',1,'pc_emulator::DataTypeUtils']]],
   ['subfromtod',['SubFromTOD',['../classpc__emulator_1_1DataTypeUtils.html#ae9646c27c41585a808f847c649043f24',1,'pc_emulator::DataTypeUtils']]],
-  ['subtods',['SubTODs',['../classpc__emulator_1_1DataTypeUtils.html#a4b694002d5039a511080fa55bea7fd87',1,'pc_emulator::DataTypeUtils']]]
+  ['subtods',['SubTODs',['../classpc__emulator_1_1DataTypeUtils.html#a4b694002d5039a511080fa55bea7fd87',1,'pc_emulator::DataTypeUtils']]],
+  ['synchronizedqueue',['SynchronizedQueue',['../classSynchronizedQueue.html',1,'']]],
+  ['synchronizedqueue_3c_20string_20_3e',['SynchronizedQueue&lt; string &gt;',['../classSynchronizedQueue.html',1,'']]]
 ];

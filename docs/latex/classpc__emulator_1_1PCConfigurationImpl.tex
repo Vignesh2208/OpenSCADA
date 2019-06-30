@@ -39,16 +39,39 @@ Collaboration diagram for pc\+\_\+emulator\+:\+:P\+C\+Configuration\+Impl\+:\nop
 \begin{DoxyCompactList}\small\item\em Returns a variable referred by an Access\+Path. \end{DoxyCompactList}\item 
 \hyperlink{classpc__emulator_1_1PCDataType}{P\+C\+Data\+Type} $\ast$ \hyperlink{classpc__emulator_1_1PCConfigurationImpl_abad943ac691a001ec5606d9d69aa6a0d}{Lookup\+Data\+Type} (string Data\+Type\+Name)
 \begin{DoxyCompactList}\small\item\em Returns a registered data type with the specified data type name. \end{DoxyCompactList}\item 
-\hyperlink{classpc__emulator_1_1PCConfigurationImpl_a43cbbf707440d2e928c4048afca1fe95}{P\+C\+Configuration\+Impl} (string Configuration\+Path)
+\hyperlink{classpc__emulator_1_1PCConfigurationImpl_ae6e084d4242e24198c0dce6baef45bf1}{P\+C\+Configuration\+Impl} (string Configuration\+Path, bool enable\+\_\+kronos, long per\+\_\+round\+\_\+inc\+\_\+ns=1000000)
 \begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
 \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1PCConfigurationImpl_ae083ff203d78246a9c2ea8f3d8ec20a8}{Get\+Variable\+Pointer\+To\+Mem} (int Byte\+Offset, int Bit\+Offset, string Variable\+Data\+Type\+Name)
 \begin{DoxyCompactList}\small\item\em Given R\+AM memory location details, returns a \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} pointing to that location. \end{DoxyCompactList}\item 
 \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} $\ast$ \hyperlink{classpc__emulator_1_1PCConfigurationImpl_ae09c2ded1759b34e1ea304f715c74fe3}{Get\+Variable\+Pointer\+To\+Resource\+Mem} (string Resource\+Name, int Mem\+Type, int Byte\+Offset, int Bit\+Offset, string Variable\+Data\+Type\+Name)
 \begin{DoxyCompactList}\small\item\em Given location details, returns a \hyperlink{classpc__emulator_1_1PCVariable}{P\+C\+Variable} pointing to that location. \end{DoxyCompactList}\item 
+void \hyperlink{classpc__emulator_1_1PCConfigurationImpl_a7720a1df058b8f2c65b42a61ee0ccce8}{Run\+P\+LC} ()\hypertarget{classpc__emulator_1_1PCConfigurationImpl_a7720a1df058b8f2c65b42a61ee0ccce8}{}\label{classpc__emulator_1_1PCConfigurationImpl_a7720a1df058b8f2c65b42a61ee0ccce8}
+
+\begin{DoxyCompactList}\small\item\em Launches a P\+LC and waits for completion. \end{DoxyCompactList}\item 
+void \hyperlink{classpc__emulator_1_1PCConfigurationImpl_a6bc0a2d0db10cd899baac75d7d79f33f}{Launch\+P\+LC} ()\hypertarget{classpc__emulator_1_1PCConfigurationImpl_a6bc0a2d0db10cd899baac75d7d79f33f}{}\label{classpc__emulator_1_1PCConfigurationImpl_a6bc0a2d0db10cd899baac75d7d79f33f}
+
+\begin{DoxyCompactList}\small\item\em Launch a P\+LC. \end{DoxyCompactList}\item 
+void \hyperlink{classpc__emulator_1_1PCConfigurationImpl_a710983b0fa5c90e9d98d42b5cffda7bd}{Wait\+For\+Completion} ()\hypertarget{classpc__emulator_1_1PCConfigurationImpl_a710983b0fa5c90e9d98d42b5cffda7bd}{}\label{classpc__emulator_1_1PCConfigurationImpl_a710983b0fa5c90e9d98d42b5cffda7bd}
+
+\begin{DoxyCompactList}\small\item\em Wait for the specified run time to elapse. \end{DoxyCompactList}\item 
 void \hyperlink{classpc__emulator_1_1PCConfigurationImpl_a15dff3a523e1aac72268a30cfb2edf02}{Cleanup} ()\hypertarget{classpc__emulator_1_1PCConfigurationImpl_a15dff3a523e1aac72268a30cfb2edf02}{}\label{classpc__emulator_1_1PCConfigurationImpl_a15dff3a523e1aac72268a30cfb2edf02}
 
 \begin{DoxyCompactList}\small\item\em Cleans up all resources and frees allocated memory. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\subsection*{Additional Inherited Members}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+bool {\bfseries stop}\hypertarget{classpc__emulator_1_1PCConfigurationImpl_a5fa854b73309ce8c8a1c91e385a65c34}{}\label{classpc__emulator_1_1PCConfigurationImpl_a5fa854b73309ce8c8a1c91e385a65c34}
+
+\item 
+bool {\bfseries enable\+\_\+kronos}\hypertarget{classpc__emulator_1_1PCConfigurationImpl_a32a79edc91700f5c8f14a548fb02167f}{}\label{classpc__emulator_1_1PCConfigurationImpl_a32a79edc91700f5c8f14a548fb02167f}
+
+\item 
+float {\bfseries rel\+\_\+cpu\+\_\+speed}\hypertarget{classpc__emulator_1_1PCConfigurationImpl_ad0c39af31f210109df318e77a9dbab14}{}\label{classpc__emulator_1_1PCConfigurationImpl_ad0c39af31f210109df318e77a9dbab14}
+
+\item 
+long {\bfseries per\+\_\+round\+\_\+inc\+\_\+ns}\hypertarget{classpc__emulator_1_1PCConfigurationImpl_a760b0e1484136ef12687deee70d25987}{}\label{classpc__emulator_1_1PCConfigurationImpl_a760b0e1484136ef12687deee70d25987}
+
+\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
@@ -57,11 +80,13 @@ Specific implementation of the \hyperlink{classpc__emulator_1_1PCConfiguration}{
 \subsection{Constructor \& Destructor Documentation}
 \index{pc\+\_\+emulator\+::\+P\+C\+Configuration\+Impl@{pc\+\_\+emulator\+::\+P\+C\+Configuration\+Impl}!P\+C\+Configuration\+Impl@{P\+C\+Configuration\+Impl}}
 \index{P\+C\+Configuration\+Impl@{P\+C\+Configuration\+Impl}!pc\+\_\+emulator\+::\+P\+C\+Configuration\+Impl@{pc\+\_\+emulator\+::\+P\+C\+Configuration\+Impl}}
-\subsubsection[{\texorpdfstring{P\+C\+Configuration\+Impl(string Configuration\+Path)}{PCConfigurationImpl(string ConfigurationPath)}}]{\setlength{\rightskip}{0pt plus 5cm}pc\+\_\+emulator\+::\+P\+C\+Configuration\+Impl\+::\+P\+C\+Configuration\+Impl (
+\subsubsection[{\texorpdfstring{P\+C\+Configuration\+Impl(string Configuration\+Path, bool enable\+\_\+kronos, long per\+\_\+round\+\_\+inc\+\_\+ns=1000000)}{PCConfigurationImpl(string ConfigurationPath, bool enable_kronos, long per_round_inc_ns=1000000)}}]{\setlength{\rightskip}{0pt plus 5cm}pc\+\_\+emulator\+::\+P\+C\+Configuration\+Impl\+::\+P\+C\+Configuration\+Impl (
 \begin{DoxyParamCaption}
-\item[{string}]{Configuration\+Path}
+\item[{string}]{Configuration\+Path, }
+\item[{bool}]{enable\+\_\+kronos, }
+\item[{long}]{per\+\_\+round\+\_\+inc\+\_\+ns = {\ttfamily 1000000}}
 \end{DoxyParamCaption}
-)}\hypertarget{classpc__emulator_1_1PCConfigurationImpl_a43cbbf707440d2e928c4048afca1fe95}{}\label{classpc__emulator_1_1PCConfigurationImpl_a43cbbf707440d2e928c4048afca1fe95}
+)}\hypertarget{classpc__emulator_1_1PCConfigurationImpl_ae6e084d4242e24198c0dce6baef45bf1}{}\label{classpc__emulator_1_1PCConfigurationImpl_ae6e084d4242e24198c0dce6baef45bf1}
 
 
 Constructor. 
@@ -69,6 +94,8 @@ Constructor.
 
 \begin{DoxyParams}{Parameters}
 {\em Configuration\+Path} & Path to txt file specified in configuration.\+proto format \\
+\hline
+{\em enable\+\_\+kronos} & Whether this P\+LC is run under virtual time or not \\
 \hline
 \end{DoxyParams}
 

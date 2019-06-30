@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['launchplc',['LaunchPLC',['../classpc__emulator_1_1PCConfigurationImpl.html#a6bc0a2d0db10cd899baac75d7d79f33f',1,'pc_emulator::PCConfigurationImpl']]],
   ['ld_5finsn',['LD_Insn',['../classpc__emulator_1_1LD__Insn.html',1,'pc_emulator']]],
   ['le_5finsn',['LE_Insn',['../classpc__emulator_1_1LE__Insn.html',1,'pc_emulator']]],
   ['limit',['LIMIT',['../classpc__emulator_1_1LIMIT.html',1,'pc_emulator']]],

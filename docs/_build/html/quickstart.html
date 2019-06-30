@@ -6,8 +6,8 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>&lt;no title&gt; &#8212; OpenSCADA 1.0 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <title>Quick Start Example &#8212; OpenSCADA 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
@@ -17,95 +17,94 @@
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-   
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
+    <link rel="next" title="Advanced Topics" href="advanced_topics.html" />
+    <link rel="prev" title="Kronos driven co-simulation" href="co_simulation.html" /> 
   </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
-
-          <div class="body" role="main">
-            
-  
-
-          </div>
-          
-        </div>
+      <div class="header" role="banner"><h1 class="heading"><a href="index.html">
+          <span>OpenSCADA 1.0 documentation</span></a></h1>
+        <h2 class="heading"><span>Quick Start Example</span></h2>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">OpenSCADA</a></h1>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="co_simulation.html">Kronos driven co-simulation</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="advanced_topics.html">Advanced Topics</a>&#160;&#160;»
+        </p>
 
-
-
-
-
-
-
-
-<h3>Navigation</h3>
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="quick-start-example">
+<h1>Quick Start Example<a class="headerlink" href="#quick-start-example" title="Permalink to this headline">¶</a></h1>
+<p>The quick start example references code included in the <a class="reference external" href="https://github.com/Vignesh2208/OpenSCADA/tree/master/examples/inverted_pendulum">inverted_pendulum</a> directory.</p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>In this example, a cart-pole simulator, a PLC, a modbus communication module and a hmi are started. The cart-pole simulator contains a cart which can move sideways. A pendulum is attached to the cart and it can swing freely. The goal of the experiment is to move the car so that the swinging motion of the pendulum is influenced and the pendulum is eventually made to stand upright and balanced.</p>
+<p>The PLC uses one CPU and periodically reads the current angle made by the pendulum with a normal and directs how much force should be applied on the cart. A PID control has been implemented in IL for this purpose. The constants involved in the control algorithm were carefully chosen to ensure quick stability.</p>
+<p>The modbus communication module attaches to the PLC and waits for queries. The example hmi client periodically (every 100ms) queries the communication module for the current angle made by the pendulum. The communication module receives each query and fetches the result from the PLC CPU’s input memory. The hmi client stores the read values with relative timestamps inside a file.</p>
+</div>
+<div class="section" id="stating-the-example">
+<h2>Stating the example<a class="headerlink" href="#stating-the-example" title="Permalink to this headline">¶</a></h2>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="user_guide.html">User Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="user_guide.html#indices-and-tables">Indices and tables</a></li>
-<li class="toctree-l1"><a class="reference internal" href="advanced_topics.html">Advanced Topics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="developers_guide.html">Developer’s Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-  </ul></li>
+<li><p class="first">Before starting the example ensure Kronos is installed/built and loaded.</p>
+</li>
+<li><p class="first">For convenience, create an OSCADA_INSTALLATION environment variable which contains the openscada installation directory:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">OSCADA_INSTALLATION</span><span class="o">=&lt;</span><span class="n">path</span> <span class="n">to</span> <span class="n">OpenSCADA</span> <span class="n">installation</span> <span class="n">directory</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">To start the example with Kronos:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>cd $OSCADA_INSTALLATION
+bazel run :simulation -- --plc_spec_file=$OSCADA_INSTALLATION/examples/inverted_pendulum/system_specification.prototxt \
+                         --plc_spec_dir=$OSCADA_INSTALLATION/examples/inverted_pendulum \
+                         --is_virtual=True
+</pre></div>
+</div>
+</li>
+<li><p class="first">To start the example without Kronos:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>cd $OSCADA_INSTALLATION
+bazel run :simulation -- --plc_spec_file=$OSCADA_INSTALLATION/examples/inverted_pendulum/system_specification.prototxt \
+                         --plc_spec_dir=$OSCADA_INSTALLATION/examples/inverted_pendulum \
+                         --is_virtual=False
+</pre></div>
+</div>
+</li>
+<li><p class="first">The modbus listen ip and port can be set by specifying other optional arguments.</p>
+</li>
 </ul>
 </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    </div>
+<div class="section" id="viewing-output">
+<h2>Viewing output<a class="headerlink" href="#viewing-output" title="Permalink to this headline">¶</a></h2>
+<p>Logs generated by each process are stored in the <strong>/tmp</strong> directory. Timestamped readings collected by the <strong>HMI</strong> are stored in <strong>/tmp/hmi_readings.txt</strong>. A sample plot which depicts how the pendulum angle varied over time is shown below:</p>
+<blockquote>
+<div><div class="figure align-center">
+<a class="reference internal image-reference" href="_images/pendulum_control.png"><img alt="_images/pendulum_control.png" src="_images/pendulum_control.png" style="width: 80%;" /></a>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+</div></blockquote>
+</div>
+</div>
 
 
-
-
-
-
-
-
-        </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2019, Vignesh Babu.
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
       
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="_sources/quickstart.rst.txt"
-          rel="nofollow">Page source</a>
+        <p>
+        «&#160;&#160;<a href="co_simulation.html">Kronos driven co-simulation</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="advanced_topics.html">Advanced Topics</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Vignesh Babu.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
     </div>
-
-    
-
-    
   </body>
 </html>

@@ -7,8 +7,9 @@ OpenSCADA: IEC 61131-3 compliant PLC emulator with virtual time support
    about
    installation
    user_guide
+   quickstart
    advanced_topics
-   developers_guide
+   doxygen_reference
    contact
    
    :caption: Contents:

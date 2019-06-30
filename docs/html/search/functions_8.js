@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['launchplc',['LaunchPLC',['../classpc__emulator_1_1PCConfigurationImpl.html#a6bc0a2d0db10cd899baac75d7d79f33f',1,'pc_emulator::PCConfigurationImpl']]],
   ['lint_5fto_5fany',['LINT_TO_ANY',['../classpc__emulator_1_1Utils.html#a9926717443d1adac415f6a8bf5c725f7',1,'pc_emulator::Utils']]],
   ['linttoany',['LIntToAny',['../classpc__emulator_1_1DataTypeUtils.html#aa28b3185bb419706594f4b9b660fe932',1,'pc_emulator::DataTypeUtils']]],
   ['logger',['Logger',['../classpc__emulator_1_1Logger.html#a26b4bcb02142f7e206c5f537b8d6367e',1,'pc_emulator::Logger']]],
