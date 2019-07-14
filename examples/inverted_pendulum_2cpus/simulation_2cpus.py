@@ -32,6 +32,7 @@ def start_grpc_server(path_to_plc_specifications_dir, log_file_fd):
     if newpid == 0:
         os.dup2(log_file_fd, sys.stdout.fileno())
         os.dup2(log_file_fd, sys.stderr.fileno())
+        os.setpgrp()
         args = ["pc_grpc_server", path_to_plc_specifications_dir]
         os.execvp(args[0], args)
     else:
@@ -45,7 +46,9 @@ def start_plc(path_to_plc_specification_file, is_virtual, rel_cpu_speed,
     if newpid == 0:
         os.dup2(log_file_fd, sys.stdout.fileno())
         os.dup2(log_file_fd, sys.stderr.fileno())
+
         if is_virtual == True:
+            os.setpgrp()
             args = ["plc_runner", "-f", path_to_plc_specification_file, "-e", "1",
             "-n", str(n_insns_per_round), "-s", str(rel_cpu_speed)]
             os.execvp(args[0], args)
@@ -65,7 +68,9 @@ def start_comm_module(path_to_plc_specification_file, ip_address_to_listen,
     if newpid == 0:
         os.dup2(log_file_fd, sys.stdout.fileno())
         os.dup2(log_file_fd, sys.stderr.fileno())
+        
         if is_virtual:
+            os.setpgrp()
             cmd_str = "modbus_comm_module -f %s -i %s -p %s -r  %s" \
                 % (path_to_plc_specification_file,
                     ip_address_to_listen, listen_port, resource_to_attach)
@@ -87,6 +92,7 @@ def start_example_hmi(is_virtual, rel_cpu_speed,
         os.dup2(log_file_fd, sys.stdout.fileno())
         os.dup2(log_file_fd, sys.stderr.fileno())
         if is_virtual == True:
+            os.setpgrp()
             cmd_str = os.environ['OSCADA_INSTALLATION'] + "/bazel-bin/example_hmi_2conns"
             args = ["tracer", "-c", cmd_str, "-r", str(rel_cpu_speed), "-n", \
                 str(n_insns_per_round)]
@@ -108,7 +114,7 @@ def main(num_dilated_nodes=5,
 
     assert 'OSCADA_INSTALLATION' in os.environ
 
-    signal.signal(signal.SIGINT, handler)
+    
 
     parser = argparse.ArgumentParser()
 
@@ -144,9 +150,23 @@ def main(num_dilated_nodes=5,
         help='comm module 2 attaches to this resource of the plc',
         default='CPU_002')
 
+    if os.path.exists("/tmp/pc_grpc_server_log.txt"):
+        os.remove("/tmp/pc_grpc_server_log.txt")
+
+    if os.path.exists("/tmp/pc_log.txt"):
+        os.remove("/tmp/plc_log.txt")
+
+    if os.path.exists("/tmp/comm_module_1_log.txt"):
+        os.remove("/tmp/comm_module_1_log.txt")
+
+    if os.path.exists("/tmp/comm_module_2_log.txt"):
+        os.remove("/tmp/comm_module_2_log.txt")
+
+    if os.path.exists("/tmp/example_hmi.txt"):
+        os.remove("/tmp/example_hmi.txt")
 
     fd1 = os.open( "/tmp/pc_grpc_server_log.txt", os.O_RDWR | os.O_CREAT )
-    fd2 = os.open( "/tmp/plc_log.txt", os.O_RDWR | os.O_CREAT )
+    fd2 = os.open( "/tmp/plc_log.txt", os.O_RDWR | os.O_CREAT )    
     fd3 = os.open( "/tmp/comm_module_1_log.txt", os.O_RDWR | os.O_CREAT )
     fd4 = os.open( "/tmp/comm_module_2_log.txt", os.O_RDWR | os.O_CREAT )
     fd5 = os.open( "/tmp/example_hmi.txt", os.O_RDWR | os.O_CREAT )
@@ -170,7 +190,7 @@ def main(num_dilated_nodes=5,
     print "Starting PLC ..."
     plc_pid = start_plc(args.plc_spec_file, is_virtual, rel_cpu_speed, \
         num_insns_per_round, fd2)
-
+    
     print "Starting 2 Modbus Comm modules ..."
     comm_module_1_pid = start_comm_module(args.plc_spec_file, \
         args.comm_module_1_bind_ip, args.comm_module_1_listen_port, \
@@ -184,10 +204,15 @@ def main(num_dilated_nodes=5,
     print "Starting HMI ..."
     example_hmi_pid = start_example_hmi(is_virtual, rel_cpu_speed, \
         num_insns_per_round, fd5)
+    
+    
+
 
 
     # Wait until all processes have started and registered themselves
     emulation.wait_for_initialization()
+
+    signal.signal(signal.SIGINT, handler)
 
     total_time_elapsed = 0.0
     while total_time_elapsed <= run_time:
@@ -217,6 +242,7 @@ def main(num_dilated_nodes=5,
         os.kill(comm_module_1_pid, signal.SIGINT)
         os.kill(comm_module_2_pid, signal.SIGINT)
         os.kill(example_hmi_pid, signal.SIGINT)
+        os.kill(grpc_server_pid, signal.SIGINT)
 
     print "Emulation finished ! "
 

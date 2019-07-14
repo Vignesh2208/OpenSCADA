@@ -1,3 +1,5 @@
+#include <sys/types.h>
+
 #include "src/pc_emulator/include/kronos_api.h"
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/lexical_cast.hpp>
@@ -32,6 +34,7 @@ int GetNxtCommand(string& result) {
     }
 
     //std::cout << "Kronos returned: " << result << std::endl;
+    std::cout << "####### My Pid = " << gettid() << " Kronos returned: " << result << std::endl;
     boost::trim_if(result, boost::is_any_of("\t .[]"));
     boost::split(NestedFields, result,
                 boost::is_any_of(",|"), boost::token_compress_on);

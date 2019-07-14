@@ -106,7 +106,7 @@ def main(num_dilated_nodes=3,
 
     global stop
 
-    signal.signal(signal.SIGINT, handler)
+    
 
     parser = argparse.ArgumentParser()
 
@@ -131,6 +131,17 @@ def main(num_dilated_nodes=3,
         help='comm module attaches to this resource of the plc',
         default='CPU_001')
 
+    if os.path.exists("/tmp/pc_grpc_server_log.txt"):
+        os.remove("/tmp/pc_grpc_server_log.txt")
+
+    if os.path.exists("/tmp/pc_log.txt"):
+        os.remove("/tmp/plc_log.txt")
+
+    if os.path.exists("/tmp/comm_module_log.txt"):
+        os.remove("/tmp/comm_module_log.txt")
+
+    if os.path.exists("/tmp/example_hmi.txt"):
+        os.remove("/tmp/example_hmi.txt")
 
     fd1 = os.open( "/tmp/pc_grpc_server_log.txt", os.O_RDWR | os.O_CREAT )
     fd2 = os.open( "/tmp/plc_log.txt", os.O_RDWR | os.O_CREAT )
@@ -170,13 +181,12 @@ def main(num_dilated_nodes=3,
 
     # Wait until all processes have started and registered themselves
     emulation.wait_for_initialization()
+    signal.signal(signal.SIGINT, handler)
 
     total_time_elapsed = 0.0
     while total_time_elapsed <= run_time:
-        try:
-           emulation.run_for(0.01)
-        except KeyboardInterrupt as e:
-           stop = True
+        
+        emulation.run_for(0.01)
         total_time_elapsed += 0.01
         if is_virtual:
             print "Time Elapsed: ", total_time_elapsed
