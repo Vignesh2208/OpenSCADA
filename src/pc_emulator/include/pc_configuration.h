@@ -135,6 +135,8 @@ namespace pc_emulator {
             //! Wait for the specified run time to elapse
             void WaitForCompletion();
 
+            // Schedule all resources to stop gracefully !
+            void StopAllResources();
             //! Cleans up all resources and frees allocated memory
             void Cleanup();
 

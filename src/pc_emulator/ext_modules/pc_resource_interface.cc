@@ -90,18 +90,21 @@ void PCResourceInterface::InitializeAllSFBVars() {
             && (pou_var.pou_type() == PoUType::FC || 
                 pou_var.pou_type() == PoUType::FB ||
                 pou_var.pou_type() == PoUType::PROGRAM));
-                    
-        auto new_var_type = std::unique_ptr<PCDataType>(
-            new PCDataType((PCConfiguration *)__configuration, 
-                pou_var.name(), pou_var.name(), DataTypeCategory::POU));
 
-        Utils::InitializeDataType(__configuration, new_var_type.get(),
-                                pou_var);
+        if (__configuration->RegisteredDataTypes->GetDataType(
+            pou_var.name()) == nullptr) {        
+            auto new_var_type = std::unique_ptr<PCDataType>(
+                new PCDataType((PCConfiguration *)__configuration, 
+                    pou_var.name(), pou_var.name(), DataTypeCategory::POU));
+
+            Utils::InitializeDataType(__configuration, new_var_type.get(),
+                                    pou_var);
 
 
-        __configuration->RegisteredDataTypes->RegisterDataType(
-                                    pou_var.name(),
-                                    std::move(new_var_type));
+            __configuration->RegisteredDataTypes->RegisterDataType(
+                                        pou_var.name(),
+                                        std::move(new_var_type));
+        }
 
         
         auto new_pou_var = std::unique_ptr<PCVariable>(new PCVariable(

@@ -113,6 +113,14 @@ py_binary(
     deps = [":py_access_service_proto"],
 )
 
+py_binary(
+    name="simulation_2cpus",
+    srcs = [
+        "examples/inverted_pendulum_2cpus/simulation_2cpus.py",
+    ],
+    deps = [":py_access_service_proto"],
+)
+
 cc_binary(
     name="example_comm_module",
     srcs = [
@@ -128,6 +136,16 @@ cc_binary(
     name="example_hmi",
     srcs = [
         "examples/inverted_pendulum/hmi.cc"
+    ],
+    deps = ["@boost//:algorithm", "@modbuslib//:modbusapi"], 
+    copts = ["-Iexternal/gtest/include -I/usr/local/include -fpermissive -Wno-reorder"],
+    linkstatic = 1,
+)
+
+cc_binary(
+    name="example_hmi_2conns",
+    srcs = [
+        "examples/inverted_pendulum_2cpus/hmi.cc"
     ],
     deps = ["@boost//:algorithm", "@modbuslib//:modbusapi"], 
     copts = ["-Iexternal/gtest/include -I/usr/local/include -fpermissive -Wno-reorder"],

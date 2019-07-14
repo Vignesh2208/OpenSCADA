@@ -61,12 +61,8 @@ void signal_handler( int signal_num ) {
     std::cout << "Interrupted! Stopping PLC .... " << std::endl; 
      
     if (configuration != nullptr) {
-        configuration->Cleanup();
-        delete configuration;
-    }
-
-    std::cout << "PLC Stopped ..." << std::endl;  
-    exit(0);   
+        configuration->StopAllResources();
+    }  
 } 
   
 

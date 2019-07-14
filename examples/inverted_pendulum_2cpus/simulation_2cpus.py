@@ -9,7 +9,7 @@
 
 
 from contrib.emulation_driver import EmulationDriver
-from pendulum_sim import PendulumSimulator
+from pendulum_sim import PendulumSystemSimulator
 import argparse
 import os
 import signal
@@ -87,24 +87,26 @@ def start_example_hmi(is_virtual, rel_cpu_speed,
         os.dup2(log_file_fd, sys.stdout.fileno())
         os.dup2(log_file_fd, sys.stderr.fileno())
         if is_virtual == True:
-            cmd_str = "example_hmi"
+            cmd_str = os.environ['OSCADA_INSTALLATION'] + "/bazel-bin/example_hmi_2conns"
             args = ["tracer", "-c", cmd_str, "-r", str(rel_cpu_speed), "-n", \
                 str(n_insns_per_round)]
             os.execvp(args[0], args)
         else:
-            args = ["example_hmi"]
+            args = [os.environ['OSCADA_INSTALLATION'] + "/bazel-bin/example_hmi_2conns"]
             os.execvp(args[0], args)
     else:
         print "Started example hmi with pid ", newpid
         return newpid
 
 
-def main(num_dilated_nodes=3,
+def main(num_dilated_nodes=5,
         run_time=5, 
         rel_cpu_speed=1.0,
         num_insns_per_round=1000000):
 
     global stop
+
+    assert 'OSCADA_INSTALLATION' in os.environ
 
     signal.signal(signal.SIGINT, handler)
 
@@ -119,27 +121,39 @@ def main(num_dilated_nodes=3,
     parser.add_argument('--plc_spec_dir', dest='plc_spec_dir',
             help='path to directory containing spec protxt files of all plcs')
 
-    parser.add_argument('--comm_module_bind_ip', dest='comm_module_bind_ip',
+    parser.add_argument('--comm_module_1_bind_ip', dest='comm_module_1_bind_ip',
                         help='ip_address to which comm module would bind', \
                         default="0.0.0.0")
 
-    parser.add_argument('--comm_module_listen_port', dest='comm_module_listen_port',
-                        help='listen port of comm module', default="1502")
+    parser.add_argument('--comm_module_2_bind_ip', dest='comm_module_2_bind_ip',
+                        help='ip_address to which comm module would bind', \
+                        default="0.0.0.0")
 
-    parser.add_argument('--comm_module_attached_resource', \
-        dest='comm_module_attached_resource',
-        help='comm module attaches to this resource of the plc',
+    parser.add_argument('--comm_module_1_listen_port', dest='comm_module_1_listen_port',
+                        help='listen port of comm module', default="1502")
+    parser.add_argument('--comm_module_2_listen_port', dest='comm_module_2_listen_port',
+                        help='listen port of comm module', default="1503")
+
+    parser.add_argument('--comm_module_1_attached_resource', \
+        dest='comm_module_1_attached_resource',
+        help='comm module 1 attaches to this resource of the plc',
         default='CPU_001')
+
+    parser.add_argument('--comm_module_2_attached_resource', \
+        dest='comm_module_2_attached_resource',
+        help='comm module 2 attaches to this resource of the plc',
+        default='CPU_002')
 
 
     fd1 = os.open( "/tmp/pc_grpc_server_log.txt", os.O_RDWR | os.O_CREAT )
     fd2 = os.open( "/tmp/plc_log.txt", os.O_RDWR | os.O_CREAT )
-    fd3 = os.open( "/tmp/comm_module_log.txt", os.O_RDWR | os.O_CREAT )
-    fd4 = os.open( "/tmp/example_hmi.txt", os.O_RDWR | os.O_CREAT )
+    fd3 = os.open( "/tmp/comm_module_1_log.txt", os.O_RDWR | os.O_CREAT )
+    fd4 = os.open( "/tmp/comm_module_2_log.txt", os.O_RDWR | os.O_CREAT )
+    fd5 = os.open( "/tmp/example_hmi.txt", os.O_RDWR | os.O_CREAT )
 
     args = parser.parse_args()
      
-    pendulum_sim = PendulumSimulator()
+    pendulum_sim = PendulumSystemSimulator()
     if args.is_virtual == "True":
         is_virtual = True
     else:
@@ -157,15 +171,19 @@ def main(num_dilated_nodes=3,
     plc_pid = start_plc(args.plc_spec_file, is_virtual, rel_cpu_speed, \
         num_insns_per_round, fd2)
 
-    print "Starting Modbus Comm module ..."
-    comm_module_pid = start_comm_module(args.plc_spec_file, \
-        args.comm_module_bind_ip, args.comm_module_listen_port, \
-        args.comm_module_attached_resource, is_virtual, rel_cpu_speed, \
+    print "Starting 2 Modbus Comm modules ..."
+    comm_module_1_pid = start_comm_module(args.plc_spec_file, \
+        args.comm_module_1_bind_ip, args.comm_module_1_listen_port, \
+        args.comm_module_1_attached_resource, is_virtual, rel_cpu_speed, \
         num_insns_per_round, fd3)
+    comm_module_2_pid = start_comm_module(args.plc_spec_file, \
+        args.comm_module_2_bind_ip, args.comm_module_2_listen_port, \
+        args.comm_module_2_attached_resource, is_virtual, rel_cpu_speed, \
+        num_insns_per_round, fd4)
 
     print "Starting HMI ..."
     example_hmi_pid = start_example_hmi(is_virtual, rel_cpu_speed, \
-        num_insns_per_round, fd4)
+        num_insns_per_round, fd5)
 
 
     # Wait until all processes have started and registered themselves
@@ -173,10 +191,7 @@ def main(num_dilated_nodes=3,
 
     total_time_elapsed = 0.0
     while total_time_elapsed <= run_time:
-        try:
-           emulation.run_for(0.01)
-        except KeyboardInterrupt as e:
-           stop = True
+        emulation.run_for(0.01)
         total_time_elapsed += 0.01
         if is_virtual:
             print "Time Elapsed: ", total_time_elapsed
@@ -184,13 +199,13 @@ def main(num_dilated_nodes=3,
             break
 
     print "Stopping Emulation ..."
-    sys.stdout.flush()
     emulation.stop_exp() 
 
     os.close(fd1)
     os.close(fd2)
     os.close(fd3)
     os.close(fd4)
+    os.close(fd5)
 
 
 
@@ -199,7 +214,8 @@ def main(num_dilated_nodes=3,
     
     if is_virtual == False:
         os.kill(plc_pid, signal.SIGINT)
-        os.kill(comm_module_pid, signal.SIGINT)
+        os.kill(comm_module_1_pid, signal.SIGINT)
+        os.kill(comm_module_2_pid, signal.SIGINT)
         os.kill(example_hmi_pid, signal.SIGINT)
 
     print "Emulation finished ! "

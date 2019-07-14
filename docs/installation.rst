@@ -7,11 +7,11 @@ Installing GRPC
 ^^^^^^^^^^^^^^^
 * Install pip::
 
-	sudo apt-get install python3-pip
+	sudo apt-get install python-pip
 
 * To install grpc for python execute the following commands::
 
-	pip3 instatll grpcio grpcio-tools
+	pip instatll grpcio grpcio-tools
 
 Installing Bazel
 ^^^^^^^^^^^^^^^^

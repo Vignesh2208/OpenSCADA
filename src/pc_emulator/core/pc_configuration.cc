@@ -621,6 +621,18 @@ void PCConfigurationImpl::WaitForCompletion() {
         "Finished executing all programs");
 }
 
+void PCConfigurationImpl::StopAllResources() {
+    for (auto it = __ResourceManagers.begin();
+        it != __ResourceManagers.end(); it++) {
+
+        PCLogger->LogMessage(LogLevels::LOG_INFO, "Stopping Resource: "
+            + it->first);
+
+        auto ResourceManager = it->second.get();
+        ResourceManager->__AssociatedResource->clock->__stop = true;
+    }
+}
+
 void PCConfigurationImpl::Cleanup() {
     for ( auto it = __AccessedFields.begin(); it != __AccessedFields.end(); 
             ++it ) {
@@ -643,4 +655,6 @@ void PCConfigurationImpl::Cleanup() {
     RegisteredDataTypes->Cleanup();
 
     delete RegisteredResources;
+
+    std::cout << "Configuration: Cleaned up" << std::endl;
 }

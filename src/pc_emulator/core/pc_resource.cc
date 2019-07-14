@@ -225,20 +225,27 @@ void PCResourceImpl::InitializeAllSFBVars() {
             && (pou_var.pou_type() == PoUType::FC || 
                 pou_var.pou_type() == PoUType::FB ||
                 pou_var.pou_type() == PoUType::PROGRAM));
-                    
-        auto new_var_type = std::unique_ptr<PCDataType>(
-            new PCDataType((PCConfiguration *)__configuration, 
-                pou_var.name(), pou_var.name(), DataTypeCategory::POU));
 
-        Utils::InitializeDataType(__configuration, new_var_type.get(),
-                                pou_var);
+        if (__configuration->RegisteredDataTypes->GetDataType(
+            pou_var.name()) == nullptr) { 
+            auto new_var_type = std::unique_ptr<PCDataType>(
+                new PCDataType((PCConfiguration *)__configuration, 
+                    pou_var.name(), pou_var.name(), DataTypeCategory::POU));
 
-        auto code_container = CreateNewCodeContainer(new_var_type.get());
+            Utils::InitializeDataType(__configuration, new_var_type.get(),
+                                    pou_var);
+
+            
+
+            __configuration->RegisteredDataTypes->RegisterDataType(
+                                        pou_var.name(),
+                                        std::move(new_var_type));
+        }
+
+        auto registered_type = __configuration->RegisteredDataTypes->GetDataType(
+                pou_var.name()); 
+        auto code_container = CreateNewCodeContainer(registered_type);
         assert(code_container != nullptr);
-
-        __configuration->RegisteredDataTypes->RegisterDataType(
-                                    pou_var.name(),
-                                    std::move(new_var_type));
 
         
         auto new_pou_var = std::unique_ptr<PCVariable>(new PCVariable(
@@ -493,6 +500,7 @@ void PCResourceImpl::Cleanup() {
     delete __InsnRegistry;
     delete __SFCRegistry;
     delete __SFBRegistry;
+    std:cout << "Resource: " << __ResourceName << " cleaned up ..." << std::endl;
 }
 
 PoUCodeContainer * PCResourceImpl::CreateNewCodeContainer(

@@ -45,6 +45,7 @@ PCResource * ResourceRegistry::GetResource(string ResourceName) {
     }
 }
 
+
 void ResourceRegistry::Cleanup() {
     for ( auto it = __Registry.begin(); it != __Registry.end(); 
             ++it ) {
