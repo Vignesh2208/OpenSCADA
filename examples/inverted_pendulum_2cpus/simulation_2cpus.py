@@ -32,6 +32,9 @@ def start_grpc_server(path_to_plc_specifications_dir, log_file_fd):
     if newpid == 0:
         os.dup2(log_file_fd, sys.stdout.fileno())
         os.dup2(log_file_fd, sys.stderr.fileno())
+        # We change process group here so that any signal sent to the 
+        # main process doesn't automatically affect all forked children
+        # This is necessary for a clean exit if interrupted
         os.setpgrp()
         args = ["pc_grpc_server", path_to_plc_specifications_dir]
         os.execvp(args[0], args)
@@ -48,6 +51,9 @@ def start_plc(path_to_plc_specification_file, is_virtual, rel_cpu_speed,
         os.dup2(log_file_fd, sys.stderr.fileno())
 
         if is_virtual == True:
+            # We change process group here so that any signal sent to the 
+            # main process doesn't automatically affect all forked children
+            # This is necessary for a clean exit if interrupted
             os.setpgrp()
             args = ["plc_runner", "-f", path_to_plc_specification_file, "-e", "1",
             "-n", str(n_insns_per_round), "-s", str(rel_cpu_speed)]
@@ -70,6 +76,9 @@ def start_comm_module(path_to_plc_specification_file, ip_address_to_listen,
         os.dup2(log_file_fd, sys.stderr.fileno())
         
         if is_virtual:
+            # We change process group here so that any signal sent to the 
+            # main process doesn't automatically affect all forked children
+            # This is necessary for a clean exit if interrupted
             os.setpgrp()
             cmd_str = "modbus_comm_module -f %s -i %s -p %s -r  %s" \
                 % (path_to_plc_specification_file,
@@ -92,6 +101,9 @@ def start_example_hmi(is_virtual, rel_cpu_speed,
         os.dup2(log_file_fd, sys.stdout.fileno())
         os.dup2(log_file_fd, sys.stderr.fileno())
         if is_virtual == True:
+            # We change process group here so that any signal sent to the 
+            # main process doesn't automatically affect all forked children
+            # This is necessary for a clean exit if interrupted
             os.setpgrp()
             cmd_str = os.environ['OSCADA_INSTALLATION'] + "/bazel-bin/example_hmi_2conns"
             args = ["tracer", "-c", cmd_str, "-r", str(rel_cpu_speed), "-n", \
@@ -106,7 +118,7 @@ def start_example_hmi(is_virtual, rel_cpu_speed,
 
 
 def main(num_dilated_nodes=5,
-        run_time=5, 
+        run_time=30, 
         rel_cpu_speed=1.0,
         num_insns_per_round=1000000):
 

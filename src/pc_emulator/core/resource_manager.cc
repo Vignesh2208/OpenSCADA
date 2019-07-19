@@ -64,9 +64,7 @@ void ResourceManager::ExecuteResource() {
                 __AssociatedResource->GetIntervalTaskToExecuteAt(
                     curr_time*1000.0);
             if (!NxtTask) {
-                std::cout << "Resrouce: " << __AssociatedResource->__ResourceName << " Sleeping for 1ms" << std::endl;
                 __AssociatedResource->clock->SleepFor(US_IN_MS);
-                std::cout << "Resource: " << __AssociatedResource->__ResourceName << " Woke-up from sleep" << std::endl;
             } else {
                 __AssociatedResource->__configuration->PCLogger->LogMessage(
                 LogLevels::LOG_NOTICE,
@@ -174,15 +172,13 @@ void ResourceManager::ExecuteResourceManager() {
             __AssociatedResource->FromResourceManager.push(std::to_string(
                             curr_time + nxt_round_inc));
             auto recv = __AssociatedResource->ToResourceManager.pop();
-	    std::cout << "Thread: " << gettid() << " Curr time: " << curr_time << std::endl; 
+	    
 
             if (recv == "WAIT_FOR_IO") {
                 curr_time = __AssociatedResource->clock->__time;
-                std::cout << "Thread: " << gettid() <<  " Waiting for IO " << std::endl;
                 while (recv != "FINISHED_IO") {
                     
                     nxt_command = "0";
-                    std::cout << "Thread: " << gettid() <<  " Getting Nxt Command " << std::endl;
                     GetNxtCommand(nxt_command);
                     if (nxt_command == "STOP") {
                         break;
@@ -207,7 +203,6 @@ void ResourceManager::ExecuteResourceManager() {
                     nxt_round_inc = per_round_advance_ns - std::stod(recv);
                 }
                 nxt_command = recv;
-                std::cout << "Thread: " << gettid() <<  " Getting Nxt Command from here " << std::endl;
                 GetNxtCommand(nxt_command);
                 if (nxt_command == "STOP") {
                     break;

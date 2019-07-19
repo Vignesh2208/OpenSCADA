@@ -89,7 +89,6 @@ class EmulationDriver(object):
 
             if n_rounds <= 0 :
                 n_rounds = 1
-            print "Num progressed rounds: ", self.n_progressed_rounds
             kf.progress_n_rounds(int(n_rounds))
             #print "Progress call finished !"
             self.n_progressed_rounds += int(n_rounds)

@@ -87,6 +87,10 @@ In this example, 3 POUs are defined. Two of them are Function Blocks, while one 
 	    }
 	}
 
+.. note:: POUs defined in each resource must have unique names. This is not an IEC 61131-3 requirement but rather a current limitation in OpenSCADA design for simplicity.
+
+.. note:: POUs defined in one resource specification cannot be referenced or used in another resource specification.
+
 **interval_task**: This field is used to specify a task which gets invoked periodically according to the specified period. Programs and Function Blocks could be attached to this task and periodically invoked. In OpenSCADA, for each CPU, only one interval task can be specified. In this example, the interval task is called "CYCLIC_TASK" and it executes one every 10ms.::
 
 	interval_task {

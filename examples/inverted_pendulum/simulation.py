@@ -32,6 +32,11 @@ def start_grpc_server(path_to_plc_specifications_dir, log_file_fd):
     if newpid == 0:
         os.dup2(log_file_fd, sys.stdout.fileno())
         os.dup2(log_file_fd, sys.stderr.fileno())
+
+        # We change process group here so that any signal sent to the 
+        # main process doesn't automatically affect all forked children
+        # This is necessary for a clean exit if interrupted
+        os.setpgrp()
         args = ["pc_grpc_server", path_to_plc_specifications_dir]
         os.execvp(args[0], args)
     else:
@@ -46,6 +51,10 @@ def start_plc(path_to_plc_specification_file, is_virtual, rel_cpu_speed,
         os.dup2(log_file_fd, sys.stdout.fileno())
         os.dup2(log_file_fd, sys.stderr.fileno())
         if is_virtual == True:
+            # We change process group here so that any signal sent to the 
+            # main process doesn't automatically affect all forked children
+            # This is necessary for a clean exit if interrupted
+            os.setpgrp()
             args = ["plc_runner", "-f", path_to_plc_specification_file, "-e", "1",
             "-n", str(n_insns_per_round), "-s", str(rel_cpu_speed)]
             os.execvp(args[0], args)
@@ -69,6 +78,10 @@ def start_comm_module(path_to_plc_specification_file, ip_address_to_listen,
             cmd_str = "modbus_comm_module -f %s -i %s -p %s -r  %s" \
                 % (path_to_plc_specification_file,
                     ip_address_to_listen, listen_port, resource_to_attach)
+            # We change process group here so that any signal sent to the 
+            # main process doesn't automatically affect all forked children
+            # This is necessary for a clean exit if interrupted
+            os.setpgrp()
             args = ["tracer", "-c", cmd_str, "-r", str(rel_cpu_speed), "-n", \
                 str(n_insns_per_round)]
             os.execvp(args[0], args)
@@ -90,6 +103,10 @@ def start_example_hmi(is_virtual, rel_cpu_speed,
             cmd_str = "example_hmi"
             args = ["tracer", "-c", cmd_str, "-r", str(rel_cpu_speed), "-n", \
                 str(n_insns_per_round)]
+            # We change process group here so that any signal sent to the 
+            # main process doesn't automatically affect all forked children
+            # This is necessary for a clean exit if interrupted
+            os.setpgrp()
             os.execvp(args[0], args)
         else:
             args = ["example_hmi"]
