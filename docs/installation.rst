@@ -11,6 +11,7 @@ Installing Dependencies
         pip install --upgrade pip
 
 * To install grpc and other dependencies for python execute the following commands::
+
 	sudo apt-get install python-tk
 	sudo python -m pip install grpcio grpcio-tools numpy opencv-python matplotlib
 
@@ -22,12 +23,13 @@ Installing Bazel
 	sudo apt-get install openjdk-8-jdk
 
 * Install Bazel 0.23.1::
+
 	wget https://github.com/bazelbuild/bazel/releases/download/0.23.1/bazel-0.23.1-installer-linux-x86_64.sh
 	chmod +x bazel-0.23.1-installer-linux-x86_64.sh
 	./bazel-0.23.1-installer-linux-x86_64.sh
 	
 
-Make sure the version of bazel is atleast 0.21.0 or greater (run command: bazel version)
+Make sure the version of bazel is atleast 0.23.1 (run command: bazel version)
 
 Installing OpenSCADA
 ^^^^^^^^^^^^^^^^^^^^
