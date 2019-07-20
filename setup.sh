@@ -28,6 +28,7 @@ if [ "$1" == "install" ]; then
 
     echo "Building Example HMI ..."
     bazel build :example_hmi
+    bazel build :example_hmi_2conns
     sudo cp bazel-bin/example_hmi /usr/bin
 
     echo "Build and Install finished ..."
