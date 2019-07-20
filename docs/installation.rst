@@ -1,7 +1,12 @@
 Installation
 ============
 
-To setup OpenSCADA, Kronos, grpc and bazel package manager need to be first installed. To install Kronos, follow steps included in the `documentation <https://github.com/Vignesh2208/Kronos>`_. To install all the other dependencies, follow the steps given below:
+To setup OpenSCADA, Kronos, grpc and bazel package manager need to be first installed. 
+
+Installing Kronos
+^^^^^^^^^^^^^^^^^
+
+To install Kronos, follow steps included in the `documentation <https://kronoz.readthedocs.io/en/latest/index.html>`_. To install all the other dependencies, follow the steps given below.
 
 Installing Dependencies
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -46,6 +51,12 @@ Installing OpenSCADA
 
 	export OSCADA_INSTALLATION=<path to installation directory>
 	export PYTHONPATH="${PYTHONPATH}:${OSCADA_INSTALLATION}"
+	
+Ready to use VM
+^^^^^^^^^^^^^^^
+
+A link to use VM containing OpenSCADA and Kronos will be provided upon request. Please contact projectmoses@illinois.edu.
+
 
 Uninstalling OpenSCADA
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -53,4 +64,6 @@ Uninstalling OpenSCADA
 * To uninstall/cleanup run the following command::
 
 	sudo ./setup.sh uninstall
+
+ 
 	
