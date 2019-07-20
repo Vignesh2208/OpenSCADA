@@ -57,4 +57,6 @@ It can be started under virtual time with the following command::
 	bazel run :simulation_2cpus -- --plc_spec_file=$OSCADA_INSTALLATION/examples/inverted_pendulum_2cpus/system_specification.prototxt \        
 				       --plc_spec_dir=$OSCADA_INSTALLATION/examples/inverted_pendulum_2cpus \
 			               --is_virtual=True
+
+This example is a good exercise to understand the benefits of virtual time. When run without Kronos you will notice that both pendulums keep oscillating and never settle down. This is because the PLCs cannot process requests fast enough and in synchronization with the pendulum simulator. But with Kronos, you would see both pendulums stop oscillating and eventually converge. 
  
