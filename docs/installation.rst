@@ -3,15 +3,16 @@ Installation
 
 To setup OpenSCADA, Kronos, grpc and bazel package manager need to be first installed. To install Kronos, follow steps included in the `documentation <https://github.com/Vignesh2208/Kronos>`_. To install all the other dependencies, follow the steps given below:
 
-Installing GRPC
-^^^^^^^^^^^^^^^
+Installing Dependencies
+^^^^^^^^^^^^^^^^^^^^^^^
 * Install pip::
 
 	sudo apt-get install python-pip
+        pip install --upgrade pip
 
-* To install grpc for python execute the following commands::
-
-	pip instatll grpcio grpcio-tools
+* To install grpc and other dependencies for python execute the following commands::
+	sudo apt-get install python-tk
+	sudo python -m pip install grpcio grpcio-tools numpy opencv-python matplotlib
 
 Installing Bazel
 ^^^^^^^^^^^^^^^^
@@ -20,12 +21,11 @@ Installing Bazel
 
 	sudo apt-get install openjdk-8-jdk
 
-* Install Bazel::
-
-	echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
-	curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
-	sudo apt-get update && sudo apt-get install bazel
-	sudo apt-get install --only-upgrade bazel
+* Install Bazel 0.23.1::
+	wget https://github.com/bazelbuild/bazel/releases/download/0.23.1/bazel-0.23.1-installer-linux-x86_64.sh
+	chmod +x bazel-0.23.1-installer-linux-x86_64.sh
+	./bazel-0.23.1-installer-linux-x86_64.sh
+	
 
 Make sure the version of bazel is atleast 0.21.0 or greater (run command: bazel version)
 
@@ -39,6 +39,11 @@ Installing OpenSCADA
 * Run the installation setup script. This would take a while the first time it is run because bazel downloads and installs other dependencies::
 
 	sudo ./setup.sh install
+
+* Update environment variables. Add OSCADA_INSTALLATION and update PYTHONPATH in bashrc::
+
+	export OSCADA_INSTALLATION=<path to installation directory>
+	export PYTHONPATH="${PYTHONPATH}:${OSCADA_INSTALLATION}"
 
 Uninstalling OpenSCADA
 ^^^^^^^^^^^^^^^^^^^^^^

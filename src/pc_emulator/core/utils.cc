@@ -11,6 +11,7 @@
 #include <sys/types.h>
 #include <pwd.h>
 #include <cerrno>
+#include <climits>
 
 
 #include "src/pc_emulator/include/pc_variable.h"
@@ -129,9 +130,10 @@ bool Utils::GenerateFullSpecification(string SystemSpecificationPath,
     if (configuration.has_log_file_path())
         full_specification.set_log_file_path(configuration.log_file_path());
 
-    
-    full_specification.set_run_time_secs(configuration.run_time_secs());
-
+    if (configuration.has_run_time_secs())    
+    	full_specification.set_run_time_secs(configuration.run_time_secs());
+    else
+	full_specification.set_run_time_secs(INT_MAX -1);
     num_resources = configuration.hardware_spec().num_resources();
     if (num_resources < 0 )
         return false;
@@ -166,11 +168,15 @@ bool Utils::GenerateFullSpecification(string SystemSpecificationPath,
     }
 
     for (auto& resource_file_path: configuration.resource_file_path()) {
-        int fd = open(resource_file_path.c_str(), O_RDONLY);
+	string full_resource_file_path = resource_file_path;
+        if (resource_file_path[0] == '~') {
+		full_resource_file_path.replace(0,1, std::getenv("HOME"));
+	}
+        int fd = open(full_resource_file_path.c_str(), O_RDONLY);
         auto resource_spec = machine_spec->add_resource_spec();
         if( fd < 0 ) {
-            std::cerr << " Error opening resource specification file " 
-                      << resource_file_path << std::endl;
+            std::cerr << " Error opening resource specification. File: " 
+                      << full_resource_file_path << " doesn't exist!" << std::endl;
             return false;
         }
 
@@ -181,7 +187,7 @@ bool Utils::GenerateFullSpecification(string SystemSpecificationPath,
         if (!google::protobuf::TextFormat::Parse(&fileInput,
                                         resource_spec)) {
             std::cerr << std::endl << "Failed to parse resource spec file!" 
-             << resource_file_path << std::endl;
+             << full_resource_file_path << std::endl;
             return false;
         }
     }
@@ -1049,11 +1055,9 @@ string Utils::GetInitialValueForArrayIdx(int Idx, string InitialValue,
 
 string Utils::GetInstallationDirectory() {
 
-    string InstallationDir = getpwuid(getuid())->pw_dir;
+    string InstallationDir = std::getenv("OSCADA_INSTALLATION");
 
-    if (InstallationDir == "/root")
-        InstallationDir = "/home/moses";
-    return InstallationDir + "/OpenSCADA";
+    return InstallationDir;
 }
 
 string Utils::GetElementaryDataTypeName(int Category) {

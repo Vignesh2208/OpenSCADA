@@ -1,6 +1,5 @@
 configuration_name: "Pendulum_PLC"
 log_level: LOG_NOTICE
-run_time_secs: 30
 
 hardware_spec {
     num_resources: 1
@@ -327,4 +326,4 @@ var_global {
     }
 }
 
-resource_file_path: "/home/moses/OpenSCADA/examples/inverted_pendulum/CPU_001.prototxt"
+resource_file_path: "~/OpenSCADA/examples/inverted_pendulum/CPU_001.prototxt"

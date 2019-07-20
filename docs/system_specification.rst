@@ -13,9 +13,8 @@ The system level specification of the PLC is specified as a prototxt file of the
 
 **log_file_path**: (optional) If specified the logs are stored here.
 
-**run_time_secs**: Total time for which the PLC should run::
+**run_time_secs**: (optional) Total time for which the PLC should run. If unspecified, will run forever untill interrupted::
 
-	run_time_secs: 30
  
 **hardware_spec**: Description about the PLC's hardware according to HardwareSpecification message defined in `system_spectification.proto <https://github.com/Vignesh2208/OpenSCADA/tree/master/src/pc_emulator/proto/system_specification.proto/>`_. (Full example is not included here for brevity). In this hardware_spec, num_resources specifies the number of CPUs attached to the PLC. Here it is 1. The hardware_spec also includes the mean and standard deviation of execution times of all instructions, system functions and system function blocks. The mean and standard deviation execution times are all specified in nanoseconds::
 	
@@ -169,5 +168,5 @@ In this example, 4 PLC level global variables are declared:
 
 **resource_file_path**: Indicates where to find specification this PLC first and only CPU. Since the PLC can have multiple CPUs, this field can be repeated::
 
-	resource_file_path: "/home/moses/OpenSCADA/examples/inverted_pendulum/CPU_001.prototxt"
+	resource_file_path: "~/OpenSCADA/examples/inverted_pendulum/CPU_001.prototxt"
 

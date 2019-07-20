@@ -179,4 +179,4 @@ var_global {
     }
 }
 
-resource_file_path: "/home/moses/OpenSCADA/src/pc_emulator/tests/sfc_tests/CPU_001.prototxt"
+resource_file_path: "~/OpenSCADA/src/pc_emulator/tests/sfc_tests/CPU_001.prototxt"

@@ -307,4 +307,4 @@ var_access {
 }
 
 
-resource_file_path: "/home/moses/OpenSCADA/examples/idle_plc/CPU_001.prototxt"
+resource_file_path: "~/OpenSCADA/examples/idle_plc/CPU_001.prototxt"

@@ -23,8 +23,8 @@ message SystemConfiguration {
     // Log files are stored here
     optional string log_file_path = 3;
 
-    // Running time of the emulator
-    required int32 run_time_secs = 4;
+    // Running time of the emulator. If not specified, runs until interrupted
+    optional int32 run_time_secs = 4;
 
     // Description of the PLC's hardware
     required HardwareSpecification hardware_spec = 5;
