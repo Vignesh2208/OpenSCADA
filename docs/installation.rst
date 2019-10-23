@@ -1,7 +1,12 @@
 Installation
 ============
 
-To setup OpenSCADA, Kronos, grpc and bazel package manager need to be first installed. To install Kronos, follow steps included in the `documentation <https://github.com/Vignesh2208/Kronos>`_. To install all the other dependencies, follow the steps given below:
+To setup OpenSCADA, Kronos, grpc and bazel package manager need to be first installed. 
+
+Installing Kronos
+^^^^^^^^^^^^^^^^^
+
+To install Kronos, follow steps included in the `documentation <https://kronoz.readthedocs.io/en/latest/index.html>`_. To install all the other dependencies, follow the steps given below.
 
 Installing Dependencies
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -11,6 +16,7 @@ Installing Dependencies
         pip install --upgrade pip
 
 * To install grpc and other dependencies for python execute the following commands::
+
 	sudo apt-get install python-tk
 	sudo python -m pip install grpcio grpcio-tools numpy opencv-python matplotlib
 
@@ -22,12 +28,13 @@ Installing Bazel
 	sudo apt-get install openjdk-8-jdk
 
 * Install Bazel 0.23.1::
+
 	wget https://github.com/bazelbuild/bazel/releases/download/0.23.1/bazel-0.23.1-installer-linux-x86_64.sh
 	chmod +x bazel-0.23.1-installer-linux-x86_64.sh
 	./bazel-0.23.1-installer-linux-x86_64.sh
 	
 
-Make sure the version of bazel is atleast 0.21.0 or greater (run command: bazel version)
+Make sure the version of bazel is atleast 0.23.1 (run command: bazel version)
 
 Installing OpenSCADA
 ^^^^^^^^^^^^^^^^^^^^
@@ -44,6 +51,12 @@ Installing OpenSCADA
 
 	export OSCADA_INSTALLATION=<path to installation directory>
 	export PYTHONPATH="${PYTHONPATH}:${OSCADA_INSTALLATION}"
+	
+Ready to use VM
+^^^^^^^^^^^^^^^
+
+A link to use VM containing OpenSCADA and Kronos will be provided upon request. Please contact projectmoses@illinois.edu.
+
 
 Uninstalling OpenSCADA
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -51,4 +64,6 @@ Uninstalling OpenSCADA
 * To uninstall/cleanup run the following command::
 
 	sudo ./setup.sh uninstall
+
+ 
 	
