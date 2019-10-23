@@ -31,6 +31,7 @@ class SinglePendulumSimulator(object):
         self.g = 9.81
         self.errors, self.force, self.theta, self.times, self.x = [],[],[],[],[]
         self.world_size = 1000
+        self.total_time_elapsed = 0
         
         # Initializing cart and pendulum objects
         self.cart = Cart(int(0.5 * self.world_size),
@@ -43,7 +44,14 @@ class SinglePendulumSimulator(object):
         self.x_tminus1 = self.x_tminus2 = self.cart.x
         self.previous_time_delta = 0
 	self.cpu_id = controlling_plc_cpu
-
+        height = self.world_size
+        width = self.world_size
+        layers = 3
+        size = (width,height)
+        #self.out = cv2.VideoWriter('/tmp/simulation-%s.mp4' %(str(self.cpu_id)),cv2.VideoWriter_fourcc(*'MP4V'), 15, size)
+        self.im_array = []
+        self.im_count = 1
+        self.pendulum_angles = []
     def display_stuff(self):
         # This function displays the pendulum and cart.
         length_for_display = self.pendulum.length * 100
@@ -61,7 +69,10 @@ class SinglePendulumSimulator(object):
         cv2.circle(A, (pendulum_x_endpoint, pendulum_y_endpoint), 6,\
             (255,255,255),-1)
         cv2.imshow(self.cpu_id,A)
-        cv2.waitKey(5)
+        cv2.waitKey(1)
+        #if self.im_count < 5000:
+        #    self.im_array.append(A)
+        self.im_count += 1
 
 
     def apply_control_input(self, F, time_delta):
@@ -99,12 +110,22 @@ class SinglePendulumSimulator(object):
 
         # Update the variables and display stuff
         self.set_sensor_input(self.pendulum.theta, self.cpu_id)
-        self.display_stuff()
+        if self.total_time_elapsed <= 5.0:
+            self.pendulum_angles.append(self.pendulum.theta)
+        self.total_time_elapsed += time_step_size
+        
         self.previous_time_delta = time_step_size
         self.theta_tminus2 = self.theta_tminus1 
         self.theta_tminus1 = self.pendulum.theta
         self.x_tminus2 = self.x_tminus1
         self.x_tminus1 = self.cart.x
+
+
+    def display(self):
+        try:
+            self.display_stuff()
+        except:
+            pass
 
     def set_sensor_input(self, curr_theta, cpu_id):
         try:
@@ -150,5 +171,24 @@ class PendulumSystemSimulator(PhysicalSystemSim):
      def progress(self,time_step_size):
           self.pendulums[0].progress(time_step_size)
           self.pendulums[1].progress(time_step_size)
-     
+
+     def display(self):
+          self.pendulums[0].display()
+          self.pendulums[1].display()
+
+     def finish_video(self):
+          pass
+          #for im in self.pendulums[0].im_array:
+          #   self.pendulums[0].out.write(im)
+          #self.pendulums[0].out.release()
+
+          #for im in self.pendulums[1].im_array:
+          #   self.pendulums[1].out.write(im)
+          #self.pendulums[1].out.release()
+          with open('/tmp/pendulum-1.txt', 'w') as f:
+              for angle in self.pendulums[0].pendulum_angles:
+                  f.write(str(angle) + '\n')
+          with open('/tmp/pendulum-2.txt', 'w') as f:
+              for angle in self.pendulums[1].pendulum_angles:
+                  f.write(str(angle) + '\n')
 

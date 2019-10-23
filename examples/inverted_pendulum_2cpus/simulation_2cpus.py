@@ -118,7 +118,7 @@ def start_example_hmi(is_virtual, rel_cpu_speed,
 
 
 def main(num_dilated_nodes=5,
-        run_time=30, 
+        run_time=5, 
         rel_cpu_speed=1.0,
         num_insns_per_round=1000000):
 
@@ -177,6 +177,9 @@ def main(num_dilated_nodes=5,
     if os.path.exists("/tmp/example_hmi.txt"):
         os.remove("/tmp/example_hmi.txt")
 
+    os.system ("rm /tmp/Input_*")
+    os.system ("rm /tmp/Output_*")
+    os.system ("rm /tmp/Pendulum_PLC*")
     fd1 = os.open( "/tmp/pc_grpc_server_log.txt", os.O_RDWR | os.O_CREAT )
     fd2 = os.open( "/tmp/plc_log.txt", os.O_RDWR | os.O_CREAT )    
     fd3 = os.open( "/tmp/comm_module_1_log.txt", os.O_RDWR | os.O_CREAT )
@@ -219,7 +222,7 @@ def main(num_dilated_nodes=5,
     
     
 
-
+    
 
     # Wait until all processes have started and registered themselves
     emulation.wait_for_initialization()
@@ -228,12 +231,15 @@ def main(num_dilated_nodes=5,
 
     total_time_elapsed = 0.0
     while total_time_elapsed <= run_time:
-        emulation.run_for(0.01)
-        total_time_elapsed += 0.01
+        emulation.run_for(0.001)
+        total_time_elapsed += 0.001
+        pendulum_sim.display()
         if is_virtual:
             print "Time Elapsed: ", total_time_elapsed
         if stop == True:
             break
+
+    pendulum_sim.finish_video()
 
     print "Stopping Emulation ..."
     emulation.stop_exp() 

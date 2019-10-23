@@ -90,7 +90,6 @@ class EmulationDriver(object):
             if n_rounds <= 0 :
                 n_rounds = 1
             kf.progress_n_rounds(int(n_rounds))
-            #print "Progress call finished !"
             self.n_progressed_rounds += int(n_rounds)
         else:
             pass
@@ -98,7 +97,13 @@ class EmulationDriver(object):
 
         self.total_time_elapsed += float(time_step_secs)
         if self.physical_system_sim_driver is not None:
+            start_time = float(time.time())
             self.physical_system_sim_driver.progress(float(time_step_secs))
+            end_time = float(time.time())
+            if not self.is_virtual:
+                left_over = time_step_secs - (end_time - start_time)
+                if left_over > 0:
+                    time.sleep(left_over)
 
     def run_for(self, run_time):
         """Run the co/simulation-emulation for specified duration.

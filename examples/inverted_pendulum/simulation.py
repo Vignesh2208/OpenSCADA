@@ -14,7 +14,7 @@ import argparse
 import os
 import signal
 import sys
-
+import time
 
 stop = False
 
@@ -116,7 +116,7 @@ def start_example_hmi(is_virtual, rel_cpu_speed,
         return newpid
 
 
-def main(num_dilated_nodes=3,
+def main(num_dilated_nodes=1,
         run_time=5, 
         rel_cpu_speed=1.0,
         num_insns_per_round=1000000):
@@ -151,7 +151,7 @@ def main(num_dilated_nodes=3,
     if os.path.exists("/tmp/pc_grpc_server_log.txt"):
         os.remove("/tmp/pc_grpc_server_log.txt")
 
-    if os.path.exists("/tmp/pc_log.txt"):
+    if os.path.exists("/tmp/plc_log.txt"):
         os.remove("/tmp/plc_log.txt")
 
     if os.path.exists("/tmp/comm_module_log.txt"):
@@ -184,7 +184,7 @@ def main(num_dilated_nodes=3,
     print "Starting PLC ..."
     plc_pid = start_plc(args.plc_spec_file, is_virtual, rel_cpu_speed, \
         num_insns_per_round, fd2)
-
+    """
     print "Starting Modbus Comm module ..."
     comm_module_pid = start_comm_module(args.plc_spec_file, \
         args.comm_module_bind_ip, args.comm_module_listen_port, \
@@ -194,7 +194,7 @@ def main(num_dilated_nodes=3,
     print "Starting HMI ..."
     example_hmi_pid = start_example_hmi(is_virtual, rel_cpu_speed, \
         num_insns_per_round, fd4)
-
+    """
 
     # Wait until all processes have started and registered themselves
     emulation.wait_for_initialization()
@@ -219,15 +219,15 @@ def main(num_dilated_nodes=3,
     os.close(fd3)
     os.close(fd4)
 
-
+    pendulum_sim.finish_video()
 
     print "Interrupting all spawned processes !"
     os.kill(grpc_server_pid, signal.SIGINT)
     
     if is_virtual == False:
         os.kill(plc_pid, signal.SIGINT)
-        os.kill(comm_module_pid, signal.SIGINT)
-        os.kill(example_hmi_pid, signal.SIGINT)
+        #os.kill(comm_module_pid, signal.SIGINT)
+        #os.kill(example_hmi_pid, signal.SIGINT)
 
     print "Emulation finished ! "
 

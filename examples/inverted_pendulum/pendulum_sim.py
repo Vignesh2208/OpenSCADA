@@ -42,6 +42,13 @@ class PendulumSimulator(PhysicalSystemSim):
         self.theta_tminus1 = self.theta_tminus2 = self.pendulum.theta
         self.x_tminus1 = self.x_tminus2 = self.cart.x
         self.previous_time_delta = 0
+        height = self.world_size
+        width = self.world_size
+        layers = 3
+        size = (width,height)
+        self.out = cv2.VideoWriter('/tmp/simulation.mp4',cv2.VideoWriter_fourcc(*'MP4V'), 15, size)
+        self.im_array = []
+        self.im_count = 1
 
     def display_stuff(self):
         # This function displays the pendulum and cart.
@@ -61,7 +68,9 @@ class PendulumSimulator(PhysicalSystemSim):
             (255,255,255),-1)
         cv2.imshow('WindowName',A)
         cv2.waitKey(5)
-
+        #if self.im_count < 1000:
+        #    self.im_array.append(A)
+        #self.im_count += 1
 
     def apply_control_input(self, F, time_delta):
         # Finding x and theta on considering the control inputs and the dynamics of the system
@@ -139,3 +148,8 @@ class PendulumSimulator(PhysicalSystemSim):
                 return 0.0
         except Exception as e:
             return 0.0
+
+    def finish_video(self):
+        for im in self.im_array:
+            self.out.write(im)
+        self.out.release()
