@@ -19,6 +19,9 @@ namespace pc_emulator {
                 __BaseStorageLocation; /*!< Data of this memory unit is stored her */ 
             bool __Initialized; /*!< Set to true iff initialized */
             int __MemUnitSizeBytes; /*!< Size of memory unit in bytes */
+
+	    int __acquireFlock(std::string lockFilePath);
+	    void __releaseFlock(int lockFd);
             
         public:
             bool __isMemControllerActive; /*!< Set to true iff MMAP'ed memory is allocated */

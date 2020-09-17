@@ -7,6 +7,9 @@ if [ "$1" == "install" ]; then
     echo "Building Emulator library ..."
     bazel build :pc_emulator_lib
 
+    echo "Building Python Proto libs ..."
+    bazel build :py_access_service_proto
+
     echo "Building LibModbus extensions ..."
     cd contrib/libmodbus && ./autogen.sh && ./configure && make install
     cd ../../
@@ -28,7 +31,6 @@ if [ "$1" == "install" ]; then
 
     echo "Building Example HMI ..."
     bazel build :example_hmi
-    bazel build :example_hmi_2conns
     sudo cp bazel-bin/example_hmi /usr/bin
 
     echo "Build and Install finished ..."

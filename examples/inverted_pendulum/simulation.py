@@ -1,15 +1,13 @@
 # Description:  This programs runs a simulation of a cart-pole system
 #		The conrol algorithm used to balance the pendulum is PID
 # To start this simulation run:
-#  	cd ~/OpenSCADA
-#	bazel run :simulation -- --plc_spec_file=<system spec file> \
-#				 --plc_spec_dir=<directory containing plc system spec file> \
-#				 --is_virtual=<True/False>
+#  	cd ~/OpenSCADA/examples/inverted_pendulum
+#	sudo python simulation.py --is_virtual=<True/False>
  
 
 
 from contrib.emulation_driver import EmulationDriver
-from pendulum_sim import PendulumSimulator
+from examples.common.single_pendulum_sim import PendulumSimulator
 import argparse
 import os
 import signal
@@ -22,102 +20,40 @@ stop = False
 
 def handler(signum, frame):
     global stop
-    print 'Pressed Ctrl-C! Scheduled clean exit ...'
+    print ('Pressed Ctrl-C! Scheduled clean exit ...')
     stop = True
     
 
-def start_grpc_server(path_to_plc_specifications_dir, log_file_fd):
+
+def fork_run_command(cmd_as_list, log_file_fd=None):
+    if not cmd_as_list:
+        return None
 
     newpid = os.fork()
     if newpid == 0:
-        os.dup2(log_file_fd, sys.stdout.fileno())
-        os.dup2(log_file_fd, sys.stderr.fileno())
-
-        # We change process group here so that any signal sent to the 
-        # main process doesn't automatically affect all forked children
-        # This is necessary for a clean exit if interrupted
+        if log_file_fd:
+            os.dup2(log_file_fd, sys.stdout.fileno())
+            os.dup2(log_file_fd, sys.stderr.fileno())
+        
         os.setpgrp()
-        args = ["pc_grpc_server", path_to_plc_specifications_dir]
-        os.execvp(args[0], args)
+        os.execvp(cmd_as_list[0], cmd_as_list)
+        sys.exit(0)
     else:
-        print "Started PC GRPC Server with pid ", newpid
+        print ("Started command: ", " ".join(x for x in cmd_as_list), " with pid: ",  newpid)
         return newpid
 
-def start_plc(path_to_plc_specification_file, is_virtual, rel_cpu_speed, 
-    n_insns_per_round, log_file_fd):
-
-    newpid = os.fork()
-    if newpid == 0:
-        os.dup2(log_file_fd, sys.stdout.fileno())
-        os.dup2(log_file_fd, sys.stderr.fileno())
-        if is_virtual == True:
-            # We change process group here so that any signal sent to the 
-            # main process doesn't automatically affect all forked children
-            # This is necessary for a clean exit if interrupted
-            os.setpgrp()
-            args = ["plc_runner", "-f", path_to_plc_specification_file, "-e", "1",
-            "-n", str(n_insns_per_round), "-s", str(rel_cpu_speed)]
-            os.execvp(args[0], args)
-        else:
-            args = ["plc_runner", "-f", path_to_plc_specification_file]
-            os.execvp(args[0], args)
-    else:
-        print "Started PLC Runner with pid ", newpid
-        return newpid
-
-def start_comm_module(path_to_plc_specification_file, ip_address_to_listen,
-    listen_port, resource_to_attach, is_virtual, rel_cpu_speed, 
-    n_insns_per_round, log_file_fd):
-
-    newpid = os.fork()
-
-    if newpid == 0:
-        os.dup2(log_file_fd, sys.stdout.fileno())
-        os.dup2(log_file_fd, sys.stderr.fileno())
-        if is_virtual:
-            cmd_str = "modbus_comm_module -f %s -i %s -p %s -r  %s" \
-                % (path_to_plc_specification_file,
-                    ip_address_to_listen, listen_port, resource_to_attach)
-            # We change process group here so that any signal sent to the 
-            # main process doesn't automatically affect all forked children
-            # This is necessary for a clean exit if interrupted
-            os.setpgrp()
-            args = ["tracer", "-c", cmd_str, "-r", str(rel_cpu_speed), "-n", \
-                str(n_insns_per_round)]
-            os.execvp(args[0], args)
-        else:
-            args = ["modbus_comm_module", "-f", path_to_plc_specification_file, \
-                "-i", ip_address_to_listen, "-p", listen_port, "-r", resource_to_attach]
-            os.execvp(args[0], args)
-    else:
-        print "Started Modbus comm module with pid ", newpid
-        return newpid
-
-def start_example_hmi(is_virtual, rel_cpu_speed, 
-    n_insns_per_round, log_file_fd):
-    newpid = os.fork()
-    if newpid == 0:
-        os.dup2(log_file_fd, sys.stdout.fileno())
-        os.dup2(log_file_fd, sys.stderr.fileno())
-        if is_virtual == True:
-            cmd_str = "example_hmi"
-            args = ["tracer", "-c", cmd_str, "-r", str(rel_cpu_speed), "-n", \
-                str(n_insns_per_round)]
-            # We change process group here so that any signal sent to the 
-            # main process doesn't automatically affect all forked children
-            # This is necessary for a clean exit if interrupted
-            os.setpgrp()
-            os.execvp(args[0], args)
-        else:
-            args = ["example_hmi"]
-            os.execvp(args[0], args)
-    else:
-        print "Started example hmi with pid ", newpid
-        return newpid
+def get_comm_module_start_command(path_to_plc_specification_file, ip_address_to_listen,
+    listen_port, plc_resource_to_attach, log_file_path):
+    return f"modbus_comm_module -f {path_to_plc_specification_file} -i {ip_address_to_listen} -p {listen_port} -r {plc_resource_to_attach} -l {log_file_path}"
 
 
-def main(num_dilated_nodes=1,
-        run_time=5, 
+def get_example_hmi_start_command(ip_address_to_connect, port_to_connect, log_file_path):
+    return f"example_hmi -i {ip_address_to_connect} -p {port_to_connect} -l {log_file_path}"
+    
+
+
+def main(num_dilated_nodes=3,
+        run_time_secs=5, 
         rel_cpu_speed=1.0,
         num_insns_per_round=1000000):
 
@@ -128,13 +64,15 @@ def main(num_dilated_nodes=1,
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--plc_spec_file', dest='plc_spec_file',
+                        default=f"{os.path.expanduser('~')}/OpenSCADA/examples/inverted_pendulum/plc_system_specification.prototxt",
                         help='path to plc spec prototxt file')
 
     parser.add_argument('--is_virtual', dest='is_virtual',
                         help='with Kronos', default="False")
 
     parser.add_argument('--plc_spec_dir', dest='plc_spec_dir',
-            help='path to directory containing spec protxt files of all plcs')
+            default=f"{os.path.expanduser('~')}/OpenSCADA/examples/inverted_pendulum",
+            help='path to directory containing spec protoxt files of all plcs')
 
     parser.add_argument('--comm_module_bind_ip', dest='comm_module_bind_ip',
                         help='ip_address to which comm module would bind', \
@@ -161,10 +99,6 @@ def main(num_dilated_nodes=1,
         os.remove("/tmp/example_hmi.txt")
 
     fd1 = os.open( "/tmp/pc_grpc_server_log.txt", os.O_RDWR | os.O_CREAT )
-    fd2 = os.open( "/tmp/plc_log.txt", os.O_RDWR | os.O_CREAT )
-    fd3 = os.open( "/tmp/comm_module_log.txt", os.O_RDWR | os.O_CREAT )
-    fd4 = os.open( "/tmp/example_hmi.txt", os.O_RDWR | os.O_CREAT )
-
     args = parser.parse_args()
      
     pendulum_sim = PendulumSimulator()
@@ -178,58 +112,60 @@ def main(num_dilated_nodes=1,
         rel_cpu_speed=rel_cpu_speed, physical_system_sim_driver=pendulum_sim)
 
     # Start pc_grpc_server, all PLCs and all communication modules here 
-    print "Starting PC GRPC Server ..."
-    grpc_server_pid = start_grpc_server(args.plc_spec_dir, fd1)
+    emulation.start_grpc_server(args.plc_spec_dir, fd1)
 
-    print "Starting PLC ..."
-    plc_pid = start_plc(args.plc_spec_file, is_virtual, rel_cpu_speed, \
-        num_insns_per_round, fd2)
-    """
-    print "Starting Modbus Comm module ..."
-    comm_module_pid = start_comm_module(args.plc_spec_file, \
-        args.comm_module_bind_ip, args.comm_module_listen_port, \
-        args.comm_module_attached_resource, is_virtual, rel_cpu_speed, \
-        num_insns_per_round, fd3)
+    print ("Starting PLC ...")
+    plc_pid = fork_run_command(emulation.get_plc_exec_command(
+				path_to_plc_specification_file=args.plc_spec_file,
+                                log_file_path="/tmp/plc_log.txt",
+				as_list=True))
+   
+    
+    print ("Starting Modbus Comm module ...")
+    comm_module_start_command = get_comm_module_start_command(
+	args.plc_spec_file, args.comm_module_bind_ip, args.comm_module_listen_port,
+        args.comm_module_attached_resource, "/tmp/comm_module_log.txt")
 
-    print "Starting HMI ..."
-    example_hmi_pid = start_example_hmi(is_virtual, rel_cpu_speed, \
-        num_insns_per_round, fd4)
-    """
+    comm_module_pid = fork_run_command(emulation.wrap_command(
+				orig_cmd_string=comm_module_start_command,
+				as_list=True))
+
+    print ("Starting HMI ...")
+    hmi_start_command = get_example_hmi_start_command(
+	args.comm_module_bind_ip, args.comm_module_listen_port, "/tmp/example_hmi.txt")
+
+    hmi_pid = fork_run_command(emulation.wrap_command(
+				orig_cmd_string=hmi_start_command,
+				as_list=True))
 
     # Wait until all processes have started and registered themselves
     emulation.wait_for_initialization()
     signal.signal(signal.SIGINT, handler)
 
     total_time_elapsed = 0.0
-    while total_time_elapsed <= run_time:
+    while total_time_elapsed <= run_time_secs:
         
         emulation.run_for(0.01)
         total_time_elapsed += 0.01
         if is_virtual:
-            print "Time Elapsed: ", total_time_elapsed
+            print ("Time Elapsed: ", total_time_elapsed)
         if stop == True:
             break
 
-    print "Stopping Emulation ..."
+    print ("Stopping Emulation ...")
     sys.stdout.flush()
     emulation.stop_exp() 
 
     os.close(fd1)
-    os.close(fd2)
-    os.close(fd3)
-    os.close(fd4)
-
     pendulum_sim.finish_video()
 
-    print "Interrupting all spawned processes !"
-    os.kill(grpc_server_pid, signal.SIGINT)
-    
+    print ("Interrupting all spawned processes !")
     if is_virtual == False:
         os.kill(plc_pid, signal.SIGINT)
-        #os.kill(comm_module_pid, signal.SIGINT)
-        #os.kill(example_hmi_pid, signal.SIGINT)
+        os.kill(comm_module_pid, signal.SIGINT)
+        os.kill(hmi_pid, signal.SIGINT)
 
-    print "Emulation finished ! "
+    print ("Emulation finished ! ")
 
 
 

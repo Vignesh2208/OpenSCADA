@@ -9,6 +9,7 @@
  *              -e: 1 or 0 to enable/disable kronos"
                 -n: num_insns_per_round - only valid if Kronos is enabled
                 -s: relative cpu speed - only valid if Kronos is enabled
+ 		-l: log file path. Stdout will be redirected to this file.
  * 
 */
 #include <iostream> 
@@ -71,10 +72,14 @@ int main(int argc, char **argv) {
     signal(SIGINT, signal_handler); 
     InputParser input(argc, argv);
     bool enable_kronos = false;
+    std::string logFilePath;
+    std::ofstream output;
 
     long num_insns_per_round = 1000000;
     long per_round_inc_ns;
     float relative_cpu_speed = 1.0;
+
+    std::streambuf *coutbuf = std::cout.rdbuf(); //save old buf
 
     if (!input.cmdOptionExists("-f")) {
         std::cout << "ERROR: Missing specification file! " << std::endl;
@@ -82,8 +87,15 @@ int main(int argc, char **argv) {
                 " [-e <1 or 0 to enable/disable kronos>] "
                 " [-n <num_insns_per_round - only valid if Kronos is enabled >] "
                 " [-s <relative cpu speed - only valid if Kronos is enabled>]"
+		" [-l <(optional) path to log file> ] "
                 << std::endl;
         exit(0);
+    }
+
+    if (input.cmdOptionExists("-l")) {
+	logFilePath = input.getCmdOption("-l");
+	output.open(logFilePath, std::ofstream::out | std::ofstream::trunc);
+    	std::cout.rdbuf(output.rdbuf()); //redirect std::cout to logFilePath
     }
 
     if (input.cmdOptionExists("-e")) {
@@ -123,6 +135,8 @@ int main(int argc, char **argv) {
     std::cout << "Cleaning up ... " << std::endl;
     configuration->Cleanup();
     delete configuration;
-    
+    std::cout.rdbuf(coutbuf);
+
+    if (logFilePath != "") output.close();
     return 0;
 }

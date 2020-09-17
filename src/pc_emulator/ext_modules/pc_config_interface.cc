@@ -7,6 +7,12 @@
 #include <fstream>
 #include <cstdio>
 
+#include <bits/stdc++.h> 
+#include <iostream> 
+#include <sys/stat.h> 
+#include <sys/types.h> 
+
+
 #include "src/pc_emulator/include/pc_variable.h"
 #include "src/pc_emulator/include/pc_datatype.h"
 #include "src/pc_emulator/include/utils.h"
@@ -54,13 +60,20 @@ PCConfigurationInterface::PCConfigurationInterface(string ConfigurationPath) {
     __RAMmemSize = __specification.machine_spec().ram_mem_size_bytes();
     assert(__RAMmemSize > 0);
     
+    
+    mkdir("/tmp/OpenSCADA", 0777);
+    mkdir(("/tmp/OpenSCADA/" + __ConfigurationName).c_str(), 0777);
+    
     std::cout << "Allocating Shared Memory " << std::endl;
 
     __RAMMemory.AllocateSharedMemory(__RAMmemSize,
-            "/tmp/" + __ConfigurationName + "_RAM",
+            "/tmp/OpenSCADA/" + __ConfigurationName + "/" + __ConfigurationName + "_RAM",
             __ConfigurationName + "_RamLock");
 
-    //__RAMMemory.AllocateStaticMemory(__RAMmemSize);
+    /*__RAMMemory.AllocateSharedMemory(__RAMmemSize,
+            "/tmp/" + __ConfigurationName + "_RAM",
+            __ConfigurationName + "_RamLock");*/
+
     std::cout << "Allocated Shared Memory " << std::endl;
     __NumResources = __specification.machine_spec().num_cpus();
     assert(__NumResources >= 0);
@@ -102,7 +115,7 @@ PCConfigurationInterface::PCConfigurationInterface(string ConfigurationPath) {
         __access_pou_var = std::unique_ptr<PCVariable>
                     (new PCVariable((PCConfiguration *)this, nullptr,
                                 "__CONFIG_ACCESS_VAR__", "__CONFIG_ACCESS__"));
-        __access_pou_var->AllocateStorage("/tmp/" + __ConfigurationName
+        __access_pou_var->AllocateStorage("/tmp/OpenSCADA/" + __ConfigurationName + "/" + __ConfigurationName 
             + "_" + "__CONFIG_ACCESS__");
         __access_pou_var->__VariableDataType->__PoUType 
                         = pc_specification::PoUType::PROGRAM;
@@ -118,6 +131,7 @@ PCConfigurationInterface::PCConfigurationInterface(string ConfigurationPath) {
                     field.field_name(), field_qualifier));
         }
     }
+    std::cout << "Registered all resources ! " << std::endl;
 }
 
 void PCConfigurationInterface::RegisterAllElementaryDataTypes () {
@@ -336,7 +350,7 @@ void PCConfigurationInterface::RegisterAllComplexDataTypes() {
                 (new PCVariable((PCConfiguration *)this, nullptr,
                                 "__CONFIG_GLOBAL_VAR__", "__CONFIG_GLOBAL__"));
         std::cout << "Initializing GLOBAL VAR ****\n";
-        __global_pou_var->AllocateStorage("/tmp/" + __ConfigurationName
+        __global_pou_var->AllocateStorage("/tmp/OpenSCADA/" + __ConfigurationName + "/" + __ConfigurationName
                 + "_" + "__CONFIG_GLOBAL__");
         
         __global_pou_var->__VariableDataType->__PoUType 
@@ -372,7 +386,7 @@ void PCConfigurationInterface::Cleanup() {
 
     std::cout << "Configuration: Removing MMap Files" << std::endl;
     __RAMMemory.Cleanup();
-    std::remove(("/tmp/" + __ConfigurationName).c_str());
+    std::remove(("/tmp/OpenSCADA/" + __ConfigurationName + "/" + __ConfigurationName).c_str());
     RegisteredResources->Cleanup();
     RegisteredDataTypes->Cleanup();
 

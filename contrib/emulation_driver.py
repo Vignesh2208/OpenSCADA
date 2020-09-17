@@ -3,6 +3,7 @@ import os
 import time
 import kronos_functions as kf
 import sys
+import signal
 
 class EmulationDriver(object):
     """A Wrapper used to drive co/simulation-emulation of PLCs and physical system simulations."""
@@ -46,28 +47,129 @@ class EmulationDriver(object):
         self.is_virtual = is_virtual
         self.num_tracers = number_dilated_nodes
         self.n_progressed_rounds = 0
-        self.timestep_per_round_secs =\
-             (float(n_insns_per_round)/rel_cpu_speed)/1000000000.0
+        self.timestep_per_round_secs = float(n_insns_per_round)/(rel_cpu_speed*1000000000.0)
+        self.rel_cpu_speed = rel_cpu_speed
+        self.n_insns_per_round = n_insns_per_round
         self.total_time_elapsed = 0.0
+        self.grpc_server_pid = None
+        self.spinner_pid = None
         assert number_dilated_nodes > 0 
         if self.is_virtual == True:
-            print "Initializing Kronos ..."
+            print ("Initializing Kronos ...")
             if kf.initializeExp(1) < 0 :
-                print "Kronos initialization failed ! Make sure you are running\
-                    the dilated kernel and kronos module is loaded !"
+                print ("Kronos initialization failed ! Make sure you are running "
+                       "the dilated kernel and kronos module is loaded !")
                 sys.exit(0)
 
         self.physical_system_sim_driver = physical_system_sim_driver
+        self.start_dummy_spinner()
+        if os.path.isdir("/tmp/OpenSCADA"):
+            print ("Removing any pre-existing files ...")
+            import shutil
+            shutil.rmtree("/tmp/OpenSCADA")
+
+    def start_dummy_spinner(self):
+        """Starts a dummy process and adds it to kronos control. 
+
+        This dummy processes serves as an anchor for all virtual time controlled network interfaces.
+        """
+        if not self.is_virtual:
+            return
+        newpid = os.fork()
+        spinner_cmd = ["tracer", "-c", "/bin/x64_synchronizer", "-r", str(self.rel_cpu_speed), "-n", str(self.n_insns_per_round), "-s"]
+        if newpid == 0:
+            os.setpgrp()
+            os.execvp(spinner_cmd[0], spinner_cmd)
+            sys.exit(0)
+        else:
+            print ("Started  initialization task with pid: ",  newpid)
+            self.spinner_pid = newpid
+            
+    def add_interfaces_to_vt_control(self, interface_names_list):
+        """Accepts a list of network interfaces and adds them to kronos control.
+
+        This is useful in a CORE experiment containing link delays. If link delays are enforced
+        at a interface using the netem module, then these interfaces need to be added to kronos
+        control to ensure that packet delays are enforced in virtual time.
+        """
+        if not self.is_virtual:
+            return
+        print ("Adding specified network interfaces to virtual time control")
+        for intf in interface_names_list:
+            if kf.add_netdevice_to_vt_control(intf) < 0:
+                print (f"Warning. Failed to add interface {intf} to virtual time control")
 
     def wait_for_initialization(self):
         """Wait for all dilated nodes to register themselves with Kronos."""
-
-        print "Waiting for all nodes to register ..."
+        
         if self.is_virtual == True:
-            while kf.synchronizeAndFreeze(self.num_tracers) <= 0:
-                print "Kronos >> Synchronize and Freeze failed. Retrying in 1 sec"
+            print ("Waiting for all nodes to register with kronos ...")
+            while kf.synchronizeAndFreeze(self.num_tracers + 1) <= 0:
+                print ("Kronos >> Synchronize and Freeze failed. Retrying in 1 sec")
                 time.sleep(1)
-        print "Resuming ..."
+            print ("Resuming ...")
+
+
+    def start_grpc_server(self, path_to_plc_specifications_dir, log_file_fd=None):
+        """Starts a GRPC server which facilitates I/O operations on all started PLCs with any external program."""
+
+        print ("Starting GRPC server to facilitate I/O operations on all started PLC with simulated sensors/actuators")
+        newpid = os.fork()
+        if newpid == 0:
+            if log_file_fd:
+                os.dup2(log_file_fd, sys.stdout.fileno())
+                os.dup2(log_file_fd, sys.stderr.fileno())
+
+            # We change process group here so that any signal sent to the 
+            # main process doesn't automatically affect all forked children
+            # This is necessary for a clean exit if interrupted
+            os.setpgrp()
+            args = ["pc_grpc_server", path_to_plc_specifications_dir]
+            os.execvp(args[0], args)
+        else:
+            print ("Started PC GRPC Server with pid ", newpid)
+            print ("Waiting for 10 secs for initialization to complete ...")
+            time.sleep(10)
+            self.grpc_server_pid = newpid
+            return newpid
+
+    def get_plc_exec_command(
+        self, path_to_plc_specification_file, log_file_path=None, as_list=False):
+        """Returns a command string which can be exectuted to start a running PLC emulator."""
+
+        if self.is_virtual:
+            if not as_list:
+                if log_file_path:
+                    return f"plc_runner -f {path_to_plc_specification_file} -e 1 -n {self.n_insns_per_round} -s {self.rel_cpu_speed} -l {log_file_path}"
+                else:
+                    return f"plc_runner -f {path_to_plc_specification_file} -e 1 -n {self.n_insns_per_round} -s {self.rel_cpu_speed}"
+            if log_file_path:
+                return ["plc_runner", "-f", path_to_plc_specification_file, "-e", "1",
+                        "-n", str(self.n_insns_per_round), "-s", str(self.rel_cpu_speed), "-l", log_file_path]
+            else:
+                return ["plc_runner", "-f", path_to_plc_specification_file, "-e", "1",
+                        "-n", str(self.n_insns_per_round), "-s", str(self.rel_cpu_speed)]
+        else:
+            if not as_list:
+                if log_file_path:
+                    return f"plc_runner -f {path_to_plc_specification_file} -l {log_file_path}"
+                else:
+                    return f"plc_runner -f {path_to_plc_specification_file}"
+            if log_file_path:
+                return ["plc_runner", "-f", path_to_plc_specification_file, "-l", log_file_path]
+            else:
+                return ["plc_runner", "-f", path_to_plc_specification_file]
+
+    def wrap_command(self, orig_cmd_string, as_list=False):
+        """Wraps a command around a tracer to bring it under virtual time control if needed. """
+        if self.is_virtual:
+            if not as_list:
+                return f"tracer -c \"{orig_cmd_string}\" -r {self.rel_cpu_speed} -n {self.n_insns_per_round}"
+            return ["tracer", "-c", orig_cmd_string, "-r", str(self.rel_cpu_speed), "-n", str(self.n_insns_per_round)]
+        else:
+            if not as_list:
+                return orig_cmd_string
+            return orig_cmd_string.split(' ')
 
     def progress_for(self, time_step_secs):
         """Run the entire co/simulation-emulation for specified time.
@@ -81,7 +183,7 @@ class EmulationDriver(object):
         """
 
         if self.is_virtual and self.n_progressed_rounds == 0 :
-            print "Starting Synchronized Experiment ..."
+            print ("Starting Synchronized Experiment ...")
             kf.startExp()
 
         if self.is_virtual:
@@ -142,5 +244,7 @@ class EmulationDriver(object):
         """Stops the Kronos experiment."""
 
         if self.is_virtual:
-            print "Stopping Synchronized Experiment ..."
+            print ("Stopping Synchronized Experiment ...")
             kf.stopExp()
+        if self.grpc_server_pid:
+            os.kill(self.grpc_server_pid, signal.SIGINT)

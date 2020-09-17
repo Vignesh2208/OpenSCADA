@@ -1,4 +1,4 @@
-configuration_name: "Pendulum_PLC"
+configuration_name: "Pendulum_PLC_1"
 log_level: LOG_NOTICE
 
 hardware_spec {
@@ -326,5 +326,4 @@ var_global {
     }
 }
 
-resource_file_path: "~/OpenSCADA/examples/inverted_pendulum_2cpus/CPU_001.prototxt"
-resource_file_path: "~/OpenSCADA/examples/inverted_pendulum_2cpus/CPU_002.prototxt"
+resource_file_path: "~/OpenSCADA/examples/core_examples/inverted_pendulum/CPU_001.prototxt"

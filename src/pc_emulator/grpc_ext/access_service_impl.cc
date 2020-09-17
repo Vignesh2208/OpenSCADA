@@ -63,9 +63,10 @@ grpc::Status AccessServiceImpl::SetSensorInput(ServerContext*,
     }
     auto PLCExtInterface = got->second.get();
 
-    string ram_f_name = "/tmp/" 
-    + PLCExtInterface->__ConfigInterface.__ConfigurationName + "_RAM";
+    string ram_f_name = "/tmp/OpenSCADA/" 
+    + PLCExtInterface->__ConfigInterface.__ConfigurationName + "/" + PLCExtInterface->__ConfigInterface.__ConfigurationName + "_RAM";
     if (!Utils::does_file_exist(ram_f_name.c_str())) {
+	std::cout << "Set Sensor Input. RAM file does not exist ! " << std::endl;
         PLCExtInterface->__ConfigInterface.Cleanup();
         ExtInterface.erase(sensor_desc->plc_id());
         status->set_status("NOT_FOUND");
@@ -94,9 +95,10 @@ grpc::Status AccessServiceImpl::GetActuatorOutput(ServerContext*,
     }
     auto PLCExtInterface = got->second.get();
 
-    string ram_f_name = "/tmp/" 
-    + PLCExtInterface->__ConfigInterface.__ConfigurationName + "_RAM";
+    string ram_f_name = "/tmp/OpenSCADA/" 
+    + PLCExtInterface->__ConfigInterface.__ConfigurationName + "/" + PLCExtInterface->__ConfigInterface.__ConfigurationName + "_RAM";
     if (!Utils::does_file_exist(ram_f_name.c_str())) {
+	std::cout << "Get Actuator Output. RAM file: " << ram_f_name << " does not exist ! " << std::endl;
         PLCExtInterface->__ConfigInterface.Cleanup();
         ExtInterface.erase(actuator_desc->plc_id());
         result->set_status("NOT_FOUND");

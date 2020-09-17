@@ -869,13 +869,18 @@ char * Utils::make_mmap_shared(int nElements, string FileName) {
         bool file_exists = does_file_exist(FileName.c_str());
 
         FILE * fp;
+	std::cout << "Does Shared Mem File exist : " << file_exists << std::endl;
         
-        if(file_exists)
+        if(file_exists == true)
             fp = fopen((FileName).c_str(), "a+");
         else
             fp = fopen((FileName).c_str(), "w+");
 
-        
+	if (fp == NULL) {
+	      
+	      fprintf(stdout, "Value of errno: %d\n", errno);
+	      fprintf(stdout, "Error opening file: %s\n", strerror( errno ));
+   	}        
         fseek(fp,0,SEEK_END);
         int file_size = ftell(fp);
         std::cout << "Initializing MMAP file: " << FileName << std::endl;

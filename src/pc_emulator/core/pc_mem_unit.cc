@@ -1,5 +1,7 @@
 
 #include <assert.h>
+#include <unistd.h>
+#include <sys/file.h>
 #include "src/pc_emulator/include/utils.h"
 #include "src/pc_emulator/include/pc_mem_unit.h"
 
@@ -22,6 +24,23 @@ void PCMemUnit::AllocateStaticMemory(int MemSize) {
     __Initialized = true;
 }
 
+int PCMemUnit::__acquireFlock(
+	std::string lockFilePath) {
+	int lockFd = open(lockFilePath.c_str(), O_RDWR | O_CREAT, 0666);
+	int rc = 0;
+	do {
+		 rc = flock(lockFd, LOCK_EX | LOCK_NB);
+		 if (rc != 0)
+			usleep(10000);
+	} while (rc != 0);
+	return lockFd;
+}
+
+void PCMemUnit::__releaseFlock(int lockFd) {
+	flock(lockFd, LOCK_UN);
+	close(lockFd);
+}
+
 void PCMemUnit::AllocateSharedMemory(int MemSize, string mmap_file_name,
                         string lock_name) {
     if (!__Initialized) {
@@ -31,13 +50,11 @@ void PCMemUnit::AllocateSharedMemory(int MemSize, string mmap_file_name,
         //std::cout << "Opening sem lock: " << lock_name << std::endl;
         assert((__sem_lock = sem_open(lock_name.c_str(), O_CREAT, 0644, 1))
                 != SEM_FAILED);
-        //std::cout << "Opening sem lock: " << lock_name 
-        //          << " success" << std::endl;
+        
         __sem_name = lock_name;
-
-        sem_wait(__sem_lock);
+        int lockFd = __acquireFlock("/tmp/OpenSCADA/" + lock_name + ".lock");
         auto ptr = Utils::make_mmap_shared(MemSize, mmap_file_name);
-        sem_post(__sem_lock);
+        __releaseFlock(lockFd);
         
         __BaseStorageLocation = std::shared_ptr<char>(new(ptr) char[MemSize],
                 [](char *p) {});

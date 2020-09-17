@@ -10,10 +10,13 @@ To install Kronos, follow steps included in the `documentation <https://kronoz.r
 
 Installing Dependencies
 ^^^^^^^^^^^^^^^^^^^^^^^
+* Ensure default python is python 3.6 or above.
+  	Follow instructions: https://linuxconfig.org/how-to-change-from-default-to-alternative-python-version-on-debian-linux
+
 * Install pip::
 
-	sudo apt-get install python-pip
-        pip install --upgrade pip
+	sudo apt-get install python3-pip
+        pip3 install --upgrade pip
 
 * To install grpc and other dependencies for python execute the following commands::
 
@@ -50,8 +53,36 @@ Installing OpenSCADA
 * Update environment variables. Add OSCADA_INSTALLATION and update PYTHONPATH in bashrc::
 
 	export OSCADA_INSTALLATION=<path to installation directory>
-	export PYTHONPATH="${PYTHONPATH}:${OSCADA_INSTALLATION}"
+	export OSCADA_PROTO_PATH=${OSCADA_INSTALLATION}/bazel-out/k8-fastbuild/genfiles/py_access_service_proto_pb
+	export PYTHONPATH="${PYTHONPATH}:${OSCADA_INSTALLATION}:${OSCADA_PROTO_PATH}"
+
+* Preserve some environment variables across sudo. Append the following lines after running command sudo visudo::
+
+	Defaults        env_keep += PYTHONPATH
+	Defaults        env_keep += OSCADA_INSTALLATION
+
+Installing CORE Network Emulator (Optional)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This step is optional. To run example on a CORE network follow these steps.
+
+* Install iproute2 4.5+. Clone and install from: https://github.com/shemminger/iproute2
 	
+  
+* Install CORE emulator: Follow instructions from here: http://coreemu.github.io/core/install.html.
+  Note: On ubuntu 16.04, the installation process fails to install OSPF-MDR because of conflicting
+  header files. This limits CORE functionality to some extent.
+
+* Edit /usr/local/bin/core-python script by pre-pending the following two lines before the exec statement::
+
+	export PYTHONPATH="${PYTHONPATH}:${HOME}/.local/lib/python3.x/site-packages"
+	export PYTHONPATH="${PYTHONPATH}:/usr/local/lib/python3.x/dist-packages"
+
+  where python3.x should be changed according to the python version installed on your system. This ensures that
+  core-python can find other packages installed on your system outside the virtual environment created by CORE.
+
+  	
+
 Ready to use VM
 ^^^^^^^^^^^^^^^
 
@@ -65,5 +96,9 @@ Uninstalling OpenSCADA
 
 	sudo ./setup.sh uninstall
 
- 
+
+Uninstalling CORE
+^^^^^^^^^^^^^^^^^
+
+To uninstall CORE, follow instructions described here: http://coreemu.github.io/core/install.html
 	

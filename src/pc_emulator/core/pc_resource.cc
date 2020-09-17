@@ -41,11 +41,19 @@ PCResourceImpl::PCResourceImpl(PCConfigurationImpl * configuration,
     //__InputMemory.AllocateStaticMemory(__InputMemSize);
     //__OutputMemory.AllocateStaticMemory(__OutputMemSize);
     __InputMemory.AllocateSharedMemory(__InputMemSize,
-                "/tmp/Output_" + ResourceName,
-                ResourceName + "_IMemLock");
+                "/tmp/OpenSCADA/" + __configuration->__ConfigurationName + "/Input_" + ResourceName,
+                 __configuration->__ConfigurationName + ResourceName + "_IMemLock");
     __OutputMemory.AllocateSharedMemory(__OutputMemSize,
+                "/tmp/OpenSCADA/" + __configuration->__ConfigurationName + "/Output_" + ResourceName,
+                 __configuration->__ConfigurationName + ResourceName + "_OMemLock");
+
+     /*__InputMemory.AllocateSharedMemory(__InputMemSize,
                 "/tmp/Input_" + ResourceName,
-                ResourceName + "_OMemLock");
+                __configuration->__ConfigurationName + ResourceName + "_IMemLock");
+    __OutputMemory.AllocateSharedMemory(__OutputMemSize,
+                "/tmp/Output_" + ResourceName,
+                __configuration->__ConfigurationName + ResourceName + "_OMemLock");*/
+
     __CurrentResult = new PCVariable((PCConfiguration *)configuration,
                         (PCResource *) this, "__CurrentResult", "BOOL");
     __CurrentResult->AllocateAndInitialize();
@@ -271,7 +279,7 @@ void PCResourceImpl::InitializeAllSFBVars() {
     for(auto it = __ResourcePoUVars.begin();
             it != __ResourcePoUVars.end(); it ++) {
         PCVariable * pou_var = it->second.get();
-        pou_var->AllocateAndInitialize("/tmp/" + __ResourceName
+        pou_var->AllocateAndInitialize("/tmp/OpenSCADA/" + __configuration->__ConfigurationName + "/" + __ResourceName
             + "_" + pou_var->__VariableName);
     
         Utils::ValidatePOUDefinition(pou_var, __configuration);
@@ -376,7 +384,7 @@ void PCResourceImpl::InitializeAllPoUVars() {
             for(auto it = __ResourcePoUVars.begin();
                     it != __ResourcePoUVars.end(); it ++) {
                 PCVariable * pou_var = it->second.get();
-                pou_var->AllocateAndInitialize("/tmp/" + __ResourceName
+                pou_var->AllocateAndInitialize("/tmp/OpenSCADA/" + __configuration->__ConfigurationName + "/" + __ResourceName
                     + "_" + pou_var->__VariableName);
             
                 Utils::ValidatePOUDefinition(pou_var, __configuration);
@@ -492,15 +500,15 @@ void PCResourceImpl::Cleanup() {
     std::cout << "Removing MMap files: " << __ResourceName << std::endl;
     __InputMemory.Cleanup();
     __OutputMemory.Cleanup();
-    //std::remove(("/tmp/Output_" + __ResourceName).c_str());
-    //std::remove(("/tmp/Input_" + __ResourceName).c_str());
+    //std::remove(("/tmp/OpenSCADA/" + __configuration->__ConfigurationName + "/Output_" + __ResourceName).c_str());
+    //std::remove(("/tmp/OpenSCADA/" + __configuration->__ConfigurationName + "/Input_" + __ResourceName).c_str());
 
     __CurrentResult->Cleanup();
     delete __CurrentResult;
     delete __InsnRegistry;
     delete __SFCRegistry;
     delete __SFBRegistry;
-    std:cout << "Resource: " << __ResourceName << " cleaned up ..." << std::endl;
+    std::cout << "Resource: " << __ResourceName << " cleaned up ..." << std::endl;
 }
 
 PoUCodeContainer * PCResourceImpl::CreateNewCodeContainer(

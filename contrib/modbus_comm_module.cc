@@ -7,7 +7,7 @@
  * Usage:
  *  modbus_comm_module -f <path_plc_spec_prototxt> \
                        -i <ip_address_to_listen on> \
-                       -p <listen_port> -r <cpu_resource_name>
+                       -p <listen_port> -r <cpu_resource_name> -l <optional log file path>
  */
 #include <iostream>
 #include <cstdint>
@@ -65,9 +65,9 @@ class InputParser{
 using namespace std;
 
 void print_usage() {
-    std::cout << "modbus_comm_module -f <path_plc_spec_prototxt> "
-        "-i <ip_address_to_listen on>"
-        " -p <listen_port> -r <resource_name>" << std::endl;
+    std::cout << 
+	"modbus_comm_module -f <path_plc_spec_prototxt> -i <ip_address_to_listen on> "
+        "-p <listen_port> -r <plc_resource_name> -l <optional log file path>" << std::endl;
 }
 
 CommModule * comm_module = nullptr;
@@ -94,7 +94,11 @@ void signalHandler( int signal_num ) {
 int main(int argc, char **argv) {
     InputParser input(argc, argv);
     modbus_mapping_t mb_mapping;
+    std::string logFilePath;
+    std::streambuf *coutbuf = std::cout.rdbuf(); //save old buf
     int s, rc;
+    int redir_fd, stdout_fd;
+    std::ofstream output;
 
 
     signal(SIGINT, signalHandler);  
@@ -102,6 +106,16 @@ int main(int argc, char **argv) {
     if(input.cmdOptionExists("-h")){
         print_usage();
         exit(0);
+    }
+
+    if (input.cmdOptionExists("-l")) {
+	logFilePath = input.getCmdOption("-l");
+	output.open(logFilePath, std::ofstream::out | std::ofstream::trunc);
+    	std::cout.rdbuf(output.rdbuf()); //redirect std::cout to logFilePath
+	stdout_fd = dup(STDOUT_FILENO);
+	redir_fd = open(logFilePath.c_str(), O_WRONLY);
+	dup2(redir_fd, STDOUT_FILENO);
+	close(redir_fd);
     }
 
     if (!input.cmdOptionExists("-f") || !input.cmdOptionExists("-r")) {
@@ -153,7 +167,7 @@ int main(int argc, char **argv) {
         modbus_tcp_accept(ctx, &s);
         memset(&query, 0, MODBUS_TCP_MAX_ADU_LENGTH);
 
-        modbus_set_debug(ctx, TRUE);
+        //modbus_set_debug(ctx, TRUE);
         for (;;) {
             do {
 		std::cout << "ModBUS waiting for new packet ..." 
@@ -184,6 +198,15 @@ int main(int argc, char **argv) {
     comm_module->Cleanup();
     delete comm_module;
     std::cout << "Comm module Stopped ..." << std::endl;
+
+
+    std::cout.rdbuf(coutbuf);
+    if (logFilePath != "") {
+	output.close();
+	fflush(stdout);
+	dup2(stdout_fd, STDOUT_FILENO);
+	close(stdout_fd);
+    }
 
     return 0;
 }

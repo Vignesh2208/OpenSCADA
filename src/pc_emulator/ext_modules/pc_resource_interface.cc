@@ -38,11 +38,18 @@ PCResourceInterface::PCResourceInterface(
 
     assert(__InputMemSize > 0 && __OutputMemSize > 0);
     __InputMemory.AllocateSharedMemory(__InputMemSize,
-                "/tmp/Output_" + ResourceName,
-                ResourceName + "_IMemLock");
+                "/tmp/OpenSCADA/" + __configuration->__ConfigurationName + "/Input_" + ResourceName,
+                __configuration->__ConfigurationName + ResourceName + "_IMemLock");
     __OutputMemory.AllocateSharedMemory(__OutputMemSize,
+                "/tmp/OpenSCADA/" + __configuration->__ConfigurationName + "/Output_" + ResourceName,
+                __configuration->__ConfigurationName + ResourceName + "_OMemLock");
+
+    /*__InputMemory.AllocateSharedMemory(__InputMemSize,
                 "/tmp/Input_" + ResourceName,
-                ResourceName + "_OMemLock");
+                __configuration->__ConfigurationName + ResourceName + "_IMemLock");
+    __OutputMemory.AllocateSharedMemory(__OutputMemSize,
+                "/tmp/Output_" + ResourceName,
+                __configuration->__ConfigurationName + ResourceName + "_OMemLock");*/
 }
 
 void PCResourceInterface::RegisterPoUVariable(string VariableName,
@@ -123,11 +130,11 @@ void PCResourceInterface::InitializeAllSFBVars() {
         RegisterPoUVariable(pou_var.name(), std::move(new_pou_var));
         
     }
-
+    
     for(auto it = __ResourcePoUVars.begin();
             it != __ResourcePoUVars.end(); it ++) {
         PCVariable * pou_var = it->second.get();
-        pou_var->AllocateStorage("/tmp/" + __ResourceName
+        pou_var->AllocateStorage("/tmp/OpenSCADA/" + __configuration->__ConfigurationName + "/" + __ResourceName
             + "_" + pou_var->__VariableName);
     
         Utils::ValidatePOUDefinition(pou_var, __configuration);
@@ -225,7 +232,7 @@ void PCResourceInterface::InitializeAllPoUVars() {
             for(auto it = __ResourcePoUVars.begin();
                     it != __ResourcePoUVars.end(); it ++) {
                 PCVariable * pou_var = it->second.get();
-                pou_var->AllocateStorage("/tmp/" + __ResourceName
+                pou_var->AllocateStorage("/tmp/OpenSCADA/" + __configuration->__ConfigurationName + "/" + __ResourceName
                     + "_" + pou_var->__VariableName);
             
                 Utils::ValidatePOUDefinition(pou_var, __configuration);
@@ -262,8 +269,8 @@ void PCResourceInterface::Cleanup() {
     std::cout << "Removing MMap files: " << __ResourceName << std::endl;
     __InputMemory.Cleanup();
     __OutputMemory.Cleanup();
-    std::remove(("/tmp/Output_" + __ResourceName).c_str());
-    std::remove(("/tmp/Input_" + __ResourceName).c_str());
+    std::remove(("/tmp/OpenSCADA/" + __configuration->__ConfigurationName + "/Output_" + __ResourceName).c_str());
+    std::remove(("/tmp/OpenSCADA/" + __configuration->__ConfigurationName + "/Input_" + __ResourceName).c_str());
 }
 
 void PCResourceInterface::OnStartup() {

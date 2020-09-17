@@ -1,0 +1,329 @@
+configuration_name: "Pendulum_PLC_2"
+log_level: LOG_NOTICE
+
+hardware_spec {
+    num_resources: 1
+    ram_mem_size_bytes: 10000
+
+    # Instruction mean, std execution times, used only in virtual time mode
+    ins_spec {
+        ins_name:   "ADD"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "AND"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "DIV"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "EQ"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "GE"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "GT"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "LD"
+        mu_exec_time_ns:    2000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "LE"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "LT"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "MOD"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "MUL"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "NE"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "NOT"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "OR"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "SHL"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "SHR"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "ST"
+        mu_exec_time_ns:    1500
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "SUB"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    ins_spec {
+        ins_name:   "XOR"
+        mu_exec_time_ns:    1000
+        sigma_exec_time_ns: 100
+    }
+
+    # SFCs (System functions) - mean, std of execution times
+    sfc_spec {
+        sfc_name: "ABS"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "ACOS"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "ASIN"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "ATAN"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "COS"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "EXP"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "LIMIT"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "LN"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "LOG"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "MAX"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "MIN"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "MUX"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "SEL"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "SIN"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "SQRT"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    sfc_spec {
+        sfc_name: "TAN"
+        mu_exec_time_ns: 2000
+        sigma_exec_time_ns: 0
+    }
+
+    # SFBs (System function blocks) - mean, std of execution times
+    sfb_spec {
+        sfb_name: "TON"
+        mu_exec_time_ns: 1500
+        sigma_exec_time_ns: 0
+    }
+
+    sfb_spec {
+        sfb_name: "TOF"
+        mu_exec_time_ns: 1500
+        sigma_exec_time_ns: 0
+    }
+
+    sfb_spec {
+        sfb_name: "TP"
+        mu_exec_time_ns: 1500
+        sigma_exec_time_ns: 0
+    }
+}
+
+datatype_declaration {
+    name: "INT_TYPE_DEF"
+    datatype_category: INT
+    datatype_spec {
+        initial_value: "10"
+    }
+}
+
+datatype_declaration {
+    name: "INT_1DARR_TYPE_DEF"
+    datatype_category: INT
+    datatype_spec {
+        initial_value: "{-1,0,1,2,3,4,5,6,7,8}"
+        dimension_1:  10
+    }   
+}
+
+datatype_declaration {
+    name: "INT_2DARR_TYPE_DEF"
+    datatype_category: INT
+    datatype_spec {
+        initial_value: "{{0,1},{2,3}}"
+        dimension_1:  2
+        dimension_2: 2
+    }   
+}
+
+datatype_declaration {
+    name: "COMPLEX_STRUCT"
+    datatype_category: DERIVED
+    datatype_field {
+        field_name: "string_field"
+        field_datatype_name: "STRING"
+    }
+    datatype_field {
+        field_name: "int_field"
+        field_datatype_name: "INT_TYPE_DEF"
+    }
+    datatype_field {
+        field_name: "real_field"
+        field_datatype_name: "REAL"
+        initial_value: "0.1"
+        range_min: -10
+        range_max: 10
+    }
+    datatype_field {
+        field_name: "oned_arr_field"
+        field_datatype_name: "INT_1DARR_TYPE_DEF"
+    }
+    datatype_field {
+        field_name: "twod_arr_field"
+        field_datatype_name: "INT_2DARR_TYPE_DEF"
+    }
+}
+
+var_global {
+    name: "__CONFIG_GLOBAL__"
+    datatype_field {
+        field_name: "global_bool_var"
+        field_datatype_name: "BOOL"
+        intf_type : VAR_EXPLICIT_STORAGE
+        field_storage_spec {
+            mem_type: RAM_MEM
+            byte_offset: 3
+            bit_offset: 1
+        }
+    }
+    datatype_field {
+        field_name: "global_int_var"
+        field_datatype_name: "INT"
+        intf_type : VAR_EXPLICIT_STORAGE
+        field_storage_spec {
+            full_storage_spec: "%MW10"
+        }
+    }
+    datatype_field {
+        field_name: "start_int"
+        field_datatype_name: "INT_TYPE_DEF"
+    }
+    datatype_field {
+        field_name: "complex_global"
+        field_datatype_name: "COMPLEX_STRUCT"
+        intf_type: VAR_EXPLICIT_STORAGE
+        field_storage_spec {
+            full_storage_spec: "%MW30"
+        }
+    }
+}
+
+resource_file_path: "~/OpenSCADA/examples/core_examples/inverted_pendulum/CPU_001.prototxt"

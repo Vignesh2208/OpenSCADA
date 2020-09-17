@@ -138,7 +138,7 @@ void PCVariable::AllocateStorage(string SharedMemFileName) {
         }
         //DataTypeSizeBytes = DataTypeSizeBytes > 0 ? DataTypeSizeBytes : 1;
 
-        string LockName = __VariableName + "_Lock";
+        string LockName = __configuration->__ConfigurationName + "_" + __VariableName + "_Lock";
         if (__AssociatedResource != nullptr)
             LockName = __AssociatedResource->__ResourceName + "_" + LockName;
         __MemoryLocation.AllocateSharedMemory(DataTypeSizeBytes,
@@ -161,7 +161,7 @@ void PCVariable::AllocateAndInitialize() {
 void PCVariable::AllocateAndInitialize(string SharedMemFileName) {
 
     if (!__MemAllocated) {
-        std::remove(SharedMemFileName.c_str());
+        //std::remove(SharedMemFileName.c_str());
         this->AllocateStorage(SharedMemFileName);
         this->InitializeAllNonPtrFields();
         this->InitializeAllDirectlyRepresentedFields();

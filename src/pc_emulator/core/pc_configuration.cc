@@ -7,6 +7,11 @@
 #include <fstream>
 #include <cstdio>
 
+#include <bits/stdc++.h> 
+#include <iostream> 
+#include <sys/stat.h> 
+#include <sys/types.h> 
+
 extern "C"
 {
     #include <Kronos_functions.h>   
@@ -70,10 +75,16 @@ PCConfigurationImpl::PCConfigurationImpl(string ConfigurationPath,
         assert(__RAMmemSize > 0);
         
         std::cout << "Allocating Shared RAM Memory " << std::endl;
+    	//assert (mkdir(("/tmp/OpenSCADA/" + __ConfigurationName).c_str(), 0777) != 0);
+	mkdir("/tmp/OpenSCADA", 0777);
+    	mkdir(("/tmp/OpenSCADA/" + __ConfigurationName).c_str(), 0777);
 
         __RAMMemory.AllocateSharedMemory(__RAMmemSize,
-                "/tmp/" + __ConfigurationName + "_RAM",
+                "/tmp/OpenSCADA/" + __ConfigurationName + "/" + __ConfigurationName + "_RAM",
                 __ConfigurationName + "_RamLock");
+	/*__RAMMemory.AllocateSharedMemory(__RAMmemSize,
+                "/tmp/" + __ConfigurationName + "_RAM",
+                __ConfigurationName + "_RamLock");*/
 
         //__RAMMemory.AllocateStaticMemory(__RAMmemSize);
         __NumResources = __specification.machine_spec().num_cpus();
@@ -336,7 +347,7 @@ void PCConfigurationImpl::InitializeAllPOUVariables() {
         PCLogger->LogMessage(LogLevels::LOG_INFO,
             "Initializing Configuration GLOBAL variables ****");
 
-        __global_pou_var->AllocateAndInitialize("/tmp/" + __ConfigurationName
+        __global_pou_var->AllocateAndInitialize("/tmp/OpenSCADA/" + __ConfigurationName + "/" + __ConfigurationName
                 + "_" + "__CONFIG_GLOBAL__");
         
         __global_pou_var->__VariableDataType->__PoUType 
@@ -378,7 +389,7 @@ void PCConfigurationImpl::InitializeAllPOUVariables() {
 
         PCLogger->LogMessage(LogLevels::LOG_INFO,
          "Initializing ACCESS Paths ****");
-        __access_pou_var->AllocateAndInitialize("/tmp/" + __ConfigurationName
+        __access_pou_var->AllocateAndInitialize("/tmp/OpenSCADA/" + __ConfigurationName + "/" + __ConfigurationName
             + "_" + "__CONFIG_ACCESS__");
         __access_pou_var->__VariableDataType->__PoUType 
                         = pc_specification::PoUType::PROGRAM;
@@ -650,7 +661,7 @@ void PCConfigurationImpl::Cleanup() {
 
     std::cout << "Configuration: Removing MMap Files" << std::endl;
     __RAMMemory.Cleanup();
-    std::remove(("/tmp/" + __ConfigurationName).c_str());
+    std::remove(("/tmp/OpenSCADA/" + __ConfigurationName + "/" + __ConfigurationName).c_str());
     RegisteredResources->Cleanup();
     RegisteredDataTypes->Cleanup();
 
