@@ -81,11 +81,11 @@ const char *modbus_strerror(int errnum) {
 void _error_print(modbus_t *ctx, const char *context)
 {
     if (ctx->debug) {
-        fprintf(stderr, "ERROR %s", modbus_strerror(errno));
+        printf("ERROR %s", modbus_strerror(errno));
         if (context != NULL) {
-            fprintf(stderr, ": %s\n", context);
+            printf(": %s\n", context);
         } else {
-            fprintf(stderr, "\n");
+            printf("\n");
         }
     }
 }
@@ -206,6 +206,31 @@ static int send_msg(modbus_t *ctx, uint8_t *msg, int msg_length)
 
     return rc;
 }
+
+void print_curr_time() {
+
+  char buffer[26];
+  int millisec;
+  struct tm* tm_info;
+  struct timeval tv;
+
+  gettimeofday(&tv, NULL);
+
+  millisec = (int) tv.tv_usec / 1000.0; // Round to nearest millisec
+  if (millisec >= 1000) { // Allow for rounding up to nearest second
+    millisec -= 1000;
+    tv.tv_sec++;
+  }
+
+  tm_info = localtime(&tv.tv_sec);
+
+  strftime(buffer, 26, "%Y:%m:%d %H:%M:%S", tm_info);
+  fprintf(stdout, "%s.%03d\n", buffer, millisec);
+  fflush(stdout);
+
+
+}
+
 
 int modbus_send_raw_request(modbus_t *ctx, uint8_t *raw_req, int raw_req_length)
 {
@@ -386,7 +411,7 @@ int _modbus_receive_msg(modbus_t *ctx, uint8_t *msg, msg_type_t msg_type)
     while (length_to_read != 0) {
         rc = ctx->backend->select(ctx, &rset, p_tv, length_to_read);
         if (rc == -1) {
-            _error_print(ctx, "select");
+            _error_print(ctx, "select: modbus_recv_msg");
             if (ctx->error_recovery & MODBUS_ERROR_RECOVERY_LINK) {
                 int saved_errno = errno;
 
@@ -1062,9 +1087,11 @@ static int read_io_status(modbus_t *ctx, int function,
         int offset_end;
 
         rc = _modbus_receive_msg(ctx, rsp, MSG_CONFIRMATION);
-        if (rc == -1)
+        if (rc == -1) {
+	    printf("MODBUS RECEIVE MESSAGE: error: %d\n", errno);
+            fflush(stdout);
             return -1;
-
+	}
         rc = check_confirmation(ctx, req, rsp, rc);
         if (rc == -1)
             return -1;
@@ -1171,8 +1198,11 @@ static int read_registers(modbus_t *ctx, int function, int addr, int nb,
         int i;
 
         rc = _modbus_receive_msg(ctx, rsp, MSG_CONFIRMATION);
-        if (rc == -1)
+        if (rc == -1) {
+            printf("MODBUS RECEIVE MESSAGE: error: %d\n", errno);
+            fflush(stdout);
             return -1;
+        }
 
         rc = check_confirmation(ctx, req, rsp, rc);
         if (rc == -1)

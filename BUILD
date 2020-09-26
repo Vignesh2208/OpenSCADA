@@ -133,7 +133,7 @@ cc_binary(
         "contrib/modbus_comm_module.cc"
     ],
     deps = [":pc_emulator_lib", "@modbuslib//:modbusapi"], 
-    copts = ["-Iexternal/gtest/include -fpermissive -Wno-reorder -Wno-sign-compare -Wno-delete-non-virtual-dtor"],
+    copts = ["-Iexternal/gtest/include -I/usr/local/include -fpermissive -Wno-reorder -Wno-sign-compare -Wno-delete-non-virtual-dtor"],
     linkstatic = 1,
 )
 

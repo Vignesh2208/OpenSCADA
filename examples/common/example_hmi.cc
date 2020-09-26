@@ -143,7 +143,8 @@ int main(int argc, char **argv) {
 
         if (rc < 0) {
             std::cout << "Error reading input registers ! Stopping HMI "
-            << std::endl;
+                      << std::endl;
+            break;
         }
 
 	input_mem_bytes = (uint8_t *) input_mem_registers;
@@ -152,9 +153,9 @@ int main(int argc, char **argv) {
         auto curr = std::chrono::steady_clock::now();
         auto elapsed_time = std::chrono::duration_cast<
             std::chrono::milliseconds>(curr - begin).count();
-        std::cout << elapsed_time << "," << current_theta << std::endl;
-        //std::cout << "Current Theta: " << current_theta << std::endl;
+        std::cout << "Elapsed Time (milli-sec): " << elapsed_time << ", Curr Theta: " << current_theta << std::endl;
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        fflush(stdout);
 
     }
 

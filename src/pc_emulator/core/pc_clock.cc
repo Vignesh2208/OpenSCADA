@@ -7,6 +7,7 @@
 #include <ratio>
 #include <chrono>
 #include <thread>
+#include <unistd.h>
 
 #include "src/pc_emulator/include/pc_clock.h"
 #include "src/pc_emulator/include/pc_logger.h"

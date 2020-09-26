@@ -16,7 +16,7 @@ using namespace pc_specification;
 using MemType  = pc_specification::MemType;
 using DataTypeCategory = pc_specification::DataTypeCategory;
 using FieldInterfaceType = pc_specification::FieldInterfaceType;
-typedef long long unsigned int s64;
+typedef long long s64;
 
 namespace pc_emulator {
 

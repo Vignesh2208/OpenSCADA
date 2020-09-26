@@ -161,7 +161,7 @@ int main(int argc, char **argv) {
 
     while (1) {
         std::cout << "ModBUS waiting for new connection (Press Ctrl-C to quit)..." 
-                << std::endl;
+                  << std::endl;
         fflush(stdout);
         s = modbus_tcp_listen(ctx, 1);
         modbus_tcp_accept(ctx, &s);

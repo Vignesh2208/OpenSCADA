@@ -10,7 +10,8 @@
 
 extern "C"
 {
-#include <Kronos_functions.h>   
+#include <Kronos_functions.h>  
+#include <kronos_utility_functions.h>   
 }
 
 
@@ -20,7 +21,7 @@ typedef unsigned long u32;
 #define TRACER_RESULTS 'J'
 
 //! Synchronization Functions 
-int GetNxtCommand(string& result);
+string GetNxtCommand(int assignedTracerID);
 
 
 

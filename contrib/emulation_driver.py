@@ -53,16 +53,17 @@ class EmulationDriver(object):
         self.total_time_elapsed = 0.0
         self.grpc_server_pid = None
         self.spinner_pid = None
-        assert number_dilated_nodes > 0 
+        
         if self.is_virtual == True:
+            assert number_dilated_nodes > 0
             print ("Initializing Kronos ...")
-            if kf.initializeExp(1) < 0 :
+            if kf.initializeExp(number_dilated_nodes + 1) < 0 :
                 print ("Kronos initialization failed ! Make sure you are running "
                        "the dilated kernel and kronos module is loaded !")
                 sys.exit(0)
+            self.start_dummy_spinner()
 
-        self.physical_system_sim_driver = physical_system_sim_driver
-        self.start_dummy_spinner()
+        self.physical_system_sim_driver = physical_system_sim_driver        
         if os.path.isdir("/tmp/OpenSCADA"):
             print ("Removing any pre-existing files ...")
             import shutil
@@ -76,7 +77,7 @@ class EmulationDriver(object):
         if not self.is_virtual:
             return
         newpid = os.fork()
-        spinner_cmd = ["tracer", "-c", "/bin/x64_synchronizer", "-r", str(self.rel_cpu_speed), "-n", str(self.n_insns_per_round), "-s"]
+        spinner_cmd = ["tracer", "-c", "/bin/x64_synchronizer", "-r", str(self.rel_cpu_speed), "-s"]
         if newpid == 0:
             os.setpgrp()
             os.execvp(spinner_cmd[0], spinner_cmd)
@@ -96,7 +97,7 @@ class EmulationDriver(object):
             return
         print ("Adding specified network interfaces to virtual time control")
         for intf in interface_names_list:
-            if kf.add_netdevice_to_vt_control(intf) < 0:
+            if kf.setNetDeviceOwner(0, intf) < 0:
                 print (f"Warning. Failed to add interface {intf} to virtual time control")
 
     def wait_for_initialization(self):
@@ -104,7 +105,7 @@ class EmulationDriver(object):
         
         if self.is_virtual == True:
             print ("Waiting for all nodes to register with kronos ...")
-            while kf.synchronizeAndFreeze(self.num_tracers + 1) <= 0:
+            while kf.synchronizeAndFreeze() <= 0:
                 print ("Kronos >> Synchronize and Freeze failed. Retrying in 1 sec")
                 time.sleep(1)
             print ("Resuming ...")
@@ -164,8 +165,8 @@ class EmulationDriver(object):
         """Wraps a command around a tracer to bring it under virtual time control if needed. """
         if self.is_virtual:
             if not as_list:
-                return f"tracer -c \"{orig_cmd_string}\" -r {self.rel_cpu_speed} -n {self.n_insns_per_round}"
-            return ["tracer", "-c", orig_cmd_string, "-r", str(self.rel_cpu_speed), "-n", str(self.n_insns_per_round)]
+                return f"tracer -c \"{orig_cmd_string}\" -r {self.rel_cpu_speed}"
+            return ["tracer", "-c", orig_cmd_string, "-r", str(self.rel_cpu_speed)]
         else:
             if not as_list:
                 return orig_cmd_string
@@ -184,14 +185,13 @@ class EmulationDriver(object):
 
         if self.is_virtual and self.n_progressed_rounds == 0 :
             print ("Starting Synchronized Experiment ...")
-            kf.startExp()
 
         if self.is_virtual:
             n_rounds = float(time_step_secs) / self.timestep_per_round_secs
 
             if n_rounds <= 0 :
                 n_rounds = 1
-            kf.progress_n_rounds(int(n_rounds))
+            kf.progressBy(self.n_insns_per_round, int(n_rounds))
             self.n_progressed_rounds += int(n_rounds)
         else:
             pass

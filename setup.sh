@@ -13,6 +13,8 @@ if [ "$1" == "install" ]; then
     echo "Building LibModbus extensions ..."
     cd contrib/libmodbus && ./autogen.sh && ./configure && make install
     cd ../../
+    
+    sudo ldconfig
 
     echo "Building GRPC extensions ..."
     bazel build :grpc_ext_lib

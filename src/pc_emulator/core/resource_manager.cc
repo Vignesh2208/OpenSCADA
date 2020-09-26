@@ -143,6 +143,7 @@ void ResourceManager::ExecuteResourceManager() {
         
         auto nxt_round_inc = per_round_advance_ns;
         auto curr_time = 0.0;
+        int assignedTracerID;
         long run_time_secs 
             = __AssociatedResource->__configuration
                 ->__specification.run_time_secs();
@@ -156,9 +157,10 @@ void ResourceManager::ExecuteResourceManager() {
             << __AssociatedResource->__ResourceName 
             << std::endl;
 
-        addToExp_child(1.0, 
-            (int)per_round_advance_ns, thread_pid);
-        GetNxtCommand(nxt_command);
+        registerTracer(-1, TRACER_TYPE_INS_VT, REGISTRATION_W_CONTROL_THREAD, thread_pid, 0);
+        assignedTracerID = getAssignedTracerID();
+        std::cout << "Assigned Tracer-ID: " << assignedTracerID << std::endl;
+        nxt_command= GetNxtCommand(assignedTracerID);
         while (true) {
             // get each round params from kronos, send it to Resource thread
             // through some shared queue and wait until completion of round.
@@ -178,8 +180,7 @@ void ResourceManager::ExecuteResourceManager() {
                 curr_time = __AssociatedResource->clock->__time;
                 while (recv != "FINISHED_IO") {
                     
-                    nxt_command = "0";
-                    GetNxtCommand(nxt_command);
+                    nxt_command= GetNxtCommand(assignedTracerID);
                     if (nxt_command == "STOP") {
                         break;
                     }
@@ -202,8 +203,7 @@ void ResourceManager::ExecuteResourceManager() {
                 } else {
                     nxt_round_inc = per_round_advance_ns - std::stod(recv);
                 }
-                nxt_command = recv;
-                GetNxtCommand(nxt_command);
+                nxt_command= GetNxtCommand(assignedTracerID);
                 if (nxt_command == "STOP") {
                     break;
                 }

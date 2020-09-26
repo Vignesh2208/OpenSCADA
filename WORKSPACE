@@ -41,7 +41,7 @@ cc_library(
 
 new_local_repository(
     name = "modbuslib",
-    # pkg-config --variable=libdir kronosapi
+    # pkg-config --variable=libdir modbusapi
     path = "/usr/local/lib",
     build_file_content = """
 cc_library(

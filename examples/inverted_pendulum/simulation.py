@@ -130,7 +130,7 @@ def main(num_dilated_nodes=3,
 				orig_cmd_string=comm_module_start_command,
 				as_list=True))
 
-    print ("Starting HMI ...")
+    #print ("Starting HMI ...")
     hmi_start_command = get_example_hmi_start_command(
 	args.comm_module_bind_ip, args.comm_module_listen_port, "/tmp/example_hmi.txt")
 
@@ -147,6 +147,8 @@ def main(num_dilated_nodes=3,
         
         emulation.run_for(0.01)
         total_time_elapsed += 0.01
+        #if is_virtual and total_time_elapsed >= 0.98:
+        #    input('Press key to continue')
         if is_virtual:
             print ("Time Elapsed: ", total_time_elapsed)
         if stop == True:
