@@ -35,6 +35,9 @@ if [ "$1" == "install" ]; then
     bazel build :example_hmi
     sudo cp bazel-bin/example_hmi /usr/bin
 
+    sudo cp bazel-genfiles/py_access_service_proto_pb/src/pc_emulator/proto/*.py src/pc_emulator/proto
+    sudo chmod 777 src/pc_emulator/proto/*.py 
+
     echo "Build and Install finished ..."
 else
     if [ "$1" == "uninstall" ]; then
@@ -44,7 +47,7 @@ else
         rm /usr/bin/modbus_comm_module || true
         rm /usr/bin/plc_runner || true
         rm /usr/bin/example_hmi || true
-
+	rm src/pc_emulator/proto/*.py
         cd contrib/libmodbus && make uninstall
         cd ../../ 
         echo "Cleanup finished ..."
