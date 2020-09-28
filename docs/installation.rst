@@ -86,7 +86,18 @@ This step is optional. To run example on a CORE network follow these steps.
 Ready to use VM
 ^^^^^^^^^^^^^^^
 
-A link to use VM containing OpenSCADA and Kronos will be provided upon request. Please contact projectmoses@illinois.edu.
+Link to a ready to use Kronos VM (version 1.3) can be downloaded from `here <https://drive.google.com/drive/folders/1wwJ6tO7XaGj3C_8ZophNsmbc2vO-oxH4?usp=sharing>`_.
+The VM also contains installations of companion projects `OpenSCADA <http://github.com/Vignesh2208/OpenSCADA>`_ and `Melody <http://github.com/Vignesh2208/Melody>`_.
+which use Kronos for cyber-physical system modelling.
+
+Username: kronos
+Password: kronos
+
+Make sure Kronos is loaded after each reboot before running experiments which use it::
+
+  cd ~/Kronos
+  sudo make load
+
 
 
 Uninstalling OpenSCADA
